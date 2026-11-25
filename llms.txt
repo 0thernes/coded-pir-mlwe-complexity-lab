@@ -1,0 +1,22 @@
+# coded-pir-mlwe-complexity-lab
+
+> Zero-Mathlib Lean 4.35.0 formal proofs, C11/Python/Eshkol multi-language verifiers, and an 11-page AMS-LaTeX preprint on Coded/Byzantine PIR (`CS-053`), Module-LWE reduction tightness (`CS-026`), and complexity-theoretic barriers (`CS-001`/`CS-051`).
+
+- Author: Alexander S. Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648)
+- Code License: Apache-2.0 | Docs & Paper License: CC-BY-4.0
+
+## Primary Documentation
+- [README.md](README.md): Project overview, 14 headline theorems (`T1a`–`T3d`), verbatim Lean axiom audit, and quickstart.
+- [CLAIMS.md](CLAIMS.md): Claim-by-claim ledger (`C1`–`C14`), open frontiers (`O1`–`O4`), and falsification protocol.
+- [LIMITATIONS.md](LIMITATIONS.md): Explicit non-claims, formal vs. computational boundaries, and real-vs-metaphor breakdown.
+- [REPLICATION.md](REPLICATION.md): Clean-room replication commands and verification log.
+- [HARDENING_LOG.md](HARDENING_LOG.md): 12 real defects/holes found and resolved across 10 audit passes.
+- [AGENTS.md](AGENTS.md): Canonical instructions for AI coding agents.
+
+## Technical Artifacts
+- [lean/Solution.lean](lean/Solution.lean): Master zero-Mathlib Lean 4.35.0 solution (`T1a`–`T3d`).
+- [lean/VerifyAxioms.lean](lean/VerifyAxioms.lean): Strict `#print axioms` audit script.
+- [lean/formalization.yaml](lean/formalization.yaml): Machine-readable formalization registry metadata.
+- [docs/architecture.md](docs/architecture.md): System and mathematical dependency architecture.
+- [docs/statement-fidelity.md](docs/statement-fidelity.md): Line-by-line Lean-to-paper statement fidelity table.
+- [dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf](dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf): Frozen 11-page AMS-LaTeX preprint.

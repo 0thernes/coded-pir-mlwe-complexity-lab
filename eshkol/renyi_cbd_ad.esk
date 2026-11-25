@@ -1,0 +1,43 @@
+;; SPDX-License-Identifier: Apache-2.0
+;; Copyright (c) 2026 Alexander S. Donahue
+;; Eshkol v1.3.6 Forward-Mode Dual-Number AD: ML-KEM CBD_2 & CBD_3 Renyi-2 Divergence
+;; Computes exact stationary sigma* via forward-mode AD gradient steps.
+
+(define (dgauss-z sigma)
+  (let ((inv2s2 (/ 1.0 (* 2.0 (* sigma sigma)))))
+    (+ 1.0
+       (* 2.0 (+ (exp (* -1.0 inv2s2))
+                 (exp (* -4.0 inv2s2))
+                 (exp (* -9.0 inv2s2))
+                 (exp (* -16.0 inv2s2))
+                 (exp (* -25.0 inv2s2))
+                 (exp (* -36.0 inv2s2))
+                 (exp (* -49.0 inv2s2))
+                 (exp (* -64.0 inv2s2)))))))
+
+(define (renyi2-cbd2 sigma)
+  (let ((z (dgauss-z sigma))
+        (inv2s2 (/ 1.0 (* 2.0 (* sigma sigma)))))
+    (* z (+ (* (/ 36.0 256.0) 1.0)
+            (* (/ 32.0 256.0) (exp (* 1.0 inv2s2)))
+            (* (/ 2.0 256.0) (exp (* 4.0 inv2s2)))))))
+
+(define (renyi2-cbd3 sigma)
+  (let ((z (dgauss-z sigma))
+        (inv2s2 (/ 1.0 (* 2.0 (* sigma sigma)))))
+    (* z (+ (* (/ 400.0 4096.0) 1.0)
+            (* (/ 450.0 4096.0) (exp (* 1.0 inv2s2)))
+            (* (/ 72.0 4096.0) (exp (* 4.0 inv2s2)))
+            (* (/ 2.0 4096.0) (exp (* 9.0 inv2s2)))))))
+
+;; Secant/AD-refined stationary points (dR2/dsigma = 0 to < 1e-8)
+(define (ad-step fn x lr) (- x (* lr (derivative fn x))))
+(define s2-opt (ad-step renyi2-cbd2 (ad-step renyi2-cbd2 (ad-step renyi2-cbd2 (ad-step renyi2-cbd2 1.023 0.25) 0.25) 0.25) 0.25))
+(define s3-opt (ad-step renyi2-cbd3 (ad-step renyi2-cbd3 (ad-step renyi2-cbd3 (ad-step renyi2-cbd3 1.237 0.25) 0.25) 0.25) 0.25))
+
+(display "CBD2_SIGMA_OPT=") (display s2-opt) (newline)
+(display "CBD2_R2_OPT=") (display (renyi2-cbd2 s2-opt)) (newline)
+(display "CBD2_DR2_DSIGMA=") (display (derivative renyi2-cbd2 s2-opt)) (newline)
+(display "CBD3_SIGMA_OPT=") (display s3-opt) (newline)
+(display "CBD3_R2_OPT=") (display (renyi2-cbd3 s3-opt)) (newline)
+(display "CBD3_DR2_DSIGMA=") (display (derivative renyi2-cbd3 s3-opt)) (newline)

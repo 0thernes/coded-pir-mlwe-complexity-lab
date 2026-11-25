@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="55%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#172554"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#f472b6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect x="48" y="48" width="1184" height="544" rx="22" fill="#0b1220" fill-opacity="0.72" stroke="url(#accent)" stroke-width="2.5"/>
+  <text x="90" y="132" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#38bdf8" letter-spacing="2">CODED-PIR-MLWE-COMPLEXITY-LAB · v1.0.0</text>
+  <text x="90" y="196" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">Koszul-Veronese Byzantine PIR, MLWE Tightness,</text>
+  <text x="90" y="248" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">and Complexity-Barrier Bridges</text>
+  <rect x="90" y="276" width="240" height="4" rx="2" fill="url(#accent)"/>
+  <g font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="19" fill="#e2e8f0">
+    <rect x="90" y="314" width="340" height="170" rx="14" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="112" y="352" font-weight="700" fill="#38bdf8">PILLAR I · CS-053 PIR</text>
+    <text x="112" y="384" font-size="16">• Exact Koszul rank: 10/17 &gt; 4/7</text>
+    <text x="112" y="410" font-size="16">• Beats 2610.37412 LFSR &amp; E &lt; KT</text>
+    <text x="112" y="436" font-size="16">• Exact E=K+1 unrestricted cap.</text>
+    <text x="112" y="462" font-size="16">• Pure-int h_uncond 8/13 barrier</text>
+
+    <rect x="468" y="314" width="340" height="170" rx="14" fill="#1e293b" stroke="#f472b6" stroke-width="1.5"/>
+    <text x="490" y="352" font-weight="700" fill="#f472b6">PILLAR II · CS-026 MLWE</text>
+    <text x="490" y="384" font-size="16">• Luo 2026 det-ideal refutation</text>
+    <text x="490" y="410" font-size="16">• Chen Step-9 DFT cancellation</text>
+    <text x="490" y="436" font-size="16">• 5x ML-KEM CBD2/CBD3 Renyi cliff</text>
+    <text x="490" y="462" font-size="16">• QGTL shifted-LWE Berry witness</text>
+
+    <rect x="846" y="314" width="340" height="170" rx="14" fill="#1e293b" stroke="#fbbf24" stroke-width="1.5"/>
+    <text x="868" y="352" font-weight="700" fill="#fbbf24">PILLAR III · CS-001 TRIAD</text>
+    <text x="868" y="384" font-size="16">• Algebrization MLE uniqueness</text>
+    <text x="868" y="410" font-size="16">• LWE PRF -&gt; Natural Proofs</text>
+    <text x="868" y="436" font-size="16">• Katz-Trevisan PIR &lt;-&gt; LDC</text>
+    <text x="868" y="462" font-size="16">• Honest: P != NP remains OPEN</text>
+  </g>
+  <text x="90" y="544" font-family="ui-monospace, Consolas, monospace" font-size="17" fill="#94a3b8">Zero-Mathlib Lean 4.35.0 (14 Theorems · 6 Independent Kernels) · C11 · Eshkol AD · Alexander S. Donahue (ORCID 0009-0006-8168-9648)</text>
+</svg>

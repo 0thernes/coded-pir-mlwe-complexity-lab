@@ -1,0 +1,6 @@
+# SPDX-License-Identifier: Apache-2.0
+# Pinned Python 3.12 verification dependencies for coded-pir-mlwe-complexity-lab (Build Standard B02)
+matplotlib==3.11.2
+numpy==2.5.5
+pytest==9.2.0
+scipy==1.18.1

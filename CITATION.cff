@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+title: "Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked Complexity-Barrier Bridges"
+message: "If you use these Lean 4 proofs, verification artifacts, or white paper, please cite this software and preprint."
+type: software
+version: 1.0.0
+date-released: 2026-11-25
+license: Apache-2.0
+repository-code: "https://github.com/0thernes/coded-pir-mlwe-complexity-lab"
+url: "https://github.com/0thernes/coded-pir-mlwe-complexity-lab"
+authors:
+  - family-names: Donahue
+    given-names: Alexander Stephen
+    orcid: "https://orcid.org/0009-0006-8168-9648"
+    email: "0_0@0thernes.art"
+    affiliation: "Independent Researcher, Spokane, WA, USA"
+keywords:
+  - private-information-retrieval
+  - byzantine-fault-tolerance
+  - koszul-veronese
+  - mlwe
+  - fips-203
+  - ml-kem
+  - quantum-geometric-tensor
+  - algebrization
+  - lean4
+  - formal-verification

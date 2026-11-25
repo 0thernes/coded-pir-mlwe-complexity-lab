@@ -1,0 +1,7 @@
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+# ADR 0001: Zero-Mathlib Lean 4.35.0 Trusted Computing Base & Palomar 6-Kernel Replay
+
+- **Status:** Accepted (2026-11-25)
+- **Context:** Large Lean formalizations importing Mathlib require multi-gigabyte `.olean` downloads, slow CI builds, and expand the transitive dependency graph across hundreds of thousands of lines. Moreover, verifying finite certificates (`F_11` Byzantine matrices and 12-variable polymatroid `h_uncond`) via `native_decide` introduces `Lean.ofReduceBool` / `Lean.trustCompiler`, weakening kernel soundness.
+- **Decision:** Implement all 14 theorems (`T1a`–`T3d`) and concrete non-vacuity witnesses in **zero-Mathlib Lean 4.35.0** with custom minimal algebraic classes (`CommRing`, `SimpleField`), compile finite certificates into $O(\log N)$ balanced binary-tree lookup functions reduced natively inside Lean's kernel (zero `native_decide`), and expose a `PalomarChallenge.lean` / `PalomarSolution.lean` contract replayed across all six independent Lean 4.35.0 proof kernels via `lake comparator --config comparator.json --paranoid`.
+- **Consequences:** Clean-room builds finish in seconds on both Windows and Ubuntu CI, every theorem stays strictly within `[propext, Classical.choice, Quot.sound]` (`T1e` uses `[propext]` alone), and real-analytic transcendental curves are cleanly documented as Tier-2 60-digit/C11/Eshkol verifications.

@@ -1,0 +1,18 @@
+;; SPDX-License-Identifier: Apache-2.0
+;; Copyright (c) 2026 Alexander S. Donahue
+;; Eshkol v1.3.6 Forward-Mode Dual-Number AD: Koszul-Veronese PIR Rate vs LFSR Surplus
+
+(define (koszul-rate-k3-t3 e)
+  (/ (* (* e e) (- e 1.0))
+     (* e (+ (* e e) (- (* 4.0 e) 9.0)))))
+
+(define (lfsr-rate-k3-t3 e)
+  (/ e (+ e 5.0)))
+
+(define (koszul-surplus-k3-t3 e)
+  (- (koszul-rate-k3-t3 e) (lfsr-rate-k3-t3 e)))
+
+(display "KOSZUL_RATE_E6=") (display (koszul-rate-k3-t3 6.0)) (newline)
+(display "LFSR_RATE_E6=") (display (lfsr-rate-k3-t3 6.0)) (newline)
+(display "SURPLUS_E6=") (display (koszul-surplus-k3-t3 6.0)) (newline)
+(display "DSURPLUS_DE_E6=") (display (derivative koszul-surplus-k3-t3 6.0)) (newline)

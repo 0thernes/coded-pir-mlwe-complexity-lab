@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: Apache-2.0
+blank_issues_enabled: true
+contact_links:
+  - name: Security & Proof-Soundness Disclosure
+    url: https://github.com/0thernes/coded-pir-mlwe-complexity-lab/blob/main/SECURITY.md
+    about: Responsible reporting channel for soundness or security issues
+  - name: Claims & Falsification Ledger
+    url: https://github.com/0thernes/coded-pir-mlwe-complexity-lab/blob/main/CLAIMS.md
+    about: Inspect every claim and one-command falsification test before filing

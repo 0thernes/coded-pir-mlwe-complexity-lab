@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+
+# Lean 4
+lean/.lake/
+
+# Native C11
+native/build/
+*.o
+*.obj
+*.exe
+*.out
+
+# LaTeX build intermediates
+paper/build/
+*.aux
+*.log
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Environment & OS
+.env
+.DS_Store
+Thumbs.db

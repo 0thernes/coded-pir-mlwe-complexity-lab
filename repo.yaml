@@ -1,0 +1,48 @@
+# SPDX-License-Identifier: Apache-2.0
+# Project manifest for the Build Standard for LLMs v1.2.0. Read by scripts/Audit-Repo.ps1.
+standard: "1.2.0"
+name: "coded-pir-mlwe-complexity-lab"
+version: "1.0.0"
+description: "Zero-Mathlib Lean 4.35.0 proofs (14 theorems T1a-T3d across 6 kernels), C11/Python/Eshkol verifiers, and 11-page AMS-LaTeX preprint on Coded/Byzantine PIR (CS-053), MLWE Tightness (CS-026), and Complexity Barriers (CS-001/CS-051)."
+owner: "0thernes"
+author: "Alexander S. Donahue"
+orcid: "0009-0006-8168-9648"
+repository: "https://github.com/0thernes/coded-pir-mlwe-complexity-lab"
+status: "active"
+license_code: "Apache-2.0"
+license_docs: "CC-BY-4.0"
+year: 2026
+project_type: research
+stack: [lean, c, python, node, latex]
+flags:
+  public: true
+  package: true
+  visual: true
+  ui: false
+  native: true
+  ai: false
+  personal_data: false
+  service: false
+  deployed: false
+  api: false
+  perf: false
+  concurrent: false
+  numeric: true
+  experimental: false
+  ml: false
+  formal: true
+items:
+  A19: {status: done, evidence: "GitHub About description and 7 topics configured on 0thernes/coded-pir-mlwe-complexity-lab"}
+  A27: {status: n/a, note: "Formal mathematics preprint and verification suite (ui: false); frozen PDF and arXiv tarball published via GitHub Releases and 0thernes-research-archive"}
+  B03: {status: done, evidence: "Deterministic exact Lean kernel proofs, seeded Python/C11 runs, reproducible PDF/tarball SHA-256 hashes in MANIFEST.sha256"}
+  B05: {status: done, evidence: "14 pytest tests (tests/test_all.py), 40 C11 unit tests, 3 Eshkol AD modules, and 14 Lean theorems covering claims C1-C14"}
+  B06: {status: done, evidence: "Negative boundary tests in tests/test_all.py and test_triad_core.c (Compress_1 e=+832 failure, Chen even-c non-cancellation, sub-threshold flag privacy)"}
+  B07: {status: done, evidence: "Regression tests for every fixed defect logged in HARDENING_LOG.md (H01 Compress_1 +1665, H03 full T=2 privacy, H04 sub-KT selector, H05 F_11 matrices)"}
+  B08: {status: done, evidence: "Golden artifacts results/lean_axioms.txt (drift-checked in CI), data/f11_byz_witness.json, data/h_uncond_certified.json, results/exact_audit_summary.json, MANIFEST.sha256"}
+  B11: {status: done, evidence: "Cross-language differential tests across Lean 4.35.0, C11, 60-digit Python, and Eshkol v1.3.6 dual-number AD (< 2e-13) plus 6-kernel Lean replay"}
+  B12: {status: done, evidence: "60-digit Decimal Python exact oracles and exact finite-field / integer polymatroid enumerators serving as reference oracles for C11 and Eshkol"}
+  B14: {status: done, evidence: "Metamorphic K<->T rate symmetry, S_4 polymatroid invariance, odd-symmetry QGTL Berry curvature Omega(-e0) = -Omega(e0), and unimodular det invariance"}
+  B20: {status: done, evidence: "60-digit Decimal ML-KEM Renyi-2 minimization matching C11 and Eshkol AD to < 2e-13; QGTL Berry curvature residual 5.55e-17"}
+  B23: {status: n/a, note: "Algebraic, combinatorial, and information-theoretic theorems proved directly in Lean 4.35.0; no concurrent state machine requiring TLA+"}
+  B24: {status: done, evidence: "All 14 headline theorems (T1a-T3d) and concrete NonVacuity witnesses machine-checked in zero-Mathlib Lean 4.35.0 across 6 independent kernels"}
+  B25: {status: n/a, note: "C11 verification core audited via -std=c11 -Wall -Wextra -Wpedantic -Werror, ASan/UBSan, 500+ fuzz iterations, and Lean algebraic proofs; CBMC/Kani deferred"}

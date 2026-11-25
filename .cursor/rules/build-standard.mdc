@@ -1,0 +1,12 @@
+---
+description: Canonical engineering and formal-verification rules for coded-pir-mlwe-complexity-lab
+globs: ["**/*"]
+alwaysApply: true
+---
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+Follow `AGENTS.md` as the canonical instruction source:
+- Lean 4.35.0 proofs in `lean/TriadFrontier/`, `lean/Challenge.lean`, `lean/Solution.lean`, and `lean/PalomarSolution.lean` must have zero `sorry`, zero `native_decide`, zero custom axioms, and pass `lake build`, `VerifyAxioms.lean`, and `leanchecker-paranoid`.
+- C11 sources in `native/` must compile cleanly with `-std=c11 -Wall -Wextra -Wpedantic -Werror`.
+- Maintain strict epistemic honesty: `P != NP`, non-linear `C(2,4,2,2)`, general `M >= 3` non-LFSR PIR capacity, and worst-case quantum MLWE hardness remain OPEN.
+- Keep `VERSION`, `pyproject.toml`, `CITATION.cff`, `repo.yaml`, `lean/lakefile.toml`, and `lean/formalization.yaml` version-synced.

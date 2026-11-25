@@ -1,0 +1,201 @@
+{
+  "schema": "triad-exact-audit/v1",
+  "version": "1.0.0",
+  "author": "Alexander S. Donahue",
+  "orcid": "0009-0006-8168-9648",
+  "pillar_1_cs053": {
+    "koszul_6_3_3_rate": "10/17",
+    "lfsr_6_3_3_rate": "None",
+    "koszul_rank_grid": {
+      "checked_blocks": 46,
+      "strict_savings_count": 30,
+      "sample_savings": [
+        {
+          "T": 2,
+          "Tp": 1,
+          "K": 2,
+          "koszul": 3,
+          "naive": 4,
+          "saved": 1
+        },
+        {
+          "T": 2,
+          "Tp": 1,
+          "K": 3,
+          "koszul": 4,
+          "naive": 6,
+          "saved": 2
+        },
+        {
+          "T": 2,
+          "Tp": 1,
+          "K": 4,
+          "koszul": 5,
+          "naive": 8,
+          "saved": 3
+        },
+        {
+          "T": 2,
+          "Tp": 1,
+          "K": 5,
+          "koszul": 6,
+          "naive": 10,
+          "saved": 4
+        },
+        {
+          "T": 3,
+          "Tp": 1,
+          "K": 2,
+          "koszul": 4,
+          "naive": 6,
+          "saved": 2
+        },
+        {
+          "T": 3,
+          "Tp": 1,
+          "K": 3,
+          "koszul": 5,
+          "naive": 9,
+          "saved": 4
+        }
+      ]
+    },
+    "f11_byzantine_rate25": {
+      "params": "(M=2, N=6, K=2, T=2, B=1, U=0, E=4)",
+      "field": "F_11",
+      "rate": "2/5",
+      "lfsr_rate": "8/21",
+      "subsets_verified": 15,
+      "ordered_pairs_flag_private": 30
+    },
+    "polymatroid_h_uncond": {
+      "scale": 128,
+      "orbits": 330,
+      "elemental_submodularity_checked": 67584,
+      "privacy_equalities_checked": 2816,
+      "singleton_ingletons_checked": 2970,
+      "retrieval_6atom_subset_ingletons_checked": 3814209,
+      "violations": 0,
+      "D_over_L": "13/8",
+      "C_shannon_ingleton": "8/13",
+      "strictly_exceeds_linear_capacity_3_5": true
+    }
+  },
+  "pillar_2_cs026": {
+    "renyi_60digit": {
+      "CBD_2": {
+        "variance_exact": "1",
+        "fourth_moment_exact": "5/2",
+        "excess_kurtosis_exact": "-1/2",
+        "sigma_opt_r2": "1.0225969681464395",
+        "min_r2": "1.01289004083745600343",
+        "sigma_opt_rinf": "1.0402025190638227",
+        "min_rinf": "1.03474779177984963913",
+        "bits_per_coord_r2": 0.0184775639,
+        "cumulative_bits_r2": {
+          "1536": 28.381538,
+          "2048": 37.842051
+        }
+      },
+      "CBD_3": {
+        "variance_exact": "3/2",
+        "fourth_moment_exact": "6",
+        "excess_kurtosis_exact": "-1/3",
+        "sigma_opt_r2": "1.2365053528680225",
+        "min_r2": "1.00517797597143322374",
+        "sigma_opt_rinf": "1.2794666865166662",
+        "min_rinf": "1.02018015561768603822",
+        "bits_per_coord_r2": 0.0074509664,
+        "cumulative_bits_r2": {
+          "1024": 7.62979
+        }
+      },
+      "cliff_ratio_1024_over_512": 4.959776
+    },
+    "chen_step9": {
+      "tested_odd_D": [
+        {
+          "D": 3,
+          "c": 3,
+          "max_even_mag": 1.715743480079471e-15,
+          "max_odd_mag": 6.0
+        },
+        {
+          "D": 5,
+          "c": 3,
+          "max_even_mag": 1.8607417383456514e-14,
+          "max_odd_mag": 4.472136
+        },
+        {
+          "D": 7,
+          "c": 3,
+          "max_even_mag": 2.7069641654237156e-14,
+          "max_odd_mag": 5.291503
+        },
+        {
+          "D": 11,
+          "c": 3,
+          "max_even_mag": 1.181751447746054e-13,
+          "max_odd_mag": 6.63325
+        },
+        {
+          "D": 13,
+          "c": 3,
+          "max_even_mag": 1.6364318308743682e-13,
+          "max_odd_mag": 7.211103
+        }
+      ],
+      "all_even_modes_vanish": true
+    },
+    "luo_det_ideal": {
+      "q": 3329,
+      "m": 3,
+      "k": 3,
+      "q_pow_m": 36892780289,
+      "observed_abs_dets_across_10_secrets": [
+        36892780289
+      ]
+    },
+    "qgtl_berry_curvature": {
+      "symmetric_e0_0": {
+        "e0": 0.0,
+        "g_tt": 0.9556511863678382,
+        "g_ss": 0.3145588293571421,
+        "g_ts": 0.0,
+        "omega_ts": 0.0
+      },
+      "biased_e0_pos035": {
+        "e0": 0.35,
+        "g_tt": 0.9343522137872168,
+        "g_ss": 0.30616735150762026,
+        "g_ts": 0.0,
+        "omega_ts": -0.1750698392509179
+      },
+      "biased_e0_neg035": {
+        "e0": -0.35,
+        "g_tt": 0.9343522137872168,
+        "g_ss": 0.30616735150762026,
+        "g_ts": 0.0,
+        "omega_ts": 0.1750698392509179
+      }
+    }
+  },
+  "pillar_3_triad": {
+    "algebrization_mle": {
+      "field": "F_11",
+      "dim": 3,
+      "points_multilinearity_verified": 1331
+    },
+    "katz_trevisan_ldc": {
+      "code": "GRS_2(F_11, N=6)",
+      "min_hamming_distance": 5,
+      "byzantine_bound_2B_plus_1": 3
+    },
+    "mlwe_compress1_ceiling": {
+      "q": 3329,
+      "exact_safe_margin": 831,
+      "first_failure": 832,
+      "depth_at_step16": 51
+    }
+  }
+}

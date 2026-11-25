@@ -1,0 +1,11 @@
+version = 1
+
+[[annotations]]
+path = ["lean/**", "native/**", "eshkol/**", "python/**", "tests/**", "scripts/**", "examples/**", "justfile", "pyproject.toml", ".github/**", "VERSION", "repo.yaml", ".env.example"]
+SPDX-FileCopyrightText = "2026 Alexander S. Donahue"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = ["paper/**", "docs/**", "dist/**", "data/**", "results/**", "*.md", "CITATION.cff", "llms*.txt"]
+SPDX-FileCopyrightText = "2026 Alexander S. Donahue"
+SPDX-License-Identifier = "CC-BY-4.0"

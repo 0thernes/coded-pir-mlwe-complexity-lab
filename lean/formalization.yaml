@@ -1,0 +1,196 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+# SPDX-License-Identifier: Apache-2.0
+version: "v0.4"
+release_version: "1.0.0"
+
+project:
+  name: "Koszul-Veronese Flag-Private Coded Byzantine PIR, Module-LWE Reduction Obstructions, and Complexity-Theoretic Bridges"
+  description: >-
+    Zero-Mathlib Lean 4.35.0 formalization of 14 headline theorems (T1a-T3d) plus
+    concrete non-vacuity witnesses across three interconnected open problem frontiers:
+    (Pillar I, CS-053) exterior-power Koszul-Veronese PIR strictly beating the 2026
+    LFSR coded-colluding ceiling, non-vacuous Byzantine-robust capacity double-counting
+    with kernel-certified F_11 rate-2/5 zero-error witness, exact flag-privacy thresholds,
+    a 330-orbit 12-variable Shannon+Ingleton polymatroid barrier at 8/13 > 3/5, and
+    projective P^3 linear impossibility over arbitrary fields; (Pillar II, CS-026)
+    commutative-ring determinant-ideal secret independence refuting Luo (2026), ring-universal
+    anti-periodic DFT cancellation explaining Chen (2024) Step 9, exact FIPS 203 ML-KEM
+    CBD2/CBD3 moments & 4.96x Renyi-2 tightness cliff, and shifted-LWE QGTL Berry curvature;
+    and (Pillar III, CS-001/CS-051) constructive multilinear-extension uniqueness over
+    arbitrary fields, LWE PRF -> Natural Proofs obstruction, Katz-Trevisan Byzantine PIR
+    to LDC minimum distance 2B+1, and sharp FIPS 203 Compress_1 single-server MLWE-PIR ceiling.
+  authors:
+    - name: "Alexander S. Donahue"
+      orcid: "0009-0006-8168-9648"
+      email: "0_0@0thernes.art"
+      affiliation: "Independent Researcher, Spokane, WA, USA"
+  responsible_maintainers:
+    - name: "Alexander S. Donahue"
+      github: "0thernes"
+      orcid: "0009-0006-8168-9648"
+      email: "0_0@0thernes.art"
+  license: "Apache-2.0"
+
+classification:
+  arxiv:
+    - "cs.IT"
+    - "cs.CR"
+    - "cs.CC"
+    - "cs.LO"
+  msc2020:
+    - "94A24"
+    - "94B05"
+    - "94A60"
+    - "68Q15"
+    - "03B35"
+
+sources:
+  - title: "Koszul-Veronese Flag-Private Coded Byzantine PIR, Module-LWE Reduction Obstructions, and Complexity-Theoretic Bridges: Machine-Checked Results in Lean 4"
+    authors:
+      - "Alexander S. Donahue"
+    id: "https://github.com/0thernes/coded-pir-mlwe-complexity-lab"
+    type: "original-proof"
+    relationship: "other"
+    note: >-
+      Original formalization and companion 11-page AMS-LaTeX preprint first presented in
+      this repository. No external DOI, arXiv ID, or peer review is claimed prior to
+      confirmed external assignment.
+  - title: "The capacity of private information retrieval from coded storage systems with colluding, robust and byzantine servers"
+    authors:
+      - "Rui Sun"
+      - "Yiwei Zhang"
+    id: "https://arxiv.org/abs/2610.37412"
+    type: "paper"
+    relationship: "background"
+    note: "Establishes the LFSR coded-colluding PIR capacity exceeded by Theorem T1b."
+  - title: "Module-Lattice-Based Key-Encapsulation Mechanism Standard (FIPS 203)"
+    authors:
+      - "National Institute of Standards and Technology"
+    id: "https://doi.org/10.6028/NIST.FIPS.203"
+    type: "standard"
+    relationship: "background"
+    note: "Defines ML-KEM modulus q=3329, CBD_2/CBD_3 noise, and Compress_1 audited in T2c and T3d."
+  - title: "Quantum Algorithms for Lattice Problems"
+    authors:
+      - "Yilei Chen"
+    id: "https://eprint.iacr.org/2024/555"
+    type: "paper"
+    relationship: "background"
+    note: "Step 9 periodicity obstruction explained ring-universally by Theorem T2b."
+
+related_formalizations: []
+
+status:
+  scope: >-
+    Complete zero-Mathlib Lean 4.35.0 formalization of all 14 headline theorems T1a-T3d
+    plus concrete non-vacuity witnesses (TriadFrontier/NonVacuity.lean, including
+    SimpleField (Fin 5) and SimpleField (Fin 11)). Not formalized inside Lean: transcendental
+    60-digit Renyi-2 optimization curves and floating-point DFT/QGTL spectra (verified in
+    Tier-2 exact Python, C11, and Eshkol dual-number AD), or open conjectures (P != NP,
+    non-linear C(2,4,2,2), general M>=3 non-LFSR PIR, worst-case quantum MLWE hardness).
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms:
+    - "propext"
+    - "Classical.choice"
+    - "Quot.sound"
+  main_results:
+    - declaration: "TriadFrontier.Palomar.t1a_koszul_veronese_rank_identity"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t1b_universal_koszul_domination_over_lfsr"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t1c_byzantine_robust_capacity_and_f11_certificate"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t1d_flag_privacy_and_feasibility_dimensions"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t1e_unconditioned_shannon_ingleton_barrier"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t1f_projective_p3_linear_impossibility"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t2a_determinant_ideal_secret_independence"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t2b_chen_step9_antiperiodic_dft_cancellation"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t2c_mlkem_cbd_renyi_cliff"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t2d_qgtl_shifted_lwe_berry_curvature"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t3a_algebrization_multilinear_extension_uniqueness"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t3b_lwe_to_natural_proofs_obstruction"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t3c_katz_trevisan_byzantine_pir_ldc_distance"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t3d_mlwe_single_server_pir_noise_ceiling"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+
+automation:
+  methods:
+    - method: "manual"
+      notes: "Alexander S. Donahue conceived the triad research program, directed the mathematical exploration and 10-pass adversarial audit, verified every statement boundary, and bears sole responsibility for the manuscript."
+    - method: "agent"
+      models:
+        - "Gemini (Antigravity)"
+      framework: "Antigravity"
+      notes: >-
+        Assisted with Lean 4.35.0 proof engineering, O(log N) balanced-tree certificate
+        generation, C11/Python/Eshkol computational cross-verification, figure production,
+        and manuscript drafting under human supervision.
+
+fidelity:
+  divergences: >-
+    Transcendental Renyi-2 optimization curves (Table 2) and complex DFT/QGTL spectra
+    are verified to 60-digit Decimal precision in Python and differentially against C11
+    and Eshkol forward-mode dual-number AD (< 2e-13), while Lean 4.35.0 machine-checks
+    the exact rational/integer moments, cleared-denominator inequalities, finite-field
+    rank certificates, and pure-integer 12-variable polymatroid witness with zero Mathlib.
+
+review:
+  status: "self-assessed"
+  notes: >-
+    Not externally peer-reviewed. Machine-checked across all 6 independent Lean 4.35.0
+    proof kernels via lake comparator --config comparator.json --paranoid (Lean default,
+    leanchecker-paranoid, lean4lean, nanoda, con-leche --verified, con-ron --verified),
+    with 0 warnings, 0 proof sorries, 0 native_decide, and concrete NonVacuity witnesses.

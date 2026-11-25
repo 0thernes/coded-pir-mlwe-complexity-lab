@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: Apache-2.0
+name: Research / Audit Finding Report
+description: Report a mathematical hole, statement-fidelity gap, falsification counterexample, or blindspot
+title: "[finding]: "
+labels: ["blindspot"]
+body:
+  - type: dropdown
+    id: taxonomy
+    attributes:
+      label: Finding Class (Build Standard v1.2.0 10-Class Taxonomy)
+      options:
+        - bug
+        - error
+        - issue
+        - problem
+        - concern
+        - dilemma
+        - conflict
+        - gap
+        - hole
+        - blindspot
+    validations:
+      required: true
+  - type: input
+    id: claim
+    attributes:
+      label: Affected Theorem / Claim ID
+      placeholder: "e.g., T1e / C5 / Section 4"
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Technical Evidence or Counterexample
+      description: Provide exact Lean declaration, mathematical argument, or reproducible command.
+    validations:
+      required: true

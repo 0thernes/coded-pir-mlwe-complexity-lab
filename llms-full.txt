@@ -1,0 +1,33 @@
+# coded-pir-mlwe-complexity-lab — Complete LLM Context (`llms-full.txt`)
+
+## Summary
+Author: Alexander S. Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648)
+Repository: https://github.com/0thernes/coded-pir-mlwe-complexity-lab
+Version: 1.0.0 | Code License: Apache-2.0 | Paper & Docs License: CC-BY-4.0
+
+This repository delivers 14 machine-checked zero-Mathlib Lean 4.35.0 theorems (`T1a`–`T3d`) plus concrete non-vacuity witnesses (`TriadFrontier/NonVacuity.lean`), independently cross-verified in C11 (`-std=c11 -Wall -Wextra -Wpedantic -Werror`), 60-digit exact Python, and Eshkol v1.3.6 forward-mode dual-number AD, together with an 11-page zero-overfull AMS-LaTeX preprint (`paper/main.tex`).
+
+## Pillar I — Coded, Colluding, Robust & Byzantine PIR (`CS-053`)
+- `T1a`: Moment-curve annihilation `<u(alpha), e_{r+1} - alpha e_r> = 0` over any `CommRing R`; exact Pascal interference savings `K * C(T, T') = lambda*(T, T', K) + (K - T') * C(T - 1, T')`; flagship `(E,K,T)=(6,3,3)` gives `d_int = 42` and rate `10/17 > 4/7`.
+- `T1b`: Exact `K <-> T` symmetry and universal strict domination over the Sun-Zhang (2026, arXiv:2610.37412) LFSR coded-colluding capacity in both single-file and multi-file `P`-out-of-`M` regimes via cleared-denominator surplus `(K-1)(T-1)E^2 > 0`.
+- `T1c`: Non-vacuous Byzantine-robust double-counting converse reduction; exact match at `E = K+1` to the Sun-Jafar unrestricted capacity (breaking the `E >= KT` barrier for all `K >= 2`); kernel-certified zero-error `F_11` Byzantine rate-`2/5` scheme at `(M=2, N=6, K=2, T=2, B=1, U=0, E=4)` certifying all 15 desired `12x12`, 15 interference `8x8`, and 60 flag-privacy `5x5` exact inverses inside Lean's kernel without `native_decide`.
+- `T1d`: Sharp flag-privacy dimension thresholds (`K=2,T=2 <-> E >= 4`; zero-error `T=3,K=2 <-> E >= 6`) and universal overlap feasibility `E*w <= K*delta*sigma` (tight iff `E = K+1`).
+- `T1e`: Pure-integer scale-128 12-variable polymatroid `h_uncond` kernel-certified (`[propext]` only) for all 12 monotonicity checks, all 330 canonical `S_4` orbits (= 270,336 elemental Shannon inequalities), all 99 PIR equalities (including all 89 full `T=2` privacy equalities), and all 1,485 singleton Ingleton inequalities at `C = 8/13 > 3/5`. Python further checks all 67,584 elemental triples and 3,814,209 6-atom Ingletons with 0 violations.
+- `T1f`: Projective `P^3` linear impossibility over any `SimpleField F`: four pairwise-intersecting 2-subspaces of `F^4` are either concurrent or coplanar.
+
+## Pillar II — Module-LWE Reduction Tightness & Cryptanalytic Obstructions (`CS-026`)
+- `T2a`: Commutative-ring determinant-ideal secret independence (`det(B) = q^m`, unimodularly invariant), refuting Luo (arXiv:2604.15858).
+- `T2b`: Ring-universal anti-periodic DFT even-mode cancellation (`f_hat(2k) = 0`) + odd `c,D` quadratic Gauss parity witness explaining Chen (ePrint 2024/555) Step 9.
+- `T2c`: Exact FIPS 203 `CBD_2` (`Var=1, mu_4=5/2`) vs. `CBD_3` (`Var=3/2, mu_4=6`) moments, cyclotomic trace-orthogonality over any `SimpleField F`, and cleared-denominator `4.96x` Renyi-2 tightness cliff (60-digit `CBD_2`: `min R_2 = 1.012890040837456`, `28.38` bits at ML-KEM-768, `37.84` bits at ML-KEM-1024; `CBD_3`: `min R_2 = 1.005177975971433`, `7.63` bits at ML-KEM-512).
+- `T2d`: QGTL shifted-LWE Berry curvature normalization invariance, exact symmetry vanishing at `e_0 = 0`, and strict bias witness (`-512 != 0` at `e_0 = 1`).
+
+## Pillar III — Complexity-Theoretic & Cryptographic Bridges (`CS-001`, `CS-051`, `CS-053`, `CS-026`)
+- `T3a`: Constructive existence and global uniqueness of the multilinear extension over any `SimpleField F` (Algebrization algebraic core).
+- `T3b`: LWE/LWR PRF `eps`-indistinguishability blocks `delta`-large constructive Natural Proofs.
+- `T3c`: Katz-Trevisan `B`-Byzantine zero-error PIR / LDC minimum Hamming distance `d_min >= 2B + 1`.
+- `T3d`: Sharp FIPS 203 `Compress_1` margin `|e| <= 831` (round-half-up `+1665`, failing sharply at `+832` for both `b=0,1`) and additive single-server MLWE-PIR noise ceiling `M <= floor(831 / b_step)`.
+
+## Explicit Non-Claims (OPEN)
+- `P != NP` (`CS-001`) remains OPEN.
+- Non-linear `C(2,4,2,2) in [3/5, 8/13]` and general `M >= 3` non-LFSR PIR (`CS-053`) remain OPEN.
+- Worst-case quantum hardness lower bounds for MLWE (`CS-026`) remain OPEN.

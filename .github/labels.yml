@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: Apache-2.0
+# Build Standard v1.2.0 10-class finding taxonomy labels (A30)
+- name: bug
+  color: "d73a4a"
+  description: "Confirmed implementation or proof bug violating expected behavior"
+- name: error
+  color: "b60205"
+  description: "Build, compiler, theorem, or citation error"
+- name: issue
+  color: "fbca04"
+  description: "General operational, typography, or presentation issue"
+- name: problem
+  color: "e99695"
+  description: "Structural or mathematical difficulty requiring redesign"
+- name: concern
+  color: "d93f0b"
+  description: "Portability, security, or maintainability risk"
+- name: dilemma
+  color: "5319e7"
+  description: "Tradeoff requiring an explicit Architecture Decision Record (ADR)"
+- name: conflict
+  color: "c5def5"
+  description: "Inconsistency between specification, code, paper, or policy"
+- name: gap
+  color: "0e8a16"
+  description: "Missing verification coverage, test, or documentation artifact"
+- name: hole
+  color: "1d76db"
+  description: "Missing constraint or edge-case assumption in a model or LP"
+- name: blindspot
+  color: "000000"
+  description: "Unexamined assumption, epistemic boundary, or framing risk"

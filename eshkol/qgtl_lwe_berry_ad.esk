@@ -1,0 +1,27 @@
+;; SPDX-License-Identifier: Apache-2.0
+;; Copyright (c) 2026 Alexander S. Donahue
+;; Eshkol v1.3.6 Forward-Mode Dual-Number AD: QGTL Shifted-LWE Berry Curvature
+
+(define (qgtl-berry-e0 e0)
+  (let ((s 1.023)
+        (two-s2 (* 2.0 (* 1.023 1.023)))
+        (s3 (* 1.023 (* 1.023 1.023))))
+    (let ((w-2 (exp (/ (- (* (- -2.0 e0) (- -2.0 e0))) two-s2)))
+          (w-1 (exp (/ (- (* (- -1.0 e0) (- -1.0 e0))) two-s2)))
+          (w0  (exp (/ (- (* (-  0.0 e0) (-  0.0 e0))) two-s2)))
+          (w1  (exp (/ (- (* (-  1.0 e0) (-  1.0 e0))) two-s2)))
+          (w2  (exp (/ (- (* (-  2.0 e0) (-  2.0 e0))) two-s2))))
+      (let ((z (+ w-2 (+ w-1 (+ w0 (+ w1 w2))))))
+        (let ((b-2 (/ (* (- -2.0 e0) (- -2.0 e0)) s3))
+              (b-1 (/ (* (- -1.0 e0) (- -1.0 e0)) s3))
+              (b0  (/ (* (-  0.0 e0) (-  0.0 e0)) s3))
+              (b1  (/ (* (-  1.0 e0) (-  1.0 e0)) s3))
+              (b2  (/ (* (-  2.0 e0) (-  2.0 e0)) s3)))
+          (let ((ex (/ (+ (* w-2 -2.0) (+ (* w-1 -1.0) (+ (* w1 1.0) (* w2 2.0)))) z))
+                (eb (/ (+ (* w-2 b-2) (+ (* w-1 b-1) (+ (* w0 b0) (+ (* w1 b1) (* w2 b2))))) z))
+                (exb (/ (+ (* w-2 (* -2.0 b-2)) (+ (* w-1 (* -1.0 b-1)) (+ (* w1 (* 1.0 b1)) (* w2 (* 2.0 b2))))) z)))
+            (- exb (* ex eb))))))))
+
+(display "QGTL_OMEGA_E0_0=") (display (qgtl-berry-e0 0.0)) (newline)
+(display "QGTL_OMEGA_E0_035=") (display (qgtl-berry-e0 0.35)) (newline)
+(display "QGTL_DOMEGA_DE0_0=") (display (derivative qgtl-berry-e0 0.0)) (newline)

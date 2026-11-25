@@ -1,0 +1,13 @@
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+# Threat Model & Verification Trust Boundary (`docs/threat-model.md`)
+
+Because `coded-pir-mlwe-complexity-lab` is a formal verification and scientific research repository (not a networked service), the primary threats are **proof soundness compromise**, **statement-vs-claim drift**, **memory corruption in native C11 verifiers**, and **supply-chain / artifact tampering**.
+
+| Threat | Attack Vector | Mitigation in This Repository | Residual Risk |
+|---|---|---|---|
+| **Proof Cheating / Unsound Axiom** | Hidden `sorry`, `admit`, `native_decide`, `Lean.trustCompiler`, or custom `axiom` | Zero-Mathlib Lean 4.35.0; `VerifyAxioms.lean` audited in CI (`! grep` allowlist); independent 6-kernel replay via `lake comparator --config comparator.json --paranoid` (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`) | Shared bug across all 6 independent kernels (negligible) |
+| **Vacuous Theorem Statements** | Uninhabited algebraic typeclasses (`SimpleField`, `CommRing`) making universal quantifiers vacuously true | Concrete inhabitants proved in `lean/TriadFrontier/NonVacuity.lean` (`SimpleField (Fin 5)`, `SimpleField (Fin 11)`, `CommRing Int`, anti-periodic $D=3$, 2-var Boolean XOR, 3-rep LDC) | Semantic misinterpretation by reader (mitigated by `docs/statement-fidelity.md`) |
+| **README / Paper Drift from Lean** | Paper or README edits diverging from kernel-checked statements or axioms | Automated CI parity check `scripts/check_readme_axioms.py`; explicit statement-fidelity mapping in `docs/statement-fidelity.md`; version-consistency test in `tests/test_all.py` | Manual prose typos outside automated checks |
+| **C11 Undefined Behavior / Buffer Overflow** | Out-of-bounds indexing or signed overflow in `native/` | Strict `-std=c11 -Wall -Wextra -Wpedantic -Werror`, 40 unit + 500 fuzz tests, libFuzzer harness (`native/tests/fuzz_triad.c`), and Ubuntu CI AddressSanitizer + UndefinedBehaviorSanitizer (`make -C native sanitizers`) | Host compiler bugs |
+| **Artifact Tampering Post-Build** | Altered PDF, arXiv tarball, or witness JSON | `data/MANIFEST.sha256`, root `MANIFEST.sha256`, `results/rosette_receipt.json`, GitHub Actions Sigstore SLSA `attest-build-provenance@v2`, and pinned submodule + PDF hash in `0thernes-research-archive` (`0TH-2026-012`) | Compromise of GitHub account credentials |
+| **Misuse of C11 Utilities in Production Crypto** | Treating research verification helpers as side-channel-hardened FIPS 140-3 crypto | Explicit non-production disclaimers in `LIMITATIONS.md` and `SECURITY.md` | User ignoring documentation |

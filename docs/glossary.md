@@ -1,0 +1,18 @@
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+# Glossary (`docs/glossary.md`)
+
+- **Algebrization (`T3a`):** Aaronson–Wigderson complexity barrier showing that techniques extending to low-degree algebraic oracle extensions (built via unique multilinear extensions $\tilde{f} : F^n \to F$) cannot separate $\mathrm{P}$ from $\mathrm{NP}$.
+- **Anti-Periodic DFT (`T2b`):** A length-$2D$ sequence satisfying $f(D+x) = -f(x)$ for all $x < D$, whose even discrete Fourier coefficients vanish identically ($\hat{f}(2k) \equiv 0$) over any commutative ring with $\omega^D = -1$.
+- **Byzantine-Robust Coded PIR (`CS-053`, `T1c`):** Private Information Retrieval from $N$ servers storing an $(N, K)$ MDS-coded database where up to $T$ servers collude, up to $B$ servers return malicious errors, and up to $U$ servers do not respond, leaving $E = N - 2B - U$ effective honest degrees of freedom.
+- **Centered Binomial Distribution $\mathrm{CBD}_\eta$ (`T2c`):** FIPS 203 ML-KEM error distribution $\sum_{i=1}^\eta (a_i - b_i)$ with $a_i, b_i \sim \mathrm{Bernoulli}(1/2)$; $\mathrm{CBD}_2$ has $\mathrm{Var}=1, \mu_4=5/2$ and $\mathrm{CBD}_3$ has $\mathrm{Var}=3/2, \mu_4=6$.
+- **`Compress_1` (`T3d`):** FIPS 203 1-bit decompression/rounding map $\lfloor (2(x \bmod 3329) + 1665)/3329 \rfloor \bmod 2$ with exact error tolerance $|e| \le 831$ and sharp failure at $e = +832$.
+- **Flag-Private PIR (`T1d`):** Coded-colluding PIR scheme whose query matrices enforce privacy across nested subspace flags rather than restricting to independent full-support-rank columns.
+- **Ingleton Inequality (`T1e`):** The four-variable non-Shannon information inequality satisfied by all linear (representable) polymatroids: $I(A;B) \le I(A;B|C) + I(A;B|D) + I(C;D)$.
+- **Koszul–Veronese PIR (`T1a`–`T1b`):** Exterior-power query construction using moment-curve annihilation $\langle u(\alpha), e_{r+1} - \alpha e_r \rangle = 0$ to cancel interference across $\binom{T}{T'}$ colluding subsets, strictly dominating the Sun–Zhang (2026) LFSR capacity for all $K,T \ge 2$.
+- **LFSR Capacity (`T1b`):** The Linear Full-Support-Rank coded-colluding PIR capacity bound established by Rui Sun & Yiwei Zhang (`arXiv:2610.37412`).
+- **Locally Decodable Code (LDC, `CS-051`, `T3c`):** Error-correcting code allowing recovery of any single message symbol from a small number of codeword queries; zero-error $B$-Byzantine PIR implies minimum Hamming distance $d_{\min} \ge 2B+1$.
+- **Natural Proofs Barrier (`T3b`):** Razborov–Rudich barrier showing that $\delta$-large constructive combinatorial circuit lower-bound proofs cannot exist if $\varepsilon$-indistinguishable pseudorandom functions (e.g., from LWE/LWR) exist with $\varepsilon \le \delta$.
+- **Palomar Comparator (`lake comparator --paranoid`):** Lean 4.35.0 sandboxed verification harness (`bubblewrap`) comparing a challenge module against a solution module across six independent proof kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`).
+- **Polymatroid (`T1e`):** A normalized ($h(\emptyset)=0$), monotone, submodular set function $h : 2^{[n]} \to \mathbb{R}_{\ge 0}$ modeling entropy vectors in Shannon information theory.
+- **QGTL Shifted-LWE Berry Curvature (`T2d`):** Antisymmetric Quantum Geometric Tensor covariance functional on shifted LWE error states, vanishing identically at zero shift ($e_0 = 0$) by parity symmetry and strictly non-zero at $e_0 = 1$.
+- **Rényi-2 Divergence (`T2c`):** $R_2(P \| Q) = \sum_x P(x)^2 / Q(x)$, governing the multiplicative probability-loss factor when replacing discrete Gaussian noise with $\mathrm{CBD}_\eta$ in ML-KEM security reductions.

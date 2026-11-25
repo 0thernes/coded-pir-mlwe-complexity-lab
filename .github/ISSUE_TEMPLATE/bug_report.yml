@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: Apache-2.0
+name: Bug Report
+description: Report a defect in Lean proofs, C11/Python/Eshkol verifiers, or build scripts
+title: "[bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary & Expected vs. Actual Behavior
+      description: Concise description of the defect and which claim (`C1`-`C14`) or layer is affected.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal Reproduction Command
+      placeholder: "e.g., cd lean && lake build"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment (OS, Lean/GCC/Python/Node versions)
+      placeholder: "e.g., Ubuntu 24.04, Lean 4.35.0, GCC 13.2"
+    validations:
+      required: true
