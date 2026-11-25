@@ -137,7 +137,7 @@ jobs:
           (cd /tmp/arxiv_verify && tectonic -X compile main.tex)
       - name: Verify SHA256SUMS / MANIFEST.sha256 & report-only security/secret audit
         run: |
-          sha256sum -c data/MANIFEST.sha256
+          (cd data && sha256sum -c MANIFEST.sha256)
           sha256sum -c MANIFEST.sha256
           sha256sum dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf dist/arxiv_submission.tar.gz > /tmp/SHA256SUMS
           cat /tmp/SHA256SUMS

@@ -36,8 +36,11 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     }
 
     /* 2. Fuzz FIPS 203 Compress_1 margin invariant */
-    const int raw_e = (int)((int16_t)(((uint16_t)data[2] << 8) | data[3]));
-    const int e = (raw_e % 1663) - 831; /* strictly in [-831, +831] */
+    const uint16_t raw_u = (uint16_t)(((uint16_t)data[2] << 8) | (uint16_t)data[3]);
+    const int e = (int)(raw_u % 1663U) - 831; /* strictly in [-831, +831] */
+    if (e < -831 || e > 831) {
+        abort();
+    }
     if (triad_mlkem_compress1(e) != 0) {
         abort();
     }

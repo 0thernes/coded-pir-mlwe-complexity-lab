@@ -7,7 +7,7 @@ This repository is a static scientific research artifact with no runtime servers
 
 ```bash
 # Re-verify all checksums
-sha256sum -c data/MANIFEST.sha256
+(cd data && sha256sum -c MANIFEST.sha256)
 sha256sum -c MANIFEST.sha256
 
 # Re-verify README axiom block parity against results/lean_axioms.txt

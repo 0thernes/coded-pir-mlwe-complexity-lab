@@ -72,7 +72,7 @@ tar -xzf dist/arxiv_submission.tar.gz -C /tmp/arxiv_cleanroom
 
 ### Step 6 — Cryptographic Checksum Verification
 ```bash
-sha256sum -c data/MANIFEST.sha256
+(cd data && sha256sum -c MANIFEST.sha256)
 sha256sum -c MANIFEST.sha256
 ```
 

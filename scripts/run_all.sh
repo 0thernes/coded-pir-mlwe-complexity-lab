@@ -33,6 +33,6 @@ python3 scripts/check_readme_axioms.py
 python3 scripts/check_citations.py
 
 echo "=== [5/5] Checksums ==="
-sha256sum -c data/MANIFEST.sha256
+(cd data && sha256sum -c MANIFEST.sha256)
 sha256sum -c MANIFEST.sha256
 echo "ALL CHECKS PASSED."

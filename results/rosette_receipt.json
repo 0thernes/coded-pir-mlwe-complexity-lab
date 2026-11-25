@@ -2,7 +2,7 @@
   "schema": "rosette-wire-receipt/v1-cleanroom",
   "project": "coded-pir-mlwe-complexity-lab",
   "version": "1.0.0",
-  "generated_utc": "2026-11-25T20:17:25Z",
+  "generated_utc": "2026-11-25T20:23:31Z",
   "author": "Alexander S. Donahue",
   "orcid": "0009-0006-8168-9648",
   "lean_toolchain": "leanprover/lean4:v4.35.0",
@@ -15,7 +15,7 @@
     "arxiv_tarball": "8bacb6f499342ee7bd26c72c07b77e2546d707de2f40b94121ddd4dd36219405",
     "lean_axioms": "08c48d4481e19176578f8f6386c5de5a723c9d6917b0715093ec0d4e6bab8c98",
     "exact_audit_summary": "932a9e59399a8638d3258b7eb3ff8595065832e4ef9d7b9d1576570bf2877eac",
-    "manifest_sha256": "080c55596df9302dec88e213c34ba4a5eeb449db7550ec7643a9a49c2df30272"
+    "manifest_sha256": "b09ff172e19f594c94ab8bc849880e237e624e310ced23225db95db265152dd7"
   },
   "all_checks_ok": true
 }
