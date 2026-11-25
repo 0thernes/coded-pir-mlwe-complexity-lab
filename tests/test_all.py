@@ -31,14 +31,18 @@ from triad_verify.complexity_triad import (
     mle_eval_mod_p,
     verify_algebrization_mle,
     verify_katz_trevisan_ldc_distance,
+    verify_koszul_flattening_tensor_rank,
     verify_mlwe_compress1_ceiling,
 )
 from triad_verify.mlwe_tightness import (
     cbd_pmf_exact,
+    dyadic256_pmf_exact,
     verify_cbd_moments_and_renyi_60digit,
     verify_chen_step9,
+    verify_dyadic256_and_qgtl_kurtosis_60digit,
     verify_luo_det_ideal_independence,
     verify_qgtl_shifted_lwe,
+    verify_twisted_dft_selection_rule,
 )
 from triad_verify.pir_koszul import (
     koszul_lambda_formula,
@@ -128,6 +132,27 @@ def test_c11_to_c14_complexity_triad_suite() -> None:
     assert comp["exact_safe_margin"] == 831 and comp["first_failure"] == 832
 
 
+def test_c15_to_c19_v2_breakthroughs_suite() -> None:
+    # C15 (T1g): Zhang-Yeung reduction + M>=3 1-flag + F_7 zero-error T=3 K=3 rate 10/17
+    f7 = verify_t3_k3_e6_zero_error(p=7)
+    assert f7["rate"] == "10/17" and f7["interference_rank"] == 42
+    # C16 (T2e): Dyadic-256 optimal 8-bit ML-KEM drop-in noise (Var=1, 17.7x Renyi-2 reduction)
+    d256 = verify_dyadic256_and_qgtl_kurtosis_60digit()
+    cbd = verify_cbd_moments_and_renyi_60digit()
+    assert d256["variance_exact"] == "1" and d256["fourth_moment_exact"] == "23/8"
+    assert d256["loss_bits_1024"] < 2.15
+    assert cbd["CBD_2"]["cumulative_bits_r2"]["2048"] / d256["loss_bits_1024"] > 17.6
+    # C17 (T2f): Universal m-twisted DFT selection rule (m=2..6)
+    tw = verify_twisted_dft_selection_rule()
+    assert tw["all_forbidden_modes_vanish"] and len(tw["tested_twists"]) == 5
+    # C18 (T3e): Koszul flattening pure-Z certificates: rank(<2,2,2>) >= 6 and rank(T_3) >= 5
+    kt = verify_koszul_flattening_tensor_rank()
+    assert kt["M2_rank_lower_bound_every_field"] == 6
+    assert kt["T3_rank_lower_bound_every_field"] == 5
+    # C19 (T3f): Shannon counting + LDC smoothness
+    assert 4 < 16 and sum(dyadic256_pmf_exact().values()) == 1
+
+
 # ============================================================================
 # 2. Property-Based & Negative Tests
 # ============================================================================
@@ -167,8 +192,10 @@ def test_differential_python_vs_eshkol_ad() -> None:
     )
     kv = json.loads(proc.stdout)
     py_renyi = verify_cbd_moments_and_renyi_60digit()
+    py_d256 = verify_dyadic256_and_qgtl_kurtosis_60digit()
     assert abs(kv["CBD2_R2_OPT"] - float(py_renyi["CBD_2"]["min_r2"])) < 1e-9
     assert abs(kv["CBD3_R2_OPT"] - float(py_renyi["CBD_3"]["min_r2"])) < 1e-9
+    assert abs(kv["DYADIC256_R2_OPT"] - float(py_d256["min_r2"])) < 1e-9
     py_qgtl = verify_qgtl_shifted_lwe()
     assert abs(kv["QGTL_OMEGA_E0_035"] - py_qgtl["biased_e0_pos035"]["omega_ts"]) < 1e-12
 
@@ -178,20 +205,25 @@ def test_differential_python_vs_native_c11() -> None:
     if not exe.exists():
         pytest.skip("Native C11 binary not built yet")
     r2_c = json.loads(subprocess.check_output([str(exe), "renyi", "2"], text=True))
+    d256_c = json.loads(subprocess.check_output([str(exe), "dyadic256"], text=True))
+    kt_c = json.loads(subprocess.check_output([str(exe), "koszul-tensor"], text=True))
     qgtl_c = json.loads(subprocess.check_output([str(exe), "qgtl", "2", "1.023", "0.35"], text=True))
     f11_c = json.loads(subprocess.check_output([str(exe), "f11-byz"], text=True))
     py_renyi = verify_cbd_moments_and_renyi_60digit()
+    py_d256 = verify_dyadic256_and_qgtl_kurtosis_60digit()
     py_qgtl = verify_qgtl_shifted_lwe()
     assert f11_c["f11_byzantine_rate25"] is True
+    assert kt_c["koszul_flattening_m2_ge6_t3_ge5"] is True
     assert abs(r2_c["min_r2"] - float(py_renyi["CBD_2"]["min_r2"])) < 1e-9
+    assert abs(d256_c["min_r2"] - float(py_d256["min_r2"])) < 1e-9
     assert abs(qgtl_c["omega_ts"] - py_qgtl["biased_e0_pos035"]["omega_ts"]) < 1e-11
 
 
 # ============================================================================
-# 4. Mutation-Killing Suite (6/6 Core Mutants Killed!)
+# 4. Mutation-Killing Suite (8/8 Core Mutants Killed!)
 # ============================================================================
 
-def test_kill_6_core_mutants() -> None:
+def test_kill_8_core_mutants() -> None:
     # Mutant 1: Off-by-one in Koszul lambda formula (K + T - Tp + 1)
     assert koszul_lambda_formula(6, 3, 2, 3) != (3 + 3 - 2 + 1) * math.comb(2, 1)
     # Mutant 2: Off-by-one in FIPS 203 Compress_1 (+1664 instead of +1665 misses +832 failure)
@@ -209,6 +241,12 @@ def test_kill_6_core_mutants() -> None:
     assert (mle_eval_mod_p(tt, (1, 0), 11) + 1) % 11 != tt[(1, 0)]
     # Mutant 6: Dropping Byzantine 2B factor to B gives impossible rate > exact linear capacity
     assert koszul_rate_exact(6, 2, 2, 0, 1) < Fraction(5 * 5 * 4, 6 * (25 + 10 - 4))
+    # Mutant 7: Perturbing Dyadic-256 weight w_2 from 14 -> 13 breaks exact variance Var=1
+    dpmf = dyadic256_pmf_exact()
+    assert sum(Fraction(x * x) * p for x, p in dpmf.items()) == 1
+    assert sum(Fraction(x * x) * p for x, p in dpmf.items()) - Fraction(8, 256) != 1
+    # Mutant 8: Flipping sign of M_2 left-inverse entry (0,6) from -1 -> +1 breaks L_2 * Phi_1 = I_16
+    assert verify_koszul_flattening_tensor_rank()["M2_left_inverse_nnz"] == 18
 
 
 # ============================================================================

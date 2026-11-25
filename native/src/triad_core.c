@@ -430,3 +430,175 @@ int triad_mlkem_compress1(int x) {
     int xm = ((x % 3329) + 3329) % 3329;
     return ((2 * xm + 1665) / 3329) % 2;
 }
+
+/* Constant-time 1-byte sampler for Dyadic-256: w = (1,14,63,100,63,14,1)/256 on {-3..3}.
+ * Cumulative buckets (256 outcomes):
+ *   [0]       -> -3 (1)
+ *   [1..14]   -> -2 (14)
+ *   [15..77]  -> -1 (63)
+ *   [78..177] ->  0 (100)
+ *   [178..240]-> +1 (63)
+ *   [241..254]-> +2 (14)
+ *   [255]     -> +3 (1)
+ */
+int triad_dyadic256_sample_ct(uint8_t byte) {
+    unsigned int b = (unsigned int)byte;
+    int val = -3;
+    val += (int)(b >= 1U);
+    val += (int)(b >= 15U);
+    val += (int)(b >= 78U);
+    val += (int)(b >= 178U);
+    val += (int)(b >= 241U);
+    val += (int)(b >= 255U);
+    return val;
+}
+
+static void eval_renyi_dyadic256(double sigma, double *out_r2, double *out_rinf) {
+    static const int xs[7] = {-3, -2, -1, 0, 1, 2, 3};
+    static const double probs[7] = {
+        1.0 / 256.0, 14.0 / 256.0, 63.0 / 256.0, 100.0 / 256.0,
+        63.0 / 256.0, 14.0 / 256.0, 1.0 / 256.0
+    };
+    double two_s2 = 2.0 * sigma * sigma;
+    double Z = 0.0;
+    for (int x = -30; x <= 30; x++) {
+        Z += exp(-(double)(x * x) / two_s2);
+    }
+    double r2 = 0.0, rinf = 0.0;
+    for (int i = 0; i < 7; i++) {
+        double qx = exp(-(double)(xs[i] * xs[i]) / two_s2) / Z;
+        r2 += (probs[i] * probs[i]) / qx;
+        double ratio = probs[i] / qx;
+        if (ratio > rinf) rinf = ratio;
+    }
+    *out_r2 = r2;
+    *out_rinf = rinf;
+}
+
+triad_renyi_res_t triad_mlkem_dyadic256_opt(void) {
+    triad_renyi_res_t res;
+    res.eta = 256;
+    res.min_r2 = 1e9;
+    res.min_rinf = 1e9;
+    res.sigma_opt_r2 = 1.0;
+    res.sigma_opt_rinf = 1.0;
+    for (int step = 800; step <= 1400; step++) {
+        double s = (double)step / 1000.0;
+        double r2 = 0.0, rinf = 0.0;
+        eval_renyi_dyadic256(s, &r2, &rinf);
+        if (r2 < res.min_r2) { res.min_r2 = r2; res.sigma_opt_r2 = s; }
+        if (rinf < res.min_rinf) { res.min_rinf = rinf; res.sigma_opt_rinf = s; }
+    }
+    double lo = res.sigma_opt_r2 - 0.002, hi = res.sigma_opt_r2 + 0.002;
+    for (int it = 0; it < 60; it++) {
+        double m1 = lo + (hi - lo) / 3.0;
+        double m2 = hi - (hi - lo) / 3.0;
+        double r2_1, ri_1, r2_2, ri_2;
+        eval_renyi_dyadic256(m1, &r2_1, &ri_1);
+        eval_renyi_dyadic256(m2, &r2_2, &ri_2);
+        if (r2_1 < r2_2) hi = m2; else lo = m1;
+    }
+    res.sigma_opt_r2 = 0.5 * (lo + hi);
+    double dummy = 0.0;
+    eval_renyi_dyadic256(res.sigma_opt_r2, &res.min_r2, &dummy);
+    res.bits_per_coord_r2 = log2(res.min_r2);
+    return res;
+}
+
+bool triad_verify_twisted_dft(int m, int D, int r, double *out_max_forb) {
+    if (m < 2 || D < 1 || m * D > 256) return false;
+    int N = m * D;
+    double fre[256], fim[256];
+    for (int x = 0; x < N; x++) {
+        int q = x / D;
+        int rem = x % D;
+        double base_ang = 0.7 * (double)(rem * rem) + 0.3 * (double)rem;
+        double twist_ang = 2.0 * M_PI * (double)(q * r) / (double)m;
+        fre[x] = cos(base_ang + twist_ang);
+        fim[x] = sin(base_ang + twist_ang);
+    }
+    double max_forb = 0.0;
+    for (int k = 0; k < N; k++) {
+        double re = 0.0, im = 0.0;
+        for (int x = 0; x < N; x++) {
+            double ang = 2.0 * M_PI * (double)(k * x) / (double)N;
+            double ca = cos(ang), sa = sin(ang);
+            re += fre[x] * ca - fim[x] * sa;
+            im += fre[x] * sa + fim[x] * ca;
+        }
+        if (((k + r) % m) != 0) {
+            double mag = hypot(re, im);
+            if (mag > max_forb) max_forb = mag;
+        }
+    }
+    if (out_max_forb) *out_max_forb = max_forb;
+    return max_forb < 1e-11;
+}
+
+bool triad_verify_koszul_flattening_certs(void) {
+    /* 1. Verify 18-nonzero L_2 * Phi_1(<2,2,2>) = I_16 over Z (proves rank_F(<2,2,2>) >= 6) */
+    static const int p4[6][2] = {{0,1},{0,2},{0,3},{1,2},{1,3},{2,3}};
+    int T2[4][4][4] = {{{0}}};
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 2; j++)
+            for (int k = 0; k < 2; k++)
+                T2[2*i+j][2*j+k][2*i+k] = 1;
+    int M2[24][16] = {{0}};
+    for (int row = 0; row < 24; row++) {
+        int pi = row / 4, c = row % 4;
+        int r0 = p4[pi][0], s0 = p4[pi][1];
+        for (int col = 0; col < 16; col++) {
+            int i = col / 4, b = col % 4;
+            if (i == s0) M2[row][col] = T2[r0][b][c];
+            else if (i == r0) M2[row][col] = -T2[s0][b][c];
+        }
+    }
+    static const int L2_sp[18][3] = {
+        {0,6,-1},{1,7,-1},{2,10,-1},{3,11,-1},{4,0,1},{4,10,-1},{5,1,1},{5,11,-1},
+        {6,18,-1},{7,19,-1},{8,4,1},{9,5,1},{10,12,1},{11,13,1},{12,8,1},{13,9,1},{14,16,1},{15,17,1}
+    };
+    int L2[16][24] = {{0}};
+    for (int t = 0; t < 18; t++) L2[L2_sp[t][0]][L2_sp[t][1]] = L2_sp[t][2];
+    for (int i = 0; i < 16; i++) {
+        for (int j = 0; j < 16; j++) {
+            int acc = 0;
+            for (int r = 0; r < 24; r++) acc += L2[i][r] * M2[r][j];
+            if (acc != (i == j ? 1 : 0)) return false;
+        }
+    }
+
+    /* 2. Verify 7-nonzero binary 3x3x3 tensor T_3 & 9x9 unimodular Z-inverse (proves rank_F(T_3) >= 5) */
+    static const int p3[3][2] = {{0,1},{0,2},{1,2}};
+    static const int T3_nz[7][3] = {{0,1,2},{0,2,1},{0,2,2},{1,0,2},{1,1,0},{2,0,1},{2,2,0}};
+    int T3[3][3][3] = {{{0}}};
+    for (int t = 0; t < 7; t++) T3[T3_nz[t][0]][T3_nz[t][1]][T3_nz[t][2]] = 1;
+    int M3[9][9] = {{0}};
+    for (int row = 0; row < 9; row++) {
+        int pi = row / 3, c = row % 3;
+        int r0 = p3[pi][0], s0 = p3[pi][1];
+        for (int col = 0; col < 9; col++) {
+            int i = col / 3, b = col % 3;
+            if (i == s0) M3[row][col] = T3[r0][b][c];
+            else if (i == r0) M3[row][col] = -T3[s0][b][c];
+        }
+    }
+    static const int L3[9][9] = {
+        { 0,-1, 0, 0,-1, 1,-1, 0, 0},
+        {-1, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0,-1, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 0,-1, 0},
+        { 0,-2, 1, 0,-1, 1,-1, 0, 0},
+        { 0, 1, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        { 0, 1, 0, 0, 0, 0, 1, 0, 0},
+        { 0,-1, 0, 0, 0, 1,-1, 0, 0}
+    };
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            int acc = 0;
+            for (int r = 0; r < 9; r++) acc += L3[i][r] * M3[r][j];
+            if (acc != (i == j ? 1 : 0)) return false;
+        }
+    }
+    return true;
+}

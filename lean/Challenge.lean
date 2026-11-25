@@ -20,6 +20,7 @@ open TriadFrontier.PIRCertificates
 open TriadFrontier.PIRKoszul
 open TriadFrontier.MLWETightness
 open TriadFrontier.ComplexityTriad
+open TriadFrontier.KoszulTensor
 
 @[expose] public section
 
@@ -167,6 +168,63 @@ def T3d_MLWESingleServerPIRNoiseCeiling : Prop :=
   (mlkemCompress1 832 = 1 ∧ mlkemCompress1 (1665 + 832) = 0) ∧
   (∀ (bStep M : Nat), 0 < bStep → 831 / bStep < M → 832 ≤ M * bStep)
 
+def T1g_ZhangYeungReductionAndMFileKoszul : Prop :=
+  (∀ (H : Nat → Int) (a b c d : Nat),
+    zhangYeungQ H a b c d =
+    ingletonQ H c d a b + condI H a c d + condI H a d c + condI H c d a) ∧
+  (∀ (H : Nat → Int) (a b c d : Nat),
+    0 ≤ ingletonQ H c d a b →
+    0 ≤ condI H a c d →
+    0 ≤ condI H a d c →
+    0 ≤ condI H c d a →
+    0 ≤ zhangYeungQ H a b c d) ∧
+  (∀ E K T : Nat, koszulMFileDen 2 E K T = koszulDen E K T) ∧
+  (∀ M E K T : Nat, koszulMFileDen M E K T = koszulMFileDen M E T K) ∧
+  (∀ M K T : Nat, 3 ≤ M → 2 ≤ K → 2 ≤ T →
+    K + 1 < K * T ∧ 0 < koszulMFileDen M (K + 1) K T) ∧
+  (koszulMFileDen 3 3 2 2 = 16 ∧ 3 * 2 * 8 = 3 * 16)
+
+def T2e_Dyadic256RenyiFloorAndQGTLPSD : Prop :=
+  (∀ (N : Nat) (M : Int) (p q w : Nat → Int),
+    0 < M →
+    (∀ i, i < N → 0 ≤ w i ∧ w i * q i = M) →
+    M * (sumInt N p) * (sumInt N p) ≤
+    (sumInt N q) * (sumInt N (fun i => p i * p i * w i))) ∧
+  (dyadic256Weight (-3) + dyadic256Weight (-2) + dyadic256Weight (-1) + dyadic256Weight 0 +
+     dyadic256Weight 1 + dyadic256Weight 2 + dyadic256Weight 3 = 256 ∧
+   9 * dyadic256Weight (-3) + 4 * dyadic256Weight (-2) + 1 * dyadic256Weight (-1) +
+     1 * dyadic256Weight 1 + 4 * dyadic256Weight 2 + 9 * dyadic256Weight 3 = 256 ∧
+   81 * dyadic256Weight (-3) + 16 * dyadic256Weight (-2) + 1 * dyadic256Weight (-1) +
+     1 * dyadic256Weight 1 + 16 * dyadic256Weight 2 + 81 * dyadic256Weight 3 = 736 ∧
+   21383 * 176 < 378421 * 10 ∧
+   3 * 32 < 15 * 8 ∧ 15 * 2 < 1 * 32) ∧
+  (∀ (N : Nat) (p a b : Nat → Int),
+    (∀ i, i < N → 0 ≤ p i) →
+    covNum N p a b * covNum N p a b ≤ varNum N p a * varNum N p b)
+
+def T2f_UniversalTwistedDFTSelectionRule : Prop :=
+  ∀ (R : Type) [CommRing R] (m D r k : Nat) (ω ζ : R) (f : Nat → R),
+    rPow ω D = ζ →
+    (∀ q x, q < m → x < D → f (q * D + x) = rPow ζ (q * r) * f x) →
+    sumR m (fun q => rPow ζ (q * (r + k))) = 0 →
+    dftCoeff (m * D) ω f k = 0
+
+def T3e_KoszulFlatteningTensorRankBridge : Prop :=
+  (∀ (F : Type) [SimpleField F] (r : Nat),
+    HasTensorRankAtMost 4 4 4 r (fun a b c => intToR (R := F) (matMul2Tensor a b c)) →
+    6 ≤ r) ∧
+  (∀ (F : Type) [SimpleField F] (r : Nat),
+    HasTensorRankAtMost 3 3 3 r (fun a b c => intToR (R := F) (tensor3Bin a b c)) →
+    5 ≤ r)
+
+def T3f_ShannonCountingAndLDCSmoothness : Prop :=
+  (∀ (C M : Nat) (eval : Fin C → Fin M),
+    C < M → ∃ f : Fin M, ∀ c : Fin C, eval c ≠ f) ∧
+  (∀ (N q S τ : Nat) (cnt : Nat → Nat) (isHeavy : Nat → Bool),
+    sumNat N cnt ≤ q * S →
+    (∀ i, i < N → isHeavy i = true → τ ≤ cnt i) →
+    countBool N isHeavy * τ ≤ q * S)
+
 def AllTriadFrontierTheorems : Prop :=
   T1a_KoszulVeroneseRankIdentity ∧
   T1b_UniversalKoszulDominationOverLFSR ∧
@@ -174,14 +232,19 @@ def AllTriadFrontierTheorems : Prop :=
   T1d_FlagPrivacyAndFeasibilityDimensions ∧
   T1e_UnconditionedShannonIngletonBarrier ∧
   T1f_ProjectiveP3LinearImpossibility ∧
+  T1g_ZhangYeungReductionAndMFileKoszul ∧
   T2a_DeterminantIdealSecretIndependence ∧
   T2b_ChenStep9AntiPeriodicDFTCancellation ∧
   T2c_MLKEMCBDRenyiCliff ∧
   T2d_QGTLShiftedLWEBerryCurvature ∧
+  T2e_Dyadic256RenyiFloorAndQGTLPSD ∧
+  T2f_UniversalTwistedDFTSelectionRule ∧
   T3a_AlgebrizationMultilinearExtensionUniqueness ∧
   T3b_LWEToNaturalProofsObstruction ∧
   T3c_KatzTrevisanByzantinePIRToLDC ∧
-  T3d_MLWESingleServerPIRNoiseCeiling
+  T3d_MLWESingleServerPIRNoiseCeiling ∧
+  T3e_KoszulFlatteningTensorRankBridge ∧
+  T3f_ShannonCountingAndLDCSmoothness
 
 end
 end TriadFrontier.Challenge

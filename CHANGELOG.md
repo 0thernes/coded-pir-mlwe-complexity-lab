@@ -6,6 +6,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-11-25
+
+### Added
+- **5 New Zero-Mathlib Lean 4.35.0 Theorems (`T1g`, `T2e`, `T2f`, `T3e`, `T3f`) — 19 Headline Theorems / 21 Audited Declarations Total (2,418 `con-leche`/`con-ron` decls, 0 `sorry`, 0 `native_decide`, 0 warnings):**
+  - **`T1g` (`PIRKoszul.lean`):** Exact algebraic Zhang–Yeung (1998) reduction $\mathrm{ZY98}(A,B;C,D) = \mathrm{Ing}(C,D;A,B) + I(A;C\mid D) + I(A;D\mid C) + I(C;D\mid A)$ proving `h_uncond` unconditionally defeats Zhang–Yeung (1998) too + symmetric $M \ge 3$ 1-flag Koszul denominator breaking Sun–Zhang's $E \ge KT$ wall for all $M \ge 3$ (and zero-error $(6,3,3)$ rate $10/17$ verified over $\mathbb{F}_7$).
+  - **`T2e` (`MLWETightness.lean`):** Pure-integer Cauchy–Schwarz finite-support Rényi-2 floor $(1-\tau_S(\sigma))^{-1}$; 4–8 bit $\mathrm{Var}=1$ phase transition & optimal 1-byte constant-time **`Dyadic-256`** distribution $(1,14,63,100,63,14,1)/256$ ($\mathrm{Var}=1$, identical to FIPS 203 $\mathrm{CBD}_2$) collapsing ML-KEM-1024 loss $17.7\times$ ($37.842 \to 2.138$ bits; ML-KEM-768 $28.382 \to 1.604$ bits); universal QGTL Provost–Vallée PSD $4\det(g) \ge \Omega_{\theta\sigma}^2$ (`CM-048`) and exact symmetric Metric–Kurtosis ordering $3/8 < 15/32 < 1/2$.
+  - **`T2f` (`MLWETightness.lean`):** Universal $m$-twisted DFT selection rule over ANY `CommRing R` (`[propext]` alone; `QC-042`), generalizing Chen Step 9 ($m=2$) to arbitrary twist order $m \ge 1$.
+  - **`T3e` (`KoszulTensor.lean`, NEW):** Field-universal Landsberg–Ottaviani Koszul flattening bridge unifying exterior wedges $u \wedge \cdot$ from PIR (`T1a`) with matrix multiplication (`CS-004`) and algebraic complexity (`CS-012`): Steinitz/Gauss matrix rank bound + 18-nnz $\{-1,0,+1\}$ left-inverse $L_2 \in \mathbb{Z}^{16\times 24}$ certifying $\mathrm{rank}_F(\langle 2,2,2\rangle) \ge 6$ and $L_3 \in \mathbb{Z}^{9\times 9}$ certifying $\mathrm{rank}_F(T_3) \ge 5$ over **every** field $F$ including characteristic 2!
+  - **`T3f` (`ComplexityTriad.lean`):** Constructive Shannon (1949) finite circuit-counting non-surjectivity (`CS-001`/`CS-010`) + Katz–Trevisan $q$-query LDC smoothness averaging bound (`CS-051`).
+- **Native C11 (`native/`):** Constant-time 6-comparison byte sampler `triad_dyadic256_sample_ct`, `triad_mlkem_dyadic256_opt`, `triad_verify_twisted_dft`, `triad_verify_koszul_flattening_certs`, QGTL PSD fuzz guard, 3 new CLI commands (`dyadic256`, `twisted`, `koszul-tensor`), and 9 new unit tests (**49/49 tests**).
+- **Eshkol AD & Exact Python (`eshkol/`, `python/`, `tests/`):** Live forward-mode AD optimization of `Dyadic-256` ($|dR_2/d\sigma| = 7.77 \times 10^{-9}$), 60-digit `Dyadic-256` + QGTL Metric–Kurtosis + $m$-twisted DFT + Koszul tensor verifiers, and expanded `pytest` suite (**15/15 tests, 8/8 killed mutants**).
+- **Publication Figures, 14-Page Preprint & Interactive Proof Blueprint:** Upgraded `fig3`, `fig4` (5-node Mega Atlas V2 architecture), added **`fig5_dyadic256_and_koszul_tensor.pdf`**, updated `paper/main.tex` to 14 pages (0 overfull hboxes, 26/26 live HTTP-200 citations), and added zero-CDN interactive GitHub Pages Proof Blueprint DAG & Triad Explorer (`docs/site/index.html`, `docs/site/blueprint.html`, `.github/workflows/pages.yml`), advancing Build Standard `A27` to `PASS`.
+
+### Fixed
+- **H14 (`dilemma`/`hole`):** Rejected an asymmetric 3-round $M=3$ flag-split scheme at $(4,2,2)$ after privacy audit exposed pair-coupling leakage, replacing it with the 100% symmetric 1-flag sum scheme proved in `T1g`.
+- **H15 (`issue`):** Verified DOIs for Landsberg–Ottaviani (2013) (`10.1007/s10231-011-0238-6`), Strassen (1969) (`10.1007/BF02165411`), and Shannon (1949) (`10.1002/j.1538-7305.1949.tb03624.x`) via Crossref API before adding to `paper/refs.bib`, and eliminated visual label overlaps in `fig4`/`fig5` via screenshot inspection.
+
 ## [1.0.0] - 2026-11-25
 
 ### Added

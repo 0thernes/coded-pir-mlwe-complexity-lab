@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+<!-- Copyright (c) 2026 Alexander S. Donahue -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Triad Frontier Lab (v2.0.0) — Coded/Byzantine PIR, MLWE Tightness &amp; Koszul Tensor Bridges</title>
+<meta name="description" content="19 Zero-Mathlib Lean 4.35.0 machine-checked theorems (T1a–T3f) across 6 independent kernels on Coded/Byzantine PIR (CS-053), MLWE Tightness &amp; Dyadic-256 (CS-026), and Koszul Tensor / Complexity Barriers (CS-001/CS-004/CS-012/CS-051).">
+<style>
+  :root {
+    --bg: #0b1120;
+    --panel: #111827;
+    --panel2: #1e293b;
+    --border: #334155;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent2: #a78bfa;
+    --pink: #f472b6;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    --serif: Georgia, "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: var(--sans); background: var(--bg); color: var(--text);
+    line-height: 1.55;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 55%, #0f172a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 2.4rem 1.25rem 2rem;
+  }
+  .wrap { max-width: 1140px; margin: 0 auto; padding: 0 1rem; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.9rem; }
+  .badge {
+    font-family: var(--mono); font-size: 0.76rem; padding: 0.24rem 0.62rem;
+    border-radius: 999px; border: 1px solid var(--border); background: rgba(15,23,42,0.7);
+    color: var(--text);
+  }
+  .badge.cyan { border-color: var(--accent); color: var(--accent); }
+  .badge.green { border-color: var(--green); color: var(--green); }
+  .badge.violet { border-color: var(--accent2); color: var(--accent2); }
+  .badge.amber { border-color: var(--amber); color: var(--amber); }
+  h1 { font-family: var(--serif); font-size: clamp(1.7rem, 3.2vw, 2.45rem); margin: 0.25rem 0 0.7rem; line-height: 1.2; }
+  .subtitle { color: var(--muted); max-width: 860px; font-size: 1.02rem; margin: 0 0 1.25rem; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .btn {
+    display: inline-block; padding: 0.58rem 1.05rem; border-radius: 8px;
+    font-weight: 600; font-size: 0.9rem; border: 1px solid var(--border);
+    background: var(--panel2); color: var(--text);
+  }
+  .btn.primary { background: #0284c7; border-color: #38bdf8; color: #fff; }
+  .btn.primary:hover { background: #0369a1; text-decoration: none; }
+  .btn:hover { border-color: var(--accent); text-decoration: none; }
+  main { padding: 2rem 0 3.5rem; }
+  section { margin-bottom: 2.5rem; }
+  h2 { font-family: var(--serif); font-size: 1.45rem; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; margin-bottom: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.25rem; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.15rem 1.25rem;
+  }
+  .card h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+  .p1 h3 { color: var(--accent); }
+  .p2 h3 { color: var(--pink); }
+  .p3 h3 { color: var(--amber); }
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; margin: 1.2rem 0 0; }
+  .stat { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem; text-align: center; }
+  .stat .num { font-family: var(--mono); font-size: 1.45rem; font-weight: 700; color: var(--accent); }
+  .stat .lbl { font-size: 0.78rem; color: var(--muted); }
+  label { display: flex; justify-content: space-between; font-size: 0.86rem; color: var(--muted); margin: 0.45rem 0 0.15rem; }
+  input[type=range], select { width: 100%; accent-color: var(--accent); background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 0.35rem; }
+  .out-box {
+    margin-top: 0.9rem; padding: 0.85rem; background: #0f172a; border: 1px solid var(--border);
+    border-radius: 8px; font-family: var(--mono); font-size: 0.83rem; line-height: 1.6;
+  }
+  .hl-green { color: var(--green); font-weight: 700; }
+  .hl-amber { color: var(--amber); font-weight: 700; }
+  .hl-red { color: var(--red); font-weight: 700; }
+  .hl-cyan { color: var(--accent); font-weight: 700; }
+  .filter-row { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 0.85rem; }
+  .fbtn {
+    padding: 0.35rem 0.75rem; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--panel2); color: var(--text); cursor: pointer; font-size: 0.82rem;
+  }
+  .fbtn.active { background: #0284c7; border-color: var(--accent); color: #fff; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+  th, td { text-align: left; padding: 0.55rem 0.65rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; background: var(--panel2); }
+  code { font-family: var(--mono); font-size: 0.82rem; color: #e2e8f0; }
+  .tag { display: inline-block; font-family: var(--mono); font-size: 0.72rem; padding: 0.12rem 0.45rem; border-radius: 4px; }
+  .tag.t1 { background: rgba(52,211,153,0.16); color: var(--green); border: 1px solid rgba(52,211,153,0.35); }
+  .tag.open { background: rgba(251,191,36,0.15); color: var(--amber); border: 1px solid rgba(251,191,36,0.4); }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem 0 2.5rem; color: var(--muted); font-size: 0.84rem; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="badge-row">
+      <span class="badge cyan">v2.0.0 · Zero-Mathlib Lean 4.35.0</span>
+      <span class="badge green">19 Theorems (T1a–T3f) · 6 Independent Kernels</span>
+      <span class="badge violet">0 sorry · 0 native_decide · 2,418 Decls</span>
+      <span class="badge amber">Honest Scope: P≠NP, ω=2, VP≠VNP OPEN</span>
+    </div>
+    <h1>Koszul–Veronese Byzantine PIR, MLWE Reduction Tightness, and Complexity-Barrier Bridges</h1>
+    <p class="subtitle">
+      Interactive formal-verification companion by <strong>Alexander S. Donahue</strong>
+      (Independent Researcher, Spokane, WA, USA · <a href="https://orcid.org/0009-0006-8168-9648">ORCID 0009-0006-8168-9648</a>).
+      Cross-audited across 6 Lean proof kernels, zero-warning C11 (49 tests), Eshkol v1.3.6 forward-mode AD, and 60-digit exact Python.
+    </p>
+    <div class="cta-row">
+      <a class="btn primary" href="blueprint.html">Open Interactive 19-Theorem Proof Blueprint DAG &rarr;</a>
+      <a class="btn" href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab">GitHub Repository</a>
+      <a class="btn" href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab/releases">v2.0.0 Frozen PDF &amp; arXiv Bundle</a>
+      <a class="btn" href="https://github.com/0thernes/0thernes-research-archive">Master Research Archive (0TH-2026-012)</a>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">19</div><div class="lbl">Lean 4.35 Theorems (T1a–T3f)</div></div>
+      <div class="stat"><div class="num">6</div><div class="lbl">Independent Proof Kernels</div></div>
+      <div class="stat"><div class="num">2,418</div><div class="lbl">con-leche / con-ron Verified Decls</div></div>
+      <div class="stat"><div class="num">17.7&times;</div><div class="lbl">Dyadic-256 ML-KEM-1024 Cliff Drop</div></div>
+      <div class="stat"><div class="num">10/17</div><div class="lbl">Zero-Error PIR (beats 4/7 over F_7)</div></div>
+      <div class="stat"><div class="num">&ge; 6</div><div class="lbl">rank_F(&lt;2,2,2&gt;) ∀ Fields incl. char 2</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section>
+    <h2>Three Machine-Checked Research Pillars</h2>
+    <div class="grid-3">
+      <div class="card p1">
+        <h3>Pillar I · CS-053 Coded/Byzantine PIR (T1a–T1g)</h3>
+        <ul>
+          <li>Exact Koszul–Veronese Schur-product rank <code>&lambda;&star;(T,T',K)</code> raising Example VII.A from <code>4/7</code> to zero-error <code>10/17</code> (valid over <code>F_7</code>!).</li>
+          <li>Universal <code>K &harr; T</code> symmetric rate strictly beating Sun–Zhang (<code>arXiv:2610.37412</code>) LFSR by <code>(K-1)(T-1)E&sup2; &gt; 0</code> and breaking <code>E &ge; KT</code> for all <code>M &ge; 2</code>.</li>
+          <li>Pure-integer 12-variable polymatroid <code>h_uncond</code> at <code>8/13 &gt; 3/5</code> defeating Shannon, 3.81M Ingletons, <em>and</em> Zhang–Yeung (1998) identically, paired with projective <code>P&sup3;</code> linear impossibility.</li>
+        </ul>
+      </div>
+      <div class="card p2">
+        <h3>Pillar II · CS-026 / QC-042 / CM-048 MLWE (T2a–T2f)</h3>
+        <ul>
+          <li>Ring-universal refutation of determinant-ideal module-SVP attacks (<code>arXiv:2604.15858</code>) and universal <code>m</code>-twisted DFT selection rule (generalizing Chen 2024/555 Step 9; axioms <code>[propext]</code> alone!).</li>
+          <li>Pure-integer Cauchy–Schwarz finite-support R&eacute;nyi floor explaining FIPS 203 <code>CBD_2</code>'s <code>37.84</code>-bit cliff + drop-in 1-byte constant-time <strong>Dyadic-256</strong> collapsing loss <code>17.7&times;</code> to <code>2.14</code> bits at identical <code>Var=1</code>.</li>
+          <li>QGTL Berry curvature <code>&Omega;_{&theta;&sigma;}</code>, Provost–Vall&eacute;e PSD <code>4 det(g) &ge; &Omega;&sup2;</code>, and exact Metric–Kurtosis ordering <code>3/8 &lt; 15/32 &lt; 1/2</code>.</li>
+        </ul>
+      </div>
+      <div class="card p3">
+        <h3>Pillar III · CS-001 / CS-004 / CS-012 / CS-051 (T3a–T3f)</h3>
+        <ul>
+          <li>Field-universal Landsberg–Ottaviani Koszul flattening bridge: 18-nnz <code>{-1,0,+1}</code> left-inverse certifying <code>rank_F(&lt;2,2,2&gt;) &ge; 6</code> and <code>rank_F(T_3) &ge; 5</code> over <em>every</em> field (incl. char 2!).</li>
+          <li>Algebrization multilinear extension uniqueness over any field (<code>T3a</code>), LWE PRF &rArr; Natural Proofs obstruction (<code>T3b</code>), Shannon circuit counting (<code>T3f</code>).</li>
+          <li>Katz–Trevisan Byzantine PIR &harr; LDC distance <code>d_min &ge; 2B+1</code> &amp; smoothness (<code>T3c, T3f</code>) + sharp FIPS 203 <code>Compress_1</code> margin <code>|e| &le; 831</code> (<code>T3d</code>).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Interactive Verification Calculators (Live Exact Arithmetic)</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>1. Koszul–Veronese Byzantine PIR Rate Explorer (T1b, T1g)</h3>
+        <label>Files M: <span id="vM">2</span></label>
+        <input id="sM" type="range" min="2" max="5" value="2">
+        <label>Total Servers N: <span id="vN">6</span></label>
+        <input id="sN" type="range" min="4" max="14" value="6">
+        <label>MDS Code Dimension K: <span id="vK">3</span></label>
+        <input id="sK" type="range" min="2" max="5" value="3">
+        <label>Collusion Threshold T: <span id="vT">2</span></label>
+        <input id="sT" type="range" min="2" max="5" value="2">
+        <label>Byzantine Servers B: <span id="vB">1</span></label>
+        <input id="sB" type="range" min="0" max="2" value="1">
+        <label>Unresponsive Servers U: <span id="vU">0</span></label>
+        <input id="sU" type="range" min="0" max="2" value="0">
+        <div class="out-box" id="pirOut"></div>
+      </div>
+
+      <div class="card">
+        <h3>2. ML-KEM R&eacute;nyi-2 Tightness &amp; QGTL Explorer (T2c, T2d, T2e)</h3>
+        <label>Noise Distribution (all drop-in except CBD_3):</label>
+        <select id="distSel">
+          <option value="dyadic256" selected>Dyadic-256 (Ours, 1-byte CT, Var=1, kurt=-1/8)</option>
+          <option value="cbd2">FIPS 203 CBD_2 (ML-KEM-768/1024, Var=1, kurt=-1/2)</option>
+          <option value="d128">7-bit Optimal D=128 (Var=1, supp {-3..3})</option>
+          <option value="cbd3">FIPS 203 CBD_3 (ML-KEM-512, Var=3/2, kurt=-1/3)</option>
+        </select>
+        <label>Target Discrete Gaussian &sigma;: <span id="vSig">1.001</span></label>
+        <input id="sSig" type="range" min="0.85" max="1.45" step="0.001" value="1.001">
+        <label>QGTL Noise Mean Bias e_0: <span id="vE0">0.00</span></label>
+        <input id="sE0" type="range" min="-1.00" max="1.00" step="0.02" value="0.00">
+        <div class="out-box" id="mlweOut"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Claims Ledger (C1–C19) &amp; Explicit Open Frontiers (O1–O5)</h2>
+    <div class="filter-row">
+      <button class="fbtn active" data-f="all">All (24)</button>
+      <button class="fbtn" data-f="p1">Pillar I · CS-053 (7)</button>
+      <button class="fbtn" data-f="p2">Pillar II · CS-026 (6)</button>
+      <button class="fbtn" data-f="p3">Pillar III · Triad (6)</button>
+      <button class="fbtn" data-f="open">Explicitly Open (5)</button>
+    </div>
+    <div class="card" style="overflow-x:auto; padding:0;">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Lean</th><th>Axioms</th><th>Mathematical Statement</th><th>Status</th></tr>
+        </thead>
+        <tbody id="claimsBody"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <strong>AI-Assistance &amp; Epistemic Integrity Disclosure:</strong>
+    Conceived, directed, and audited by Alexander S. Donahue (ORCID 0009-0006-8168-9648) with Antigravity AI assistance for Lean 4.35.0 proof engineering, verification harnesses, and typesetting. Not externally peer-reviewed; every Tier-1 theorem stands solely on independently checkable machine-verified proof terms. Licensed under Apache-2.0 (code/Lean) &amp; CC-BY-4.0 (text/docs/figures).
+  </div>
+</footer>
+
+<script>
+function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { const t = b; b = a % b; a = t; } return a || 1; }
+function fracStr(num, den) { const g = gcd(num, den); return `${num/g}/${den/g} (${(num/den).toFixed(5)})`; }
+
+function updatePIR() {
+  const M = +sM.value, N = +sN.value, K = +sK.value, T = +sT.value, B = +sB.value, U = +sU.value;
+  vM.textContent = M; vN.textContent = N; vK.textContent = K; vT.textContent = T; vB.textContent = B; vU.textContent = U;
+  const E = N - U - 2 * B;
+  const lines = [`Effective servers E = N - U - 2B = ${E} (KT = ${K * T})`];
+  if (E < K + 1 || N - U <= 0) {
+    lines.push(`<span class="hl-red">Infeasible: requires E >= K + 1 = ${K + 1} (increase N or lower B/U).</span>`);
+  } else {
+    const denM = E * (E - 1) + (M - 1) * ((K + T - 1) * E - K * T);
+    const numM = E * E * (E - 1);
+    const totalDen = (N - U) * denM;
+    lines.push(`Koszul–Veronese symmetric rate (T1b/T1g): <span class="hl-green">${fracStr(numM, totalDen)}</span>`);
+    if (E < K * T) {
+      lines.push(`Sun–Zhang (2610.37412) LFSR: <span class="hl-amber">INFEASIBLE (E = ${E} &lt; KT = ${K*T}) — Barrier broken!</span>`);
+    } else {
+      let lfsrDen = 0;
+      const ratio = (K + T - 1) / E;
+      for (let j = 0; j < M; j++) lfsrDen += Math.pow(ratio, j);
+      const rLfsr = (E / (N - U)) / lfsrDen;
+      const rKosz = numM / totalDen;
+      if (M === 2) {
+        const surplus = (K - 1) * (T - 1) * E * E;
+        lines.push(`Sun–Zhang LFSR (M=2): ${fracStr(E * E, (N - U) * (E + K + T - 1))}`);
+        lines.push(`Exact T1b cleared-denom surplus: <span class="hl-cyan">+(K-1)(T-1)E² = +${surplus}</span> (ΔR = +${(rKosz - rLfsr).toFixed(5)})`);
+      } else {
+        lines.push(`Sun–Zhang LFSR (M=${M}): ${rLfsr.toFixed(5)} (M>=3 non-LFSR capacity above LFSR when E>=KT remains OPEN)`);
+      }
+    }
+    if (M === 2 && T === 2 && E === K + 1) {
+      lines.push(`<span class="hl-green">★ Exact UNRESTRICTED (non-linear included) capacity achieved (T1c/T1d)!</span>`);
+    } else if (M === 2 && K === 2 && T === 2 && E >= 4) {
+      lines.push(`<span class="hl-green">★ Exact LINEAR capacity achieved (T1c)!</span>`);
+    }
+  }
+  pirOut.innerHTML = lines.join("<br>");
+}
+[sM, sN, sK, sT, sB, sU].forEach(el => el.addEventListener("input", updatePIR));
+updatePIR();
+
+const DISTS = {
+  dyadic256: { name: "Dyadic-256", pmf: [[-3,1/256],[-2,14/256],[-1,63/256],[0,100/256],[1,63/256],[2,14/256],[3,1/256]], detg: "15/32 (0.46875)", optSig: 1.001 },
+  cbd2: { name: "CBD_2", pmf: [[-2,1/16],[-1,4/16],[0,6/16],[1,4/16],[2,1/16]], detg: "3/8 (0.37500)", optSig: 1.023 },
+  d128: { name: "7-bit D=128", pmf: [[-3,1/128],[-2,6/128],[-1,31/128],[0,52/128],[1,31/128],[2,6/128],[3,1/128]], detg: "7/16 (0.43750)", optSig: 1.005 },
+  cbd3: { name: "CBD_3", pmf: [[-3,1/64],[-2,6/64],[-1,15/64],[0,20/64],[1,15/64],[2,6/64],[3,1/64]], detg: "Var=3/2", optSig: 1.237 }
+};
+function updateMLWE() {
+  const d = DISTS[distSel.value];
+  const sig = +sSig.value, e0 = +sE0.value;
+  vSig.textContent = sig.toFixed(3); vE0.textContent = e0.toFixed(2);
+  let Z = 0;
+  for (let x = -25; x <= 25; x++) Z += Math.exp(-(x * x) / (2 * sig * sig));
+  let r2 = 0, rinf = 0, supp2 = 0;
+  for (let x = -2; x <= 2; x++) supp2 += Math.exp(-(x * x) / (2 * sig * sig)) / Z;
+  for (const [x, p] of d.pmf) {
+    const q = Math.exp(-(x * x) / (2 * sig * sig)) / Z;
+    r2 += (p * p) / q;
+    rinf = Math.max(rinf, p / q);
+  }
+  const bits1024 = 2048 * Math.log2(r2);
+  const floor1024 = 2048 * Math.log2(1 / supp2);
+  // QGTL shifted-LWE at current (sig, e0) on {-2..2}
+  const xs = [-2, -1, 0, 1, 2];
+  const ws = xs.map(x => Math.exp(-((x - e0) ** 2) / (2 * sig * sig)));
+  const Zw = ws.reduce((a, b) => a + b, 0);
+  const ps = ws.map(w => w / Zw);
+  const bs = xs.map(x => ((x - e0) ** 2) / (sig ** 3));
+  const ex = ps.reduce((a, p, i) => a + p * xs[i], 0);
+  const eb = ps.reduce((a, p, i) => a + p * bs[i], 0);
+  const gtt = ps.reduce((a, p, i) => a + p * (xs[i] - ex) ** 2, 0);
+  const gss = 0.25 * ps.reduce((a, p, i) => a + p * (bs[i] - eb) ** 2, 0);
+  const om = ps.reduce((a, p, i) => a + p * (xs[i] - ex) * (bs[i] - eb), 0);
+  const psd = 4 * gtt * gss - om * om;
+  mlweOut.innerHTML = [
+    `R₂(${d.name} ‖ D_${sig.toFixed(3)}) = <span class="hl-cyan">${r2.toFixed(7)}</span> · R_∞ = ${rinf.toFixed(6)}`,
+    `ML-KEM-1024 loss (m=2048): <span class="${bits1024 < 5 ? 'hl-green' : 'hl-amber'}">${bits1024.toFixed(3)} bits</span> (Support-2 C–S floor: ${floor1024.toFixed(2)} bits)`,
+    `Symmetric det(g) at e₀=0, σ=1: <span class="hl-cyan">${d.detg}</span> (Gaussian limit = 1/2)`,
+    `QGTL Berry Ω_{θσ}(e₀=${e0.toFixed(2)}) = <span class="${Math.abs(om) < 1e-12 ? 'hl-green' : 'hl-amber'}">${om.toFixed(6)}</span>`,
+    `Provost–Vallée PSD 4det(g) - Ω² = <span class="hl-green">${psd.toFixed(6)} &ge; 0</span>`
+  ].join("<br>");
+}
+distSel.addEventListener("change", () => { sSig.value = DISTS[distSel.value].optSig; updateMLWE(); });
+[sSig, sE0].forEach(el => el.addEventListener("input", updateMLWE));
+updateMLWE();
+
+const CLAIMS = [
+  ["C1","p1","T1a","propext, Classical.choice, Quot.sound","Exact Koszul–Veronese Schur-product rank λ⋆(T,T',K) & Pascal savings; (6,3,3) zero-error 10/17 > 4/7 (valid over F_7)","t1"],
+  ["C2","p1","T1b","propext, Quot.sound","Universal K↔T symmetric R^Koszul strictly dominates Sun–Zhang LFSR by (K-1)(T-1)E² > 0 (single & multi-file)","t1"],
+  ["C3","p1","T1c","propext, Quot.sound","Byzantine double-counting reduction, exact E=K+1 unrestricted cap., & kernel-certified F_11 rate-2/5 witness","t1"],
+  ["C4","p1","T1d","propext, Quot.sound","Single-orbit flag-privacy thresholds (E>=4 for K=T=2; E>=6 for K=2,T=3) & Ew <= Kδσ feasibility","t1"],
+  ["C5","p1","T1e","propext","Pure-integer 330-orbit 12-var polymatroid h_uncond satisfies 270,336 Shannon + 3.81M Ingletons at 8/13 > 3/5","t1"],
+  ["C6","p1","T1f","propext, Classical.choice, Quot.sound","Projective P³ linear collapse: 4 pairwise-intersecting 2-subspaces of F⁴ are concurrent or coplanar ∀F","t1"],
+  ["C7","p1","T1g","propext, Quot.sound","Exact algebraic Zhang–Yeung (1998) reduction (defeated by h_uncond!) & symmetric M>=3 Koszul breaking E>=KT","t1"],
+  ["C8","p2","T2a","propext, Quot.sound","MLWE & Kannan q-ary determinant equals q^m over any commutative ring (refutes Luo 2026 det-ideal attacks)","t1"],
+  ["C9","p2","T2b","propext, Quot.sound","Anti-periodic DFT even modes vanish (f̂(2k)=0) over any ring with ω^D=-1 (Chen 2024/555 Step 9)","t1"],
+  ["C10","p2","T2c","propext, Classical.choice, Quot.sound","FIPS 203 CBD_2/CBD_3 exact moments, cyclotomic orthogonality, & 4.96× Rényi-2 cliff (7.63 vs 37.84 bits)","t1"],
+  ["C11","p2","T2d","propext, Quot.sound","QGTL shifted-LWE Berry curvature Ω_{θσ} = Cov(X,(X-e₀)²/σ³); vanishes iff symmetric (e₀=0)","t1"],
+  ["C12","p2","T2e","propext, Quot.sound","Cauchy–Schwarz support-2 Rényi floor, 1-byte Dyadic-256 (17.7× drop to 2.14 bits), QGTL PSD & 3/8 < 15/32 < 1/2","t1"],
+  ["C13","p2","T2f","propext","Universal m-twisted DFT selection rule over any commutative ring (QC-042; axioms [propext] alone)","t1"],
+  ["C14","p3","T3a","propext, Classical.choice, Quot.sound","Constructive existence & global uniqueness of multilinear extension f̃: F^n -> F ∀F (Algebrization core)","t1"],
+  ["C15","p3","T3b","propext, Quot.sound","LWE/LWR PRF ε-indistinguishability blocks δ-large constructive Natural Proofs (CS-026 -> CS-001)","t1"],
+  ["C16","p3","T3c","propext, Classical.choice, Quot.sound","Katz–Trevisan B-Byzantine zero-error PIR / LDC induces minimum Hamming distance d_min >= 2B + 1","t1"],
+  ["C17","p3","T3d","propext, Quot.sound","Sharp FIPS 203 Compress_1 margin |e|<=831 (fails at +832) & single-server MLWE-PIR noise ceiling","t1"],
+  ["C18","p3","T3e","propext, Classical.choice, Quot.sound","Field-universal Koszul-flattening tensor rank: rank_F(<2,2,2>) >= 6 & rank_F(T_3) >= 5 ∀ fields F (incl. char 2)","t1"],
+  ["C19","p3","T3f","propext, Quot.sound","Shannon (1949) finite circuit-counting non-surjectivity (CS-010) & Katz–Trevisan q-query LDC smoothness (CS-051)","t1"],
+  ["O1","open","—","—","P ≠ NP & super-linear explicit Boolean circuit lower bounds (CS-001 / CS-010) — NO PROOF CLAIMED","open"],
+  ["O2","open","—","—","Matrix multiplication exponent ω = 2 (CS-004) & Valiant VP ≠ VNP (CS-012) — REMAIN OPEN","open"],
+  ["O3","open","—","—","Non-linear PIR capacity C(2,4,2,2) ∈ [3/5, 8/13] (5+ variable non-Shannon converse vs non-linear scheme)","open"],
+  ["O4","open","—","—","General M >= 3 non-LFSR PIR capacity above Sun–Zhang when E >= KT & arbitrary T >= 4 zero-error schemes","open"],
+  ["O5","open","—","—","Worst-case quantum MLWE lower bounds (CS-026 / QC-042) — hardness remains a cryptographic assumption","open"]
+];
+
+function renderClaims(filter) {
+  claimsBody.innerHTML = CLAIMS.filter(c => filter === "all" || c[1] === filter).map(c => `
+    <tr>
+      <td><code>${c[0]}</code></td>
+      <td><code>${c[2]}</code></td>
+      <td><code>${c[3]}</code></td>
+      <td>${c[4]}</td>
+      <td><span class="tag ${c[5]}">${c[5] === "t1" ? "Tier-1 Lean + Tier-2" : "Tier-4 OPEN"}</span></td>
+    </tr>`).join("");
+}
+document.querySelectorAll(".fbtn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".fbtn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderClaims(btn.dataset.f);
+  });
+});
+renderClaims("all");
+</script>
+</body>
+</html>

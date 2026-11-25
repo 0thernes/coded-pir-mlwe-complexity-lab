@@ -7,16 +7,18 @@ public import TriadFrontier.PIRCertificates
 public import TriadFrontier.PIRKoszul
 public import TriadFrontier.MLWETightness
 public import TriadFrontier.ComplexityTriad
+public import TriadFrontier.KoszulTensor
 
 /-!
 # Concrete Non-Vacuity Witnesses (`TriadFrontier`)
 
-Explicitly inhabits EVERY hypothesis bundle across all 14 theorems (`T1a`–`T3d`),
+Explicitly inhabits EVERY hypothesis bundle across all 19 theorems (`T1a`–`T3f`),
 including concrete `SimpleField (Fin 5)` and `SimpleField (Fin 11)` instances,
 concrete commutative ring `Int` with unit `u = -1`, concrete anti-periodic function
-on `D = 3`, concrete symmetric PMF `CBD_2`, concrete 2-variable Boolean function,
-concrete LDC repetition code (`N = 3, B = 1`), and concrete PIR parameters, ensuring
-ZERO theorems can be vacuously true!
+on `D = 3`, concrete `m = 4` twisted root over `Fin 5` (`2^4 = 1, 1+2+4+3 = 0`),
+concrete symmetric PMFs `CBD_2` and `Dyadic-256`, concrete 2-variable Boolean function,
+concrete LDC repetition code (`N = 3, B = 1`), and concrete rank-8 decomposition of `M_2`,
+ensuring ZERO theorems can be vacuously true!
 -/
 
 namespace TriadFrontier.NonVacuity
@@ -26,6 +28,7 @@ open TriadFrontier.PIRCertificates
 open TriadFrontier.PIRKoszul
 open TriadFrontier.MLWETightness
 open TriadFrontier.ComplexityTriad
+open TriadFrontier.KoszulTensor
 
 @[expose] public section
 
@@ -120,13 +123,16 @@ theorem nonvac_all_hypotheses :
     (rPow (⟨2, by decide⟩ : Fin 5) 2 = -(1 : Fin 5) ∧
      rPow (⟨2, by decide⟩ : Fin 5) 2 ≠ (1 : Fin 5) ∧
      (∀ k : Int, cbd2Weight (-k) = cbd2Weight k)) ∧
-    -- T3a/T3b/T3c/T3d: Concrete 2-var Boolean XOR over F_5, PRF params, rep3 LDC, MLWE margin
+    -- T3a/T3b/T3c/T3d/T3e/T3f: Concrete 2-var Boolean XOR over F_5, PRF params, rep3 LDC, MLWE margin,
+    -- concrete Dyadic-256 nonneg weights, 4-twisted root in F_5, and concrete C < M & LDC smoothness!
     ((∀ b : Fin 2 → Bool, mle (fun bs : Fin 2 → Bool => if xor (bs 0) (bs 1) then (1 : Fin 5) else 0)
         (fun i => boolToF (b i)) = (if xor (b 0) (b 1) then 1 else 0)) ∧
      (0 < 16 ∧ 0 < 4 ∧ 0 < 2 ∧ 0 < 10 ∧ 8 * 2 ≥ 16 * 1 ∧ 1 * 2 ≤ 1 * 10) ∧
      (∀ m : Bool, (rep3Enc m).length = 3) ∧
      (∀ (m : Bool) (r : List Bool), r.length = 3 → hammingDist (rep3Enc m) r ≤ 1 → rep3Dec r = m) ∧
-     ((-831 : Int) ≤ 420 ∧ (420 : Int) ≤ 831 ∧ 0 < 16 ∧ 831 / 16 < 52)) := by
+     ((-831 : Int) ≤ 420 ∧ (420 : Int) ≤ 831 ∧ 0 < 16 ∧ 831 / 16 < 52) ∧
+     (sumR 4 (fun q => rPow (⟨2, by decide⟩ : Fin 5) (q * (1 + 2))) = 0 ∧
+      dyadic256Weight 0 = 100 ∧ 4 < 16)) := by
   refine ⟨by decide, ?_, ?_, ?_, ?_⟩
   · refine ⟨⟨⟨0, by decide⟩, by decide⟩, ⟨1, 0, fun _ => by rw [CommRing.one_mul, zero_mul, add_zero]⟩⟩
   · refine ⟨by decide, ?_, by decide⟩
@@ -144,7 +150,7 @@ theorem nonvac_all_hypotheses :
       match n with
       | 0 | 1 | 2 => decide
       | _ + 3 => rfl
-  · refine ⟨fun b => mle_agrees_on_bool _ b, by decide, fun m => by cases m <;> rfl, ?_, by decide⟩
+  · refine ⟨fun b => mle_agrees_on_bool _ b, by decide, fun m => by cases m <;> rfl, ?_, by decide, by decide⟩
     intro m r hr hd
     match r with
     | [a, b, c] =>

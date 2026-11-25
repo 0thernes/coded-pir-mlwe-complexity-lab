@@ -415,5 +415,86 @@ theorem t3d_mlwe_single_server_pir_noise_ceiling :
     have h3 : (831 / bStep + 1) * bStep ≤ M * bStep := Nat.mul_le_mul_right bStep h1
     omega
 
+-- ============================================================================
+-- T3f: Shannon Circuit Counting Lower Bound (CS-001/CS-010) & LDC Smoothness (CS-051)
+-- ============================================================================
+
+/-- Count of indices `i < N` satisfying Boolean predicate `p`. -/
+def countBool : Nat → (Nat → Bool) → Nat
+  | 0, _ => 0
+  | k + 1, p => countBool k p + (if p k then 1 else 0)
+
+/-- Finite pigeonhole non-surjectivity: no map `Fin C → Fin M` with `C < M` is surjective. -/
+theorem fin_not_surjective :
+    ∀ (C M : Nat) (eval : Fin C → Fin M), C < M → ∃ f : Fin M, ∀ c : Fin C, eval c ≠ f
+  | 0, M, _, h => ⟨⟨0, h⟩, fun c => absurd c.isLt (Nat.not_lt_zero _)⟩
+  | C + 1, M, eval, hlt => by
+    have hM1 : 0 < M - 1 := by omega
+    let lastVal := eval ⟨C, Nat.lt_succ_self C⟩
+    -- Compress `Fin M \ {lastVal}` into `Fin (M - 1)`!
+    let comp : Fin C → Fin (M - 1) := fun c =>
+      let y := eval ⟨c.val, Nat.lt_succ_of_lt c.isLt⟩
+      if h1 : y.val < lastVal.val then ⟨y.val, by omega⟩
+      else if h2 : lastVal.val < y.val then ⟨y.val - 1, by omega⟩
+      else ⟨0, hM1⟩
+    obtain ⟨g, hg⟩ := fin_not_surjective C (M - 1) comp (by omega)
+    let f : Fin M :=
+      if h1 : g.val < lastVal.val then ⟨g.val, by omega⟩
+      else ⟨g.val + 1, by omega⟩
+    refine ⟨f, ?_⟩
+    intro c heq
+    cases Nat.eq_or_lt_of_le (Nat.le_of_lt_succ c.isLt) with
+    | inl hcC =>
+      have hc_eq : c = ⟨C, Nat.lt_succ_self C⟩ := Fin.ext hcC
+      rw [hc_eq] at heq
+      have hval := congrArg Fin.val heq
+      dsimp only [f] at hval
+      split at hval <;> (simp only at hval; omega)
+    | inr hc_lt =>
+      let c' : Fin C := ⟨c.val, hc_lt⟩
+      have hceq : eval ⟨c'.val, Nat.lt_succ_of_lt c'.isLt⟩ = f := heq
+      have hcomp_eq : comp c' = g := by
+        apply Fin.ext
+        simp only [comp, hceq, f]
+        split
+        · rfl
+        · rename_i hngl
+          have hnot1 : ¬ (g.val + 1 < lastVal.val) := by omega
+          have h2 : lastVal.val < g.val + 1 := by omega
+          simp only [hnot1, h2, ↓reduceDIte]
+          omega
+      exact hg c' hcomp_eq
+
+/-- **Theorem T3f (Shannon Circuit Counting Non-Surjectivity & Katz-Trevisan LDC Smoothness):**
+1. **Shannon (1949) Circuit Counting (`CS-001` / `CS-010`):** For ANY class of `C` circuits
+   mapping into `M` target Boolean functions (`C < M`, e.g., `M = 2^{2^n}`), there exists an
+   explicit function `f : Fin M` NOT computed by any circuit in the class — quantifying the
+   exact Natural Proofs tension with `T3b`!
+2. **Katz-Trevisan (`CS-051`) `q`-Query LDC Smoothness Averaging Bound:** If a `q`-query local
+   decoder over `S` random coins sums to `≤ q * S` total coordinate queries across `N` codeword
+   positions, then the number of heavy positions queried `≥ τ` times obeys `count * τ ≤ q * S`! -/
+theorem t3f_shannon_counting_and_ldc_smoothness :
+    (∀ (C M : Nat) (eval : Fin C → Fin M),
+      C < M → ∃ f : Fin M, ∀ c : Fin C, eval c ≠ f) ∧
+    (∀ (N q S τ : Nat) (cnt : Nat → Nat) (isHeavy : Nat → Bool),
+      sumNat N cnt ≤ q * S →
+      (∀ i, i < N → isHeavy i = true → τ ≤ cnt i) →
+      countBool N isHeavy * τ ≤ q * S) := by
+  refine ⟨fin_not_surjective, ?_⟩
+  intro N q S τ cnt isHeavy hsum hheavy
+  have hle : countBool N isHeavy * τ ≤ sumNat N cnt := by
+    induction N with
+    | zero => simp [countBool, sumNat]
+    | succ k ih =>
+      simp only [countBool, sumNat, Nat.add_mul]
+      have h1 := ih (Nat.le_trans (Nat.le_add_right _ _) hsum) (fun i hi => hheavy i (Nat.lt_succ_of_lt hi))
+      cases hpk : isHeavy k with
+      | false => simp; omega
+      | true =>
+        simp only [↓reduceIte, Nat.one_mul]
+        have h2 := hheavy k (Nat.lt_succ_self k) hpk
+        omega
+  exact Nat.le_trans hle hsum
+
 end
 end TriadFrontier.ComplexityTriad

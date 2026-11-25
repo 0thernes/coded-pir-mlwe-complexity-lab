@@ -1,18 +1,8 @@
-# Six-Kernel Lean 4.35.0 Independent Audit Log
-# Generated: 2026-11-25
-# Toolchain: leanprover/lean4:v4.35.0 (zero Mathlib)
-
-[1] lake build (clean-room .lake, 15/15 jobs, 0 warnings): EXIT 0
-[2] leanchecker (Solution + PalomarSolution): EXIT 0
-[3] leanchecker-paranoid (Solution + PalomarSolution): EXIT 0
-[4] con-leche --verified (Solution + NonVacuity): accepted 1967 declarations (--verified) (EXIT 0)
-[5] con-ron --verified (Solution + NonVacuity): accepted 1967 declarations (--verified) (EXIT 0)
-[6] nanoda_bin (strict allowlist [propext, Classical.choice, Quot.sound]): EXIT 0
-[7] Ubuntu Linux CI `lake comparator --config comparator.json --paranoid` (bubblewrap sandbox, run 45694922485):
-    - Lean paranoid kernel: accepts the solution
-    - lean4lean kernel: checked 1911 declarations — accepts the solution
-    - nanoda kernel: accepts the solution
-    - con-leche kernel: accepted 1914 declarations (--verified) — accepts the solution
-    - con-ron kernel: accepted 1914 declarations (--verified) — accepts the solution
-    - Lean default kernel: accepts the solution
-    - Verdict: "Your solution is okay!" (EXIT 0)
+# TriadFrontier v2.0.0 Six-Kernel Local Audit Log (Lean 4.35.0, Zero-Mathlib, 19 Theorems T1a-T3f, 21 Audited Decls)
+leanchecker Solution: EXIT 0 
+leanchecker PalomarSolution: EXIT 0 
+leanchecker-paranoid Solution: EXIT 0 
+leanchecker-paranoid PalomarSolution: EXIT 0 
+con-leche --verified: con-leche: accepted 2418 declarations (--verified)
+con-ron --verified: con-ron: accepted 2418 declarations (--verified)
+nanoda_bin: EXIT 0

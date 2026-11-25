@@ -49,6 +49,27 @@ int main(int argc, char **argv) {
                r.eta, r.sigma_opt_r2, r.min_r2, r.sigma_opt_rinf, r.min_rinf, r.bits_per_coord_r2);
         return 0;
     }
+    if (strcmp(argv[1], "dyadic256") == 0) {
+        triad_renyi_res_t r = triad_mlkem_dyadic256_opt();
+        printf("{\"dist\":\"dyadic256\",\"sigma_opt_r2\":%.6f,\"min_r2\":%.12f,\"min_rinf\":%.12f,\"bits_per_coord_r2\":%.12f,\"loss_1024_bits\":%.6f}\n",
+               r.sigma_opt_r2, r.min_r2, r.min_rinf, r.bits_per_coord_r2, 2048.0 * r.bits_per_coord_r2);
+        return 0;
+    }
+    if (strcmp(argv[1], "twisted") == 0) {
+        int m = (argc > 2) ? atoi(argv[2]) : 4;
+        int D = (argc > 3) ? atoi(argv[3]) : 5;
+        int r = (argc > 4) ? atoi(argv[4]) : 1;
+        double mf = 0.0;
+        bool ok = triad_verify_twisted_dft(m, D, r, &mf);
+        printf("{\"m\":%d,\"D\":%d,\"r\":%d,\"max_forbidden_mag\":%.3e,\"passed\":%s}\n",
+               m, D, r, mf, ok ? "true" : "false");
+        return ok ? 0 : 1;
+    }
+    if (strcmp(argv[1], "koszul-tensor") == 0) {
+        bool ok = triad_verify_koszul_flattening_certs();
+        printf("{\"koszul_flattening_m2_ge6_t3_ge5\":%s}\n", ok ? "true" : "false");
+        return ok ? 0 : 1;
+    }
     fprintf(stderr, "Unknown command: %s\n", argv[1]);
     return 2;
 }

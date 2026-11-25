@@ -29,8 +29,11 @@ jobs:
           ./native/build/triad_cli koszul 3 2 3
           ./native/build/triad_cli f11-byz
           ./native/build/triad_cli renyi 2
+          ./native/build/triad_cli dyadic256
           ./native/build/triad_cli chen 7 3
+          ./native/build/triad_cli twisted 4 5 1
           ./native/build/triad_cli qgtl 2 1.023 0.25
+          ./native/build/triad_cli koszul-tensor
       - name: Run AddressSanitizer, UBSan & standalone libFuzzer smoke (Ubuntu)
         if: runner.os == 'Linux'
         shell: bash

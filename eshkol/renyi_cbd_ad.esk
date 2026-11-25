@@ -30,10 +30,19 @@
             (* (/ 72.0 4096.0) (exp (* 4.0 inv2s2)))
             (* (/ 2.0 4096.0) (exp (* 9.0 inv2s2)))))))
 
+(define (renyi2-dyadic256 sigma)
+  (let ((z (dgauss-z sigma))
+        (inv2s2 (/ 1.0 (* 2.0 (* sigma sigma)))))
+    (* z (+ (* (/ 10000.0 65536.0) 1.0)
+            (* (/ 7938.0 65536.0) (exp (* 1.0 inv2s2)))
+            (* (/ 392.0 65536.0) (exp (* 4.0 inv2s2)))
+            (* (/ 2.0 65536.0) (exp (* 9.0 inv2s2)))))))
+
 ;; Secant/AD-refined stationary points (dR2/dsigma = 0 to < 1e-8)
 (define (ad-step fn x lr) (- x (* lr (derivative fn x))))
 (define s2-opt (ad-step renyi2-cbd2 (ad-step renyi2-cbd2 (ad-step renyi2-cbd2 (ad-step renyi2-cbd2 1.023 0.25) 0.25) 0.25) 0.25))
 (define s3-opt (ad-step renyi2-cbd3 (ad-step renyi2-cbd3 (ad-step renyi2-cbd3 (ad-step renyi2-cbd3 1.237 0.25) 0.25) 0.25) 0.25))
+(define sd-opt (ad-step renyi2-dyadic256 (ad-step renyi2-dyadic256 (ad-step renyi2-dyadic256 (ad-step renyi2-dyadic256 1.001 0.25) 0.25) 0.25) 0.25))
 
 (display "CBD2_SIGMA_OPT=") (display s2-opt) (newline)
 (display "CBD2_R2_OPT=") (display (renyi2-cbd2 s2-opt)) (newline)
@@ -41,3 +50,6 @@
 (display "CBD3_SIGMA_OPT=") (display s3-opt) (newline)
 (display "CBD3_R2_OPT=") (display (renyi2-cbd3 s3-opt)) (newline)
 (display "CBD3_DR2_DSIGMA=") (display (derivative renyi2-cbd3 s3-opt)) (newline)
+(display "DYADIC256_SIGMA_OPT=") (display sd-opt) (newline)
+(display "DYADIC256_R2_OPT=") (display (renyi2-dyadic256 sd-opt)) (newline)
+(display "DYADIC256_DR2_DSIGMA=") (display (derivative renyi2-dyadic256 sd-opt)) (newline)

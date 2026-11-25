@@ -1,6 +1,6 @@
 {
   "schema": "triad-exact-audit/v1",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "Alexander S. Donahue",
   "orcid": "0009-0006-8168-9648",
   "pillar_1_cs053": {
@@ -112,6 +112,23 @@
       },
       "cliff_ratio_1024_over_512": 4.959776
     },
+    "dyadic256_60digit": {
+      "weights": "(1, 14, 63, 100, 63, 14, 1) / 256",
+      "variance_exact": "1",
+      "fourth_moment_exact": "23/8",
+      "excess_kurtosis_exact": "-1/8",
+      "sigma_opt_r2": "1.0013012639194317",
+      "min_r2": "1.00072396978728318496",
+      "sigma_opt_rinf": "1.0000001056157346",
+      "min_rinf": "1.01703936212031725652",
+      "loss_bits_768": 1.603722,
+      "loss_bits_1024": 2.138296,
+      "qgtl_det_at_sigma1": {
+        "CBD_2": "3/8",
+        "Dyadic_256": "15/32",
+        "Gaussian_limit": "1/2"
+      }
+    },
     "chen_step9": {
       "tested_odd_D": [
         {
@@ -146,6 +163,41 @@
         }
       ],
       "all_even_modes_vanish": true
+    },
+    "twisted_dft_m2_to_6": {
+      "tested_twists": [
+        {
+          "m": 2,
+          "D": 5,
+          "r": 1,
+          "max_forbidden_mag": 5.380860564253635e-15
+        },
+        {
+          "m": 3,
+          "D": 5,
+          "r": 1,
+          "max_forbidden_mag": 3.0924046183418036e-14
+        },
+        {
+          "m": 4,
+          "D": 5,
+          "r": 1,
+          "max_forbidden_mag": 7.256902121382414e-14
+        },
+        {
+          "m": 5,
+          "D": 5,
+          "r": 1,
+          "max_forbidden_mag": 2.7178930847802182e-14
+        },
+        {
+          "m": 6,
+          "D": 5,
+          "r": 1,
+          "max_forbidden_mag": 1.1827393001361066e-13
+        }
+      ],
+      "all_forbidden_modes_vanish": true
     },
     "luo_det_ideal": {
       "q": 3329,
@@ -196,6 +248,12 @@
       "exact_safe_margin": 831,
       "first_failure": 832,
       "depth_at_step16": 51
+    },
+    "koszul_flattening_tensor_rank": {
+      "M2_left_inverse_nnz": 18,
+      "M2_rank_lower_bound_every_field": 6,
+      "T3_nnz": 7,
+      "T3_rank_lower_bound_every_field": 5
     }
   }
 }

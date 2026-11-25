@@ -56,8 +56,16 @@ triad_chen_res_t triad_verify_chen_step9(int D, int c);
 /* CS-026: QGTL shifted-LWE Fourier state metric & Berry curvature calculator. */
 triad_qgtl_res_t triad_qgtl_shifted_lwe(int eta, double sigma, double e0);
 
-/* CS-026: FIPS 203 CBD_eta vs Discrete Gaussian Renyi-2 / Renyi-inf optimizer & Compress_1. */
+/* CS-026: FIPS 203 CBD_eta & Optimal 8-Bit Dyadic-256 Renyi-2 optimizer, sampler & Compress_1. */
 triad_renyi_res_t triad_mlkem_renyi_opt(int eta);
+triad_renyi_res_t triad_mlkem_dyadic256_opt(void);
+int triad_dyadic256_sample_ct(uint8_t byte);
 int triad_mlkem_compress1(int x);
+
+/* CS-026 <-> QC-042: Universal m-twisted DFT selection rule verifier (T2f). */
+bool triad_verify_twisted_dft(int m, int D, int r, double *out_max_forb);
+
+/* CS-053 <-> CS-004/CS-012: Pure-integer Koszul flattening left-inverse verifier (T3e). */
+bool triad_verify_koszul_flattening_certs(void);
 
 #endif /* TRIAD_CORE_H */

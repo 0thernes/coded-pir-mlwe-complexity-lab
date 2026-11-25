@@ -77,7 +77,7 @@ int main(void) {
     CHECK(triad_mlkem_compress1(832) == 1 && triad_mlkem_compress1(1665 + 832) == 0,
           "Compress_1 fails sharply at +832 for both b=0 and b=1");
 
-    /* 7. Deterministic fuzz smoke (500 pseudo-random QGTL & rank inputs, ASan/UBSan clean) */
+    /* 7. Deterministic fuzz smoke (500 pseudo-random QGTL & PSD invariants, ASan/UBSan clean) */
     uint32_t seed = 0x20261125u;
     bool fuzz_ok = true;
     for (int t = 0; t < 500; t++) {
@@ -86,9 +86,34 @@ int main(void) {
         seed = seed * 1664525u + 1013904223u;
         double e0 = -1.0 + (double)(seed % 2000u) / 1000.0;
         triad_qgtl_res_t qr = triad_qgtl_shifted_lwe(2, sigma, e0);
-        if (qr.max_err > 1e-12 || qr.g_tt < -1e-12 || qr.g_ss < -1e-12) fuzz_ok = false;
+        double qgt_psd = 4.0 * qr.g_tt * qr.g_ss - qr.omega_ts * qr.omega_ts;
+        if (qr.max_err > 1e-12 || qr.g_tt < -1e-12 || qr.g_ss < -1e-12 || qgt_psd < -1e-11) fuzz_ok = false;
     }
-    CHECK(fuzz_ok, "500-case deterministic QGTL fuzz invariants hold (no NaN/UB/negative metric)");
+    CHECK(fuzz_ok, "500-case deterministic QGTL & Provost-Vallee PSD fuzz invariants hold");
+
+    /* 8. v2.0.0 Optimal 8-Bit Dyadic-256 ML-KEM Noise (exact Var=1, 17.7x Renyi-2 reduction, CT sampler) */
+    int hist[7] = {0};
+    for (int b = 0; b < 256; b++) {
+        int v = triad_dyadic256_sample_ct((uint8_t)b);
+        if (v >= -3 && v <= 3) hist[v + 3]++;
+    }
+    CHECK(hist[0] == 1 && hist[1] == 14 && hist[2] == 63 && hist[3] == 100 &&
+          hist[4] == 63 && hist[5] == 14 && hist[6] == 1,
+          "Constant-time Dyadic-256 1-byte sampler matches exact weights (1,14,63,100,63,14,1)");
+    triad_renyi_res_t rd = triad_mlkem_dyadic256_opt();
+    double loss_d1024 = 2048.0 * rd.bits_per_coord_r2;
+    CHECK(fabs(rd.min_r2 - 1.000723969787) < 1e-9, "Dyadic-256 min Renyi-2 matches 60-digit oracle");
+    CHECK(loss_d1024 > 2.13 && loss_d1024 < 2.15 && (loss_1024 / loss_d1024) > 17.6,
+          "Dyadic-256 compresses ML-KEM-1024 Renyi-2 loss by >17.6x (37.84 -> 2.14 bits)");
+
+    /* 9. v2.0.0 Universal m-Twisted DFT selection rule (T2f: m=2,3,4,5,6) */
+    for (int m = 2; m <= 6; m++) {
+        double mf = 0.0;
+        CHECK(triad_verify_twisted_dft(m, 5, 1, &mf), "Universal m-twisted DFT selection rule vanishes");
+    }
+
+    /* 10. v2.0.0 Universal Koszul Flattening pure-Z certificates (T3e: rank(<2,2,2>)>=6, rank(T_3)>=5) */
+    CHECK(triad_verify_koszul_flattening_certs(), "Koszul flattening Z-inverses for M_2 and T_3 verified");
 
     printf("Native C11 TriadFrontier tests: %d passed, %d failed\n", g_pass, g_fail);
     return g_fail == 0 ? 0 : 1;

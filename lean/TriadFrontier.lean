@@ -7,4 +7,5 @@ public import TriadFrontier.PIRCertificates
 public import TriadFrontier.PIRKoszul
 public import TriadFrontier.MLWETightness
 public import TriadFrontier.ComplexityTriad
+public import TriadFrontier.KoszulTensor
 public import TriadFrontier.NonVacuity

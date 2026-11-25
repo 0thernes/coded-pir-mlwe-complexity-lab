@@ -6,7 +6,7 @@ public import Challenge
 public import TriadFrontier
 
 /-!
-# Verified Solutions to All 14 Formalized Theorems (`T1a`–`T3d`)
+# Verified Solutions to All 19 Formalized Theorems (`T1a`–`T3f`)
 
 Zero-Mathlib Lean 4.35.0 proofs depending strictly on a subset of
 `[propext, Classical.choice, Quot.sound]`, zero `sorry`, zero `native_decide`, zero custom axioms.
@@ -18,6 +18,7 @@ open TriadFrontier.Challenge
 open TriadFrontier.PIRKoszul
 open TriadFrontier.MLWETightness
 open TriadFrontier.ComplexityTriad
+open TriadFrontier.KoszulTensor
 
 public theorem t1a_koszul_veronese_rank_identity : T1a_KoszulVeroneseRankIdentity :=
   PIRKoszul.t1a_koszul_veronese_rank_identity
@@ -37,6 +38,9 @@ public theorem t1e_unconditioned_shannon_ingleton_barrier : T1e_UnconditionedSha
 public theorem t1f_projective_p3_linear_impossibility : T1f_ProjectiveP3LinearImpossibility :=
   PIRKoszul.t1f_projective_p3_linear_impossibility
 
+public theorem t1g_zhang_yeung_reduction_and_mfile_koszul : T1g_ZhangYeungReductionAndMFileKoszul :=
+  PIRKoszul.t1g_zhang_yeung_reduction_and_mfile_koszul
+
 public theorem t2a_determinant_ideal_secret_independence : T2a_DeterminantIdealSecretIndependence :=
   MLWETightness.t2a_determinant_ideal_secret_independence
 
@@ -48,6 +52,12 @@ public theorem t2c_mlkem_cbd_renyi_cliff : T2c_MLKEMCBDRenyiCliff :=
 
 public theorem t2d_qgtl_shifted_lwe_berry_curvature : T2d_QGTLShiftedLWEBerryCurvature :=
   MLWETightness.t2d_qgtl_shifted_lwe_berry_curvature
+
+public theorem t2e_dyadic256_renyi_floor_and_qgtl_psd : T2e_Dyadic256RenyiFloorAndQGTLPSD :=
+  MLWETightness.t2e_dyadic256_renyi_floor_and_qgtl_psd
+
+public theorem t2f_universal_twisted_dft_selection_rule : T2f_UniversalTwistedDFTSelectionRule :=
+  MLWETightness.t2f_universal_twisted_dft_selection_rule
 
 public theorem t3a_algebrization_multilinear_extension_uniqueness : T3a_AlgebrizationMultilinearExtensionUniqueness :=
   ComplexityTriad.t3a_algebrization_multilinear_extension_uniqueness
@@ -61,6 +71,12 @@ public theorem t3c_katz_trevisan_byzantine_pir_ldc_distance : T3c_KatzTrevisanBy
 public theorem t3d_mlwe_single_server_pir_noise_ceiling : T3d_MLWESingleServerPIRNoiseCeiling :=
   ComplexityTriad.t3d_mlwe_single_server_pir_noise_ceiling
 
+public theorem t3e_koszul_flattening_tensor_rank_bridge : T3e_KoszulFlatteningTensorRankBridge :=
+  KoszulTensor.t3e_koszul_flattening_tensor_rank_bridge
+
+public theorem t3f_shannon_counting_and_ldc_smoothness : T3f_ShannonCountingAndLDCSmoothness :=
+  ComplexityTriad.t3f_shannon_counting_and_ldc_smoothness
+
 public theorem prove_all_triad_theorems : AllTriadFrontierTheorems :=
   ⟨t1a_koszul_veronese_rank_identity,
    t1b_universal_koszul_domination_over_lfsr,
@@ -68,13 +84,18 @@ public theorem prove_all_triad_theorems : AllTriadFrontierTheorems :=
    t1d_flag_privacy_and_feasibility_dimensions,
    t1e_unconditioned_shannon_ingleton_barrier,
    t1f_projective_p3_linear_impossibility,
+   t1g_zhang_yeung_reduction_and_mfile_koszul,
    t2a_determinant_ideal_secret_independence,
    t2b_chen_step9_antiperiodic_dft_cancellation,
    t2c_mlkem_cbd_renyi_cliff,
    t2d_qgtl_shifted_lwe_berry_curvature,
+   t2e_dyadic256_renyi_floor_and_qgtl_psd,
+   t2f_universal_twisted_dft_selection_rule,
    t3a_algebrization_multilinear_extension_uniqueness,
    t3b_lwe_to_natural_proofs_obstruction,
    t3c_katz_trevisan_byzantine_pir_ldc_distance,
-   t3d_mlwe_single_server_pir_noise_ceiling⟩
+   t3d_mlwe_single_server_pir_noise_ceiling,
+   t3e_koszul_flattening_tensor_rank_bridge,
+   t3f_shannon_counting_and_ldc_smoothness⟩
 
 end TriadFrontier.Solution

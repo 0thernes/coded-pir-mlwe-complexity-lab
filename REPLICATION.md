@@ -38,8 +38,11 @@ make -C native clean test
 ./native/build/triad_cli koszul 3 2 3
 ./native/build/triad_cli f11-byz
 ./native/build/triad_cli renyi 2
+./native/build/triad_cli dyadic256
 ./native/build/triad_cli chen 7 3
+./native/build/triad_cli twisted 4 5 1
 ./native/build/triad_cli qgtl 2 1.023 0.25
+./native/build/triad_cli koszul-tensor
 # On Linux:
 make -C native sanitizers
 ```
@@ -80,5 +83,5 @@ sha256sum -c MANIFEST.sha256
 
 | Date | Replicator | Platform | Lean 4.35.0 Kernels | C11 / Eshkol / Python | White Paper & Tarball | Outcome |
 |---|---|---|---|---|---|---|
-| 2026-11-25 | Alexander S. Donahue | Windows 11 x86_64 (GCC 14.2.0, Node 25.8.2, Python 3.12, Tectonic 0.15) | 6/6 local kernels (`lean`, `leanchecker`, `leanchecker-paranoid`, `con-leche --verified` 1,967 decls, `con-ron --verified` 1,967 decls, `nanoda_bin`) + clean-room `.lake` rebuild | C11 40/40 + 500 fuzz; Eshkol 3/3 (`< 2e-13`); pytest 14/14 (6/6 mutants killed); 23/23 live HTTP-200 citations | 11 pp. PDF (0 overfull hboxes) + clean-room `arxiv_submission.tar.gz` EXIT 0 | PASS |
-| 2026-11-25 | GitHub Actions CI (`ubuntu-latest` + `windows-latest`) | Linux x86_64 + Windows Server x86_64 | Full `lake comparator --config comparator.json --paranoid` (incl. `lean4lean` + `bubblewrap` sandbox) | C11 + ASan/UBSan + Eshkol 3/3 + pytest 14/14 + axiom drift + citation check | Tectonic compile + clean-room tarball + SLSA provenance attestation | See CI badge |
+| 2026-11-25 (v1.0.0) | Alexander S. Donahue | Windows 11 + Ubuntu CI (`run 45695797431`) | 6/6 kernels (14 theorems, 1,967 `con-leche`/`con-ron` decls) + `lake comparator --paranoid` | C11 40/40 + ASan/UBSan; Eshkol 3/3; pytest 14/14 (6/6 mutants); 23/23 HTTP 200 | 11 pp. PDF (0 overfull) + clean-room tarball + Sigstore Rekor `4111094089` | PASS |
+| 2026-11-25 (v2.0.0) | Alexander S. Donahue | Windows 11 x86_64 (GCC 14.2.0, Node 25.8.2, Python 3.12, Tectonic 0.15) | 6/6 local kernels (19 theorems `T1a`–`T3f`, 21 audited decls, 2,418 `con-leche`/`con-ron` decls) | C11 49/49 + 512 fuzz; Eshkol 3/3 (`Dyadic-256` `-7.77e-9`); pytest 15/15 (8/8 mutants); 25/25 live HTTP 200 | 14 pp. PDF (0 overfull, 5 figs) + clean-room tarball + interactive Pages Blueprint | PASS |

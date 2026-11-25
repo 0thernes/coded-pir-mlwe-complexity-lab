@@ -161,6 +161,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   console.log(JSON.stringify(kv, null, 2));
   if (Math.abs(kv.CBD2_DR2_DSIGMA) > 1e-3) throw new Error('CBD2 stationarity check failed');
   if (Math.abs(kv.CBD3_DR2_DSIGMA) > 1e-3) throw new Error('CBD3 stationarity check failed');
+  if (Math.abs(kv.DYADIC256_DR2_DSIGMA) > 1e-3) throw new Error('Dyadic-256 stationarity check failed');
+  if (Math.abs(kv.DYADIC256_R2_OPT - 1.000723969787) > 1e-9) throw new Error('Dyadic-256 R2 optimum mismatch');
   if (Math.abs(kv.KOSZUL_RATE_E6 - 10 / 17) > 1e-12) throw new Error('Koszul E=6 rate mismatch');
   if (Math.abs(kv.QGTL_OMEGA_E0_0) > 1e-15) throw new Error('QGTL symmetry vanishing failed');
   if (Math.abs(kv.QGTL_OMEGA_E0_035) < 1e-3) throw new Error('QGTL bias witness failed');
