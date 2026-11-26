@@ -37,9 +37,9 @@ python scripts/check_citations.py
 
 ## Key Architectural Paths
 
-- `lean/TriadFrontier/` — Zero-Mathlib Lean 4.35.0 proof modules (`AlgebraCore`, `PIRCertificates`, `PIRKoszul`, `MLWETightness`, `ComplexityTriad`, `NonVacuity`).
-- `native/` — C11 implementation, CLI, and 40-test + 500-case fuzz harness.
+- `lean/TriadFrontier/` — Zero-Mathlib Lean 4.35.0 proof modules (`AlgebraCore`, `PIRCertificates`, `PIRKoszul`, `MLWETightness`, `KoszulTensor`, `StrassenWinograd`, `ComplexityTriad`, `NonVacuity`; 23 theorems `T1a`–`T3h`).
+- `native/` — C11 implementation, CLI, and 57-test + 512-case fuzz harness.
 - `eshkol/` — Forward-mode dual-number AD modules (`.esk`) and Node.js runner.
-- `python/triad_verify/` — Exact finite-field rank, 12-variable polymatroid, 60-digit ML-KEM Rényi-2, complexity checks, and vector figure generation.
-- `paper/main.tex` & `paper/refs.bib` — 11-page AMS-LaTeX manuscript.
-- `docs/` — Architecture, ADRs, threat model, statement fidelity, 10-pass review, and adversarial red-team review.
+- `python/triad_verify/` — Exact finite-field rank, 12-variable polymatroid, 60-digit ML-KEM `Dyadic-256`/`Dyadic-512` & FIPS 203 DFR convolution, Koszul/Strassen tensor checks, and 6-figure vector PDF generation.
+- `paper/main.tex` & `paper/refs.bib` — 16-page AMS-LaTeX manuscript (`v3.0.0`).
+- `docs/` — Architecture, ADRs, threat model, statement fidelity, 10-pass review, adversarial red-team review, and interactive GitHub Pages Blueprint (`docs/site/`).

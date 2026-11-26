@@ -63,6 +63,18 @@ def main() -> int:
             f"[Pillar II | T2e] Dyadic-256 (Var=1, 1-byte CT): min R2={dy['min_r2']} "
             f"(1024-bit loss={dy_bits:.3f} bits, {cbd2_bits / dy_bits:.2f}x drop vs CBD_2)"
         )
+    if "dyadic512_dfr_variational" in mlwe:
+        d5 = mlwe["dyadic512_dfr_variational"]
+        cbd3_bits = float(renyi["CBD_3"]["cumulative_bits_r2"]["1024"])
+        d5_bits = float(d5["loss_bits_512"])
+        dfrs = d5["exact_dfr_suite"]
+        print(
+            f"[Pillar II | T2g] Dyadic-512 (Var=3/2, kappa_ex=0, 9-bit CT): min R2={d5['min_r2']} "
+            f"(512-bit loss={d5_bits:.3f} bits, {cbd3_bits / d5_bits:.2f}x drop vs CBD_3) | "
+            f"Exact DFRs: 512=2^{dfrs['ML_KEM_512_Dyadic512_256']['union_bound_log2_dfr']}, "
+            f"768=2^{dfrs['ML_KEM_768_Dyadic256']['union_bound_log2_dfr']}, "
+            f"1024=2^{dfrs['ML_KEM_1024_Dyadic256']['union_bound_log2_dfr']}"
+        )
 
     # Pillar III: CS-001 / CS-004 / CS-012 / CS-051 / CS-026 <-> CS-053
     triad = run_all_triad_checks()
@@ -73,6 +85,12 @@ def main() -> int:
             f" | Koszul tensor rank: M2>={kt['M2_rank_lower_bound_every_field']} "
             f"({kt['M2_left_inverse_nnz']}-nnz Z-inv) & "
             f"T3>={kt['T3_rank_lower_bound_every_field']} (all fields incl. char 2)"
+        )
+    if "strassen_and_all_m_koszul" in triad:
+        sw = triad["strassen_and_all_m_koszul"]
+        kt_info += (
+            f" | Exact Strassen-Winograd rank_F(<2,2,2>)={sw['M2_exact_rank_every_field']} (all F incl. F_2) "
+            f"& Phi_2(<3,3,3>) rank={sw['M3_phi2_rank_F2']} over F_2/F_101 (=> >={sw['M3_phi2_rank_lb']})"
         )
     print(
         f"[Pillar III | Triad] Algebrization MLE points={triad['algebrization_mle']['points_multilinearity_verified']} | "

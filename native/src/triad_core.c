@@ -505,6 +505,74 @@ triad_renyi_res_t triad_mlkem_dyadic256_opt(void) {
     return res;
 }
 
+/* Constant-time 9-bit sampler for Dyadic-512: w = (1,8,44,120,166,120,44,8,1)/512 on {-4..4}.
+ * Exact Var = 3/2 (matching FIPS 203 ML-KEM-512 CBD_3) and exact zero excess kurtosis (mu_4 = 27/4)! */
+int triad_dyadic512_sample_ct(uint16_t raw9) {
+    unsigned int r = (unsigned int)(raw9 & 511U);
+    int val = -4;
+    val += (int)(r >= 1U);
+    val += (int)(r >= 9U);
+    val += (int)(r >= 53U);
+    val += (int)(r >= 173U);
+    val += (int)(r >= 339U);
+    val += (int)(r >= 459U);
+    val += (int)(r >= 503U);
+    val += (int)(r >= 511U);
+    return val;
+}
+
+static void eval_renyi_dyadic512(double sigma, double *out_r2, double *out_rinf) {
+    static const int xs[9] = {-4, -3, -2, -1, 0, 1, 2, 3, 4};
+    static const double probs[9] = {
+        1.0 / 512.0, 8.0 / 512.0, 44.0 / 512.0, 120.0 / 512.0, 166.0 / 512.0,
+        120.0 / 512.0, 44.0 / 512.0, 8.0 / 512.0, 1.0 / 512.0
+    };
+    double two_s2 = 2.0 * sigma * sigma;
+    double Z = 0.0;
+    for (int x = -35; x <= 35; x++) {
+        Z += exp(-(double)(x * x) / two_s2);
+    }
+    double r2 = 0.0, rinf = 0.0;
+    for (int i = 0; i < 9; i++) {
+        double qx = exp(-(double)(xs[i] * xs[i]) / two_s2) / Z;
+        r2 += (probs[i] * probs[i]) / qx;
+        double ratio = probs[i] / qx;
+        if (ratio > rinf) rinf = ratio;
+    }
+    *out_r2 = r2;
+    *out_rinf = rinf;
+}
+
+triad_renyi_res_t triad_mlkem_dyadic512_opt(void) {
+    triad_renyi_res_t res;
+    res.eta = 512;
+    res.min_r2 = 1e9;
+    res.min_rinf = 1e9;
+    res.sigma_opt_r2 = 1.226;
+    res.sigma_opt_rinf = 1.226;
+    for (int step = 900; step <= 1600; step++) {
+        double s = (double)step / 1000.0;
+        double r2 = 0.0, rinf = 0.0;
+        eval_renyi_dyadic512(s, &r2, &rinf);
+        if (r2 < res.min_r2) { res.min_r2 = r2; res.sigma_opt_r2 = s; }
+        if (rinf < res.min_rinf) { res.min_rinf = rinf; res.sigma_opt_rinf = s; }
+    }
+    double lo = res.sigma_opt_r2 - 0.002, hi = res.sigma_opt_r2 + 0.002;
+    for (int it = 0; it < 60; it++) {
+        double m1 = lo + (hi - lo) / 3.0;
+        double m2 = hi - (hi - lo) / 3.0;
+        double r2_1, ri_1, r2_2, ri_2;
+        eval_renyi_dyadic512(m1, &r2_1, &ri_1);
+        eval_renyi_dyadic512(m2, &r2_2, &ri_2);
+        if (r2_1 < r2_2) hi = m2; else lo = m1;
+    }
+    res.sigma_opt_r2 = 0.5 * (lo + hi);
+    double dummy = 0.0;
+    eval_renyi_dyadic512(res.sigma_opt_r2, &res.min_r2, &dummy);
+    res.bits_per_coord_r2 = log2(res.min_r2);
+    return res;
+}
+
 bool triad_verify_twisted_dft(int m, int D, int r, double *out_max_forb) {
     if (m < 2 || D < 1 || m * D > 256) return false;
     int N = m * D;
@@ -598,6 +666,57 @@ bool triad_verify_koszul_flattening_certs(void) {
             int acc = 0;
             for (int r = 0; r < 9; r++) acc += L3[i][r] * M3[r][j];
             if (acc != (i == j ? 1 : 0)) return false;
+        }
+    }
+    return true;
+}
+
+bool triad_verify_strassen_7prod(void) {
+    static const int U[7][4] = {
+        { 1, 0, 0, 1}, { 0, 0, 1, 1}, { 1, 0, 0, 0}, { 0, 0, 0, 1},
+        { 1, 1, 0, 0}, {-1, 0, 1, 0}, { 0, 1, 0,-1}
+    };
+    static const int V[7][4] = {
+        { 1, 0, 0, 1}, { 1, 0, 0, 0}, { 0, 1, 0,-1}, {-1, 0, 1, 0},
+        { 0, 0, 0, 1}, { 1, 1, 0, 0}, { 0, 0, 1, 1}
+    };
+    static const int W[7][4] = {
+        { 1, 0, 0, 1}, { 0, 0, 1,-1}, { 0, 1, 0, 1}, { 1, 0, 1, 0},
+        {-1, 1, 0, 0}, { 0, 0, 0, 1}, { 1, 0, 0, 0}
+    };
+    for (int a = 0; a < 4; a++) {
+        for (int b = 0; b < 4; b++) {
+            for (int c = 0; c < 4; c++) {
+                int acc = 0;
+                for (int s = 0; s < 7; s++) acc += U[s][a] * V[s][b] * W[s][c];
+                int expected = ((a / 2 == c / 2) && (a % 2 == b / 2) && (b % 2 == c % 2)) ? 1 : 0;
+                if (acc != expected) return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool triad_verify_all_m_koszul_monomial(int m) {
+    if (m < 2 || m > 5) return false;
+    int n = m * m;
+    int dim = n * n;
+    for (int i = 0; i < dim; i++) {
+        int a = i / n, b = i % n;
+        int p = (((a / m) + 1) % m) * m + (b / m);
+        int c0 = (((a / m) + 1) % m) * m + (b % m);
+        int r0 = (p < a) ? p : a;
+        int s0 = (p < a) ? a : p;
+        int sgn = (p < a) ? 1 : -1;
+        for (int j = 0; j < dim; j++) {
+            int ja = j / n, jb = j % n;
+            int phi = 0;
+            if (ja == s0) {
+                phi = ((r0 / m == c0 / m) && (r0 % m == jb / m) && (jb % m == c0 % m)) ? 1 : 0;
+            } else if (ja == r0) {
+                phi = -(((s0 / m == c0 / m) && (s0 % m == jb / m) && (jb % m == c0 % m)) ? 1 : 0);
+            }
+            if (sgn * phi != (i == j ? 1 : 0)) return false;
         }
     }
     return true;

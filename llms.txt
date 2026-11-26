@@ -1,25 +1,26 @@
 # coded-pir-mlwe-complexity-lab
 
-> Zero-Mathlib Lean 4.35.0 formal proofs (19 theorems `T1a`–`T3f` across 6 kernels), C11/Python/Eshkol multi-language verifiers, an interactive GitHub Pages Proof Blueprint, and a 14-page AMS-LaTeX preprint (`v2.0.0`) on Coded/Byzantine PIR (`CS-053`), Module-LWE reduction tightness & `Dyadic-256` (`CS-026`/`QC-042`/`CM-048`), and Koszul tensor / complexity-theoretic barriers (`CS-001`/`CS-004`/`CS-010`/`CS-012`/`CS-051`).
+> Zero-Mathlib Lean 4.35.0 formal proofs (23 theorems `T1a`–`T3h` across 6 kernels, 2,995 decls), C11/Python/Eshkol multi-language verifiers, an interactive GitHub Pages Proof Blueprint, and a 16-page AMS-LaTeX preprint (`v3.0.0`) on Coded/Byzantine PIR (`CS-053`), Module-LWE reduction tightness & `Dyadic-256`/`Dyadic-512` + exact FIPS 203 DFRs (`CS-026`/`QC-042`/`CM-048`), and Exact Strassen–Winograd $\mathrm{rank}_F(\langle 2,2,2\rangle) = 7$ / All-$m$ Koszul MatMul / complexity-theoretic barriers (`CS-001`/`CS-004`/`CS-010`/`CS-012`/`CS-051`).
 
 - Author: Alexander S. Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648)
 - Code License: Apache-2.0 | Docs & Paper License: CC-BY-4.0
 - Interactive Proof Blueprint: https://0thernes.github.io/coded-pir-mlwe-complexity-lab/
 
 ## Primary Documentation
-- [README.md](README.md): Project overview, 19 headline theorems (`T1a`–`T3f`), verbatim 21-declaration Lean axiom audit, and quickstart.
-- [CLAIMS.md](CLAIMS.md): Claim-by-claim ledger (`C1`–`C19`), open frontiers (`O1`–`O5`), and falsification protocol.
+- [README.md](README.md): Project overview, 23 headline theorems (`T1a`–`T3h`), verbatim 25-declaration Lean axiom audit, and quickstart.
+- [CLAIMS.md](CLAIMS.md): Claim-by-claim ledger (`C1`–`C23`), open frontiers (`O1`–`O5`), and falsification protocol.
 - [LIMITATIONS.md](LIMITATIONS.md): Explicit non-claims, formal vs. computational boundaries, and real-vs-metaphor breakdown.
 - [REPLICATION.md](REPLICATION.md): Clean-room replication commands and verification log.
-- [HARDENING_LOG.md](HARDENING_LOG.md): 15 real defects/holes found and resolved across audit passes.
+- [HARDENING_LOG.md](HARDENING_LOG.md): 16 real defects/holes found and resolved across audit passes.
 - [AGENTS.md](AGENTS.md): Canonical instructions for AI coding agents.
 
 ## Technical Artifacts
-- [lean/Solution.lean](lean/Solution.lean): Master zero-Mathlib Lean 4.35.0 solution (`T1a`–`T3f`).
-- [lean/TriadFrontier/KoszulTensor.lean](lean/TriadFrontier/KoszulTensor.lean): Field-universal Koszul flattening tensor rank bridge (`T3e`).
-- [lean/VerifyAxioms.lean](lean/VerifyAxioms.lean): Strict `#print axioms` audit script (21 declarations).
+- [lean/Solution.lean](lean/Solution.lean): Master zero-Mathlib Lean 4.35.0 solution (`T1a`–`T3h`).
+- [lean/TriadFrontier/KoszulTensor.lean](lean/TriadFrontier/KoszulTensor.lean): Field-universal Koszul flattening tensor rank bridge & symbolic ALL-$m$ MatMul bound (`T3e`, `T3g`).
+- [lean/TriadFrontier/StrassenWinograd.lean](lean/TriadFrontier/StrassenWinograd.lean): Complete characteristic-free Exact Strassen–Winograd $\mathrm{rank}_F(\langle 2,2,2\rangle) = 7$ proof over every field (`T3h`).
+- [lean/VerifyAxioms.lean](lean/VerifyAxioms.lean): Strict `#print axioms` audit script (25 declarations).
 - [lean/formalization.yaml](lean/formalization.yaml): Machine-readable formalization registry metadata.
-- [docs/site/blueprint.html](docs/site/blueprint.html): Interactive 19-theorem Proof Blueprint DAG.
+- [docs/site/blueprint.html](docs/site/blueprint.html): Interactive 23-theorem Proof Blueprint DAG.
 - [docs/architecture.md](docs/architecture.md): System and mathematical dependency architecture.
 - [docs/statement-fidelity.md](docs/statement-fidelity.md): Line-by-line Lean-to-paper statement fidelity table.
-- [dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf](dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf): Frozen 14-page AMS-LaTeX preprint (`v2.0.0`).
+- [dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf](dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf): Frozen 16-page AMS-LaTeX preprint (`v3.0.0`).

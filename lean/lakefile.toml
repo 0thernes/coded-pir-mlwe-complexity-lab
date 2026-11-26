@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 name = "TriadFrontier"
-version = "2.0.0"
+version = "3.0.0"
 defaultTargets = ["TriadFrontier", "Challenge", "Solution", "PalomarSolution"]
 
 [leanOptions]

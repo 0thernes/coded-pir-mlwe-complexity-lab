@@ -6,6 +6,21 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-11-25
+
+### Added
+- **4 New Zero-Mathlib Lean 4.35.0 Breakthrough Theorems (`T1h`, `T2g`, `T3g`, `T3h`) — 23 Headline Theorems / 25 Audited Declarations Total (2,995 `con-leche`/`con-ron` decls, 0 `sorry`, 0 `native_decide`, 0 warnings):**
+  - **`T1h` (`PIRKoszul.lean`):** Universal 7-parameter non-Shannon cone reduction + infinite Matúš (2007) family $M_s$ ($\forall s \in \mathbb{N}$, equal to Zhang–Yeung 1998 at $s=1$) proving `h_uncond` simultaneously defeats ALL $M_s$ ($s \in \mathbb{N}$), plus exact all-$M$ multi-file Koszul contraction $\rho_{\mathrm{KV}}^j < \rho_{\mathrm{LFSR}}^j$ ($\forall j \ge 1$).
+  - **`T2g` (`MLWETightness.lean`):** Universal non-asymptotic Pearson $\chi^2$/Hermite-4 QGTL variational Rényi-2 bridge (analytically capturing $75.5\%$ of $R_2-1$ for $\mathrm{CBD}_2$ and $89.5\%$ for `Dyadic-256` at $\sigma=1$) + 9-bit constant-time **`Dyadic-512`** noise $(1,8,44,120,166,120,44,8,1)/512$ ($\mathrm{Var}=3/2$, $\mu_4=27/4$, exact zero excess kurtosis $\kappa_{\mathrm{ex}} = 0$, exact Gaussian QGTL metric determinant $\det(g) = 1/2$, collapsing ML-KEM-512 keygen loss $12.89\times$ from $7.630$ to $0.592$ bits while passing exact FIPS 203 DFR $2^{-139.26} < 2^{-138.8}$).
+  - **`T3g` (`KoszulTensor.lean`):** Symbolic ALL-$m$ 1-nnz/row monomial left-inverse proving $\mathrm{rank}_F(\langle m,m,m\rangle) \ge m^2 + 2$ for EVERY $m \ge 2$ and EVERY `SimpleField F` (incl. $\mathrm{char}\,2$) + degree-$(m-1)$ Koszul flattening ceiling $m^2 + m$.
+  - **`T3h` (`StrassenWinograd.lean`, NEW):** Complete characteristic-free proof of **Exact Strassen–Winograd $\mathrm{rank}_F(\langle 2,2,2\rangle) = 7$** over EVERY `SimpleField F` (including $\mathbb{F}_2$!): explicit 7-product upper bound plus direct substitution/rank-drop lower bound refuting every rank-$\le 6$ decomposition.
+- **Native C11 (`native/`):** Branchless 9-bit `triad_dyadic512_sample_ct`, `triad_mlkem_dyadic512_opt`, `triad_verify_strassen_7prod`, `triad_verify_all_m_koszul_monomial(m)`, 3 new CLI commands (`dyadic512`, `strassen`, `koszul-allm`), and 8 new unit tests (**57/57 tests** + 512 fuzz).
+- **Eshkol AD & Exact Python (`eshkol/`, `python/`, `tests/`):** Forward-mode AD optimization of `Dyadic-512` (`|dR2/dsigma| = 3.57e-6`), exact non-negative FIPS 203 discrete-convolution DFR suite passing all three parameter sets (`512`: $2^{-139.26}$, `768`: $2^{-166.12}$, `1024`: $2^{-174.26}$), 14,850 singleton Matúš $s \in \{1..5\}$ checks (0 violations), exact $\mathrm{rank}_F(\Phi_2(\langle 3,3,3\rangle)) = 324$ over $\mathbb{F}_2$ & $\mathbb{F}_{101}$ ($\implies \ge 12$), and expanded `pytest` suite (**16/16 tests, 10/10 killed mutants**).
+- **16-Page Preprint, Figure 6, Citations & Interactive Blueprint:** Added Crossref-verified `Matus2007` and `Winograd1971` (28/28 live HTTP 200 citations), **`fig6_mlkem_dfr_variational_and_allm_koszul.pdf`**, updated `paper/main.tex` to 16 pages (0 overfull hboxes), and upgraded `docs/site/` interactive 23-theorem Proof Blueprint DAG & ML-KEM DFR explorer.
+
+### Fixed
+- **H16 (`bug`/`issue`):** Removed duplicate `triad_dyadic512` edit in `triad_core.c`; fixed `Matus2007` nested BibTeX brace syntax for `check_citations.py`; aligned Matúš ordered pair-of-pairs singleton count (`14,850`); eliminated 4 Overfull `\hbox`es in `paper/main.tex` and polished `fig6` annotation clearances via visual inspection.
+
 ## [2.0.0] - 2026-11-25
 
 ### Added

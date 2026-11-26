@@ -6,10 +6,10 @@ public import Challenge
 public import Solution
 
 /-!
-# Palomar Comparator Verified Solution (`coded-pir-mlwe-complexity-lab` v2.0.0)
+# Palomar Comparator Verified Solution (`coded-pir-mlwe-complexity-lab` v3.0.0)
 
-Zero-`sorry`, zero-`native_decide`, zero-Mathlib implementation of all 19 headline
-theorems (`T1a`–`T3f`) and master conjunction verified across all six independent
+Zero-`sorry`, zero-`native_decide`, zero-Mathlib implementation of all 23 headline
+theorems (`T1a`–`T3h`) and master conjunction verified across all six independent
 Lean 4.35.0 proof kernels.
 -/
 
@@ -31,6 +31,8 @@ public theorem t1f_projective_p3_linear_impossibility : T1f_ProjectiveP3LinearIm
   TriadFrontier.Solution.t1f_projective_p3_linear_impossibility
 public theorem t1g_zhang_yeung_reduction_and_mfile_koszul : T1g_ZhangYeungReductionAndMFileKoszul :=
   TriadFrontier.Solution.t1g_zhang_yeung_reduction_and_mfile_koszul
+public theorem t1h_infinite_nonshannon_cone_barrier_and_contraction : T1h_InfiniteNonShannonConeAndContraction :=
+  TriadFrontier.Solution.t1h_infinite_nonshannon_cone_barrier_and_contraction
 public theorem t2a_determinant_ideal_secret_independence : T2a_DeterminantIdealSecretIndependence :=
   TriadFrontier.Solution.t2a_determinant_ideal_secret_independence
 public theorem t2b_chen_step9_antiperiodic_dft_cancellation : T2b_ChenStep9AntiPeriodicDFTCancellation :=
@@ -43,6 +45,8 @@ public theorem t2e_dyadic256_renyi_floor_and_qgtl_psd : T2e_Dyadic256RenyiFloorA
   TriadFrontier.Solution.t2e_dyadic256_renyi_floor_and_qgtl_psd
 public theorem t2f_universal_twisted_dft_selection_rule : T2f_UniversalTwistedDFTSelectionRule :=
   TriadFrontier.Solution.t2f_universal_twisted_dft_selection_rule
+public theorem t2g_qgtl_renyi_variational_bridge_and_dyadic512 : T2g_QGTLRenyiVariationalBridgeAndDyadic512 :=
+  TriadFrontier.Solution.t2g_qgtl_renyi_variational_bridge_and_dyadic512
 public theorem t3a_algebrization_multilinear_extension_uniqueness : T3a_AlgebrizationMultilinearExtensionUniqueness :=
   TriadFrontier.Solution.t3a_algebrization_multilinear_extension_uniqueness
 public theorem t3b_lwe_to_natural_proofs_obstruction : T3b_LWEToNaturalProofsObstruction :=
@@ -55,6 +59,10 @@ public theorem t3e_koszul_flattening_tensor_rank_bridge : T3e_KoszulFlatteningTe
   TriadFrontier.Solution.t3e_koszul_flattening_tensor_rank_bridge
 public theorem t3f_shannon_counting_and_ldc_smoothness : T3f_ShannonCountingAndLDCSmoothness :=
   TriadFrontier.Solution.t3f_shannon_counting_and_ldc_smoothness
+public theorem t3g_all_m_koszul_matmul_lower_bound : T3g_AllMKoszulMatMulLowerBound :=
+  TriadFrontier.Solution.t3g_all_m_koszul_matmul_lower_bound
+public theorem t3h_strassen_winograd_exact_rank_seven : T3h_StrassenWinogradExactRankSeven :=
+  TriadFrontier.Solution.t3h_strassen_winograd_exact_rank_seven
 public theorem prove_all_triad_theorems : AllTriadFrontierTheorems :=
   TriadFrontier.Solution.prove_all_triad_theorems
 

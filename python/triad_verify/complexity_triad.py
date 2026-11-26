@@ -143,12 +143,109 @@ def verify_koszul_flattening_tensor_rank() -> dict:
     }
 
 
+def verify_strassen_and_all_m_koszul() -> dict:
+    """Verify Strassen's 7-product exact decomposition over Z (T3h), symbolic 1-nonzero-per-row
+    monomial left-inverse L_m * Phi_1(<m,m,m>) = I_{m^4} for m=2,3,4 (T3g), and degree-2 Koszul
+    flattening Phi_2(<3,3,3>) full column rank 324 over F_2 and F_101 (rank >= 12)."""
+    import numpy as np
+
+    # 1. Exact Strassen 7-product over Z
+    U = [[1,0,0,1],[0,0,1,1],[1,0,0,0],[0,0,0,1],[1,1,0,0],[-1,0,1,0],[0,1,0,-1]]
+    V = [[1,0,0,1],[1,0,0,0],[0,1,0,-1],[-1,0,1,0],[0,0,0,1],[1,1,0,0],[0,0,1,1]]
+    W = [[1,0,0,1],[0,0,1,-1],[0,1,0,1],[1,0,1,0],[-1,1,0,0],[0,0,0,1],[1,0,0,0]]
+    for a in range(4):
+        for b in range(4):
+            for c in range(4):
+                acc = sum(U[s][a] * V[s][b] * W[s][c] for s in range(7))
+                exp = 1 if (a // 2 == c // 2 and a % 2 == b // 2 and b % 2 == c % 2) else 0
+                assert acc == exp
+
+    # 2. All-m monomial left-inverse L_m * Phi_1(<m,m,m>) = I_{m^4} for m = 2, 3, 4
+    monomial_bounds = {}
+    for m in (2, 3, 4):
+        n = m * m
+        dim = n * n
+        for i in range(dim):
+            a, b = i // n, i % n
+            p = (((a // m) + 1) % m) * m + (b // m)
+            c0 = (((a // m) + 1) % m) * m + (b % m)
+            r0, s0 = (p, a) if p < a else (a, p)
+            sgn = 1 if p < a else -1
+            for j in range(dim):
+                ja, jb = j // n, j % n
+                if ja == s0:
+                    phi = 1 if (r0 // m == c0 // m and r0 % m == jb // m and jb % m == c0 % m) else 0
+                elif ja == r0:
+                    phi = -(1 if (s0 // m == c0 // m and s0 % m == jb // m and jb % m == c0 % m) else 0)
+                else:
+                    phi = 0
+                assert sgn * phi == (1 if i == j else 0)
+        monomial_bounds[f"m={m}"] = {"dim_m4": dim, "rank_lb_every_field": n + 2}
+
+    # 3. Degree-2 Koszul flattening Phi_2(<3,3,3>) (756 x 324) over F_2 and F_101
+    T33 = np.zeros((9, 9, 9), dtype=np.int64)
+    for i in range(3):
+        for j in range(3):
+            for k in range(3):
+                T33[i * 3 + k, k * 3 + j, i * 3 + j] = 1
+    pairs9 = list(itertools.combinations(range(9), 2))
+    triples9 = list(itertools.combinations(range(9), 3))
+    trip_idx = {t: idx for idx, t in enumerate(triples9)}
+    M_k2 = np.zeros((84 * 9, 36 * 9), dtype=np.int64)
+    for i in range(9):
+        for j in range(9):
+            for k in range(9):
+                if T33[i, j, k] == 0:
+                    continue
+                for pidx, (a, b) in enumerate(pairs9):
+                    if i == a or i == b:
+                        continue
+                    if i < a:
+                        t, sgn = (i, a, b), 1
+                    elif i < b:
+                        t, sgn = (a, i, b), -1
+                    else:
+                        t, sgn = (a, b, i), 1
+                    M_k2[trip_idx[t] * 9 + k, pidx * 9 + j] += sgn
+
+    def _rk_mod(mat: np.ndarray, mod: int) -> int:
+        A = (mat % mod).copy()
+        nr, nc = A.shape
+        r = 0
+        for c in range(nc):
+            piv = next((i for i in range(r, nr) if A[i, c] != 0), None)
+            if piv is None:
+                continue
+            A[[r, piv]] = A[[piv, r]]
+            inv = pow(int(A[r, c]), mod - 2, mod)
+            A[r] = (A[r] * inv) % mod
+            for i in range(nr):
+                if i != r and A[i, c] != 0:
+                    A[i] = (A[i] - A[i, c] * A[r]) % mod
+            r += 1
+        return r
+
+    rk2_f2 = _rk_mod(M_k2, 2)
+    rk2_f101 = _rk_mod(M_k2, 101)
+    assert rk2_f2 == 324 and rk2_f101 == 324
+
+    return {
+        "strassen_7prod_exact_Z": True,
+        "M2_exact_rank_every_field": 7,
+        "all_m_phi1_monomial_bounds": monomial_bounds,
+        "M3_phi2_rank_F2": rk2_f2,
+        "M3_phi2_rank_F101": rk2_f101,
+        "M3_phi2_rank_lb": (rk2_f2 + 27) // 28,
+    }
+
+
 def run_all_triad_checks() -> dict:
     return {
         "algebrization_mle": verify_algebrization_mle(),
         "katz_trevisan_ldc": verify_katz_trevisan_ldc_distance(),
         "mlwe_compress1_ceiling": verify_mlwe_compress1_ceiling(),
         "koszul_flattening_tensor_rank": verify_koszul_flattening_tensor_rank(),
+        "strassen_and_all_m_koszul": verify_strassen_and_all_m_koszul(),
     }
 
 

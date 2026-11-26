@@ -1,30 +1,35 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
 # SPDX-License-Identifier: Apache-2.0
 version: "v0.4"
-release_version: "2.0.0"
+release_version: "3.0.0"
 
 project:
   name: "Koszul-Veronese Flag-Private Coded Byzantine PIR, Module-LWE Reduction Obstructions, and Complexity-Theoretic Bridges"
   description: >-
-    Zero-Mathlib Lean 4.35.0 formalization of 19 headline theorems (T1a-T3f) plus
+    Zero-Mathlib Lean 4.35.0 formalization of 23 headline theorems (T1a-T3h) plus
     concrete non-vacuity witnesses across three interconnected open problem frontiers:
     (Pillar I, CS-053) exterior-power Koszul-Veronese PIR strictly beating the 2026
     LFSR coded-colluding ceiling, non-vacuous Byzantine-robust capacity double-counting
     with kernel-certified F_11 rate-2/5 zero-error witness, exact flag-privacy thresholds,
     a 330-orbit 12-variable Shannon+Ingleton polymatroid barrier at 8/13 > 3/5,
     projective P^3 linear impossibility over arbitrary fields, exact algebraic Zhang-Yeung (1998)
-    reduction proving h_uncond defeats Zhang-Yeung too, and symmetric M>=3 Koszul breaking E>=KT;
+    and infinite Matus (2007) family M_s reductions proving h_uncond defeats all M_s simultaneously,
+    and symmetric M>=3 Koszul breaking E>=KT with all-M contraction;
     (Pillar II, CS-026/QC-042/CM-048) commutative-ring determinant-ideal secret independence
     refuting Luo (2026), ring-universal anti-periodic DFT cancellation (Chen 2024 Step 9) and
     universal m-twisted DFT selection rule ([propext] alone), exact FIPS 203 ML-KEM CBD2/CBD3
     moments & 4.96x Renyi-2 cliff, pure-integer Cauchy-Schwarz finite-support Renyi floor,
-    constant-time 1-byte Dyadic-256 (Var=1, 17.7x drop to 2.14 bits), and shifted-LWE QGTL
-    Berry curvature, Provost-Vallee PSD, and exact Metric-Kurtosis ordering (3/8 < 15/32 < 1/2);
+    universal Pearson chi^2/Hermite-4 QGTL variational Renyi-2 bridge, constant-time 1-byte
+    Dyadic-256 (Var=1, 17.7x drop to 2.14 bits) and 9-bit zero-excess-kurtosis Dyadic-512
+    (Var=3/2, kappa_ex=0, det(g)=1/2, 12.9x drop to 0.592 bits), and shifted-LWE QGTL
+    Berry curvature, Provost-Vallee PSD, and exact Metric-Kurtosis ordering;
     and (Pillar III, CS-001/CS-004/CS-010/CS-012/CS-051) constructive multilinear-extension
     uniqueness over arbitrary fields, LWE PRF -> Natural Proofs obstruction, Katz-Trevisan
     Byzantine PIR to LDC minimum distance 2B+1 and q-query smoothness, sharp FIPS 203 Compress_1
-    margin |e|<=831, Shannon (1949) finite circuit counting, and field-universal Landsberg-Ottaviani
-    Koszul flattening tensor rank bounds (rank_F(<2,2,2>) >= 6 and rank_F(T_3) >= 5 over every field).
+    margin |e|<=831, Shannon (1949) finite circuit counting, field-universal Landsberg-Ottaviani
+    Koszul flattening tensor rank bounds (rank_F(T_3) >= 5 and symbolic ALL-m rank_F(<m,m,m>) >= m^2+2
+    plus ceiling m^2+m), and complete characteristic-free Exact Strassen-Winograd rank_F(<2,2,2>) = 7
+    over EVERY SimpleField F including F_2.
   authors:
     - name: "Alexander S. Donahue"
       orcid: "0009-0006-8168-9648"
@@ -52,14 +57,14 @@ classification:
     - "03B35"
 
 sources:
-  - title: "Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked Complexity-Barrier Bridges (v2.0.0)"
+  - title: "Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked Complexity-Barrier Bridges (v3.0.0)"
     authors:
       - "Alexander S. Donahue"
     id: "https://github.com/0thernes/coded-pir-mlwe-complexity-lab"
     type: "original-proof"
     relationship: "other"
     note: >-
-      Original formalization and companion 14-page AMS-LaTeX preprint first presented in
+      Original formalization and companion 16-page AMS-LaTeX preprint first presented in
       this repository. No external DOI, arXiv ID, or peer review is claimed prior to
       confirmed external assignment.
   - title: "The capacity of private information retrieval from coded storage systems with colluding, robust and byzantine servers"
@@ -69,14 +74,21 @@ sources:
     id: "https://arxiv.org/abs/2610.37412"
     type: "paper"
     relationship: "background"
-    note: "Establishes the LFSR coded-colluding PIR capacity exceeded by Theorem T1b and T1g."
+    note: "Establishes the LFSR coded-colluding PIR capacity exceeded by Theorems T1b, T1g, and T1h."
+  - title: "Infinitely Many Information Inequalities"
+    authors:
+      - "Frantisek Matus"
+    id: "https://doi.org/10.1109/ISIT.2007.4557201"
+    type: "paper"
+    relationship: "background"
+    note: "Infinite non-Shannon inequality family M_s simultaneously defeated by h_uncond in Theorem T1h."
   - title: "Module-Lattice-Based Key-Encapsulation Mechanism Standard (FIPS 203)"
     authors:
       - "National Institute of Standards and Technology"
     id: "https://doi.org/10.6028/NIST.FIPS.203"
     type: "standard"
     relationship: "background"
-    note: "Defines ML-KEM modulus q=3329, CBD_2/CBD_3 noise, and Compress_1 audited in T2c, T2e, and T3d."
+    note: "Defines ML-KEM modulus q=3329, CBD_2/CBD_3 noise, and Compress_1 audited in T2c, T2e, T2g, and T3d."
   - title: "Quantum Algorithms for Lattice Problems"
     authors:
       - "Yilei Chen"
@@ -91,19 +103,26 @@ sources:
     id: "https://doi.org/10.1007/s10231-011-0238-6"
     type: "paper"
     relationship: "background"
-    note: "Koszul flattening framework generalized over arbitrary characteristic (including char 2) in Theorem T3e."
+    note: "Koszul flattening framework generalized over arbitrary characteristic (including char 2) in Theorems T3e and T3g."
+  - title: "On multiplication of 2 x 2 matrices"
+    authors:
+      - "Shmuel Winograd"
+    id: "https://doi.org/10.1016/0024-3795(71)90009-7"
+    type: "paper"
+    relationship: "background"
+    note: "Exact rank_F(<2,2,2>) = 7 formalized characteristic-free over every SimpleField F in Theorem T3h."
 
 related_formalizations: []
 
 status:
   scope: >-
-    Complete zero-Mathlib Lean 4.35.0 formalization of all 19 headline theorems T1a-T3f
+    Complete zero-Mathlib Lean 4.35.0 formalization of all 23 headline theorems T1a-T3h
     plus concrete non-vacuity witnesses (TriadFrontier/NonVacuity.lean, including
     SimpleField (Fin 5) and SimpleField (Fin 11)). Not formalized inside Lean: transcendental
-    60-digit Renyi-2 optimization curves and floating-point DFT/QGTL spectra (verified in
-    Tier-2 exact Python, C11, and Eshkol dual-number AD), or open conjectures (P != NP,
-    omega = 2, VP != VNP, non-linear C(2,4,2,2), general M>=3 non-LFSR PIR when E>=KT,
-    worst-case quantum MLWE hardness).
+    60-digit Renyi-2 optimization curves, exact FIPS 203 discrete-convolution DFRs, and
+    floating-point DFT/QGTL spectra (verified in Tier-2 exact Python, C11, and Eshkol AD),
+    or open conjectures (P != NP, omega = 2, VP != VNP, non-linear C(2,4,2,2), general M>=3
+    non-LFSR PIR when E>=KT, worst-case quantum MLWE hardness).
   sorry_count: 0
   sorry_in_definitions: 0
   axioms:
@@ -146,6 +165,11 @@ status:
       sorry_count: 0
       axioms: ["propext", "Quot.sound"]
       comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t1h_infinite_nonshannon_cone_barrier_and_contraction"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
     - declaration: "TriadFrontier.Palomar.t2a_determinant_ideal_secret_independence"
       file: "lean/PalomarSolution.lean"
       sorry_count: 0
@@ -175,6 +199,11 @@ status:
       file: "lean/PalomarSolution.lean"
       sorry_count: 0
       axioms: ["propext"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t2g_qgtl_renyi_variational_bridge_and_dyadic512"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
       comparator_config: "lean/comparator.json"
     - declaration: "TriadFrontier.Palomar.t3a_algebrization_multilinear_extension_uniqueness"
       file: "lean/PalomarSolution.lean"
@@ -206,6 +235,16 @@ status:
       sorry_count: 0
       axioms: ["propext", "Quot.sound"]
       comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t3g_all_m_koszul_matmul_lower_bound"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t3h_strassen_winograd_exact_rank_seven"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
 
 automation:
   methods:
@@ -217,22 +256,24 @@ automation:
       framework: "Antigravity"
       notes: >-
         Assisted with Lean 4.35.0 proof engineering, O(log N) balanced-tree certificate
-        generation, sparse pure-integer Koszul left-inverse discovery, C11/Python/Eshkol
-        computational cross-verification, figure production, and manuscript drafting under human supervision.
+        generation, sparse pure-integer Koszul left-inverse & Strassen-Winograd proofs,
+        C11/Python/Eshkol computational cross-verification, figure production, and manuscript
+        drafting under human supervision.
 
 fidelity:
   divergences: >-
-    Transcendental Renyi-2 optimization curves (Table 3) and complex DFT/QGTL spectra
-    are verified to 60-digit Decimal precision in Python and differentially against C11
-    and Eshkol forward-mode dual-number AD (< 2e-13), while Lean 4.35.0 machine-checks
-    the exact rational/integer moments, cleared-denominator inequalities, finite-field
-    rank certificates, pure-integer 12-variable polymatroid witness, and pure-integer
-    {-1,0,+1} Koszul flattening left-inverses with zero Mathlib.
+    Transcendental Renyi-2 optimization curves, exact FIPS 203 discrete-convolution DFRs,
+    and complex DFT/QGTL spectra are verified to 60-digit Decimal precision in Python and
+    differentially against C11 and Eshkol forward-mode dual-number AD (< 2e-13), while Lean
+    4.35.0 machine-checks the exact rational/integer moments, Cauchy-Schwarz & Pearson chi^2
+    variational bounds, cleared-denominator inequalities, finite-field rank certificates,
+    pure-integer 12-variable polymatroid witness, symbolic ALL-m Koszul left-inverses, and
+    exact characteristic-free Strassen-Winograd rank_F(<2,2,2>)=7 with zero Mathlib.
 
 review:
   status: "self-assessed"
   notes: >-
     Not externally peer-reviewed. Machine-checked across all 6 independent Lean 4.35.0
     proof kernels via lake comparator --config comparator.json --paranoid (Lean default,
-    leanchecker-paranoid, lean4lean, nanoda, con-leche --verified 2418 decls, con-ron --verified 2418 decls),
+    leanchecker-paranoid, lean4lean, nanoda, con-leche --verified 2995 decls, con-ron --verified 2995 decls),
     with 0 warnings, 0 proof sorries, 0 native_decide, and concrete NonVacuity witnesses.

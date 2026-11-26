@@ -13,31 +13,31 @@
   </defs>
   <rect width="1280" height="640" fill="url(#bg)"/>
   <rect x="48" y="48" width="1184" height="544" rx="22" fill="#0b1220" fill-opacity="0.72" stroke="url(#accent)" stroke-width="2.5"/>
-  <text x="90" y="132" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#38bdf8" letter-spacing="2">CODED-PIR-MLWE-COMPLEXITY-LAB · v2.0.0</text>
+  <text x="90" y="132" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#38bdf8" letter-spacing="2">CODED-PIR-MLWE-COMPLEXITY-LAB · v3.0.0</text>
   <text x="90" y="196" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">Koszul-Veronese Byzantine PIR, MLWE Tightness,</text>
-  <text x="90" y="248" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">and Complexity-Barrier Bridges</text>
+  <text x="90" y="248" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">and Machine-Checked Complexity Bridges</text>
   <rect x="90" y="276" width="260" height="4" rx="2" fill="url(#accent)"/>
   <g font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="19" fill="#e2e8f0">
     <rect x="90" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
-    <text x="112" y="350" font-weight="700" fill="#38bdf8">PILLAR I · CS-053 PIR (T1a–T1g)</text>
+    <text x="112" y="350" font-weight="700" fill="#38bdf8">PILLAR I · CS-053 PIR (T1a–T1h)</text>
     <text x="112" y="382" font-size="15.5">• Exact Koszul rank: 10/17 &gt; 4/7 (F_7)</text>
-    <text x="112" y="408" font-size="15.5">• Beats 2610.37412 LFSR &amp; E &lt; KT (M≥2)</text>
-    <text x="112" y="434" font-size="15.5">• Exact E=K+1 unrestricted cap.</text>
-    <text x="112" y="460" font-size="15.5">• h_uncond defeats Shannon+Ing+ZY98</text>
+    <text x="112" y="408" font-size="15.5">• All-M contraction &amp; E &lt; KT exact cap.</text>
+    <text x="112" y="434" font-size="15.5">• h_uncond defeats ALL Matúš (2007) M_s</text>
+    <text x="112" y="460" font-size="15.5">• Projective P³ linear collapse ∀F</text>
 
     <rect x="468" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#f472b6" stroke-width="1.5"/>
-    <text x="490" y="350" font-weight="700" fill="#f472b6">PILLAR II · CS-026 MLWE (T2a–T2f)</text>
-    <text x="490" y="382" font-size="15.5">• Dyadic-256: 17.7x ML-KEM cliff drop</text>
-    <text x="490" y="408" font-size="15.5">• Universal m-twisted DFT rule (QC-042)</text>
-    <text x="490" y="434" font-size="15.5">• QGTL PSD &amp; Metric-Kurtosis (CM-048)</text>
-    <text x="490" y="460" font-size="15.5">• Luo 2026 det-ideal ring refutation</text>
+    <text x="490" y="350" font-weight="700" fill="#f472b6">PILLAR II · CS-026 MLWE (T2a–T2g)</text>
+    <text x="490" y="382" font-size="15.5">• Dyadic-256 (17.7x) &amp; Dyadic-512 (12.9x)</text>
+    <text x="490" y="408" font-size="15.5">• Exact ML-KEM-512/768/1024 DFRs pass</text>
+    <text x="490" y="434" font-size="15.5">• Non-asymp. QGTL χ²/H4 variational law</text>
+    <text x="490" y="460" font-size="15.5">• Luo det-ideal &amp; universal m-DFT rule</text>
 
     <rect x="846" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#fbbf24" stroke-width="1.5"/>
-    <text x="868" y="350" font-weight="700" fill="#fbbf24">PILLAR III · TRIAD (T3a–T3f)</text>
-    <text x="868" y="382" font-size="15.5">• Koszul tensor rank(&lt;2,2,2&gt;) ≥ 6 ∀F</text>
-    <text x="868" y="408" font-size="15.5">• Algebrization MLE + LWE Nat. Proofs</text>
-    <text x="868" y="434" font-size="15.5">• Shannon counting + KT LDC smooth.</text>
+    <text x="868" y="350" font-weight="700" fill="#fbbf24">PILLAR III · TRIAD (T3a–T3h)</text>
+    <text x="868" y="382" font-size="15.5">• Exact Strassen-Winograd rank(&lt;2,2,2&gt;)=7 ∀F</text>
+    <text x="868" y="408" font-size="15.5">• Symbolic all-m rank(&lt;m,m,m&gt;) ≥ m²+2 ∀F</text>
+    <text x="868" y="434" font-size="15.5">• Algebrization, Nat. Proofs, KT LDC</text>
     <text x="868" y="460" font-size="15.5">• Honest: P≠NP, ω=2, VP≠VNP OPEN</text>
   </g>
-  <text x="90" y="544" font-family="ui-monospace, Consolas, monospace" font-size="16.5" fill="#94a3b8">Zero-Mathlib Lean 4.35.0 (19 Theorems · 6 Kernels · 2418 decls) · C11 · Eshkol AD · Alexander S. Donahue (ORCID 0009-0006-8168-9648)</text>
+  <text x="90" y="544" font-family="ui-monospace, Consolas, monospace" font-size="16.5" fill="#94a3b8">Zero-Mathlib Lean 4.35.0 (23 Theorems · 6 Kernels · 2995 decls) · C11 · Eshkol AD · Alexander S. Donahue (ORCID 0009-0006-8168-9648)</text>
 </svg>

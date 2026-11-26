@@ -2,8 +2,8 @@
 # Project manifest for the Build Standard for LLMs v1.2.0. Read by scripts/Audit-Repo.ps1.
 standard: "1.2.0"
 name: "coded-pir-mlwe-complexity-lab"
-version: "2.0.0"
-description: "Zero-Mathlib Lean 4.35.0 proofs (19 theorems T1a-T3f across 6 kernels), C11/Python/Eshkol verifiers, interactive Proof Blueprint, and 14-page AMS-LaTeX preprint on Coded/Byzantine PIR (CS-053), MLWE Tightness & Dyadic-256 (CS-026), and Koszul Tensor / Complexity Barriers (CS-001/CS-004/CS-012/CS-051)."
+version: "3.0.0"
+description: "Zero-Mathlib Lean 4.35.0 proofs (23 theorems T1a-T3h across 6 kernels, 2,995 decls), C11/Python/Eshkol verifiers, interactive Proof Blueprint, and 16-page AMS-LaTeX preprint on Coded/Byzantine PIR (CS-053), MLWE Tightness & CT Dyadic-256/512 + Exact DFRs (CS-026), and Exact Strassen-Winograd rank_F(<2,2,2>)=7 / All-m Koszul MatMul / Complexity Barriers (CS-001/CS-004/CS-012/CS-051)."
 owner: "0thernes"
 author: "Alexander S. Donahue"
 orcid: "0009-0006-8168-9648"
@@ -35,14 +35,14 @@ items:
   A19: {status: done, evidence: "GitHub About description and 7 topics configured on 0thernes/coded-pir-mlwe-complexity-lab"}
   A27: {status: done, evidence: "Self-contained interactive GitHub Pages Proof Blueprint DAG & Triad Explorer (docs/site/index.html, docs/site/blueprint.html) deployed via .github/workflows/pages.yml to https://0thernes.github.io/coded-pir-mlwe-complexity-lab/"}
   B03: {status: done, evidence: "Deterministic exact Lean kernel proofs, seeded Python/C11 runs, reproducible PDF/tarball SHA-256 hashes in MANIFEST.sha256"}
-  B05: {status: done, evidence: "15 pytest tests (tests/test_all.py, 8/8 killed mutants), 49 C11 unit tests, 3 Eshkol AD modules, and 19 Lean theorems covering claims C1-C19"}
-  B06: {status: done, evidence: "Negative boundary tests in tests/test_all.py and test_triad_core.c (Compress_1 e=+832 failure, Chen even-c non-cancellation, sub-threshold flag privacy, Cauchy-Schwarz support-2 floor)"}
-  B07: {status: done, evidence: "Regression tests for every fixed defect logged in HARDENING_LOG.md (H01 Compress_1 +1665, H03 full T=2 privacy, H04 sub-KT selector, H05 F_11 matrices, H13 fuzz unsigned mod, H14 symmetric M>=3 1-flag privacy)"}
-  B08: {status: done, evidence: "Golden artifacts results/lean_axioms.txt (21 decls, drift-checked in CI), data/f11_byz_witness.json, data/h_uncond_certified.json, results/exact_audit_summary.json, MANIFEST.sha256"}
-  B11: {status: done, evidence: "Cross-language differential tests across Lean 4.35.0, C11, 60-digit Python, and Eshkol v1.3.6 dual-number AD (< 2e-13, incl. Dyadic-256 dR2/dsigma=-7.77e-9) plus 6-kernel Lean replay (2,418 decls)"}
-  B12: {status: done, evidence: "60-digit Decimal Python exact oracles and exact finite-field / integer polymatroid & Koszul-tensor enumerators serving as reference oracles for C11 and Eshkol"}
-  B14: {status: done, evidence: "Metamorphic K<->T rate symmetry (all M>=2), S_4 polymatroid invariance, odd-symmetry QGTL Berry curvature Omega(-e0) = -Omega(e0), unimodular det invariance, and char-free Koszul tensor rank across F_2/F_3/F_101"}
-  B20: {status: done, evidence: "60-digit Decimal ML-KEM CBD & Dyadic-256 Renyi-2 minimization matching C11 and Eshkol AD to < 2e-13; QGTL Berry curvature residual 5.55e-17 and PSD 4det(g) >= Omega^2"}
+  B05: {status: done, evidence: "16 pytest tests (tests/test_all.py, 10/10 killed mutants), 57 C11 unit tests, 3 Eshkol AD modules, and 23 Lean theorems covering claims C1-C23"}
+  B06: {status: done, evidence: "Negative boundary tests in tests/test_all.py and test_triad_core.c (Compress_1 e=+832 failure, Chen even-c non-cancellation, sub-threshold flag privacy, Cauchy-Schwarz support-2 floor, Strassen rank<=6 refutation)"}
+  B07: {status: done, evidence: "Regression tests for every fixed defect logged in HARDENING_LOG.md (H01 Compress_1 +1665, H03 full T=2 privacy, H04 sub-KT selector, H05 F_11 matrices, H13 fuzz unsigned mod, H14 symmetric M>=3 1-flag privacy, H16 Matus 14850 & Dyadic-512)"}
+  B08: {status: done, evidence: "Golden artifacts results/lean_axioms.txt (25 decls, drift-checked in CI), data/f11_byz_witness.json, data/h_uncond_certified.json, results/exact_audit_summary.json, MANIFEST.sha256"}
+  B11: {status: done, evidence: "Cross-language differential tests across Lean 4.35.0, C11, 60-digit Python, and Eshkol v1.3.6 dual-number AD (< 2e-13, incl. Dyadic-256 dR2/dsigma=-7.77e-9 & Dyadic-512 -3.57e-6) plus 6-kernel Lean replay (2,995 decls)"}
+  B12: {status: done, evidence: "60-digit Decimal Python exact oracles and exact finite-field / integer polymatroid, FIPS 203 DFR convolution, & Koszul/Strassen-tensor enumerators serving as reference oracles for C11 and Eshkol"}
+  B14: {status: done, evidence: "Metamorphic K<->T rate symmetry (all M>=2), S_4 polymatroid invariance, odd-symmetry QGTL Berry curvature Omega(-e0) = -Omega(e0), unimodular det invariance, and char-free Koszul/Strassen tensor rank across F_2/F_3/F_101"}
+  B20: {status: done, evidence: "60-digit Decimal ML-KEM CBD & Dyadic-256/512 Renyi-2 minimization + exact FIPS 203 DFR convolutions matching C11 and Eshkol AD to < 2e-13; QGTL Berry curvature residual 5.55e-17, PSD 4det(g) >= Omega^2, and Pearson chi^2/Hermite-4 variational bound"}
   B23: {status: n/a, note: "Algebraic, combinatorial, and information-theoretic theorems proved directly in Lean 4.35.0; no concurrent state machine requiring TLA+"}
-  B24: {status: done, evidence: "All 19 headline theorems (T1a-T3f) and concrete NonVacuity witnesses machine-checked in zero-Mathlib Lean 4.35.0 across 6 independent kernels (2,418 verified decls)"}
+  B24: {status: done, evidence: "All 23 headline theorems (T1a-T3h) and concrete NonVacuity witnesses machine-checked in zero-Mathlib Lean 4.35.0 across 6 independent kernels (2,995 verified decls)"}
   B25: {status: n/a, note: "C11 verification core audited via -std=c11 -Wall -Wextra -Wpedantic -Werror, ASan/UBSan, 512+ fuzz iterations, and Lean algebraic proofs; CBMC/Kani deferred"}

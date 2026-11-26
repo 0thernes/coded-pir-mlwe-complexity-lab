@@ -21,6 +21,7 @@ open TriadFrontier.PIRKoszul
 open TriadFrontier.MLWETightness
 open TriadFrontier.ComplexityTriad
 open TriadFrontier.KoszulTensor
+open TriadFrontier.StrassenWinograd
 
 @[expose] public section
 
@@ -225,6 +226,68 @@ def T3f_ShannonCountingAndLDCSmoothness : Prop :=
     (∀ i, i < N → isHeavy i = true → τ ≤ cnt i) →
     countBool N isHeavy * τ ≤ q * S)
 
+def T1h_InfiniteNonShannonConeAndContraction : Prop :=
+  (∀ (H : Nat → Int) (a b c d : Nat) (α c1 c2 c3 c4 c5 c6 : Nat),
+    0 ≤ ingletonQ H c d a b →
+    0 ≤ condI H a c d → 0 ≤ condI H a d c → 0 ≤ condI H c d a →
+    0 ≤ condI H b c d → 0 ≤ condI H b d c → 0 ≤ condI H c d b →
+    0 ≤ nonShannonConeQ H a b c d α c1 c2 c3 c4 c5 c6) ∧
+  (∀ (H : Nat → Int) (a b c d : Nat),
+    matusFamilyQ H a b c d 1 = zhangYeungQ H a b c d) ∧
+  (∀ (H : Nat → Int) (a b c d s : Nat),
+    0 ≤ ingletonQ H c d a b →
+    0 ≤ condI H a c d → 0 ≤ condI H a d c → 0 ≤ condI H c d a → 0 ≤ condI H b c d →
+    0 ≤ matusFamilyQ H a b c d s) ∧
+  (∀ (E K T j : Nat), 2 ≤ E → 2 ≤ K → 2 ≤ T → K ≤ E → T ≤ E → 1 ≤ j →
+    let numKV : Int := ((K : Int) + T - 1) * E - (K : Int) * T
+    let denKV : Int := (E : Int) * ((E : Int) - 1)
+    let numLF : Int := (K : Int) + T - 1
+    let denLF : Int := (E : Int)
+    numLF * denKV - numKV * denLF = ((K : Int) - 1) * ((T : Int) - 1) * E ∧
+    (numKV * denLF) ^ j < (numLF * denKV) ^ j) ∧
+  (9 * 37 > 16 * 19)
+
+def T2g_QGTLRenyiVariationalBridgeAndDyadic512 : Prop :=
+  (∀ (N : Nat) (M : Int) (p q w φ : Nat → Int),
+    0 < M →
+    (∀ i, i < N → 0 < q i ∧ 0 ≤ w i ∧ w i * q i = M) →
+    let P := sumInt N p
+    let Q := sumInt N q
+    let Sφq := sumInt N (fun i => q i * φ i)
+    let Sφp := sumInt N (fun i => p i * φ i)
+    let φt : Nat → Int := fun i => Q * φ i - Sφq
+    M * Q * (Q * Sφp - P * Sφq) * (Q * Sφp - P * Sφq) ≤
+    sumInt N (fun i => q i * φt i * φt i) *
+      (Q * sumInt N (fun i => p i * p i * w i) - M * P * P)) ∧
+  (dyadic512Weight (-4) + dyadic512Weight (-3) + dyadic512Weight (-2) + dyadic512Weight (-1) +
+     dyadic512Weight 0 + dyadic512Weight 1 + dyadic512Weight 2 + dyadic512Weight 3 +
+     dyadic512Weight 4 = 512 ∧
+   16 * dyadic512Weight (-4) + 9 * dyadic512Weight (-3) + 4 * dyadic512Weight (-2) +
+     1 * dyadic512Weight (-1) + 1 * dyadic512Weight 1 + 4 * dyadic512Weight 2 +
+     9 * dyadic512Weight 3 + 16 * dyadic512Weight 4 = 768 ∧
+   256 * dyadic512Weight (-4) + 81 * dyadic512Weight (-3) + 16 * dyadic512Weight (-2) +
+     1 * dyadic512Weight (-1) + 1 * dyadic512Weight 1 + 16 * dyadic512Weight 2 +
+     81 * dyadic512Weight 3 + 256 * dyadic512Weight 4 = 3456 ∧
+   3456 * 4 = 27 * 512 ∧
+   5 * 2 < 1 * 12 ∧
+   5921 * 128 < 76298 * 10)
+
+def T3g_AllMKoszulMatMulLowerBound : Prop :=
+  (∀ (F : Type) [SimpleField F] (m r : Nat),
+    2 ≤ m →
+    HasTensorRankAtMost (m * m) (m * m) (m * m) r
+      (fun a b c => intToR (R := F) (matMulTensor m a b c)) →
+    m * m + 2 ≤ r) ∧
+  (∀ (m : Nat), 2 ≤ m →
+    (m * m - m + 1) * (m * m + m - 1) < m * m * (m * m))
+
+def T3h_StrassenWinogradExactRankSeven : Prop :=
+  (∀ (F : Type) [SimpleField F],
+    HasTensorRankAtMost 4 4 4 7 (fun a b c => intToR (R := F) (matMul2Tensor a b c))) ∧
+  (∀ (F : Type) [SimpleField F] (r : Nat),
+    HasTensorRankAtMost 4 4 4 r (fun a b c => intToR (R := F) (matMul2Tensor a b c)) →
+    7 ≤ r)
+
 def AllTriadFrontierTheorems : Prop :=
   T1a_KoszulVeroneseRankIdentity ∧
   T1b_UniversalKoszulDominationOverLFSR ∧
@@ -233,18 +296,22 @@ def AllTriadFrontierTheorems : Prop :=
   T1e_UnconditionedShannonIngletonBarrier ∧
   T1f_ProjectiveP3LinearImpossibility ∧
   T1g_ZhangYeungReductionAndMFileKoszul ∧
+  T1h_InfiniteNonShannonConeAndContraction ∧
   T2a_DeterminantIdealSecretIndependence ∧
   T2b_ChenStep9AntiPeriodicDFTCancellation ∧
   T2c_MLKEMCBDRenyiCliff ∧
   T2d_QGTLShiftedLWEBerryCurvature ∧
   T2e_Dyadic256RenyiFloorAndQGTLPSD ∧
   T2f_UniversalTwistedDFTSelectionRule ∧
+  T2g_QGTLRenyiVariationalBridgeAndDyadic512 ∧
   T3a_AlgebrizationMultilinearExtensionUniqueness ∧
   T3b_LWEToNaturalProofsObstruction ∧
   T3c_KatzTrevisanByzantinePIRToLDC ∧
   T3d_MLWESingleServerPIRNoiseCeiling ∧
   T3e_KoszulFlatteningTensorRankBridge ∧
-  T3f_ShannonCountingAndLDCSmoothness
+  T3f_ShannonCountingAndLDCSmoothness ∧
+  T3g_AllMKoszulMatMulLowerBound ∧
+  T3h_StrassenWinogradExactRankSeven
 
 end
 end TriadFrontier.Challenge

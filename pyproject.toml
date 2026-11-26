@@ -5,8 +5,8 @@ build-backend = "setuptools.build_backend"
 
 [project]
 name = "coded-pir-mlwe-complexity-lab"
-version = "2.0.0"
-description = "Zero-Mathlib Lean 4.35.0 proofs (19 theorems T1a-T3f across 6 kernels) and multi-language verification for Koszul-Veronese Byzantine PIR (CS-053), MLWE tightness & Dyadic-256 (CS-026), and Koszul tensor / complexity-barrier bridges (CS-001/CS-004/CS-012/CS-051)"
+version = "3.0.0"
+description = "Zero-Mathlib Lean 4.35.0 proofs (23 theorems T1a-T3h across 6 kernels, incl. Exact Strassen-Winograd rank_F(<2,2,2>)=7) and multi-language verification for Koszul-Veronese Byzantine PIR (CS-053), MLWE tightness & Dyadic-256/512 (CS-026), and All-m Koszul tensor / complexity-barrier bridges (CS-001/CS-004/CS-012/CS-051)"
 readme = "README.md"
 license = {text = "Apache-2.0"}
 authors = [

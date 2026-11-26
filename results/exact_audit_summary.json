@@ -1,6 +1,6 @@
 {
   "schema": "triad-exact-audit/v1",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "author": "Alexander S. Donahue",
   "orcid": "0009-0006-8168-9648",
   "pillar_1_cs053": {
@@ -74,6 +74,7 @@
       "elemental_submodularity_checked": 67584,
       "privacy_equalities_checked": 2816,
       "singleton_ingletons_checked": 2970,
+      "matus_s1_to_5_singleton_checked": 14850,
       "retrieval_6atom_subset_ingletons_checked": 3814209,
       "violations": 0,
       "D_over_L": "13/8",
@@ -127,6 +128,56 @@
         "CBD_2": "3/8",
         "Dyadic_256": "15/32",
         "Gaussian_limit": "1/2"
+      }
+    },
+    "dyadic512_dfr_variational": {
+      "weights": "(1, 8, 44, 120, 166, 120, 44, 8, 1) / 512",
+      "variance_exact": "3/2",
+      "fourth_moment_exact": "27/4",
+      "excess_kurtosis_exact": "0",
+      "qgtl_det_at_sigma_sqrt3_2_exact": "1/2 (exact Gaussian limit vs 5/12 for CBD_3)",
+      "sigma_opt_r2": "1.2261150068154247",
+      "min_r2": "1.00040085806108927889",
+      "sigma_opt_rinf": "1.2509792025837613",
+      "min_rinf": "1.01666565130577835542",
+      "loss_bits_512": 0.592077,
+      "exact_dfr_suite": {
+        "ML_KEM_512_FIPS": {
+          "pr_single_coeff_ge_832": 9.322515058208319e-46,
+          "union_bound_log2_dfr": -141.59
+        },
+        "ML_KEM_512_Dyadic512_256": {
+          "pr_single_coeff_ge_832": 4.6805567778362346e-45,
+          "union_bound_log2_dfr": -139.26
+        },
+        "ML_KEM_768_FIPS": {
+          "pr_single_coeff_ge_832": 8.80886400080871e-54,
+          "union_bound_log2_dfr": -168.25
+        },
+        "ML_KEM_768_Dyadic256": {
+          "pr_single_coeff_ge_832": 3.8384171775269607e-53,
+          "union_bound_log2_dfr": -166.12
+        },
+        "ML_KEM_1024_FIPS": {
+          "pr_single_coeff_ge_832": 2.644328727492627e-56,
+          "union_bound_log2_dfr": -176.63
+        },
+        "ML_KEM_1024_Dyadic256": {
+          "pr_single_coeff_ge_832": 1.357709934313547e-55,
+          "union_bound_log2_dfr": -174.26
+        }
+      },
+      "qgtl_hermite4_variational_bounds": {
+        "CBD_2": {
+          "hermite4_lb": 0.010413409,
+          "exact_r2_minus_1_at_sigma1": 0.013786158,
+          "fraction_captured": 0.7554
+        },
+        "Dyadic_256": {
+          "hermite4_lb": 0.000650903,
+          "exact_r2_minus_1_at_sigma1": 0.000727194,
+          "fraction_captured": 0.8951
+        }
       }
     },
     "chen_step9": {
@@ -254,6 +305,27 @@
       "M2_rank_lower_bound_every_field": 6,
       "T3_nnz": 7,
       "T3_rank_lower_bound_every_field": 5
+    },
+    "strassen_and_all_m_koszul": {
+      "strassen_7prod_exact_Z": true,
+      "M2_exact_rank_every_field": 7,
+      "all_m_phi1_monomial_bounds": {
+        "m=2": {
+          "dim_m4": 16,
+          "rank_lb_every_field": 6
+        },
+        "m=3": {
+          "dim_m4": 81,
+          "rank_lb_every_field": 11
+        },
+        "m=4": {
+          "dim_m4": 256,
+          "rank_lb_every_field": 18
+        }
+      },
+      "M3_phi2_rank_F2": 324,
+      "M3_phi2_rank_F101": 324,
+      "M3_phi2_rank_lb": 12
     }
   }
 }

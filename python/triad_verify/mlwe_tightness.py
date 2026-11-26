@@ -259,10 +259,205 @@ def verify_twisted_dft_selection_rule() -> dict:
     return {"tested_twists": tested, "all_forbidden_modes_vanish": True}
 
 
+def dyadic512_pmf_exact() -> dict[int, Fraction]:
+    return {
+        -4: Fraction(1, 512), -3: Fraction(8, 512), -2: Fraction(44, 512),
+        -1: Fraction(120, 512), 0: Fraction(166, 512), 1: Fraction(120, 512),
+        2: Fraction(44, 512), 3: Fraction(8, 512), 4: Fraction(1, 512),
+    }
+
+
+def _compress_noise_pmf(q: int, d: int) -> dict[int, float]:
+    pmf: dict[int, float] = {}
+    two_d = 1 << d
+    for x in range(q):
+        c = ((x * two_d + q // 2) // q) % two_d
+        y = (c * q + (two_d // 2)) // two_d
+        err = (y - x) % q
+        if err > q // 2:
+            err -= q
+        pmf[err] = pmf.get(err, 0.0) + 1.0 / q
+    return pmf
+
+
+def _prod_pmf(p1: dict[int, float], p2: dict[int, float]) -> dict[int, float]:
+    out: dict[int, float] = {}
+    for a, pa in p1.items():
+        for b, pb in p2.items():
+            out[a * b] = out.get(a * b, 0.0) + pa * pb
+    return out
+
+
+def _convolve_pow(pmf: dict[int, float], power: int) -> tuple[int, list[float]]:
+    import numpy as np
+    lo, hi = min(pmf), max(pmf)
+    arr = np.zeros(hi - lo + 1, dtype=np.float64)
+    for k, v in pmf.items():
+        arr[k - lo] = v
+    res = np.array([1.0], dtype=np.float64)
+    res_lo = 0
+    base, base_lo = arr, lo
+    n = power
+    while n > 0:
+        if n & 1:
+            res = np.convolve(res, base)
+            res_lo += base_lo
+        n >>= 1
+        if n > 0:
+            base = np.convolve(base, base)
+            base_lo *= 2
+    return res_lo, res
+
+
+def compute_exact_mlkem_dfr(k: int, d_u: int, d_v: int,
+                            eta1_pmf: dict[int, Fraction],
+                            eta2_pmf: dict[int, Fraction]) -> dict:
+    """Exact FIPS 203 discrete-convolution DFR (no FFT cancellation, direct non-negative convolution)."""
+    import numpy as np
+    q = 3329
+    p1 = {x: float(v) for x, v in eta1_pmf.items()}
+    p2 = {x: float(v) for x, v in eta2_pmf.items()}
+    p_er = _prod_pmf(p1, p1)
+    p_se1 = _prod_pmf(p1, p2)
+    p_cu = _compress_noise_pmf(q, d_u)
+    p_cv = _compress_noise_pmf(q, d_v)
+    p_cus = _prod_pmf(p_cu, p1)
+
+    lo1, arr1 = _convolve_pow(p_er, k * 256)
+    lo2, arr2 = _convolve_pow(p_se1, k * 256)
+    lo3, arr3 = _convolve_pow(p_cus, k * 256)
+
+    lo4, hi4 = min(p2), max(p2)
+    arr4 = np.zeros(hi4 - lo4 + 1, dtype=np.float64)
+    for x, p in p2.items():
+        arr4[x - lo4] = p
+    lo5, hi5 = min(p_cv), max(p_cv)
+    arr5 = np.zeros(hi5 - lo5 + 1, dtype=np.float64)
+    for x, p in p_cv.items():
+        arr5[x - lo5] = p
+
+    tot = np.convolve(arr1, arr2)
+    tot = np.convolve(tot, arr3)
+    tot = np.convolve(tot, arr4)
+    tot = np.convolve(tot, arr5)
+    tot_lo = lo1 + lo2 + lo3 + lo4 + lo5
+
+    p_fail = 0.0
+    for idx, prob in enumerate(tot):
+        if abs(tot_lo + idx) >= 832:
+            p_fail += float(prob)
+    dfr = 256.0 * p_fail
+    return {
+        "pr_single_coeff_ge_832": p_fail,
+        "union_bound_log2_dfr": round(math.log2(dfr), 2) if dfr > 0 else float("-inf"),
+    }
+
+
+def verify_dyadic512_dfr_and_variational_bridge() -> dict:
+    """60-digit verification of 9-bit zero-excess-kurtosis Dyadic-512 (T2g), exact FIPS 203
+    discrete-convolution DFRs for ML-KEM-512/768/1024, and exact Pearson chi^2 / Hermite-4 QGTL
+    variational lower bound."""
+    getcontext().prec = 65
+    pmf = dyadic512_pmf_exact()
+    assert sum(pmf.values()) == 1
+    var_exact = sum(Fraction(x * x, 1) * p for x, p in pmf.items())
+    mu4_exact = sum(Fraction(x ** 4, 1) * p for x, p in pmf.items())
+    assert var_exact == Fraction(3, 2) and mu4_exact == Fraction(27, 4)
+    kurt_ex = mu4_exact / (var_exact * var_exact) - 3
+    assert kurt_ex == 0
+
+    def eval_r(sigma: Decimal) -> tuple[Decimal, Decimal]:
+        two_s2 = Decimal(2) * sigma * sigma
+        Z = sum((-(Decimal(x * x)) / two_s2).exp() for x in range(-50, 51))
+        r2 = Decimal(0)
+        rinf = Decimal(0)
+        for x, fp in pmf.items():
+            px = Decimal(fp.numerator) / Decimal(fp.denominator)
+            qx = (-(Decimal(x * x)) / two_s2).exp() / Z
+            r2 += (px * px) / qx
+            rat = px / qx
+            if rat > rinf:
+                rinf = rat
+        return r2, rinf
+
+    phi = (Decimal(5).sqrt() - Decimal(1)) / Decimal(2)
+    lo, hi = Decimal("1.0"), Decimal("1.5")
+    for _ in range(120):
+        m1 = hi - phi * (hi - lo)
+        m2 = lo + phi * (hi - lo)
+        if eval_r(m1)[0] < eval_r(m2)[0]:
+            hi = m2
+        else:
+            lo = m1
+    s2 = (lo + hi) / Decimal(2)
+    r2_min, _ = eval_r(s2)
+
+    lo_i, hi_i = Decimal("1.0"), Decimal("1.5")
+    for _ in range(120):
+        m1 = hi_i - phi * (hi_i - lo_i)
+        m2 = lo_i + phi * (hi_i - lo_i)
+        if eval_r(m1)[1] < eval_r(m2)[1]:
+            hi_i = m2
+        else:
+            lo_i = m1
+    sinf = (lo_i + hi_i) / Decimal(2)
+    _, rinf_min = eval_r(sinf)
+    bits_coord = float(r2_min.ln() / Decimal(2).ln())
+
+    # Exact FIPS 203 discrete-convolution DFR suite
+    cbd2, cbd3 = cbd_pmf_exact(2), cbd_pmf_exact(3)
+    d256, d512 = dyadic256_pmf_exact(), pmf
+    dfr_suite = {
+        "ML_KEM_512_FIPS": compute_exact_mlkem_dfr(2, 10, 4, cbd3, cbd2),
+        "ML_KEM_512_Dyadic512_256": compute_exact_mlkem_dfr(2, 10, 4, d512, d256),
+        "ML_KEM_768_FIPS": compute_exact_mlkem_dfr(3, 10, 4, cbd2, cbd2),
+        "ML_KEM_768_Dyadic256": compute_exact_mlkem_dfr(3, 10, 4, d256, d256),
+        "ML_KEM_1024_FIPS": compute_exact_mlkem_dfr(4, 11, 5, cbd2, cbd2),
+        "ML_KEM_1024_Dyadic256": compute_exact_mlkem_dfr(4, 11, 5, d256, d256),
+    }
+    assert dfr_suite["ML_KEM_512_Dyadic512_256"]["union_bound_log2_dfr"] < -138.8
+    assert dfr_suite["ML_KEM_768_Dyadic256"]["union_bound_log2_dfr"] < -164.0
+    assert dfr_suite["ML_KEM_1024_Dyadic256"]["union_bound_log2_dfr"] < -174.0
+
+    # Exact non-asymptotic Pearson chi^2 / Hermite-4 QGTL variational bound at sigma=1
+    Z1 = sum(math.exp(-0.5 * x * x) for x in range(-30, 31))
+    Q1 = {x: math.exp(-0.5 * x * x) / Z1 for x in range(-30, 31)}
+    h4 = lambda x: x ** 4 - 6 * x ** 2 + 3
+    eq_h4 = sum(p * h4(x) for x, p in Q1.items())
+    varq_h4 = sum(p * (h4(x) - eq_h4) ** 2 for x, p in Q1.items())
+    var_bounds = {}
+    for label, dist in (("CBD_2", cbd2), ("Dyadic_256", d256)):
+        ep_h4 = sum(float(p) * h4(x) for x, p in dist.items())
+        lb = ((ep_h4 - eq_h4) ** 2) / varq_h4
+        exact_r2m1 = sum((float(p) ** 2) / Q1[x] for x, p in dist.items()) - 1.0
+        assert lb <= exact_r2m1 + 1e-15
+        var_bounds[label] = {
+            "hermite4_lb": round(lb, 9),
+            "exact_r2_minus_1_at_sigma1": round(exact_r2m1, 9),
+            "fraction_captured": round(lb / exact_r2m1, 4),
+        }
+
+    return {
+        "weights": "(1, 8, 44, 120, 166, 120, 44, 8, 1) / 512",
+        "variance_exact": str(var_exact),
+        "fourth_moment_exact": str(mu4_exact),
+        "excess_kurtosis_exact": str(kurt_ex),
+        "qgtl_det_at_sigma_sqrt3_2_exact": "1/2 (exact Gaussian limit vs 5/12 for CBD_3)",
+        "sigma_opt_r2": str(s2)[:18],
+        "min_r2": str(r2_min)[:22],
+        "sigma_opt_rinf": str(sinf)[:18],
+        "min_rinf": str(rinf_min)[:22],
+        "loss_bits_512": round(1024 * bits_coord, 6),
+        "exact_dfr_suite": dfr_suite,
+        "qgtl_hermite4_variational_bounds": var_bounds,
+    }
+
+
 def run_all_mlwe_checks() -> dict:
     return {
         "renyi_60digit": verify_cbd_moments_and_renyi_60digit(),
         "dyadic256_60digit": verify_dyadic256_and_qgtl_kurtosis_60digit(),
+        "dyadic512_dfr_variational": verify_dyadic512_dfr_and_variational_bridge(),
         "chen_step9": verify_chen_step9(),
         "twisted_dft_m2_to_6": verify_twisted_dft_selection_rule(),
         "luo_det_ideal": verify_luo_det_ideal_independence(),

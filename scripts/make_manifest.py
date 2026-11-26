@@ -99,11 +99,13 @@ def main() -> int:
         "lean/PalomarSolution.lean",
         "lean/VerifyAxioms.lean",
         "lean/TriadFrontier/KoszulTensor.lean",
+        "lean/TriadFrontier/StrassenWinograd.lean",
         "lean/comparator.json",
         "lean/formalization.yaml",
         "paper/main.tex",
         "paper/refs.bib",
         "paper/figures/fig5_dyadic256_and_koszul_tensor.pdf",
+        "paper/figures/fig6_mlkem_dfr_variational_and_allm_koszul.pdf",
         "results/lean_axioms.txt",
         "results/exact_audit_summary.json",
     ]

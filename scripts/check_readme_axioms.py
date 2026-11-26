@@ -55,8 +55,8 @@ def main() -> int:
                 print(f"ERROR: disallowed axioms {sorted(disallowed)} in: {line}", file=sys.stderr)
                 return 1
 
-    if decl_count < 21:
-        print(f"ERROR: expected >= 21 audited declarations, found {decl_count}", file=sys.stderr)
+    if decl_count < 25:
+        print(f"ERROR: expected >= 25 audited declarations, found {decl_count}", file=sys.stderr)
         return 1
 
     # Extract fenced ```text ... ``` block under the axiom audit section in README.md

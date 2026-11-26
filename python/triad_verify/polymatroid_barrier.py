@@ -128,6 +128,33 @@ def verify_h_uncond(json_path: Path) -> dict:
                         sub6_viol += 1
     assert sub6_viol == 0
 
+    # 6. Verify Matus (2007) infinite family M_s >= 0 for s = 1..5 across all 1,485 singleton 4-tuples (T1h)
+    def condI(a: int, b: int, c: int) -> int:
+        return H(a | c) + H(b | c) - H(a | b | c) - H(c)
+
+    def ingQ(c: int, d: int, a: int, b: int) -> int:
+        return (
+            H(c | d) + H(c | a) + H(c | b) + H(d | a) + H(d | b)
+            - H(c) - H(d) - H(a | b) - H(c | d | a) - H(c | d | b)
+        )
+
+    matus_checked = 0
+    matus_viol = 0
+    for a, b in combinations(range(12), 2):
+        for c, d in combinations([x for x in range(12) if x not in (a, b)], 2):
+            A, B, C, D = 1 << a, 1 << b, 1 << c, 1 << d
+            ig = ingQ(C, D, A, B)
+            i1 = condI(A, C, D)
+            i2 = condI(A, D, C)
+            i3 = condI(C, D, A)
+            i4 = condI(B, C, D)
+            for s in (1, 2, 3, 4, 5):
+                val = s * ig + i1 + s * i2 + (s * (s + 1) // 2) * i3 + (s * (s - 1) // 2) * i4
+                matus_checked += 1
+                if val < 0:
+                    matus_viol += 1
+    assert matus_viol == 0
+
     d_ratio = Fraction(4 * H(m_bits(as_=[0])), scale)
     c_ratio = Fraction(1, 1) / d_ratio
     assert d_ratio == Fraction(13, 8) and c_ratio == Fraction(8, 13)
@@ -138,6 +165,7 @@ def verify_h_uncond(json_path: Path) -> dict:
         "elemental_submodularity_checked": submod_checked,
         "privacy_equalities_checked": priv_checked,
         "singleton_ingletons_checked": sing_checked,
+        "matus_s1_to_5_singleton_checked": matus_checked,
         "retrieval_6atom_subset_ingletons_checked": sub6_checked,
         "violations": 0,
         "D_over_L": str(d_ratio),

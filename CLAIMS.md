@@ -1,15 +1,15 @@
 <!-- SPDX-License-Identifier: CC-BY-4.0 -->
 # Claims Ledger & Falsification Protocol (`CLAIMS.md`)
 
-Every mathematical and computational claim in `coded-pir-mlwe-complexity-lab` (`v2.0.0`) is assigned a unique ID, an explicit verification tier, exact artifact paths, and a concrete falsification test ("what would prove us wrong").
+Every mathematical and computational claim in `coded-pir-mlwe-complexity-lab` (`v3.0.0`) is assigned a unique ID, an explicit verification tier, exact artifact paths, and a concrete falsification test ("what would prove us wrong").
 
 ## Verification Tiers
 
-- **Tier 1 (Machine-Checked Formal Proof):** Zero-Mathlib Lean 4.35.0 proof depending strictly on a subset of `[propext, Classical.choice, Quot.sound]`, zero `sorry`, zero `native_decide`, independently replayed across all six Lean 4.35.0 kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche --verified` 2,418 decls, `con-ron --verified` 2,418 decls).
+- **Tier 1 (Machine-Checked Formal Proof):** Zero-Mathlib Lean 4.35.0 proof depending strictly on a subset of `[propext, Classical.choice, Quot.sound]`, zero `sorry`, zero `native_decide`, independently replayed across all six Lean 4.35.0 kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche --verified` 2,995 decls, `con-ron --verified` 2,995 decls).
 - **Tier 2 (Exact / Arbitrary-Precision Computation):** Deterministic integer, rational, finite-field, or 60-digit `Decimal` computation cross-checked differentially across Python, C11, and Eshkol v1.3.6 dual-number AD.
 - **Open (Explicitly Unproved):** Conjectures and open frontiers intentionally separated from claimed results.
 
-## Verified Claims (`C1`–`C19`)
+## Verified Claims (`C1`–`C23`)
 
 | ID | Pillar | Statement Summary | Tier | Formal / Code Artifacts | Falsifying Condition ("What Would Prove Us Wrong") |
 |---|---|---|---|---|---|
@@ -32,6 +32,10 @@ Every mathematical and computational claim in `coded-pir-mlwe-complexity-lab` (`
 | **C17** | `CS-026 ↔ CS-053` | Exact FIPS 203 `Compress_1` margin $|e| \le 831$ (round-half-up $+1665$, failing sharply at $+832$ for $b \in \{0,1\}$) and additive single-server MLWE-PIR depth ceiling $M \le \lfloor 831 / b_{\mathrm{step}} \rfloor$ | Tier 1 + Tier 2 | `lean/TriadFrontier/ComplexityTriad.lean` (`t3d`), `native/src/triad_core.c`, `python/triad_verify/complexity_triad.py` | Any $|e| \le 831$ decoding wrongly under `Compress_1(1665*b + e)`, or $e = +832$ decoding correctly |
 | **C18** | `CS-053 ↔ CS-004 / CS-012` | Field-universal Koszul flattening tensor rank bridge: Steinitz/Gauss rank bound + 18-nnz $\{-1,0,+1\}$ left-inverse $L_2 \in \mathbb{Z}^{16\times 24}$ certifying $\mathrm{rank}_F(\langle 2,2,2\rangle) \ge 6$ and $L_3 \in \mathbb{Z}^{9\times 9}$ certifying $\mathrm{rank}_F(T_3) \ge 5$ over **every** field $F$ (incl. $\mathrm{char}\,2$) | Tier 1 + Tier 2 | `lean/TriadFrontier/KoszulTensor.lean` (`t3e`), `native/src/triad_core.c`, `python/triad_verify/complexity_triad.py` | Any rank-5 decomposition of $\langle 2,2,2\rangle$ or rank-4 decomposition of $T_3$ over any field $F$, or any entry of $L_2 \Phi_1(M_2) - I_{16}$ or $L_3 \Phi_1(T_3) - I_9$ nonzero over $\mathbb{Z}$ |
 | **C19** | `CS-001 / CS-010 / CS-051` | Shannon (1949) finite circuit-counting non-surjectivity ($C < M \implies \exists f \in \mathrm{Fin}\, M$ uncomputed) + Katz–Trevisan $q$-query LDC smoothness averaging bound $|\{j : \mathrm{load}(j) \ge \tau\}|\cdot\tau \le q S$ | Tier 1 + Tier 2 | `lean/TriadFrontier/ComplexityTriad.lean` (`t3f`), `tests/test_all.py` | A surjection from $\mathrm{Fin}\, C$ onto $\mathrm{Fin}\, M$ with $C < M$, or a $q$-query set family violating the load averaging inequality |
+| **C20** | `CS-053` | Universal 7-parameter non-Shannon cone reduction + infinite Matúš (2007) family $M_s$ ($\forall s \in \mathbb{N}$, coinciding with `ZY98` at $s=1$) proving `h_uncond` defeats ALL $M_s$ simultaneously + exact all-$M$ multi-file Koszul contraction $\rho_{\mathrm{KV}}^j < \rho_{\mathrm{LFSR}}^j$ ($\forall j \ge 1$) | Tier 1 + Tier 2 | `lean/TriadFrontier/PIRKoszul.lean` (`t1h`), `python/triad_verify/polymatroid_barrier.py`, `tests/test_all.py` | Any $s \in \mathbb{N}$ where a Shannon+Ingleton polymatroid violates $M_s$, any violation among the 14,850 singleton $s \in \{1..5\}$ Matúš instances on `h_uncond`, or any $E \ge KT, K,T \ge 2, j \ge 1$ where $\rho_{\mathrm{KV}}^j \ge \rho_{\mathrm{LFSR}}^j$ |
+| **C21** | `CS-026 / CM-048` | Universal non-asymptotic Pearson $\chi^2$/Hermite-4 QGTL variational Rényi-2 bridge + 9-bit constant-time **`Dyadic-512`** noise $(1,8,44,120,166,120,44,8,1)/512$ ($\mathrm{Var}=3/2, \mu_4=27/4, \kappa_{\mathrm{ex}}=0, \det(g)=1/2$, collapsing ML-KEM-512 keygen loss $12.89\times$ from $7.630$ to $0.592$ bits) + exact FIPS 203 discrete-convolution DFRs passing all three parameter sets (`512`: $2^{-139.26}$, `768`: $2^{-166.12}$, `1024`: $2^{-174.26}$) | Tier 1 + Tier 2 | `lean/TriadFrontier/MLWETightness.lean` (`t2g`), `native/src/triad_core.c`, `eshkol/renyi_cbd_ad.esk`, `python/triad_verify/mlwe_tightness.py` | Any distribution violating the Pearson $\chi^2$/Hermite-4 variational bound, any 9-bit input $u \in [0,511]$ whose CT `Dyadic-512` sample deviates from the certified PMF, or any FIPS 203 parameter set whose exact DFR exceeds the target threshold |
+| **C22** | `CS-004 / CS-012` | Symbolic ALL-$m$ 1-nnz/row monomial left-inverse proving $\mathrm{rank}_F(\langle m,m,m\rangle) \ge m^2 + 2$ for EVERY $m \ge 2$ and EVERY `SimpleField F` (incl. $\mathrm{char}\,2$) + degree-$(m-1)$ Koszul flattening ceiling $m^2 + m$ + exact $\mathrm{rank}_F(\Phi_2(\langle 3,3,3\rangle)) = 324$ over $\mathbb{F}_2$ & $\mathbb{F}_{101}$ ($\implies \mathrm{rank}_F(\langle 3,3,3\rangle) \ge 12$) | Tier 1 + Tier 2 | `lean/TriadFrontier/KoszulTensor.lean` (`t3g`), `native/src/triad_core.c`, `python/triad_verify/complexity_triad.py` | Any $m \ge 2$ and field $F$ admitting a rank-$(m^2+1)$ decomposition of $\langle m,m,m\rangle$, or any row of the symbolic monomial left-inverse failing $L_m \Phi_1(\langle m,m,m\rangle) = I_{m^3 + 2m}$ |
+| **C23** | `CS-004 / CS-012` | Complete characteristic-free proof of **Exact Strassen–Winograd $\mathrm{rank}_F(\langle 2,2,2\rangle) = 7$** over EVERY `SimpleField F` (including $\mathbb{F}_2$ and every characteristic-2 field!): explicit 7-product upper bound plus direct rank-drop lower bound refuting every rank-$\le 6$ bilinear decomposition | Tier 1 + Tier 2 | `lean/TriadFrontier/StrassenWinograd.lean` (`t3h`), `native/src/triad_core.c`, `python/triad_verify/complexity_triad.py` | Any field $F$ admitting a 6-product bilinear algorithm for $2\times 2$ matrix multiplication, or any entry of Strassen's 7-product identity failing over any `CommRing` |
 
 ## Explicitly Open Problems (`O1`–`O5` — NOT Claimed Solved)
 
@@ -39,7 +43,7 @@ Every mathematical and computational claim in `coded-pir-mlwe-complexity-lab` (`
 |---|---|---|
 | **O1** | `CS-001 / CS-010` | $\mathrm{P} \neq \mathrm{NP}$ and super-linear explicit Boolean circuit lower bounds remain completely open. |
 | **O2** | `CS-004 / CS-012` | Matrix multiplication exponent $\omega = 2$ and Valiant's algebraic separation $\mathrm{VP} \neq \mathrm{VNP}$ remain completely open. |
-| **O3** | `CS-053` | Closing $C(2,4,2,2) \in [3/5, 8/13]$ via $5+$-variable non-Shannon inequalities or non-linear PIR remains open (Shannon, Ingleton, and Zhang–Yeung 1998 are all defeated by `h_uncond`). |
+| **O3** | `CS-053` | Closing $C(2,4,2,2) \in [3/5, 8/13]$ via genuinely $5+$-variable non-Shannon inequalities or non-linear PIR remains open (Shannon, 4-variable Ingleton, Zhang–Yeung 1998, and the entire infinite Matúš 2007 family $M_s$ are all defeated by `h_uncond`). |
 | **O4** | `CS-053` | General $M \ge 3$ non-LFSR coded-colluding capacity above Sun–Zhang when $E \ge KT$ and deterministic arbitrary-$T \ge 4$ zero-error schemes remain open. |
 | **O5** | `CS-026 / QC-042` | Worst-case quantum hardness lower bounds for MLWE/RLWE remain open cryptographic assumptions. |
 
@@ -48,7 +52,7 @@ Every mathematical and computational claim in `coded-pir-mlwe-complexity-lab` (`
 Any independent reviewer can attempt to refute every claim in one command sequence from a clean clone:
 
 ```bash
-# 1. Attempt to break Lean 4 proofs, find hidden axioms, or trigger kernel mismatch (19 theorems)
+# 1. Attempt to break Lean 4 proofs, find hidden axioms, or trigger kernel mismatch (23 theorems)
 cd lean
 lake build
 lake env lean VerifyAxioms.lean
@@ -56,12 +60,12 @@ lake env leanchecker Solution
 lake env leanchecker-paranoid Solution
 lake comparator --config comparator.json --paranoid   # Ubuntu/Linux with bubblewrap
 
-# 2. Attempt to falsify C11 arithmetic, Dyadic-256 CT sampler, twisted DFT, Koszul certs, or 512+ fuzz
+# 2. Attempt to falsify C11 arithmetic, Dyadic-256/512 CT samplers, Strassen, All-m Koszul, or 512+ fuzz
 cd ..
 make -C native clean test
 make -C native sanitizers   # Ubuntu/Linux ASan + UBSan
 
-# 3. Attempt to falsify differential agreement across Python (60-digit), Eshkol AD, C11, and 8/8 mutation suite
+# 3. Attempt to falsify differential agreement across Python (60-digit), Eshkol AD, C11, and 10/10 mutation suite
 node eshkol/run_eshkol_ad.mjs
 PYTHONPATH=python pytest tests/test_all.py -v
 python scripts/check_readme_axioms.py

@@ -9,7 +9,7 @@
 
 int main(int argc, char **argv) {
     if (argc < 2) {
-        fprintf(stderr, "Usage: triad_cli <koszul|f11-byz|chen|qgtl|renyi>\n");
+        fprintf(stderr, "Usage: triad_cli <koszul|f11-byz|chen|qgtl|renyi|dyadic256|dyadic512|twisted|koszul-tensor|strassen|koszul-allm>\n");
         return 2;
     }
     if (strcmp(argv[1], "koszul") == 0) {
@@ -55,6 +55,12 @@ int main(int argc, char **argv) {
                r.sigma_opt_r2, r.min_r2, r.min_rinf, r.bits_per_coord_r2, 2048.0 * r.bits_per_coord_r2);
         return 0;
     }
+    if (strcmp(argv[1], "dyadic512") == 0) {
+        triad_renyi_res_t r = triad_mlkem_dyadic512_opt();
+        printf("{\"dist\":\"dyadic512\",\"sigma_opt_r2\":%.6f,\"min_r2\":%.12f,\"min_rinf\":%.12f,\"bits_per_coord_r2\":%.12f,\"loss_512_bits\":%.6f}\n",
+               r.sigma_opt_r2, r.min_r2, r.min_rinf, r.bits_per_coord_r2, 1024.0 * r.bits_per_coord_r2);
+        return 0;
+    }
     if (strcmp(argv[1], "twisted") == 0) {
         int m = (argc > 2) ? atoi(argv[2]) : 4;
         int D = (argc > 3) ? atoi(argv[3]) : 5;
@@ -68,6 +74,18 @@ int main(int argc, char **argv) {
     if (strcmp(argv[1], "koszul-tensor") == 0) {
         bool ok = triad_verify_koszul_flattening_certs();
         printf("{\"koszul_flattening_m2_ge6_t3_ge5\":%s}\n", ok ? "true" : "false");
+        return ok ? 0 : 1;
+    }
+    if (strcmp(argv[1], "strassen") == 0) {
+        bool ok = triad_verify_strassen_7prod();
+        printf("{\"strassen_7prod_exact\":%s,\"rank_M2_every_field\":7}\n", ok ? "true" : "false");
+        return ok ? 0 : 1;
+    }
+    if (strcmp(argv[1], "koszul-allm") == 0) {
+        int m = (argc > 2) ? atoi(argv[2]) : 3;
+        bool ok = triad_verify_all_m_koszul_monomial(m);
+        printf("{\"m\":%d,\"monomial_left_inv_ok\":%s,\"rank_lb_every_field\":%d}\n",
+               m, ok ? "true" : "false", m * m + 2);
         return ok ? 0 : 1;
     }
     fprintf(stderr, "Unknown command: %s\n", argv[1]);

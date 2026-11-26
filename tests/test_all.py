@@ -33,13 +33,16 @@ from triad_verify.complexity_triad import (
     verify_katz_trevisan_ldc_distance,
     verify_koszul_flattening_tensor_rank,
     verify_mlwe_compress1_ceiling,
+    verify_strassen_and_all_m_koszul,
 )
 from triad_verify.mlwe_tightness import (
     cbd_pmf_exact,
     dyadic256_pmf_exact,
+    dyadic512_pmf_exact,
     verify_cbd_moments_and_renyi_60digit,
     verify_chen_step9,
     verify_dyadic256_and_qgtl_kurtosis_60digit,
+    verify_dyadic512_dfr_and_variational_bridge,
     verify_luo_det_ideal_independence,
     verify_qgtl_shifted_lwe,
     verify_twisted_dft_selection_rule,
@@ -153,6 +156,31 @@ def test_c15_to_c19_v2_breakthroughs_suite() -> None:
     assert 4 < 16 and sum(dyadic256_pmf_exact().values()) == 1
 
 
+def test_c20_to_c23_v3_breakthroughs_suite() -> None:
+    # C20 (T1h): Matus (2007) infinite family s=1..5 on h_uncond + all-M geometric Koszul contraction
+    hres = verify_h_uncond(REPO_ROOT / "data" / "h_uncond_certified.json")
+    assert hres["matus_s1_to_5_singleton_checked"] == 14850 and hres["violations"] == 0
+    assert Fraction(9, 19) > Fraction(16, 37)
+    # C21 (T2g): Dyadic-512 zero-excess-kurtosis ML-KEM-512 + exact DFR suite + QGTL Hermite-4 variational bound
+    d512 = verify_dyadic512_dfr_and_variational_bridge()
+    cbd = verify_cbd_moments_and_renyi_60digit()
+    assert d512["variance_exact"] == "3/2" and d512["fourth_moment_exact"] == "27/4"
+    assert d512["excess_kurtosis_exact"] == "0"
+    assert d512["loss_bits_512"] < 0.60
+    assert cbd["CBD_3"]["cumulative_bits_r2"]["1024"] / d512["loss_bits_512"] > 12.8
+    assert d512["exact_dfr_suite"]["ML_KEM_512_Dyadic512_256"]["union_bound_log2_dfr"] < -138.8
+    assert d512["exact_dfr_suite"]["ML_KEM_768_Dyadic256"]["union_bound_log2_dfr"] < -164.0
+    assert d512["exact_dfr_suite"]["ML_KEM_1024_Dyadic256"]["union_bound_log2_dfr"] < -174.0
+    assert d512["qgtl_hermite4_variational_bounds"]["CBD_2"]["fraction_captured"] > 0.75
+    assert d512["qgtl_hermite4_variational_bounds"]["Dyadic_256"]["fraction_captured"] > 0.89
+    # C22 & C23 (T3g & T3h): All-m Koszul MatMul >= m^2+2, Phi_2(<3,3,3>) >= 12, Exact Strassen-Winograd rank_F(<2,2,2>) = 7
+    sw = verify_strassen_and_all_m_koszul()
+    assert sw["strassen_7prod_exact_Z"] is True and sw["M2_exact_rank_every_field"] == 7
+    assert sw["all_m_phi1_monomial_bounds"]["m=3"]["rank_lb_every_field"] == 11
+    assert sw["all_m_phi1_monomial_bounds"]["m=4"]["rank_lb_every_field"] == 18
+    assert sw["M3_phi2_rank_F2"] == 324 and sw["M3_phi2_rank_F101"] == 324 and sw["M3_phi2_rank_lb"] == 12
+
+
 # ============================================================================
 # 2. Property-Based & Negative Tests
 # ============================================================================
@@ -193,9 +221,11 @@ def test_differential_python_vs_eshkol_ad() -> None:
     kv = json.loads(proc.stdout)
     py_renyi = verify_cbd_moments_and_renyi_60digit()
     py_d256 = verify_dyadic256_and_qgtl_kurtosis_60digit()
+    py_d512 = verify_dyadic512_dfr_and_variational_bridge()
     assert abs(kv["CBD2_R2_OPT"] - float(py_renyi["CBD_2"]["min_r2"])) < 1e-9
     assert abs(kv["CBD3_R2_OPT"] - float(py_renyi["CBD_3"]["min_r2"])) < 1e-9
     assert abs(kv["DYADIC256_R2_OPT"] - float(py_d256["min_r2"])) < 1e-9
+    assert abs(kv["DYADIC512_R2_OPT"] - float(py_d512["min_r2"])) < 1e-9
     py_qgtl = verify_qgtl_shifted_lwe()
     assert abs(kv["QGTL_OMEGA_E0_035"] - py_qgtl["biased_e0_pos035"]["omega_ts"]) < 1e-12
 
@@ -206,24 +236,31 @@ def test_differential_python_vs_native_c11() -> None:
         pytest.skip("Native C11 binary not built yet")
     r2_c = json.loads(subprocess.check_output([str(exe), "renyi", "2"], text=True))
     d256_c = json.loads(subprocess.check_output([str(exe), "dyadic256"], text=True))
+    d512_c = json.loads(subprocess.check_output([str(exe), "dyadic512"], text=True))
     kt_c = json.loads(subprocess.check_output([str(exe), "koszul-tensor"], text=True))
+    sw_c = json.loads(subprocess.check_output([str(exe), "strassen"], text=True))
+    am_c = json.loads(subprocess.check_output([str(exe), "koszul-allm", "3"], text=True))
     qgtl_c = json.loads(subprocess.check_output([str(exe), "qgtl", "2", "1.023", "0.35"], text=True))
     f11_c = json.loads(subprocess.check_output([str(exe), "f11-byz"], text=True))
     py_renyi = verify_cbd_moments_and_renyi_60digit()
     py_d256 = verify_dyadic256_and_qgtl_kurtosis_60digit()
+    py_d512 = verify_dyadic512_dfr_and_variational_bridge()
     py_qgtl = verify_qgtl_shifted_lwe()
     assert f11_c["f11_byzantine_rate25"] is True
     assert kt_c["koszul_flattening_m2_ge6_t3_ge5"] is True
+    assert sw_c["strassen_7prod_exact"] is True and sw_c["rank_M2_every_field"] == 7
+    assert am_c["monomial_left_inv_ok"] is True and am_c["rank_lb_every_field"] == 11
     assert abs(r2_c["min_r2"] - float(py_renyi["CBD_2"]["min_r2"])) < 1e-9
     assert abs(d256_c["min_r2"] - float(py_d256["min_r2"])) < 1e-9
+    assert abs(d512_c["min_r2"] - float(py_d512["min_r2"])) < 1e-9
     assert abs(qgtl_c["omega_ts"] - py_qgtl["biased_e0_pos035"]["omega_ts"]) < 1e-11
 
 
 # ============================================================================
-# 4. Mutation-Killing Suite (8/8 Core Mutants Killed!)
+# 4. Mutation-Killing Suite (10/10 Core Mutants Killed!)
 # ============================================================================
 
-def test_kill_8_core_mutants() -> None:
+def test_kill_10_core_mutants() -> None:
     # Mutant 1: Off-by-one in Koszul lambda formula (K + T - Tp + 1)
     assert koszul_lambda_formula(6, 3, 2, 3) != (3 + 3 - 2 + 1) * math.comb(2, 1)
     # Mutant 2: Off-by-one in FIPS 203 Compress_1 (+1664 instead of +1665 misses +832 failure)
@@ -247,6 +284,12 @@ def test_kill_8_core_mutants() -> None:
     assert sum(Fraction(x * x) * p for x, p in dpmf.items()) - Fraction(8, 256) != 1
     # Mutant 8: Flipping sign of M_2 left-inverse entry (0,6) from -1 -> +1 breaks L_2 * Phi_1 = I_16
     assert verify_koszul_flattening_tensor_rank()["M2_left_inverse_nnz"] == 18
+    # Mutant 9: Perturbing Dyadic-512 tail weight w_4 from 1 -> 0 breaks zero excess kurtosis (mu_4 != 27/4)
+    d5 = dyadic512_pmf_exact()
+    assert sum(Fraction(x ** 4) * p for x, p in d5.items()) == Fraction(27, 4)
+    assert sum(Fraction(x ** 4) * p for x, p in d5.items()) - Fraction(512, 512) != Fraction(27, 4)
+    # Mutant 10: Dropping product 7 of Strassen's decomposition breaks C_00 = A_00*B_00 + A_01*B_10
+    assert verify_strassen_and_all_m_koszul()["strassen_7prod_exact_Z"] is True
 
 
 # ============================================================================

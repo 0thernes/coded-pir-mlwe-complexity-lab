@@ -1,8 +1,8 @@
-# TriadFrontier v2.0.0 Six-Kernel Local Audit Log (Lean 4.35.0, Zero-Mathlib, 19 Theorems T1a-T3f, 21 Audited Decls)
-leanchecker Solution: EXIT 0 
-leanchecker PalomarSolution: EXIT 0 
-leanchecker-paranoid Solution: EXIT 0 
-leanchecker-paranoid PalomarSolution: EXIT 0 
-con-leche --verified: con-leche: accepted 2418 declarations (--verified)
-con-ron --verified: con-ron: accepted 2418 declarations (--verified)
+# TriadFrontier v3.0.0 Six-Kernel Local Audit Log (Lean 4.35.0, Zero-Mathlib, 23 Theorems T1a-T3h, 25 Audited Decls)
+leanchecker Solution: EXIT 0
+leanchecker PalomarSolution: EXIT 0
+leanchecker-paranoid Solution: EXIT 0
+leanchecker-paranoid PalomarSolution: EXIT 0
+con-leche --verified: con-leche: accepted 2995 declarations (--verified)
+con-ron --verified: con-ron: accepted 2995 declarations (--verified)
 nanoda_bin: EXIT 0

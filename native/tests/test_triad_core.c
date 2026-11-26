@@ -115,6 +115,35 @@ int main(void) {
     /* 10. v2.0.0 Universal Koszul Flattening pure-Z certificates (T3e: rank(<2,2,2>)>=6, rank(T_3)>=5) */
     CHECK(triad_verify_koszul_flattening_certs(), "Koszul flattening Z-inverses for M_2 and T_3 verified");
 
+    /* 11. v3.0.0 Optimal 9-Bit Zero-Excess-Kurtosis Dyadic-512 for ML-KEM-512 (T2g) */
+    int h512[9] = {0};
+    for (int raw = 0; raw < 512; raw++) {
+        int v = triad_dyadic512_sample_ct((uint16_t)raw);
+        if (v >= -4 && v <= 4) h512[v + 4]++;
+    }
+    CHECK(h512[0] == 1 && h512[1] == 8 && h512[2] == 44 && h512[3] == 120 && h512[4] == 166 &&
+          h512[5] == 120 && h512[6] == 44 && h512[7] == 8 && h512[8] == 1,
+          "Constant-time Dyadic-512 9-bit sampler matches exact weights (1,8,44,120,166,120,44,8,1)");
+    int sum_x2 = 0, sum_x4 = 0;
+    for (int i = 0; i < 9; i++) {
+        int x = i - 4;
+        sum_x2 += h512[i] * x * x;
+        sum_x4 += h512[i] * x * x * x * x;
+    }
+    CHECK(sum_x2 == 768 && sum_x4 == 3456,
+          "Dyadic-512 exact Var=3/2 (768/512) and exact zero excess kurtosis mu_4=27/4 (3456/512)");
+    triad_renyi_res_t rd512 = triad_mlkem_dyadic512_opt();
+    double loss_d512 = 1024.0 * rd512.bits_per_coord_r2;
+    CHECK(fabs(rd512.min_r2 - 1.000400858061) < 1e-9, "Dyadic-512 min Renyi-2 matches 60-digit oracle");
+    CHECK(loss_d512 > 0.59 && loss_d512 < 0.60 && (loss_512 / loss_d512) > 12.8,
+          "Dyadic-512 compresses ML-KEM-512 Renyi-2 loss by >12.8x (7.63 -> 0.59 bits)");
+
+    /* 12. v3.0.0 Exact Strassen 7-product & All-m Koszul Monomial Left-Inverses (T3g/T3h) */
+    CHECK(triad_verify_strassen_7prod(), "Strassen 7-product bilinear decomposition matches <2,2,2> over Z");
+    for (int m = 2; m <= 4; m++) {
+        CHECK(triad_verify_all_m_koszul_monomial(m), "All-m monomial left-inverse certifies rank(<m,m,m>) >= m^2+2");
+    }
+
     printf("Native C11 TriadFrontier tests: %d passed, %d failed\n", g_pass, g_fail);
     return g_fail == 0 ? 0 : 1;
 }
