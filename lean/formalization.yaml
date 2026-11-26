@@ -6,40 +6,34 @@ release_version: "5.0.0"
 project:
   name: "Koszul-Veronese Flag-Private Coded Byzantine PIR, Module-LWE Reduction Obstructions, and Complexity-Theoretic Bridges"
   description: >-
-    Zero-Mathlib Lean 4.35.0 formalization of 31 headline theorems (T1a-T3l) plus
-    concrete non-vacuity witnesses and 7 machine-checked adversarial boundary refutations
-    (34 audited declarations) across three interconnected open problem frontiers:
-    (Pillar I, CS-053) exterior-power Koszul-Veronese PIR strictly beating the 2026
-    LFSR coded-colluding ceiling, non-vacuous Byzantine-robust capacity double-counting
-    with kernel-certified F_11 rate-2/5 zero-error witness, exact flag-privacy thresholds,
-    a 330-orbit 12-variable Shannon+Ingleton polymatroid barrier at 8/13 > 3/5,
-    projective P^3 linear impossibility over arbitrary fields, exact algebraic Zhang-Yeung (1998)
-    and infinite Matus (2007) family M_s reductions, symmetric M>=3 Koszul contraction,
-    T1i Total 4-Variable Entropic & 5-Object F_2-Linear Subspace Barrier, and T1j Single
-    Z_4-Cyclic F_2^64 6-Subspace Realization matching ALL 64 subsets of {W1,W2,A1..A4} at scale 4
-    (confining any converse for C(2,4,2,2) <= 3/5 to genuinely >= 7-variable storage-coupled inequalities);
-    (Pillar II, CS-026/QC-042/CM-048) commutative-ring determinant-ideal secret independence
-    refuting Luo (2026), ring-universal anti-periodic DFT cancellation (Chen 2024 Step 9) and
-    universal m-twisted DFT selection rule ([propext] alone), exact FIPS 203 ML-KEM CBD2/CBD3
-    moments & 4.96x Renyi-2 cliff, pure-integer Cauchy-Schwarz finite-support floor,
-    universal all-order Renyi-(m+1) Holder floor and TV-chi^2 bridge (T2h), universal
-    Pearson chi^2/Hermite-4 QGTL variational Renyi-2 bridge, T2i pure-Nat Bai et al. engine
-    (Renyi-2 DPI, exact all-order tensorization, R_inf floor) + ML-KEM-1024 Discrete Gaussian
-    DFR Paradox (true unit-variance Gaussian fails NIST at 2^-173.42!) + 14-bit constant-time
-    Dyadic-16384-A/B (11.17x ML-KEM-1024 drop to 6.013 b / DFR 2^-174.03; 41.9x sub-1-bit
-    ML-KEM-512 drop to 0.5916 b / DFR 2^-139.31);
-    and (Pillar III, CS-001/CS-004/CS-010/CS-012/CS-051/CS-CMP-012) constructive multilinear
-    extension uniqueness, LWE PRF -> Natural Proofs obstruction, Katz-Trevisan Byzantine PIR
-    to LDC minimum distance 2B+1 and smoothness, sharp FIPS 203 Compress_1 margin |e|<=831,
-    Shannon (1949) finite circuit counting, field-universal Landsberg-Ottaviani Koszul
-    flattening bounds (rank_F(T_3)>=5, symbolic ALL-m rank_F(<m,m,m>)>=m^2+2), complete
-    characteristic-free Exact Strassen-Winograd rank_F(<2,2,2>)=7 (T3h), field-universal
-    Brockett-Dobkin (1978) rectangular & quadratic MatMul bound rank_F(<m,m,m>)>=2m^2-m (T3i),
-    field-universal Haemers rank bound & exact C_7 min Haemers rank = 4 (T3j), T3k field-universal
-    Multivariate Schwartz-Zippel Lemma + S_3 symmetry + Kronecker submultiplicativity + two-sided
-    Strassen-Brockett-Dobkin sandwich 2*4^k - 2^k <= rank_F(<2^k,2^k,2^k>) <= 7^k, and T3l
-    infinite-family zero-reals Z[sqrt(4k+1)] Paley/conference Shannon capacity Theta(G)=sqrt(4k+1)
-    for EVERY k >= 1 (instantiated concretely in Lean for P_5 = C_5, P_13, and P_17).
+    Zero-Mathlib Lean 4.35.0 formalization of 31 theorems (T1a-T3l) plus spot-check
+    non-vacuity witnesses and 7 adversarial tests (34 audited declarations). The theorems are
+    elementary identities, finite certificates and formalizations of known results used in three
+    areas; none resolves a published open problem in Lean or refutes a published claim.
+    (Pillar I, CS-053) a moment-vector annihilation identity and a Pascal-type binomial identity;
+    inequalities between closed-form rate expressions (achievability of the rates and the
+    comparison with the Sun-Zhang capacity for linear full-support-rank schemes are outside Lean);
+    arithmetic threshold statements; a Boolean check of 90 tabulated F_11 matrix inverses; Boolean
+    polymatroid checks for a tabulated 12-variable function h_uncond at value ratio 8/13; the
+    classical P^3 concurrency fact over any field; Zhang-Yeung (1998) and Matus-type identities;
+    and marginals of h_uncond expressed through in-Lean rank routines that have no correctness
+    proof. Numerical rank computations (not in Lean) give interference dimension 42 and rate 10/17
+    for one (6,3,3) design versus 4/7 in arXiv:2603.10769; privacy and zero-error decoding are not
+    verified.
+    (Pillar II, CS-026/QC-042/CM-048) a diagonal-product identity (the q-ary MLWE basis has
+    determinant q^m), DFT-cancellation identities over any commutative ring, and integer
+    Cauchy-Schwarz, Holder, TV-chi^2, data-processing and moment certificates for tabulated noise
+    weights. Renyi values, Bai et al. overheads and decryption-failure rates are numerical
+    (DFRs from a float64 model); no divergence, sampler or lattice is defined in Lean. The Lean
+    model of FIPS 203 Compress_1 differs from the standard at x = 832.
+    (Pillar III, CS-001/CS-004/CS-010/CS-012/CS-051/CS-CMP-012) multilinear-extension uniqueness,
+    the counting inequality of the natural-proofs argument, minimum distance 2B+1 of a
+    B-error-correcting code, pigeonhole counting, tensor-rank bounds over every field
+    (rank(<2,2,2>) = 7; rank(<m,m,m>) >= 2m^2-m, weaker than the published Brockett-Dobkin 2m^2-1;
+    the two-sided bound 2*4^k - 2^k <= rank(<2^k,2^k,2^k>) <= 7^k), Schwartz-Zippel, the integer
+    form of Lovasz's Theta(C_5) = sqrt(5), minimum fitting-matrix rank 4 for C_7, and, for every
+    self-complementary conference graph on 4k+1 vertices, alpha(G^t)^2 <= (4k+1)^t and
+    alpha(G^{2m}) >= (4k+1)^m, with the hypotheses checked in Lean for P_5, P_13 and P_17.
   authors:
     - name: "Alexander S. Donahue"
       orcid: "0009-0006-8168-9648"
@@ -84,28 +78,28 @@ sources:
     id: "https://arxiv.org/abs/2610.37412"
     type: "paper"
     relationship: "background"
-    note: "Establishes the LFSR coded-colluding PIR capacity exceeded by Theorems T1b, T1g, and T1h."
+    note: "Capacity among linear, full support-rank schemes when N-U-2B >= KT; T1b, T1g and T1h compare closed-form expressions with it (no scheme is defined in Lean)."
   - title: "Infinitely Many Information Inequalities"
     authors:
       - "Frantisek Matus"
     id: "https://doi.org/10.1109/ISIT.2007.4557201"
     type: "paper"
     relationship: "background"
-    note: "Infinite non-Shannon inequality family M_s simultaneously defeated by h_uncond in Theorem T1h."
+    note: "The repository defines matusFamilyQ to follow this family (not compared with the source in Lean); T1h checks it on singleton instances of h_uncond."
   - title: "Module-Lattice-Based Key-Encapsulation Mechanism Standard (FIPS 203)"
     authors:
       - "National Institute of Standards and Technology"
     id: "https://doi.org/10.6028/NIST.FIPS.203"
     type: "standard"
     relationship: "background"
-    note: "Defines ML-KEM modulus q=3329, CBD_2/CBD_3 noise, and Compress_1 audited in T2c, T2e, T2g, and T3d."
+    note: "Defines ML-KEM modulus q=3329, CBD_2/CBD_3 noise and Compress_1 (eq. 4.7). The Lean mlkemCompress1 used in T3d differs from Compress_1 at x = 832. Table 1 lists DFR 2^-174.8 for ML-KEM-1024; no 2^-174 threshold is stated."
   - title: "Quantum Algorithms for Lattice Problems"
     authors:
       - "Yilei Chen"
     id: "https://eprint.iacr.org/2024/555"
     type: "paper"
     relationship: "background"
-    note: "Step 9 periodicity obstruction explained ring-universally by Theorems T2b and T2f."
+    note: "T2b formalizes a DFT identity the author proposes as an explanation of the Step 9 failure; the Step 9 bug was found by Hongxun Wu and, independently, Thomas Vidick (author note on the ePrint page)."
   - title: "Equations for secant varieties of Veronese and other varieties"
     authors:
       - "J. M. Landsberg"
@@ -113,14 +107,14 @@ sources:
     id: "https://doi.org/10.1007/s10231-011-0238-6"
     type: "paper"
     relationship: "background"
-    note: "Koszul flattening framework generalized over arbitrary characteristic (including char 2) in Theorems T3e and T3g."
+    note: "Koszul flattening framework; T3e and T3g prove rank lower bounds over every field via integer left-inverses."
   - title: "On multiplication of 2 x 2 matrices"
     authors:
       - "Shmuel Winograd"
     id: "https://doi.org/10.1016/0024-3795(71)90009-7"
     type: "paper"
     relationship: "background"
-    note: "Exact rank_F(<2,2,2>) = 7 formalized characteristic-free over every SimpleField F in Theorem T3h."
+    note: "Known result rank(<2,2,2>) = 7; T3h formalizes it over every SimpleField F."
   - title: "On the optimal evaluation of a set of bilinear forms"
     authors:
       - "Roger W. Brockett"
@@ -128,28 +122,28 @@ sources:
     id: "https://doi.org/10.1016/0024-3795(78)90012-5"
     type: "paper"
     relationship: "background"
-    note: "Rectangular and quadratic matrix multiplication lower bound 2m^2-m formalized over every SimpleField F in Theorem T3i."
+    note: "Proved 2n^2-1 over any field (as reported by Shpilka, arXiv:cs/0201001). T3i proves the weaker substitution-method bound 2m^2-m."
   - title: "On the Shannon capacity of a graph"
     authors:
       - "Laszlo Lovasz"
     id: "https://doi.org/10.1109/TIT.1979.1055985"
     type: "paper"
     relationship: "background"
-    note: "Exact pentagon Shannon capacity Theta(C_5) = sqrt(5) proved with zero reals via 3-term Z[sqrt(5)] SOS in Theorem T3j."
+    note: "Theta(C_5) = sqrt(5) and capacity sqrt(n) for self-complementary vertex-transitive graphs; T3j gives the integer form for C_5 and T3l a conditional form for conference graphs."
   - title: "On some problems of Lovasz concerning the Shannon capacity of a graph"
     authors:
       - "Willem Haemers"
     id: "https://doi.org/10.1109/TIT.1979.1056027"
     type: "paper"
     relationship: "background"
-    note: "Field-universal Haemers rank bound and exact minimum Haemers rank = 4 for C_7 formalized in Theorem T3j."
+    note: "Haemers rank bound, formalized over every field in T3j, with minimum fitting-matrix rank 4 for C_7."
   - title: "Fast Probabilistic Algorithms for Verification of Polynomial Identities"
     authors:
       - "Jacob T. Schwartz"
     id: "https://doi.org/10.1145/322217.322225"
     type: "paper"
     relationship: "background"
-    note: "Field-universal multivariate Schwartz-Zippel Lemma formalized over every SimpleField F in Theorem T3k."
+    note: "Schwartz-Zippel root bound, formalized over every SimpleField F in T3k."
   - title: "Probabilistic Algorithms for Sparse Polynomials"
     authors:
       - "Richard Zippel"
@@ -163,20 +157,20 @@ sources:
     id: "https://doi.org/10.1002/sapm1933121311"
     type: "paper"
     relationship: "background"
-    note: "Infinite Paley/conference graph family Shannon capacity Theta(G) = sqrt(4k+1) proved with zero reals in Theorem T3l."
+    note: "Paley conference matrices. T3l is conditional on conference-graph and self-complement hypotheses, proved in Lean for P_5, P_13 and P_17 only."
 
 related_formalizations: []
 
 status:
   scope: >-
-    Complete zero-Mathlib Lean 4.35.0 formalization of all 31 headline theorems T1a-T3l,
-    concrete non-vacuity witnesses (TriadFrontier/NonVacuity.lean), and 7 machine-checked
-    adversarial negative boundary refutations (TriadFrontier/AdversarialTests.lean) — 34
+    Zero-Mathlib Lean 4.35.0 formalization of the 31 theorems T1a-T3l as stated in
+    lean/Challenge.lean, spot-check non-vacuity witnesses (TriadFrontier/NonVacuity.lean), and 7 adversarial
+    tests (TriadFrontier/AdversarialTests.lean) — 34
     audited declarations total. Not formalized inside Lean: transcendental 60-digit Renyi/Bai
-    optimization curves, exact zero-trimmed FIPS 203 discrete-convolution DFRs, Lovasz
-    theta(C_7) trigonometric evaluation, and floating-point DFT/QGTL spectra (verified in
-    Tier-2 exact Python, C11, and Eshkol AD), or open conjectures (P != NP, omega = 2,
-    VP != VNP, >=7-var non-linear C(2,4,2,2), general M>=3 non-LFSR PIR when E>=KT, exact
+    optimization curves, float64 FIPS 203 discrete-convolution DFRs, Lovasz
+    theta(C_7) trigonometric evaluation, and floating-point DFT/QGTL spectra (computed in
+    Tier-2 Python, C11, and Eshkol AD), or open conjectures (P != NP, omega = 2,
+    VP != VNP, the non-linear capacity C(2,4,2,2), the Sun-Tao-Xu-Zhang maximum-redundancy question, general M>=3 non-LFSR PIR when E>=KT, exact
     Theta(C_7), worst-case quantum MLWE hardness).
   sorry_count: 0
   sorry_in_definitions: 0
@@ -357,21 +351,22 @@ automation:
 
 fidelity:
   divergences: >-
-    Transcendental Renyi-2/inf/Bai optimization curves, exact FIPS 203 discrete-convolution DFRs,
-    trigonometric Lovasz theta(C_7), and complex DFT/QGTL spectra are verified to 60-digit Decimal
-    precision in Python and differentially against C11 and Eshkol forward-mode dual-number AD
+    Transcendental Renyi-2/inf/Bai optimization curves, float64 FIPS 203 discrete-convolution DFRs,
+    trigonometric Lovasz theta(C_7), and complex DFT/QGTL spectra are computed outside Lean (Renyi/Bai to 60-digit Decimal
+    precision, DFRs in float64) in Python and differentially against C11 and Eshkol forward-mode dual-number AD
     (< 2e-13), while Lean 4.35.0 machine-checks the exact rational/integer moments, all-order
     Renyi Holder & TV-chi^2 bounds, cleared-denominator inequalities, finite-field rank
-    certificates, 4-var/5-obj linear-subspace realizability certificates, symbolic ALL-m Koszul
-    left-inverses, exact Strassen-Winograd rank_F(<2,2,2>)=7, Brockett-Dobkin 2m^2-m, and exact
-    Z[sqrt(5)] SOS Lovasz Theta(C_5)=sqrt(5) + Haemers C_7 rank=4 with zero Mathlib.
+    certificates, 4-var/5-obj subspace certificates resting on unverified rank routines, symbolic ALL-m Koszul
+    left-inverses, rank_F(<2,2,2>)=7, the substitution bound 2m^2-m, and exact
+    Z[sqrt(5)] SOS integer form of Lovasz Theta(C_5)=sqrt(5) + Haemers C_7 rank=4 with zero Mathlib.
 
 review:
   status: "self-assessed"
   notes: >-
     Not externally peer-reviewed. Machine-checked across all 6 independent Lean 4.35.0
     proof kernels via lake comparator --config comparator.json --paranoid (Lean default,
-    leanchecker-paranoid, lean4lean, silent 0-error nanoda, con-leche --verified 4,300 decls,
-    con-ron --verified 4,300 decls), with 0 warnings, 0 proof sorries, 0 native_decide,
-    concrete NonVacuity witnesses, 7 machine-checked AdversarialTests refutations, and a
-    live negative kernel-rejection gate.
+    leanchecker-paranoid, lean4lean, silent 0-error nanoda, con-leche --verified and
+    con-ron --verified; 4,300 decls on the standalone Solution export), with 0 warnings, 0 proof sorries, 0 native_decide,
+    spot-check NonVacuity witnesses, 7 AdversarialTests, and a live negative
+    kernel-rejection gate. Kernel agreement certifies the proofs, not the modelling; see
+    ERRATA.md (2026-11-26 statement audit) for known discrepancies.
