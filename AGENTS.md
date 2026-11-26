@@ -37,9 +37,9 @@ python scripts/check_citations.py
 
 ## Key Architectural Paths
 
-- `lean/TriadFrontier/` — Zero-Mathlib Lean 4.35.0 proof modules (`AlgebraCore`, `PIRCertificates`, `PIRKoszul`, `MLWETightness`, `KoszulTensor`, `StrassenWinograd`, `ComplexityTriad`, `NonVacuity`; 23 theorems `T1a`–`T3h`).
-- `native/` — C11 implementation, CLI, and 57-test + 512-case fuzz harness.
+- `lean/TriadFrontier/` — Zero-Mathlib Lean 4.35.0 proof modules (`AlgebraCore`, `PIRCertificates`, `PIRLinearCerts`, `PIRKoszul`, `MLWETightness`, `KoszulTensor`, `StrassenWinograd`, `BrockettDobkin`, `ShannonCapacity`, `ComplexityTriad`, `NonVacuity`; 27 theorems `T1a`–`T3j`).
+- `native/` — C11 implementation, CLI, and 65-test + 512-case fuzz harness.
 - `eshkol/` — Forward-mode dual-number AD modules (`.esk`) and Node.js runner.
-- `python/triad_verify/` — Exact finite-field rank, 12-variable polymatroid, 60-digit ML-KEM `Dyadic-256`/`Dyadic-512` & FIPS 203 DFR convolution, Koszul/Strassen tensor checks, and 6-figure vector PDF generation.
-- `paper/main.tex` & `paper/refs.bib` — 16-page AMS-LaTeX manuscript (`v3.0.0`).
+- `python/triad_verify/` — Exact finite-field rank, 12-variable polymatroid + $I_4$/5-obj $\mathbb{F}_2$ linear realizability, 60-digit ML-KEM `Dyadic-256/512/1024-A/B` & Bai et al. (2018) optimizer + exact FIPS 203 DFR convolution, Koszul/Strassen/Brockett–Dobkin/Lovász checks, and 7-figure vector PDF generation.
+- `paper/main.tex` & `paper/refs.bib` — AMS-LaTeX manuscript (`v4.0.0`, 33 live HTTP-200 citations).
 - `docs/` — Architecture, ADRs, threat model, statement fidelity, 10-pass review, adversarial red-team review, and interactive GitHub Pages Blueprint (`docs/site/`).

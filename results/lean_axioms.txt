@@ -8,6 +8,7 @@
  Quot.sound]
 'TriadFrontier.Solution.t1g_zhang_yeung_reduction_and_mfile_koszul' depends on axioms: [propext, Quot.sound]
 'TriadFrontier.Solution.t1h_infinite_nonshannon_cone_barrier_and_contraction' depends on axioms: [propext, Quot.sound]
+'TriadFrontier.Solution.t1i_total_4var_entropic_and_5obj_linear_barrier' depends on axioms: [propext, Quot.sound]
 'TriadFrontier.Solution.t2a_determinant_ideal_secret_independence' depends on axioms: [propext, Quot.sound]
 'TriadFrontier.Solution.t2b_chen_step9_antiperiodic_dft_cancellation' depends on axioms: [propext, Quot.sound]
 'TriadFrontier.Solution.t2c_mlkem_cbd_renyi_cliff' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -17,6 +18,7 @@
 'TriadFrontier.Solution.t2g_qgtl_renyi_variational_bridge_and_dyadic512' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]
+'TriadFrontier.Solution.t2h_all_order_renyi_holder_tv_and_dyadic1024' depends on axioms: [propext, Quot.sound]
 'TriadFrontier.Solution.t3a_algebrization_multilinear_extension_uniqueness' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]
@@ -31,6 +33,12 @@
 'TriadFrontier.Solution.t3f_shannon_counting_and_ldc_smoothness' depends on axioms: [propext, Quot.sound]
 'TriadFrontier.Solution.t3g_all_m_koszul_matmul_lower_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
 'TriadFrontier.Solution.t3h_strassen_winograd_exact_rank_seven' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TriadFrontier.Solution.t3i_brockett_dobkin_rectangular_and_quadratic_matmul_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TriadFrontier.Solution.t3j_shannon_capacity_lovasz_c5_and_haemers' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]
 'TriadFrontier.Solution.prove_all_triad_theorems' depends on axioms: [propext, Classical.choice, Quot.sound]

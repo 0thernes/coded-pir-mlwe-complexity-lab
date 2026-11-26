@@ -453,11 +453,187 @@ def verify_dyadic512_dfr_and_variational_bridge() -> dict:
     }
 
 
+def dyadic1024a_pmf_exact() -> dict[int, Fraction]:
+    return {
+        -3: Fraction(4, 1024), -2: Fraction(57, 1024), -1: Fraction(248, 1024),
+        0: Fraction(406, 1024),
+        1: Fraction(248, 1024), 2: Fraction(57, 1024), 3: Fraction(4, 1024),
+    }
+
+
+def dyadic1024b_pmf_exact() -> dict[int, Fraction]:
+    return {
+        -4: Fraction(1, 1024), -3: Fraction(17, 1024), -2: Fraction(90, 1024),
+        -1: Fraction(239, 1024), 0: Fraction(330, 1024), 1: Fraction(239, 1024),
+        2: Fraction(90, 1024), 3: Fraction(17, 1024), 4: Fraction(1, 1024),
+    }
+
+
+def compute_bai_overhead_bits(pmf: dict[int, Fraction], m_coords: int, lam_bits: float) -> dict:
+    """Exact overflow-free log-sum-exp optimization of Bai et al. (2018) Theorem 1 security overhead:
+    Delta_Bai(lam) = min_{alpha > 1, sigma > 0} [ lam / (alpha - 1) + m * log2 R_alpha(P || D_sigma) ]."""
+    pf = {x: float(v) for x, v in pmf.items()}
+    ln2 = math.log(2.0)
+
+    def eval_ov(alpha: float, s: float) -> float:
+        two_s2 = 2.0 * s * s
+        Z = sum(math.exp(-(x * x) / two_s2) for x in range(-35, 36))
+        logZ = math.log(Z)
+        am1 = alpha - 1.0
+        log_terms = [
+            alpha * math.log(p) + am1 * ((x * x) / two_s2 + logZ)
+            for x, p in pf.items()
+        ]
+        mt = max(log_terms)
+        log_sa = mt + math.log(sum(math.exp(t - mt) for t in log_terms))
+        log2_ra = log_sa / (am1 * ln2)
+        return lam_bits / am1 + m_coords * log2_ra
+
+    best = (1e18, 2.0, 1.0)
+    alphas = [1.5 + 0.5 * i for i in range(1, 40)] + [25.0 + 2.5 * i for i in range(40)] + [140.0 + 10.0 * i for i in range(25)]
+    sigmas = [0.85 + 0.005 * i for i in range(121)]
+    for s in sigmas:
+        for alpha in alphas:
+            ov = eval_ov(alpha, s)
+            if ov < best[0]:
+                best = (ov, alpha, s)
+    ov_best, a0, s0 = best
+    for step_a, step_s in ((0.5, 0.001), (0.05, 0.0002)):
+        ca, cs = a0, s0
+        for da in range(-12, 13):
+            alpha = max(1.05, ca + step_a * da)
+            for ds in range(-12, 13):
+                s = max(0.5, cs + step_s * ds)
+                ov = eval_ov(alpha, s)
+                if ov < ov_best:
+                    ov_best, a0, s0 = ov, alpha, s
+    return {"bai_overhead_bits": round(ov_best, 4), "alpha_opt": round(a0, 3), "sigma_opt": round(s0, 5)}
+
+
+def verify_all_order_renyi_bai_and_dyadic1024() -> dict:
+    """60-digit verification of Theorem T2h: all-order Renyi-(m+1) Holder floor, TV-chi^2 bridge,
+    10-bit constant-time Dyadic-1024-A/B exact moments, R_2, R_inf, Bai et al. (2018) end-to-end
+    security overhead collapse, and exact FIPS 203 discrete-convolution DFR compliance."""
+    getcontext().prec = 65
+    d1024a = dyadic1024a_pmf_exact()
+    d1024b = dyadic1024b_pmf_exact()
+    assert sum(d1024a.values()) == 1 and sum(d1024b.values()) == 1
+    assert sum(Fraction(x * x) * p for x, p in d1024a.items()) == 1
+    assert sum(Fraction(x ** 4) * p for x, p in d1024a.items()) == Fraction(371, 128)
+    assert sum(Fraction(x * x) * p for x, p in d1024b.items()) == Fraction(3, 2)
+    assert sum(Fraction(x ** 4) * p for x, p in d1024b.items()) == Fraction(207, 32)
+
+    def opt_r2_rinf_60(pmf: dict[int, Fraction], lo_s: str, hi_s: str) -> dict:
+        def eval_r(sigma: Decimal) -> tuple[Decimal, Decimal]:
+            two_s2 = Decimal(2) * sigma * sigma
+            Z = sum((-(Decimal(x * x)) / two_s2).exp() for x in range(-50, 51))
+            r2 = Decimal(0)
+            rinf = Decimal(0)
+            for x, fp in pmf.items():
+                px = Decimal(fp.numerator) / Decimal(fp.denominator)
+                qx = (-(Decimal(x * x)) / two_s2).exp() / Z
+                r2 += (px * px) / qx
+                rat = px / qx
+                if rat > rinf:
+                    rinf = rat
+            return r2, rinf
+
+        phi = (Decimal(5).sqrt() - Decimal(1)) / Decimal(2)
+        lo, hi = Decimal(lo_s), Decimal(hi_s)
+        for _ in range(120):
+            m1 = hi - phi * (hi - lo)
+            m2 = lo + phi * (hi - lo)
+            if eval_r(m1)[0] < eval_r(m2)[0]:
+                hi = m2
+            else:
+                lo = m1
+        s2 = (lo + hi) / Decimal(2)
+        r2_min, _ = eval_r(s2)
+
+        lo, hi = Decimal(lo_s), Decimal(hi_s)
+        for _ in range(120):
+            m1 = hi - phi * (hi - lo)
+            m2 = lo + phi * (hi - lo)
+            if eval_r(m1)[1] < eval_r(m2)[1]:
+                hi = m2
+            else:
+                lo = m1
+        sinf = (lo + hi) / Decimal(2)
+        _, rinf_min = eval_r(sinf)
+        return {
+            "sigma_opt_r2": str(s2)[:18],
+            "min_r2": str(r2_min)[:22],
+            "sigma_opt_rinf": str(sinf)[:18],
+            "min_rinf": str(rinf_min)[:22],
+            "bits_per_coord_r2": float(r2_min.ln() / Decimal(2).ln()),
+            "bits_per_coord_rinf": float(rinf_min.ln() / Decimal(2).ln()),
+        }
+
+    opt_a = opt_r2_rinf_60(d1024a, "0.9", "1.3")
+    opt_b = opt_r2_rinf_60(d1024b, "1.0", "1.5")
+
+    cbd2, cbd3 = cbd_pmf_exact(2), cbd_pmf_exact(3)
+    d256, d512 = dyadic256_pmf_exact(), dyadic512_pmf_exact()
+
+    # Exact Bai et al. (2018) end-to-end security overhead across all 3 ML-KEM parameter sets
+    bai_suite = {
+        "ML_KEM_512_CBD3": compute_bai_overhead_bits(cbd3, 1024, 128.0),
+        "ML_KEM_512_Dyadic512": compute_bai_overhead_bits(d512, 1024, 128.0),
+        "ML_KEM_512_Dyadic1024B": compute_bai_overhead_bits(d1024b, 1024, 128.0),
+        "ML_KEM_768_CBD2": compute_bai_overhead_bits(cbd2, 1536, 192.0),
+        "ML_KEM_768_Dyadic256": compute_bai_overhead_bits(d256, 1536, 192.0),
+        "ML_KEM_768_Dyadic1024A": compute_bai_overhead_bits(d1024a, 1536, 192.0),
+        "ML_KEM_1024_CBD2": compute_bai_overhead_bits(cbd2, 2048, 256.0),
+        "ML_KEM_1024_Dyadic256": compute_bai_overhead_bits(d256, 2048, 256.0),
+        "ML_KEM_1024_Dyadic1024A": compute_bai_overhead_bits(d1024a, 2048, 256.0),
+    }
+
+    # Exact FIPS 203 discrete-convolution DFR compliance for 10-bit Dyadic-1024-A & Dyadic-1024-B
+    dfr_1024 = {
+        "ML_KEM_512_Dyadic1024B_A": compute_exact_mlkem_dfr(2, 10, 4, d1024b, d1024a),
+        "ML_KEM_768_Dyadic1024A": compute_exact_mlkem_dfr(3, 10, 4, d1024a, d1024a),
+        "ML_KEM_1024_Dyadic1024A": compute_exact_mlkem_dfr(4, 11, 5, d1024a, d1024a),
+    }
+    assert dfr_1024["ML_KEM_512_Dyadic1024B_A"]["union_bound_log2_dfr"] < -138.8
+    assert dfr_1024["ML_KEM_768_Dyadic1024A"]["union_bound_log2_dfr"] < -164.0
+    assert dfr_1024["ML_KEM_1024_Dyadic1024A"]["union_bound_log2_dfr"] < -174.0
+
+    # Verify all-order Renyi-k Holder floor & TV-chi^2 bridge (T2h) for k = 2..16 at sigma = 1
+    Z1 = sum(math.exp(-0.5 * x * x) for x in range(-35, 36))
+    Q1 = {x: math.exp(-0.5 * x * x) / Z1 for x in range(-35, 36)}
+    q_supp2 = sum(Q1[x] for x in range(-2, 3))
+    for k in range(2, 17):
+        rk = sum((float(p) ** k) * (Q1[x] ** (1 - k)) for x, p in cbd2.items()) ** (1.0 / (k - 1))
+        assert rk >= (1.0 / q_supp2) - 1e-14
+    tv = 0.5 * sum(abs(float(cbd2.get(x, 0)) - Q1[x]) for x in range(-35, 36))
+    r2_val = sum((float(p) ** 2) / Q1[x] for x, p in cbd2.items())
+    assert 4.0 * tv * tv <= r2_val - 1.0 + 1e-15
+
+    return {
+        "dyadic1024a": {
+            **opt_a,
+            "loss_r2_768_bits": round(1536 * opt_a["bits_per_coord_r2"], 4),
+            "loss_r2_1024_bits": round(2048 * opt_a["bits_per_coord_r2"], 4),
+            "loss_rinf_768_bits": round(1536 * opt_a["bits_per_coord_rinf"], 4),
+            "loss_rinf_1024_bits": round(2048 * opt_a["bits_per_coord_rinf"], 4),
+        },
+        "dyadic1024b": {
+            **opt_b,
+            "loss_r2_512_bits": round(1024 * opt_b["bits_per_coord_r2"], 4),
+            "loss_rinf_512_bits": round(1024 * opt_b["bits_per_coord_rinf"], 4),
+        },
+        "bai_overhead_suite": bai_suite,
+        "dfr_1024_suite": dfr_1024,
+        "all_order_renyi_k2_to_16_and_tv_chi2_verified": True,
+    }
+
+
 def run_all_mlwe_checks() -> dict:
     return {
         "renyi_60digit": verify_cbd_moments_and_renyi_60digit(),
         "dyadic256_60digit": verify_dyadic256_and_qgtl_kurtosis_60digit(),
         "dyadic512_dfr_variational": verify_dyadic512_dfr_and_variational_bridge(),
+        "dyadic1024_bai_and_all_order": verify_all_order_renyi_bai_and_dyadic1024(),
         "chen_step9": verify_chen_step9(),
         "twisted_dft_m2_to_6": verify_twisted_dft_selection_rule(),
         "luo_det_ideal": verify_luo_det_ideal_independence(),

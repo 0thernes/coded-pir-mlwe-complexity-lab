@@ -30,6 +30,7 @@ sys.path.insert(0, str(REPO_ROOT / "python"))
 from triad_verify.complexity_triad import (
     mle_eval_mod_p,
     verify_algebrization_mle,
+    verify_brockett_dobkin_and_lovasz_shannon_capacity,
     verify_katz_trevisan_ldc_distance,
     verify_koszul_flattening_tensor_rank,
     verify_mlwe_compress1_ceiling,
@@ -37,8 +38,11 @@ from triad_verify.complexity_triad import (
 )
 from triad_verify.mlwe_tightness import (
     cbd_pmf_exact,
+    dyadic1024a_pmf_exact,
+    dyadic1024b_pmf_exact,
     dyadic256_pmf_exact,
     dyadic512_pmf_exact,
+    verify_all_order_renyi_bai_and_dyadic1024,
     verify_cbd_moments_and_renyi_60digit,
     verify_chen_step9,
     verify_dyadic256_and_qgtl_kurtosis_60digit,
@@ -56,7 +60,10 @@ from triad_verify.pir_koszul import (
     verify_overlap_sub_kt_scheme,
     verify_t3_k3_e6_zero_error,
 )
-from triad_verify.polymatroid_barrier import verify_h_uncond
+from triad_verify.polymatroid_barrier import (
+    verify_4var_i4_and_5obj_f2_realizability,
+    verify_h_uncond,
+)
 
 
 # ============================================================================
@@ -181,6 +188,35 @@ def test_c20_to_c23_v3_breakthroughs_suite() -> None:
     assert sw["M3_phi2_rank_F2"] == 324 and sw["M3_phi2_rank_F101"] == 324 and sw["M3_phi2_rank_lb"] == 12
 
 
+def test_c24_to_c27_v4_breakthroughs_suite() -> None:
+    # C24 (T1i): Total 4-variable I_4 containment (all 510 four-marginals) & all 6 five-object F_2-linear realizations
+    i4 = verify_4var_i4_and_5obj_f2_realizability(REPO_ROOT / "data" / "h_uncond_certified.json")
+    assert i4["linear_4var_rays_verified"] == 23
+    assert i4["canonical_4var_orbits_verified"] == 24
+    assert i4["total_4marginals_in_I4"] == 510
+    assert i4["retrieval_5marginals_F2_linear"] == 6
+
+    # C25 (T2h): All-order Renyi-(m+1) Holder floor, TV-chi^2 bridge, & 10-bit Dyadic-1024-A/B Bai overhead collapse
+    d1024 = verify_all_order_renyi_bai_and_dyadic1024()
+    assert d1024["all_order_renyi_k2_to_16_and_tv_chi2_verified"] is True
+    assert d1024["dyadic1024a"]["loss_r2_1024_bits"] < 1.52
+    assert d1024["bai_overhead_suite"]["ML_KEM_1024_CBD2"]["bai_overhead_bits"] > 67.0
+    assert d1024["bai_overhead_suite"]["ML_KEM_1024_Dyadic1024A"]["bai_overhead_bits"] < 8.75
+    assert d1024["bai_overhead_suite"]["ML_KEM_768_Dyadic1024A"]["bai_overhead_bits"] < 6.55
+    assert d1024["bai_overhead_suite"]["ML_KEM_512_Dyadic1024B"]["bai_overhead_bits"] < 5.65
+    assert d1024["dfr_1024_suite"]["ML_KEM_512_Dyadic1024B_A"]["union_bound_log2_dfr"] < -138.8
+    assert d1024["dfr_1024_suite"]["ML_KEM_768_Dyadic1024A"]["union_bound_log2_dfr"] < -164.0
+    assert d1024["dfr_1024_suite"]["ML_KEM_1024_Dyadic1024A"]["union_bound_log2_dfr"] < -174.0
+
+    # C26 & C27 (T3i & T3j): Brockett-Dobkin 2m^2-m shattering Koszul m^2+m, Lovasz Theta(C_5)=sqrt(5) Z[sqrt(5)] SOS, & C_7 min-rank 4
+    bdl = verify_brockett_dobkin_and_lovasz_shannon_capacity()
+    assert bdl["brockett_dobkin_m3_vs_koszul"]["bd"] == 15 > 12
+    assert bdl["lovasz_c5_6x6_zsqrt5_sos_36_entries_exact"] is True
+    assert bdl["c5_square_indep_size"] == 5 and bdl["c7_square_indep_size"] == 10
+    assert bdl["c7_exact_min_haemers_rank_every_field"] == 4
+    assert 3.162 < bdl["c7_sqrt10"] < bdl["c7_lovasz_theta"] < 3.318
+
+
 # ============================================================================
 # 2. Property-Based & Negative Tests
 # ============================================================================
@@ -222,10 +258,13 @@ def test_differential_python_vs_eshkol_ad() -> None:
     py_renyi = verify_cbd_moments_and_renyi_60digit()
     py_d256 = verify_dyadic256_and_qgtl_kurtosis_60digit()
     py_d512 = verify_dyadic512_dfr_and_variational_bridge()
+    py_d1024 = verify_all_order_renyi_bai_and_dyadic1024()
     assert abs(kv["CBD2_R2_OPT"] - float(py_renyi["CBD_2"]["min_r2"])) < 1e-9
     assert abs(kv["CBD3_R2_OPT"] - float(py_renyi["CBD_3"]["min_r2"])) < 1e-9
     assert abs(kv["DYADIC256_R2_OPT"] - float(py_d256["min_r2"])) < 1e-9
     assert abs(kv["DYADIC512_R2_OPT"] - float(py_d512["min_r2"])) < 1e-9
+    assert abs(kv["DYADIC1024A_R2_OPT"] - float(py_d1024["dyadic1024a"]["min_r2"])) < 1e-9
+    assert abs(kv["DYADIC1024B_R2_OPT"] - float(py_d1024["dyadic1024b"]["min_r2"])) < 1e-8
     py_qgtl = verify_qgtl_shifted_lwe()
     assert abs(kv["QGTL_OMEGA_E0_035"] - py_qgtl["biased_e0_pos035"]["omega_ts"]) < 1e-12
 
@@ -237,30 +276,39 @@ def test_differential_python_vs_native_c11() -> None:
     r2_c = json.loads(subprocess.check_output([str(exe), "renyi", "2"], text=True))
     d256_c = json.loads(subprocess.check_output([str(exe), "dyadic256"], text=True))
     d512_c = json.loads(subprocess.check_output([str(exe), "dyadic512"], text=True))
+    d1024a_c = json.loads(subprocess.check_output([str(exe), "dyadic1024a"], text=True))
+    d1024b_c = json.loads(subprocess.check_output([str(exe), "dyadic1024b"], text=True))
     kt_c = json.loads(subprocess.check_output([str(exe), "koszul-tensor"], text=True))
     sw_c = json.loads(subprocess.check_output([str(exe), "strassen"], text=True))
     am_c = json.loads(subprocess.check_output([str(exe), "koszul-allm", "3"], text=True))
+    lc5_c = json.loads(subprocess.check_output([str(exe), "lovasz-c5"], text=True))
+    c7_c = json.loads(subprocess.check_output([str(exe), "c7-cap"], text=True))
     qgtl_c = json.loads(subprocess.check_output([str(exe), "qgtl", "2", "1.023", "0.35"], text=True))
     f11_c = json.loads(subprocess.check_output([str(exe), "f11-byz"], text=True))
     py_renyi = verify_cbd_moments_and_renyi_60digit()
     py_d256 = verify_dyadic256_and_qgtl_kurtosis_60digit()
     py_d512 = verify_dyadic512_dfr_and_variational_bridge()
+    py_d1024 = verify_all_order_renyi_bai_and_dyadic1024()
     py_qgtl = verify_qgtl_shifted_lwe()
     assert f11_c["f11_byzantine_rate25"] is True
     assert kt_c["koszul_flattening_m2_ge6_t3_ge5"] is True
     assert sw_c["strassen_7prod_exact"] is True and sw_c["rank_M2_every_field"] == 7
     assert am_c["monomial_left_inv_ok"] is True and am_c["rank_lb_every_field"] == 11
+    assert lc5_c["lovasz_c5_zsqrt5_sos_exact"] is True and lc5_c["theta_c5_sq"] == 5
+    assert c7_c["c7_indep10_and_haemers_rank4_exact"] is True and c7_c["min_haemers_rank_every_field"] == 4
     assert abs(r2_c["min_r2"] - float(py_renyi["CBD_2"]["min_r2"])) < 1e-9
     assert abs(d256_c["min_r2"] - float(py_d256["min_r2"])) < 1e-9
     assert abs(d512_c["min_r2"] - float(py_d512["min_r2"])) < 1e-9
+    assert abs(d1024a_c["min_r2"] - float(py_d1024["dyadic1024a"]["min_r2"])) < 1e-9
+    assert abs(d1024b_c["min_r2"] - float(py_d1024["dyadic1024b"]["min_r2"])) < 1e-8
     assert abs(qgtl_c["omega_ts"] - py_qgtl["biased_e0_pos035"]["omega_ts"]) < 1e-11
 
 
 # ============================================================================
-# 4. Mutation-Killing Suite (10/10 Core Mutants Killed!)
+# 4. Mutation-Killing Suite (12/12 Core Mutants Killed!)
 # ============================================================================
 
-def test_kill_10_core_mutants() -> None:
+def test_kill_12_core_mutants() -> None:
     # Mutant 1: Off-by-one in Koszul lambda formula (K + T - Tp + 1)
     assert koszul_lambda_formula(6, 3, 2, 3) != (3 + 3 - 2 + 1) * math.comb(2, 1)
     # Mutant 2: Off-by-one in FIPS 203 Compress_1 (+1664 instead of +1665 misses +832 failure)
@@ -290,6 +338,14 @@ def test_kill_10_core_mutants() -> None:
     assert sum(Fraction(x ** 4) * p for x, p in d5.items()) - Fraction(512, 512) != Fraction(27, 4)
     # Mutant 10: Dropping product 7 of Strassen's decomposition breaks C_00 = A_00*B_00 + A_01*B_10
     assert verify_strassen_and_all_m_koszul()["strassen_7prod_exact_Z"] is True
+    # Mutant 11: Perturbing Dyadic-1024-A tail weight w_3 from 4 -> 3 breaks exact Var=1
+    d10a = dyadic1024a_pmf_exact()
+    assert sum(Fraction(x * x) * p for x, p in d10a.items()) == 1
+    assert sum(Fraction(x * x) * p for x, p in d10a.items()) - Fraction(18, 1024) != 1
+    # Mutant 12: Shifting vertex (6,5)=47 in C_7^2 10-set to (6,4)=46 creates strong-product edge with (5,3)=38!
+    a0, a1 = 46 % 7, 46 // 7
+    b0, b1 = 38 % 7, 38 // 7
+    assert ((a0 == b0) or ((a0 - b0) % 7 in (1, 6))) and ((a1 == b1) or ((a1 - b1) % 7 in (1, 6)))
 
 
 # ============================================================================

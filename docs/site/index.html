@@ -5,8 +5,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Triad Frontier Lab (v3.0.0) — Coded/Byzantine PIR, MLWE Tightness &amp; Exact Strassen–Winograd Bridges</title>
-<meta name="description" content="23 Zero-Mathlib Lean 4.35.0 machine-checked theorems (T1a–T3h) across 6 independent kernels on Coded/Byzantine PIR (CS-053), MLWE Tightness &amp; Dyadic-256/512 (CS-026), and Exact Strassen–Winograd / All-m Koszul Tensor / Complexity Barriers (CS-001/CS-004/CS-012/CS-051).">
+<title>Triad Frontier Lab (v4.0.0) — Coded/Byzantine PIR, MLWE Bai Collapse, Brockett–Dobkin &amp; Lovász Capacity</title>
+<meta name="description" content="27 Zero-Mathlib Lean 4.35.0 machine-checked theorems (T1a–T3j) across 6 independent kernels on Coded/Byzantine PIR (CS-053), MLWE Tightness &amp; Dyadic-256/512/1024-A/B (CS-026), Brockett–Dobkin 2m²-m / Exact Strassen–Winograd (CS-004), and Exact Lovász Shannon Capacity Θ(C_5)=√5 &amp; Haemers C_7 Rank=4 (CS-CMP-012).">
 <style>
   :root {
     --bg: #0b1120;
@@ -106,30 +106,30 @@
 <header>
   <div class="wrap">
     <div class="badge-row">
-      <span class="badge cyan">v3.0.0 · Zero-Mathlib Lean 4.35.0</span>
-      <span class="badge green">23 Theorems (T1a–T3h) · 6 Independent Kernels</span>
-      <span class="badge violet">0 sorry · 0 native_decide · 2,995 Decls</span>
-      <span class="badge amber">Honest Scope: P≠NP, ω=2, VP≠VNP OPEN</span>
+      <span class="badge cyan">v4.0.0 · Zero-Mathlib Lean 4.35.0</span>
+      <span class="badge green">27 Theorems (T1a–T3j) · 6 Independent Kernels</span>
+      <span class="badge violet">0 sorry · 0 native_decide · 3,589 / 3,884 Decls</span>
+      <span class="badge amber">Honest Scope: P≠NP, ω=2, Θ(C₇) OPEN</span>
     </div>
     <h1>Koszul–Veronese Byzantine PIR, MLWE Reduction Tightness, and Complexity-Barrier Bridges</h1>
     <p class="subtitle">
       Interactive formal-verification companion by <strong>Alexander S. Donahue</strong>
       (Independent Researcher, Spokane, WA, USA · <a href="https://orcid.org/0009-0006-8168-9648">ORCID 0009-0006-8168-9648</a>).
-      Cross-audited across 6 Lean proof kernels, zero-warning C11 (57 tests), Eshkol v1.3.6 forward-mode AD, and 60-digit exact Python.
+      Cross-audited across 6 Lean proof kernels, zero-warning C11 (65 tests), Eshkol v1.3.6 forward-mode AD, and 60-digit exact Python.
     </p>
     <div class="cta-row">
-      <a class="btn primary" href="blueprint.html">Open Interactive 23-Theorem Proof Blueprint DAG &rarr;</a>
+      <a class="btn primary" href="blueprint.html">Open Interactive 27-Theorem Proof Blueprint DAG &rarr;</a>
       <a class="btn" href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab">GitHub Repository</a>
-      <a class="btn" href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab/releases">v3.0.0 Frozen PDF &amp; arXiv Bundle</a>
+      <a class="btn" href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab/releases">v4.0.0 Frozen PDF &amp; arXiv Bundle</a>
       <a class="btn" href="https://github.com/0thernes/0thernes-research-archive">Master Research Archive (0TH-2026-012)</a>
     </div>
     <div class="stat-row">
-      <div class="stat"><div class="num">23</div><div class="lbl">Lean 4.35 Theorems (T1a–T3h)</div></div>
+      <div class="stat"><div class="num">27</div><div class="lbl">Lean 4.35 Theorems (T1a–T3j)</div></div>
       <div class="stat"><div class="num">6</div><div class="lbl">Independent Proof Kernels</div></div>
-      <div class="stat"><div class="num">2,995</div><div class="lbl">con-leche / con-ron Verified Decls</div></div>
-      <div class="stat"><div class="num">17.7&times; / 12.9&times;</div><div class="lbl">Dyadic-256 &amp; Dyadic-512 Drops</div></div>
-      <div class="stat"><div class="num">10/17</div><div class="lbl">Zero-Error PIR (beats 4/7 over F_7)</div></div>
-      <div class="stat"><div class="num">= 7</div><div class="lbl">Exact rank_F(&lt;2,2,2&gt;) ∀F (incl. char 2)</div></div>
+      <div class="stat"><div class="num">3,589</div><div class="lbl">con-leche / con-ron Verified Decls</div></div>
+      <div class="stat"><div class="num">9.19&times;</div><div class="lbl">Dyadic-1024-A Bai Overhead Drop</div></div>
+      <div class="stat"><div class="num">2m&sup2;&minus;m</div><div class="lbl">Brockett–Dobkin ∀F (T3i)</div></div>
+      <div class="stat"><div class="num">&Theta;(C₅)=&radic;5</div><div class="lbl">Exact Zero-Reals Z[√5] SOS (T3j)</div></div>
     </div>
   </div>
 </header>
@@ -139,27 +139,27 @@
     <h2>Three Machine-Checked Research Pillars</h2>
     <div class="grid-3">
       <div class="card p1">
-        <h3>Pillar I · CS-053 Coded/Byzantine PIR (T1a–T1h)</h3>
+        <h3>Pillar I · CS-053 Coded/Byzantine PIR (T1a–T1i)</h3>
         <ul>
           <li>Exact Koszul–Veronese Schur-product rank <code>&lambda;&star;(T,T',K)</code> raising Example VII.A from <code>4/7</code> to zero-error <code>10/17</code> (valid over <code>F_7</code>!).</li>
           <li>Universal <code>K &harr; T</code> symmetric rate strictly beating Sun–Zhang (<code>arXiv:2610.37412</code>) LFSR by <code>(K-1)(T-1)E&sup2; &gt; 0</code>, breaking <code>E &ge; KT</code> for all <code>M &ge; 2</code>, and dominating all-<code>M</code> contraction <code>&rho;_KV^j &lt; &rho;_LFSR^j</code> (<code>T1h</code>).</li>
-          <li>Pure-integer 12-variable polymatroid <code>h_uncond</code> at <code>8/13 &gt; 3/5</code> defeating Shannon, 3.81M Ingletons, Zhang–Yeung (1998), <em>and all infinitely many Mat&uacute;&scaron; (2007) inequalities</em> simultaneously (<code>T1e, T1g, T1h</code>).</li>
+          <li><strong>Total 4-Var I_4 &amp; 5-Obj F_2 Barrier (T1i):</strong> ALL 510 four-marginals of <code>h_uncond</code> decompose into 23 <code>F_2/F_3</code> linear rays &amp; ALL 6 five-object retrieval marginals are <code>F_2</code>-linear (narrowing converse to <code>&ge; 6</code> vars!).</li>
         </ul>
       </div>
       <div class="card p2">
-        <h3>Pillar II · CS-026 / QC-042 / CM-048 MLWE (T2a–T2g)</h3>
+        <h3>Pillar II · CS-026 / QC-042 / CM-048 MLWE (T2a–T2h)</h3>
         <ul>
           <li>Ring-universal refutation of determinant-ideal module-SVP attacks (<code>arXiv:2604.15858</code>) and universal <code>m</code>-twisted DFT selection rule (axioms <code>[propext]</code> alone!).</li>
-          <li>Complete constant-time FIPS 203 drop-in suite: 8-bit <strong>Dyadic-256</strong> (<code>17.7&times;</code> drop to <code>2.14</code> b, DFR <code>2^-166.1</code>/<code>2^-174.3</code>) &amp; 9-bit zero-excess-kurtosis <strong>Dyadic-512</strong> (<code>&kappa;_ex=0</code>, <code>12.9&times;</code> drop to <code>0.59</code> b, DFR <code>2^-139.3 &lt; 2^-138.8</code>!).</li>
-          <li>Non-asymptotic Pearson <code>&chi;&sup2;</code>/Hermite-4 QGTL variational lower bound (<code>T2g</code>) linking metric defect <code>1/2 - det(g)</code> directly to <code>R_2 - 1</code> (capturing <code>75.5%</code>–<code>89.5%</code> analytically!).</li>
+          <li>Complete constant-time 8/9/10-bit FIPS 203 drop-in suite: <strong>Dyadic-1024-A/B</strong> collapse Bai et al. (2018) overhead <strong><code>9.19&times;</code></strong> at ML-KEM-1024 (<code>67.14 &rarr; 7.31</code> b, saving <code>59.8</code> b!) &amp; <code>4.83&times;</code> at ML-KEM-512 (<code>24.77 &rarr; 5.13</code> b), passing all exact DFRs!</li>
+          <li>All-order R&eacute;nyi-<code>(m+1)</code> H&ouml;lder floor, exact TV–<code>&chi;&sup2;</code> bridge (<code>T2h</code>), &amp; non-asymptotic Pearson <code>&chi;&sup2;</code>/Hermite-4 QGTL variational law (<code>T2g</code>).</li>
         </ul>
       </div>
       <div class="card p3">
-        <h3>Pillar III · CS-001 / CS-004 / CS-012 / CS-051 (T3a–T3h)</h3>
+        <h3>Pillar III · CS-001/004/012/051 &amp; CS-CMP-012 (T3a–T3j)</h3>
         <ul>
-          <li><strong>Exact Strassen–Winograd Theorem (T3h):</strong> Complete zero-Mathlib proof of <code>rank_F(&lt;2,2,2&gt;) = 7</code> over <em>every</em> field <code>F</code> (including <code>char F = 2</code>!).</li>
-          <li><strong>Symbolic All-<code>m</code> Koszul MatMul (T3g):</strong> Explicit 1-nnz/row monomial left-inverse certifying <code>rank_F(&lt;m,m,m&gt;) &ge; m&sup2;+2</code> for ALL <code>m &ge; 2</code> &amp; ALL fields <code>F</code> (plus <code>&Phi;_2(&lt;3,3,3&gt;) &ge; 12</code>!).</li>
-          <li>Algebrization MLE uniqueness (<code>T3a</code>), LWE PRF &rArr; Natural Proofs (<code>T3b</code>), Shannon counting (<code>T3f</code>), Katz–Trevisan LDCs (<code>T3c, T3f</code>), &amp; <code>Compress_1</code> margin <code>|e| &le; 831</code> (<code>T3d</code>).</li>
+          <li><strong>Brockett–Dobkin (T3i) &amp; Strassen–Winograd (T3h):</strong> Quadratic <code>rank_F(&lt;m,m,m&gt;) &ge; 2m&sup2;&minus;m</code> shattering Koszul <code>m&sup2;+m</code> for all <code>m &ge; 3</code>, plus exact <code>rank_F(&lt;2,2,2&gt;) = 7</code> &amp; lift <code>&ge; mp+3</code> over <em>every</em> field <code>F</code>!</li>
+          <li><strong>Zero-Reals Lov&aacute;sz &amp; Haemers (T3j):</strong> Exact 3-term <code>Z[&radic;5]</code> SOS proving <code>&Theta;(C_5) = &radic;5</code> (<code>k&sup2; &le; 5^t</code> &amp; <code>&alpha;(C_5^{&boxtimes; 2m}) = 5^m</code>) + exact <code>C_7</code> min Haemers rank <code>= 4</code> over EVERY field <code>F</code>!</li>
+          <li>Algebrization MLE (<code>T3a</code>), LWE PRF &rArr; Natural Proofs (<code>T3b</code>), Shannon counting (<code>T3f</code>), Katz–Trevisan LDCs (<code>T3c, T3f</code>), &amp; <code>Compress_1</code> <code>|e| &le; 831</code> (<code>T3d</code>).</li>
         </ul>
       </div>
     </div>
@@ -186,13 +186,14 @@
       </div>
 
       <div class="card">
-        <h3>2. ML-KEM R&eacute;nyi-2 Tightness, Exact DFR &amp; QGTL Explorer (T2c–T2g)</h3>
-        <label>Noise Distribution (complete FIPS 203 suite):</label>
+        <h3>2. ML-KEM R&eacute;nyi-2, Bai Overhead, Exact DFR &amp; QGTL Explorer (T2c–T2h)</h3>
+        <label>Noise Distribution (complete 8/9/10-bit FIPS 203 suite):</label>
         <select id="distSel">
-          <option value="dyadic256" selected>Dyadic-256 (Ours, 8-bit CT, ML-KEM-768/1024, Var=1, kurt=-1/8)</option>
+          <option value="dyadic1024a" selected>Dyadic-1024-A (Ours, 10-bit CT, ML-KEM-768/1024, Var=1, 9.19x Bai!)</option>
+          <option value="dyadic1024b">Dyadic-1024-B (Ours, 10-bit CT, ML-KEM-512, Var=3/2, 4.83x Bai!)</option>
+          <option value="dyadic256">Dyadic-256 (Ours, 8-bit CT, ML-KEM-768/1024, Var=1, kurt=-1/8)</option>
           <option value="dyadic512">Dyadic-512 (Ours, 9-bit CT, ML-KEM-512, Var=3/2, EXACT kurt=0!)</option>
           <option value="cbd2">FIPS 203 CBD_2 (ML-KEM-768/1024, Var=1, kurt=-1/2)</option>
-          <option value="d128">7-bit Optimal D=128 (Var=1, supp {-3..3})</option>
           <option value="cbd3">FIPS 203 CBD_3 (ML-KEM-512, Var=3/2, kurt=-1/3)</option>
         </select>
         <label>Target Discrete Gaussian &sigma;: <span id="vSig">1.001</span></label>
@@ -205,13 +206,13 @@
   </section>
 
   <section>
-    <h2>Claims Ledger (C1–C23) &amp; Explicit Open Frontiers (O1–O5)</h2>
+    <h2>Claims Ledger (C1–C27) &amp; Explicit Open Frontiers (O1–O6)</h2>
     <div class="filter-row">
-      <button class="fbtn active" data-f="all">All (28)</button>
-      <button class="fbtn" data-f="p1">Pillar I · CS-053 (8)</button>
-      <button class="fbtn" data-f="p2">Pillar II · CS-026 (7)</button>
-      <button class="fbtn" data-f="p3">Pillar III · Triad (8)</button>
-      <button class="fbtn" data-f="open">Explicitly Open (5)</button>
+      <button class="fbtn active" data-f="all">All (33)</button>
+      <button class="fbtn" data-f="p1">Pillar I · CS-053 (9)</button>
+      <button class="fbtn" data-f="p2">Pillar II · CS-026 (8)</button>
+      <button class="fbtn" data-f="p3">Pillar III · Triad (10)</button>
+      <button class="fbtn" data-f="open">Explicitly Open (6)</button>
     </div>
     <div class="card" style="overflow-x:auto; padding:0;">
       <table>
@@ -275,11 +276,12 @@ function updatePIR() {
 updatePIR();
 
 const DISTS = {
-  dyadic256: { name: "Dyadic-256", pmf: [[-3,1/256],[-2,14/256],[-1,63/256],[0,100/256],[1,63/256],[2,14/256],[3,1/256]], detg: "15/32 (0.46875)", optSig: 1.001, mCoords: 2048, mLbl: "ML-KEM-1024 (m=2048)", dfr: "2^-174.26 < 2^-174 (PASS)" },
-  dyadic512: { name: "Dyadic-512", pmf: [[-4,1/512],[-3,8/512],[-2,44/512],[-1,120/512],[0,166/512],[1,120/512],[2,44/512],[3,8/512],[4,1/512]], detg: "1/2 (EXACT Gaussian limit!)", optSig: 1.226, mCoords: 1024, mLbl: "ML-KEM-512 (m=1024)", dfr: "2^-139.26 < 2^-138.8 (PASS)" },
-  cbd2: { name: "CBD_2", pmf: [[-2,1/16],[-1,4/16],[0,6/16],[1,4/16],[2,1/16]], detg: "3/8 (0.37500)", optSig: 1.023, mCoords: 2048, mLbl: "ML-KEM-1024 (m=2048)", dfr: "2^-176.63 < 2^-174 (FIPS)" },
-  d128: { name: "7-bit D=128", pmf: [[-3,1/128],[-2,6/128],[-1,31/128],[0,52/128],[1,31/128],[2,6/128],[3,1/128]], detg: "7/16 (0.43750)", optSig: 1.005, mCoords: 2048, mLbl: "ML-KEM-1024 (m=2048)", dfr: "Var=1 intermediate" },
-  cbd3: { name: "CBD_3", pmf: [[-3,1/64],[-2,6/64],[-1,15/64],[0,20/64],[1,15/64],[2,6/64],[3,1/64]], detg: "5/12 (at σ=√(3/2))", optSig: 1.237, mCoords: 1024, mLbl: "ML-KEM-512 (m=1024)", dfr: "2^-141.59 < 2^-138.8 (FIPS)" }
+  dyadic1024a: { name: "Dyadic-1024-A", pmf: [[-3,4/1024],[-2,57/1024],[-1,248/1024],[0,406/1024],[1,248/1024],[2,57/1024],[3,4/1024]], detg: "243/512 (0.47461)", optSig: 1.001, mCoords: 2048, mLbl: "ML-KEM-1024 (m=2048)", bai: "7.31 bits (9.19× drop!)", dfr: "2^-174.13 < 2^-174 (PASS)" },
+  dyadic1024b: { name: "Dyadic-1024-B", pmf: [[-4,1/1024],[-3,17/1024],[-2,90/1024],[-1,239/1024],[0,330/1024],[1,239/1024],[2,90/1024],[3,17/1024],[4,1/1024]], detg: "15/32 (at σ=√(3/2))", optSig: 1.227, mCoords: 1024, mLbl: "ML-KEM-512 (m=1024)", bai: "5.13 bits (4.83× drop!)", dfr: "2^-140.02 < 2^-138.8 (PASS)" },
+  dyadic256: { name: "Dyadic-256", pmf: [[-3,1/256],[-2,14/256],[-1,63/256],[0,100/256],[1,63/256],[2,14/256],[3,1/256]], detg: "15/32 (0.46875)", optSig: 1.001, mCoords: 2048, mLbl: "ML-KEM-1024 (m=2048)", bai: "23.14 bits (2.90× drop)", dfr: "2^-174.26 < 2^-174 (PASS)" },
+  dyadic512: { name: "Dyadic-512", pmf: [[-4,1/512],[-3,8/512],[-2,44/512],[-1,120/512],[0,166/512],[1,120/512],[2,44/512],[3,8/512],[4,1/512]], detg: "1/2 (EXACT Gaussian limit!)", optSig: 1.226, mCoords: 1024, mLbl: "ML-KEM-512 (m=1024)", bai: "12.08 bits (2.05× drop)", dfr: "2^-139.26 < 2^-138.8 (PASS)" },
+  cbd2: { name: "CBD_2", pmf: [[-2,1/16],[-1,4/16],[0,6/16],[1,4/16],[2,1/16]], detg: "3/8 (0.37500)", optSig: 1.023, mCoords: 2048, mLbl: "ML-KEM-1024 (m=2048)", bai: "67.14 bits (baseline)", dfr: "2^-176.63 < 2^-174 (FIPS)" },
+  cbd3: { name: "CBD_3", pmf: [[-3,1/64],[-2,6/64],[-1,15/64],[0,20/64],[1,15/64],[2,6/64],[3,1/64]], detg: "5/12 (at σ=√(3/2))", optSig: 1.237, mCoords: 1024, mLbl: "ML-KEM-512 (m=1024)", bai: "24.77 bits (baseline)", dfr: "2^-141.59 < 2^-138.8 (FIPS)" }
 };
 function updateMLWE() {
   const d = DISTS[distSel.value];
@@ -309,8 +311,8 @@ function updateMLWE() {
   const psd = 4 * gtt * gss - om * om;
   mlweOut.innerHTML = [
     `R₂(${d.name} ‖ D_${sig.toFixed(3)}) = <span class="hl-cyan">${r2.toFixed(7)}</span> · R_∞ = ${rinf.toFixed(6)}`,
-    `${d.mLbl} loss: <span class="${bitsLoss < 5 ? 'hl-green' : 'hl-amber'}">${bitsLoss.toFixed(3)} bits</span> · Exact DFR: <span class="hl-green">${d.dfr}</span>`,
-    `Symmetric det(g) at e₀=0: <span class="hl-cyan">${d.detg}</span> (Gaussian limit = 1/2)`,
+    `${d.mLbl} R₂ loss: <span class="${bitsLoss < 5 ? 'hl-green' : 'hl-amber'}">${bitsLoss.toFixed(3)} bits</span> · Bai Δ_Bai: <span class="hl-cyan">${d.bai}</span>`,
+    `Exact FIPS 203 DFR: <span class="hl-green">${d.dfr}</span> · Symmetric det(g): <span class="hl-cyan">${d.detg}</span>`,
     `QGTL Berry Ω_{θσ}(e₀=${e0.toFixed(2)}) = <span class="${Math.abs(om) < 1e-12 ? 'hl-green' : 'hl-amber'}">${om.toFixed(6)}</span>`,
     `Provost–Vallée PSD 4det(g) - Ω² = <span class="hl-green">${psd.toFixed(6)} &ge; 0</span>`
   ].join("<br>");
@@ -343,11 +345,16 @@ const CLAIMS = [
   ["C21","p3","T3f","propext, Quot.sound","Shannon (1949) finite circuit-counting non-surjectivity (CS-010) & Katz–Trevisan q-query LDC smoothness (CS-051)","t1"],
   ["C22","p3","T3g","propext, Classical.choice, Quot.sound","Symbolic all-m monomial left-inverse: rank_F(<m,m,m>) >= m²+2 ∀m>=2 ∀F; degree-(m-1) ceiling m²+m (Φ₂(<3,3,3>)>=12)","t1"],
   ["C23","p3","T3h","propext, Classical.choice, Quot.sound","Exact Strassen–Winograd optimality: rank_F(<2,2,2>) = 7 over EVERY field F (including char F = 2)","t1"],
+  ["C24","p1","T1i","propext, Quot.sound","Total 4-var I_4 containment (all 510 four-marginals of h_uncond) & all 6 five-object retrieval marginals F_2-linear","t1"],
+  ["C25","p2","T2h","propext, Quot.sound","All-order Rényi-(m+1) Hölder floor, TV-χ² bridge (4TV²<=R₂-1), & 10-bit Dyadic-1024-A/B (9.19× Bai collapse, DFRs pass)","t1"],
+  ["C26","p3","T3i","propext, Classical.choice, Quot.sound","Field-universal Brockett–Dobkin rank_F(<m,m,m>) >= 2m²-m (> m²+m ∀m>=3) & Strassen lift rank_F(<m,2,p>) >= mp+3","t1"],
+  ["C27","p3","T3j","propext, Classical.choice, Quot.sound","Field-universal Haemers |S|<=r^t, exact Z[√5] SOS Lovász Θ(C_5)=√5 (k²<=5^t & α=5^m), & exact C_7 min Haemers rank=4 ∀F","t1"],
   ["O1","open","—","—","P ≠ NP & super-linear explicit Boolean circuit lower bounds (CS-001 / CS-010) — NO PROOF CLAIMED","open"],
   ["O2","open","—","—","Matrix multiplication exponent ω = 2 (CS-004) & Valiant VP ≠ VNP (CS-012) — REMAIN OPEN","open"],
-  ["O3","open","—","—","Non-linear PIR capacity C(2,4,2,2) ∈ [3/5, 8/13] (5+ variable non-Shannon converse vs non-linear scheme)","open"],
+  ["O3","open","—","—","Non-linear PIR capacity C(2,4,2,2) ∈ [3/5, 8/13] (narrowed by T1i to genuinely >=6-variable non-Shannon inequalities)","open"],
   ["O4","open","—","—","General M >= 3 non-LFSR PIR capacity above Sun–Zhang when E >= KT & arbitrary T >= 4 zero-error schemes","open"],
-  ["O5","open","—","—","Worst-case quantum MLWE lower bounds (CS-026 / QC-042) — hardness remains a cryptographic assumption","open"]
+  ["O5","open","—","—","Exact zero-error Shannon capacity Θ(C_7) ∈ [√10, ϑ(C_7) ≈ 3.317667] (CS-CMP-012) — REMAINS OPEN","open"],
+  ["O6","open","—","—","Worst-case quantum MLWE lower bounds (CS-026 / QC-042) — hardness remains a cryptographic assumption","open"]
 ];
 
 function renderClaims(filter) {

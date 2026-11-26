@@ -1,35 +1,42 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
 # SPDX-License-Identifier: Apache-2.0
 version: "v0.4"
-release_version: "3.0.0"
+release_version: "4.0.0"
 
 project:
   name: "Koszul-Veronese Flag-Private Coded Byzantine PIR, Module-LWE Reduction Obstructions, and Complexity-Theoretic Bridges"
   description: >-
-    Zero-Mathlib Lean 4.35.0 formalization of 23 headline theorems (T1a-T3h) plus
+    Zero-Mathlib Lean 4.35.0 formalization of 27 headline theorems (T1a-T3j) plus
     concrete non-vacuity witnesses across three interconnected open problem frontiers:
     (Pillar I, CS-053) exterior-power Koszul-Veronese PIR strictly beating the 2026
     LFSR coded-colluding ceiling, non-vacuous Byzantine-robust capacity double-counting
     with kernel-certified F_11 rate-2/5 zero-error witness, exact flag-privacy thresholds,
     a 330-orbit 12-variable Shannon+Ingleton polymatroid barrier at 8/13 > 3/5,
     projective P^3 linear impossibility over arbitrary fields, exact algebraic Zhang-Yeung (1998)
-    and infinite Matus (2007) family M_s reductions proving h_uncond defeats all M_s simultaneously,
-    and symmetric M>=3 Koszul breaking E>=KT with all-M contraction;
+    and infinite Matus (2007) family M_s reductions, symmetric M>=3 Koszul contraction,
+    and T1i Total 4-Variable Entropic & 5-Object F_2-Linear Subspace Barrier (all 510
+    four-marginals decomposed into 23 F_2/F_3 linear rays at denom 3 + all 6 five-object
+    retrieval marginals decomposed into F_2-linear subspace arrangements);
     (Pillar II, CS-026/QC-042/CM-048) commutative-ring determinant-ideal secret independence
     refuting Luo (2026), ring-universal anti-periodic DFT cancellation (Chen 2024 Step 9) and
     universal m-twisted DFT selection rule ([propext] alone), exact FIPS 203 ML-KEM CBD2/CBD3
-    moments & 4.96x Renyi-2 cliff, pure-integer Cauchy-Schwarz finite-support Renyi floor,
-    universal Pearson chi^2/Hermite-4 QGTL variational Renyi-2 bridge, constant-time 1-byte
-    Dyadic-256 (Var=1, 17.7x drop to 2.14 bits) and 9-bit zero-excess-kurtosis Dyadic-512
-    (Var=3/2, kappa_ex=0, det(g)=1/2, 12.9x drop to 0.592 bits), and shifted-LWE QGTL
-    Berry curvature, Provost-Vallee PSD, and exact Metric-Kurtosis ordering;
-    and (Pillar III, CS-001/CS-004/CS-010/CS-012/CS-051) constructive multilinear-extension
-    uniqueness over arbitrary fields, LWE PRF -> Natural Proofs obstruction, Katz-Trevisan
-    Byzantine PIR to LDC minimum distance 2B+1 and q-query smoothness, sharp FIPS 203 Compress_1
-    margin |e|<=831, Shannon (1949) finite circuit counting, field-universal Landsberg-Ottaviani
-    Koszul flattening tensor rank bounds (rank_F(T_3) >= 5 and symbolic ALL-m rank_F(<m,m,m>) >= m^2+2
-    plus ceiling m^2+m), and complete characteristic-free Exact Strassen-Winograd rank_F(<2,2,2>) = 7
-    over EVERY SimpleField F including F_2.
+    moments & 4.96x Renyi-2 cliff, pure-integer Cauchy-Schwarz finite-support floor,
+    universal all-order Renyi-(m+1) Holder floor and TV-chi^2 bridge (T2h), universal
+    Pearson chi^2/Hermite-4 QGTL variational Renyi-2 bridge, constant-time 8/9/10-bit
+    Dyadic-256, Dyadic-512, and Bai-optimal Dyadic-1024-A/B drop-in noise suite
+    (collapsing ML-KEM-1024 Bai et al. 2018 end-to-end loss 9.19x from 67.14 to 7.31 bits
+    while passing all FIPS 203 DFRs), and shifted-LWE QGTL Berry curvature & PSD;
+    and (Pillar III, CS-001/CS-004/CS-010/CS-012/CS-051/CS-CMP-012) constructive multilinear
+    extension uniqueness, LWE PRF -> Natural Proofs obstruction, Katz-Trevisan Byzantine PIR
+    to LDC minimum distance 2B+1 and smoothness, sharp FIPS 203 Compress_1 margin |e|<=831,
+    Shannon (1949) finite circuit counting, field-universal Landsberg-Ottaviani Koszul
+    flattening bounds (rank_F(T_3)>=5, symbolic ALL-m rank_F(<m,m,m>)>=m^2+2), complete
+    characteristic-free Exact Strassen-Winograd rank_F(<2,2,2>)=7 (T3h), field-universal
+    Brockett-Dobkin (1978) rectangular & quadratic MatMul bound rank_F(<m,m,m>)>=2m^2-m
+    shattering the Koszul ceiling m^2+m for all m>=3 plus Strassen lift rank_F(<m,2,p>)>=mp+3 (T3i),
+    and field-universal Haemers (1979) rank bound, exact zero-reals Z[sqrt(5)] SOS proof of
+    Lovasz (1979) Pentagon Capacity Theta(C_5)=sqrt(5) (k^2<=5^t & alpha(C_5^{box 2m})=5^m),
+    and exact C_7 minimum Haemers rank = 4 over every field F (T3j).
   authors:
     - name: "Alexander S. Donahue"
       orcid: "0009-0006-8168-9648"
@@ -57,14 +64,14 @@ classification:
     - "03B35"
 
 sources:
-  - title: "Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked Complexity-Barrier Bridges (v3.0.0)"
+  - title: "Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked Complexity-Barrier Bridges (v4.0.0)"
     authors:
       - "Alexander S. Donahue"
     id: "https://github.com/0thernes/coded-pir-mlwe-complexity-lab"
     type: "original-proof"
     relationship: "other"
     note: >-
-      Original formalization and companion 16-page AMS-LaTeX preprint first presented in
+      Original formalization and companion AMS-LaTeX preprint first presented in
       this repository. No external DOI, arXiv ID, or peer review is claimed prior to
       confirmed external assignment.
   - title: "The capacity of private information retrieval from coded storage systems with colluding, robust and byzantine servers"
@@ -111,18 +118,41 @@ sources:
     type: "paper"
     relationship: "background"
     note: "Exact rank_F(<2,2,2>) = 7 formalized characteristic-free over every SimpleField F in Theorem T3h."
+  - title: "On the optimal evaluation of a set of bilinear forms"
+    authors:
+      - "Roger W. Brockett"
+      - "David Dobkin"
+    id: "https://doi.org/10.1016/0024-3795(78)90012-5"
+    type: "paper"
+    relationship: "background"
+    note: "Rectangular and quadratic matrix multiplication lower bound 2m^2-m formalized over every SimpleField F in Theorem T3i."
+  - title: "On the Shannon capacity of a graph"
+    authors:
+      - "Laszlo Lovasz"
+    id: "https://doi.org/10.1109/TIT.1979.1055985"
+    type: "paper"
+    relationship: "background"
+    note: "Exact pentagon Shannon capacity Theta(C_5) = sqrt(5) proved with zero reals via 3-term Z[sqrt(5)] SOS in Theorem T3j."
+  - title: "On some problems of Lovasz concerning the Shannon capacity of a graph"
+    authors:
+      - "Willem Haemers"
+    id: "https://doi.org/10.1109/TIT.1979.1056027"
+    type: "paper"
+    relationship: "background"
+    note: "Field-universal Haemers rank bound and exact minimum Haemers rank = 4 for C_7 formalized in Theorem T3j."
 
 related_formalizations: []
 
 status:
   scope: >-
-    Complete zero-Mathlib Lean 4.35.0 formalization of all 23 headline theorems T1a-T3h
+    Complete zero-Mathlib Lean 4.35.0 formalization of all 27 headline theorems T1a-T3j
     plus concrete non-vacuity witnesses (TriadFrontier/NonVacuity.lean, including
     SimpleField (Fin 5) and SimpleField (Fin 11)). Not formalized inside Lean: transcendental
-    60-digit Renyi-2 optimization curves, exact FIPS 203 discrete-convolution DFRs, and
-    floating-point DFT/QGTL spectra (verified in Tier-2 exact Python, C11, and Eshkol AD),
-    or open conjectures (P != NP, omega = 2, VP != VNP, non-linear C(2,4,2,2), general M>=3
-    non-LFSR PIR when E>=KT, worst-case quantum MLWE hardness).
+    60-digit Renyi-2/inf/Bai optimization curves, exact FIPS 203 discrete-convolution DFRs,
+    Lovasz theta(C_7) trigonometric evaluation, and floating-point DFT/QGTL spectra (verified
+    in Tier-2 exact Python, C11, and Eshkol AD), or open conjectures (P != NP, omega = 2,
+    VP != VNP, non-linear C(2,4,2,2), general M>=3 non-LFSR PIR when E>=KT, exact Theta(C_7),
+    worst-case quantum MLWE hardness).
   sorry_count: 0
   sorry_in_definitions: 0
   axioms:
@@ -170,6 +200,11 @@ status:
       sorry_count: 0
       axioms: ["propext", "Quot.sound"]
       comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t1i_total_4var_entropic_and_5obj_linear_barrier"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
     - declaration: "TriadFrontier.Palomar.t2a_determinant_ideal_secret_independence"
       file: "lean/PalomarSolution.lean"
       sorry_count: 0
@@ -204,6 +239,11 @@ status:
       file: "lean/PalomarSolution.lean"
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t2h_all_order_renyi_holder_tv_and_dyadic1024"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Quot.sound"]
       comparator_config: "lean/comparator.json"
     - declaration: "TriadFrontier.Palomar.t3a_algebrization_multilinear_extension_uniqueness"
       file: "lean/PalomarSolution.lean"
@@ -245,6 +285,16 @@ status:
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
       comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t3i_brockett_dobkin_rectangular_and_quadratic_matmul_bound"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t3j_shannon_capacity_lovasz_c5_and_haemers"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
 
 automation:
   methods:
@@ -256,24 +306,26 @@ automation:
       framework: "Antigravity"
       notes: >-
         Assisted with Lean 4.35.0 proof engineering, O(log N) balanced-tree certificate
-        generation, sparse pure-integer Koszul left-inverse & Strassen-Winograd proofs,
-        C11/Python/Eshkol computational cross-verification, figure production, and manuscript
-        drafting under human supervision.
+        generation, sparse pure-integer Koszul left-inverse, Strassen-Winograd, Brockett-Dobkin,
+        and Z[sqrt(5)] Lovasz umbrella SOS proofs, C11/Python/Eshkol computational
+        cross-verification, figure production, and manuscript drafting under human supervision.
 
 fidelity:
   divergences: >-
-    Transcendental Renyi-2 optimization curves, exact FIPS 203 discrete-convolution DFRs,
-    and complex DFT/QGTL spectra are verified to 60-digit Decimal precision in Python and
-    differentially against C11 and Eshkol forward-mode dual-number AD (< 2e-13), while Lean
-    4.35.0 machine-checks the exact rational/integer moments, Cauchy-Schwarz & Pearson chi^2
-    variational bounds, cleared-denominator inequalities, finite-field rank certificates,
-    pure-integer 12-variable polymatroid witness, symbolic ALL-m Koszul left-inverses, and
-    exact characteristic-free Strassen-Winograd rank_F(<2,2,2>)=7 with zero Mathlib.
+    Transcendental Renyi-2/inf/Bai optimization curves, exact FIPS 203 discrete-convolution DFRs,
+    trigonometric Lovasz theta(C_7), and complex DFT/QGTL spectra are verified to 60-digit Decimal
+    precision in Python and differentially against C11 and Eshkol forward-mode dual-number AD
+    (< 2e-13), while Lean 4.35.0 machine-checks the exact rational/integer moments, all-order
+    Renyi Holder & TV-chi^2 bounds, cleared-denominator inequalities, finite-field rank
+    certificates, 4-var/5-obj linear-subspace realizability certificates, symbolic ALL-m Koszul
+    left-inverses, exact Strassen-Winograd rank_F(<2,2,2>)=7, Brockett-Dobkin 2m^2-m, and exact
+    Z[sqrt(5)] SOS Lovasz Theta(C_5)=sqrt(5) + Haemers C_7 rank=4 with zero Mathlib.
 
 review:
   status: "self-assessed"
   notes: >-
     Not externally peer-reviewed. Machine-checked across all 6 independent Lean 4.35.0
     proof kernels via lake comparator --config comparator.json --paranoid (Lean default,
-    leanchecker-paranoid, lean4lean, nanoda, con-leche --verified 2995 decls, con-ron --verified 2995 decls),
-    with 0 warnings, 0 proof sorries, 0 native_decide, and concrete NonVacuity witnesses.
+    leanchecker-paranoid, lean4lean, nanoda 3,884 decls, con-leche --verified 3,589 decls,
+    con-ron --verified 3,589 decls), with 0 warnings, 0 proof sorries, 0 native_decide,
+    and concrete NonVacuity witnesses.

@@ -4,9 +4,9 @@
 Author: Alexander S. Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648)
 Repository: https://github.com/0thernes/coded-pir-mlwe-complexity-lab
 Interactive Proof Blueprint: https://0thernes.github.io/coded-pir-mlwe-complexity-lab/
-Version: 3.0.0 | Code License: Apache-2.0 | Paper & Docs License: CC-BY-4.0
+Version: 4.0.0 | Code License: Apache-2.0 | Paper & Docs License: CC-BY-4.0
 
-This repository delivers 23 machine-checked zero-Mathlib Lean 4.35.0 theorems (`T1a`–`T3h`) plus concrete non-vacuity witnesses (`TriadFrontier/NonVacuity.lean`, 25 audited declarations, 2,995 `con-leche`/`con-ron` declarations across 6 independent kernels), independently cross-verified in C11 (`-std=c11 -Wall -Wextra -Wpedantic -Werror`, 57/57 tests), 60-digit exact Python (`pytest` 16/16 incl. 10/10 killed mutants), and Eshkol v1.3.6 forward-mode dual-number AD, together with a 16-page zero-overfull AMS-LaTeX preprint (`paper/main.tex`, 6 vector PDF figures, 28/28 live HTTP-200 citations).
+This repository delivers 27 machine-checked zero-Mathlib Lean 4.35.0 theorems (`T1a`–`T3j`) plus concrete non-vacuity witnesses (`TriadFrontier/NonVacuity.lean`, 29 audited declarations, 3,589 `con-leche`/`con-ron` & 3,884 `nanoda` declarations across 6 independent kernels), independently cross-verified in C11 (`-std=c11 -Wall -Wextra -Wpedantic -Werror`, 65/65 tests), 60-digit exact Python (`pytest` 17/17 incl. 12/12 killed mutants), and Eshkol v1.3.6 forward-mode dual-number AD, together with a zero-overfull AMS-LaTeX preprint (`paper/main.tex`, 7 vector PDF figures, 33/33 live HTTP-200 citations).
 
 ## Pillar I — Coded, Colluding, Robust & Byzantine PIR (`CS-053`)
 - `T1a`: Moment-curve annihilation `<u(alpha), e_{r+1} - alpha e_r> = 0` over any `CommRing R`; exact Pascal interference savings `K * C(T, T') = lambda*(T, T', K) + (K - T') * C(T - 1, T')`; flagship `(E,K,T)=(6,3,3)` gives `d_int = 42` and zero-error rate `10/17 > 4/7` (valid over `F_7`).
@@ -17,6 +17,7 @@ This repository delivers 23 machine-checked zero-Mathlib Lean 4.35.0 theorems (`
 - `T1f`: Projective `P^3` linear impossibility over any `SimpleField F`: four pairwise-intersecting 2-subspaces of `F^4` are either concurrent or coplanar.
 - `T1g`: Exact algebraic Zhang-Yeung (1998) reduction `ZY98(A,B;C,D) = Ing(C,D;A,B) + I(A;C|D) + I(A;D|C) + I(C;D|A)` proving `h_uncond` unconditionally defeats Zhang-Yeung (1998) too; symmetric `M >= 3` 1-flag Koszul denominator breaking `E >= KT` for all `M >= 3, K >= 2, T >= 2` (concrete `M=3, E=3, K=2, T=2` rate `3/8`).
 - `T1h`: Universal 7-parameter non-Shannon cone reduction + infinite Matus (2007) family `M_s` (`forall s : Nat`, equal to `ZY98` at `s=1`) proving `h_uncond` simultaneously defeats ALL `M_s` (14,850 singleton `s=1..5` instances checked with 0 violations), plus exact all-`M` multi-file Koszul contraction `rho_KV^j < rho_LFSR^j`.
+- `T1i`: Total 4-Variable Entropic & 5-Object `F_2`-Linear Subspace Barrier (`PIRLinearCerts.lean`): all 23 explicit `F_2`/`F_3` linear-subspace rays match `subspaceRank4`, all 24 canonical 4-marginals decompose at denominator 3 covering ALL 510 four-marginals (495 singleton + 15 retrieval) of `h_uncond` (defeating EVERY 4-variable linear information inequality!), AND all 6 five-object retrieval marginals decompose into explicit `F_2`-linear subspace arrangements.
 
 ## Pillar II — Module-LWE Reduction Tightness, `Dyadic-256`/`Dyadic-512`, & QGTL Geometry (`CS-026`, `QC-042`, `CM-048`)
 - `T2a`: Commutative-ring determinant-ideal secret independence (`det(B) = q^m`, unimodularly invariant), refuting Luo (arXiv:2604.15858).
@@ -26,6 +27,7 @@ This repository delivers 23 machine-checked zero-Mathlib Lean 4.35.0 theorems (`
 - `T2e`: Pure-integer Cauchy-Schwarz finite-support Renyi-2 floor `(1 - tau_S)^{-1}`, 4-8 bit `Var=1` phase transition & optimal constant-time 1-byte **`Dyadic-256`** distribution `(1,14,63,100,63,14,1)/256` (`Var=1, mu_4=23/8`, collapsing ML-KEM-1024 loss `17.7x` from `37.84` to `2.14` bits), universal QGTL Provost-Vallee PSD `4 det(g) >= Omega^2`, and exact symmetric Metric-Kurtosis ordering `CBD_2: 3/8 < Dyadic-256: 15/32 < Gaussian: 1/2`.
 - `T2f`: Universal `m`-twisted DFT selection rule over ANY `CommRing R` (`[propext]` alone; `QC-042`): `omega^D = zeta, f(qD+x) = zeta^{qr} f(x), sum zeta^{q(r+k)} = 0 -> f_hat_{mD}(k) = 0`.
 - `T2g`: Universal non-asymptotic Pearson `chi^2`/Hermite-4 QGTL variational Renyi-2 bridge (capturing 75.5% of `R_2-1` for `CBD_2` and 89.5% for `Dyadic-256` at `sigma=1`) + 9-bit constant-time **`Dyadic-512`** noise `(1,8,44,120,166,120,44,8,1)/512` (`Var=3/2, mu_4=27/4, kappa_ex=0, det(g)=1/2`, collapsing ML-KEM-512 keygen loss `12.89x` from `7.630` to `0.592` bits) + exact FIPS 203 discrete-convolution DFRs passing all three parameter sets (`512`: `2^-139.26`, `768`: `2^-166.12`, `1024`: `2^-174.26`).
+- `T2h`: All-Order Renyi-`(m+1)` Holder floor (`forall m : Nat`), exact pure-integer TV-`chi^2` bridge (`4 TV^2 <= R_2 - 1`), and 10-bit constant-time Bai-optimal **`Dyadic-1024-A`** (`(4,57,248,406,248,57,4)/1024`, `Var=1, mu_4=371/128, det(g)=243/512`, collapsing ML-KEM-1024 Bai et al. 2018 end-to-end overhead `9.19x` from `67.14` to `7.31` bits and `R_2` loss `25.1x` to `1.509` bits!) & **`Dyadic-1024-B`** (`(1,17,90,239,330,239,90,17,1)/1024`, `Var=3/2`, ML-KEM-512 Bai overhead `24.77` to `5.13` bits, `4.83x`), all passing exact FIPS 203 DFRs (`2^-140.02`, `2^-166.00`, `2^-174.13`).
 
 ## Pillar III — Complexity-Theoretic & Koszul/Strassen Tensor Bridges (`CS-001`, `CS-004`, `CS-010`, `CS-012`, `CS-051`)
 - `T3a`: Constructive existence and global uniqueness of the multilinear extension over any `SimpleField F` (Algebrization algebraic core).
@@ -36,9 +38,12 @@ This repository delivers 23 machine-checked zero-Mathlib Lean 4.35.0 theorems (`
 - `T3f`: Constructive Shannon (1949) finite circuit-counting non-surjectivity (`C < M -> exists f uncomputed`) + Katz-Trevisan `q`-query LDC smoothness averaging bound.
 - `T3g`: Symbolic ALL-`m` 1-nnz/row monomial left-inverse proving `rank_F(<m,m,m>) >= m^2 + 2` for EVERY `m >= 2` and EVERY `SimpleField F` (incl. `char 2`) + degree-`(m-1)` Koszul flattening ceiling `m^2 + m` (plus exact `rank_F(Phi_2(<3,3,3>)) = 324` over `F_2` & `F_101` giving `>= 12`).
 - `T3h`: Complete characteristic-free proof of **Exact Strassen-Winograd `rank_F(<2,2,2>) = 7`** (`StrassenWinograd.lean`) over EVERY `SimpleField F` (including `F_2`!): explicit 7-product upper bound + direct substitution/rank-drop lower bound refuting every rank-`<= 6` decomposition.
+- `T3i`: Field-universal **Brockett-Dobkin (1978)** rectangular & quadratic MatMul bound (`BrockettDobkin.lean`): `rank_F(<m,k,p>) >= max(mk+mp-m, mk+kp-k, mp+kp-p)`, quadratic `rank_F(<m,m,m>) >= 2m^2 - m` (strictly beating the Koszul ceiling `m^2 + m` for all `m >= 3`!), and Strassen lift `rank_F(<m,2,p>) >= mp + 3` over EVERY `SimpleField F`.
+- `T3j`: Zero-error **Shannon Capacity (`CS-CMP-012`)** with zero reals (`ShannonCapacity.lean`): field-universal Haemers (1979) rank bound `|S| <= r^t` (`forall F`), **exact Lovasz (1979) Pentagon Theorem `Theta(C_5) = sqrt(5)`** via exact 3-term `Z[sqrt(5)]` SOS of `80 M_6` (`k^2 <= 5^t` & `alpha(C_5^{box 2m}) = 5^m`), and **exact `C_7` minimum Haemers rank `= 4`** over EVERY field `F` (`alpha(C_7^{box 2m}) >= 10^m` + 4-clique cover).
 
 ## Explicit Non-Claims (OPEN)
 - `P != NP` & explicit circuit lower bounds (`CS-001` / `CS-010`) remain OPEN.
 - Matrix multiplication exponent `omega = 2` (`CS-004`) & Valiant `VP != VNP` (`CS-012`) remain OPEN.
-- Non-linear `C(2,4,2,2) in [3/5, 8/13]` and general `M >= 3` non-LFSR PIR when `E >= KT` (`CS-053`) remain OPEN.
+- Non-linear `C(2,4,2,2) in [3/5, 8/13]` (narrowed to `>= 6`-variable inequalities!) and general `M >= 3` non-LFSR PIR when `E >= KT` (`CS-053`) remain OPEN.
+- Exact Shannon capacity `Theta(C_7) in [sqrt(10), theta(C_7) ~ 3.317667]` (`CS-CMP-012`) remains OPEN.
 - Worst-case quantum hardness lower bounds for MLWE (`CS-026` / `QC-042`) remain OPEN.

@@ -4,6 +4,7 @@ module
 
 public import TriadFrontier.AlgebraCore
 public import TriadFrontier.PIRCertificates
+public import TriadFrontier.PIRLinearCerts
 
 /-!
 # Pillar I (`CS-053`): Coded, Colluding, Robust, and Byzantine PIR Breakthroughs
@@ -30,6 +31,7 @@ namespace TriadFrontier.PIRKoszul
 
 open TriadFrontier.AlgebraCore
 open TriadFrontier.PIRCertificates
+open TriadFrontier.PIRLinearCerts
 
 @[expose] public section
 
@@ -920,6 +922,220 @@ theorem t1h_infinite_nonshannon_cone_barrier_and_contraction :
       rw [hdecomp]; omega
     have hlt_prod : ((k + t - 1) * e - k * t) * e < (k + t - 1) * (e * (e - 1)) := by omega
     exact ⟨hgap, int_pow_lt_of_lt (Int.mul_nonneg hnum_nonneg (by omega)) hlt_prod j hj⟩
+
+-- ============================================================================
+-- T1i: Total 4-Variable Entropic & 5-Object Linear-Rank Barrier (h_uncond, 8/13)
+-- ============================================================================
+
+theorem allBelow_true_iff (n : Nat) (p : Nat → Bool) :
+    allBelow n p = true → ∀ i, i < n → p i = true := by
+  induction n with
+  | zero => intro _ _ hi; omega
+  | succ m ih =>
+    intro h i hi
+    simp only [allBelow] at h
+    have ⟨h1, h2⟩ := Bool.and_eq_true_iff.mp h
+    cases Nat.eq_or_lt_of_le (Nat.lt_succ_iff.mp hi) with
+    | inl heq => subst heq; exact h2
+    | inr hlt => exact ih h1 i hlt
+
+theorem evalFuncGo_congr (c : Nat → Int) (f g : Nat → Nat) (N : Nat)
+    (h : ∀ m, 1 ≤ m → m ≤ N → f m = g m) :
+    evalFuncGo c f N = evalFuncGo c g N := by
+  induction N with
+  | zero => rfl
+  | succ j ih =>
+    simp only [evalFuncGo]
+    rw [ih (fun m h1 h2 => h m h1 (Nat.le_succ_of_le h2)), h (j + 1) (by omega) (Nat.le_refl _)]
+
+theorem evalFuncGo_scale (c : Nat → Int) (a : Nat) (f : Nat → Nat) (N : Nat) :
+    evalFuncGo c (fun m => a * f m) N = (a : Int) * evalFuncGo c f N := by
+  induction N with
+  | zero => simp [evalFuncGo]
+  | succ j ih =>
+    simp only [evalFuncGo, ih, Int.mul_add]
+    congr 1
+    have hcast : Int.ofNat (a * f (j + 1)) = (a : Int) * Int.ofNat (f (j + 1)) := Int.natCast_mul a (f (j + 1))
+    rw [hcast, ← Int.mul_assoc, Int.mul_comm (c (j + 1)) (a : Int), Int.mul_assoc]
+
+theorem evalFuncGo_add (c : Nat → Int) (f g : Nat → Nat) (N : Nat) :
+    evalFuncGo c (fun m => f m + g m) N = evalFuncGo c f N + evalFuncGo c g N := by
+  induction N with
+  | zero => simp [evalFuncGo]
+  | succ j ih =>
+    simp only [evalFuncGo, ih]
+    have hcast : Int.ofNat (f (j + 1) + g (j + 1)) = Int.ofNat (f (j + 1)) + Int.ofNat (g (j + 1)) :=
+      Int.natCast_add (f (j + 1)) (g (j + 1))
+    rw [hcast, Int.mul_add]; omega
+
+theorem evalFuncGo_zero (c : Nat → Int) (N : Nat) : evalFuncGo c (fun _ => 0) N = 0 := by
+  induction N with
+  | zero => rfl
+  | succ j ih => simp only [evalFuncGo, ih]; change 0 + c (j + 1) * 0 = 0; simp
+
+theorem evalFunc4_congr (c : Nat → Int) (f g : Nat → Nat)
+    (h : ∀ m, 1 ≤ m → m ≤ 15 → f m = g m) : evalFunc4 c f = evalFunc4 c g :=
+  evalFuncGo_congr c f g 15 h
+
+theorem evalFunc4_scale (c : Nat → Int) (a : Nat) (f : Nat → Nat) :
+    evalFunc4 c (fun m => a * f m) = (a : Int) * evalFunc4 c f :=
+  evalFuncGo_scale c a f 15
+
+theorem evalFunc4_add (c : Nat → Int) (f g : Nat → Nat) :
+    evalFunc4 c (fun m => f m + g m) = evalFunc4 c f + evalFunc4 c g :=
+  evalFuncGo_add c f g 15
+
+theorem evalFunc4_zero (c : Nat → Int) : evalFunc4 c (fun _ => 0) = 0 :=
+  evalFuncGo_zero c 15
+
+theorem evalFunc5_congr (c : Nat → Int) (f g : Nat → Nat)
+    (h : ∀ m, 1 ≤ m → m ≤ 31 → f m = g m) : evalFunc5 c f = evalFunc5 c g :=
+  evalFuncGo_congr c f g 31 h
+
+theorem evalFunc5_scale (c : Nat → Int) (a : Nat) (f : Nat → Nat) :
+    evalFunc5 c (fun m => a * f m) = (a : Int) * evalFunc5 c f :=
+  evalFuncGo_scale c a f 31
+
+theorem evalFunc5_add (c : Nat → Int) (f g : Nat → Nat) :
+    evalFunc5 c (fun m => f m + g m) = evalFunc5 c f + evalFunc5 c g :=
+  evalFuncGo_add c f g 31
+
+/-- Kernel-checked bound verifying every ray index in `canonDecomp4` is `< 23`. -/
+def checkCanonDecomp4Idx : Bool :=
+  allBelow 24 fun p => (canonDecomp4.getD p []).all fun tw => decide (tw.1 < 23)
+
+theorem checkCanonDecomp4Idx_ok : checkCanonDecomp4Idx = true := by decide
+
+/-- **Theorem T1i (Total 4-Variable Entropic Cone & 5-Object Linear-Rank Barrier for `h_uncond`):**
+    Elevates `T1e`/`T1g`/`T1h` from specific non-Shannon families to the **ENTIRE** 4-variable
+    entropic cone `\overline{\Gamma_4^*}` and **ALL** 5-variable linear/entropic inequalities on
+    the 6 retrieval objects `{W1, W2, A1, A2, A3, A4}`:
+    1. **Total 4-Variable Linear/Entropic Realizability:** Every 4-variable integer functional `c`
+       that is nonnegative on the 23 explicit `F_2/F_3`-linear subspace arrangements (`linRay4Spec`)
+       is automatically nonnegative on **ALL 24 canonical 4-marginal profiles** of `h_uncond` —
+       which cover **ALL 495 singleton 4-marginals (`C(12,4)`) AND ALL 15 retrieval-object
+       4-marginals (`C(6,4)`)** of `h_uncond` under explicit `S_4` permutations (`checkAll510Marg4`).
+       Hence NO 4-variable inequality in the entire uncountably infinite cone `\overline{\Gamma_4^*}`
+       can lower `C(2,4,2,2)` below `8/13`!
+    2. **Total 5-Object Retrieval Linear/Entropic Realizability:** Every 5-variable integer functional `c`
+       that is nonnegative on all `F_2`-linear 5-subspace arrangements is automatically nonnegative
+       on **ALL `C(6,5) = 6` five-object retrieval marginals** of `{W1, W2, A1, A2, A3, A4}` in
+       `h_uncond` (via explicit `F_2^8` `Core_W1`/`G1`, `F_2^12` `G2`, and Boolean ray decompositions).
+       Hence ANY converse lowering `C(2,4,2,2)` below `8/13` on `{W1, W2, A1..A4}` MUST be
+       genuinely **≥ 6-variable**! -/
+theorem t1i_total_4var_entropic_and_5obj_linear_barrier :
+    (∀ (c : Nat → Int),
+      (∀ r, r < 23 →
+        let sp := linRay4Spec.getD r (2, [])
+        0 ≤ evalFunc4 c (subspaceRank4 sp.1 sp.2)) →
+      ∀ ci, ci < 24 → 0 ≤ evalFunc4 c (fun m => canonProf4At ci (m - 1))) ∧
+    (∀ (c : Nat → Int),
+      (∀ subs : List (List (List Nat)), 0 ≤ evalFunc5 c (subspaceRank5 2 subs)) →
+      0 ≤ evalFunc5 c (hUncondMarg5 (retObjMask 0) (retObjMask 2) (retObjMask 3) (retObjMask 4) (retObjMask 5)) ∧
+      0 ≤ evalFunc5 c (hUncondMarg5 (retObjMask 1) (retObjMask 2) (retObjMask 3) (retObjMask 4) (retObjMask 5)) ∧
+      (∀ t ∈ ([(2, 3, 4), (2, 3, 5), (2, 4, 5), (3, 4, 5)] : List (Nat × Nat × Nat)),
+        0 ≤ evalFunc5 c (hUncondMarg5 (retObjMask 0) (retObjMask 1) (retObjMask t.1) (retObjMask t.2.1) (retObjMask t.2.2)))) ∧
+    (checkLinRay4Exact = true ∧ checkCanonDecomp4 = true ∧
+     checkAll510Marg4 = true ∧ checkQuadEnum495and15 = true ∧ checkAll6RetMarg5 = true) := by
+  refine ⟨?_, ?_, ⟨checkLinRay4Exact_ok, checkCanonDecomp4_ok, checkAll510Marg4_ok, checkQuadEnum495and15_ok, checkAll6RetMarg5_ok⟩⟩
+  · intro c hc ci hci
+    have hray_eq : ∀ r, r < 23 →
+        evalFunc4 c (fun m => linRay4At r (m - 1)) =
+        evalFunc4 c (subspaceRank4 (linRay4Spec.getD r (2, [])).1 (linRay4Spec.getD r (2, [])).2) := by
+      intro r hr
+      apply evalFunc4_congr
+      intro m hm1 hm15
+      have h1 := allBelow_true_iff 23 _ checkLinRay4Exact_ok r hr
+      have h2 := allBelow_true_iff 15 _ h1 (m - 1) (by omega)
+      have hm' : m - 1 + 1 = m := by omega
+      rw [hm'] at h2
+      exact (beq_iff_eq.mp h2).symm
+    have hfold_nn : ∀ (terms : List (Nat × Nat)) (acc : Nat → Nat),
+        0 ≤ evalFunc4 c acc →
+        (∀ tw ∈ terms, tw.1 < 23) →
+        0 ≤ evalFunc4 c (fun m => terms.foldl (fun a tw => a + tw.2 * linRay4At tw.1 (m - 1)) (acc m)) := by
+      intro terms
+      induction terms with
+      | nil => intro acc hacc _; exact hacc
+      | cons hd tl ih =>
+        intro acc hacc hmem
+        simp only [List.foldl_cons]
+        apply ih (fun m => acc m + hd.2 * linRay4At hd.1 (m - 1))
+        · rw [evalFunc4_add, evalFunc4_scale, hray_eq hd.1 (hmem hd (List.mem_cons_self ..))]
+          have hterm := nat_cast_mul_nonneg hd.2 _ (hc hd.1 (hmem hd (List.mem_cons_self ..)))
+          omega
+        · intro tw htw
+          exact hmem tw (List.mem_cons_of_mem hd htw)
+    have hci_idx : ∀ tw ∈ canonDecomp4.getD ci [], tw.1 < 23 := by
+      have hall := allBelow_true_iff 24 _ checkCanonDecomp4Idx_ok ci hci
+      intro tw htw
+      exact of_decide_eq_true (List.all_eq_true.mp hall tw htw)
+    have h3eq : evalFunc4 c (fun m => 3 * canonProf4At ci (m - 1)) =
+        evalFunc4 c (fun m => sumDecomp4 (canonDecomp4.getD ci []) (m - 1)) := by
+      apply evalFunc4_congr
+      intro m hm1 hm15
+      have h1 := allBelow_true_iff 24 _ checkCanonDecomp4_ok ci hci
+      have h2 := allBelow_true_iff 15 _ h1 (m - 1) (by omega)
+      exact beq_iff_eq.mp h2
+    have hsum_nn : 0 ≤ evalFunc4 c (fun m => sumDecomp4 (canonDecomp4.getD ci []) (m - 1)) := by
+      unfold sumDecomp4
+      exact hfold_nn (canonDecomp4.getD ci []) (fun _ => 0) (by rw [evalFunc4_zero]; omega) hci_idx
+    rw [← h3eq, evalFunc4_scale] at hsum_nn
+    omega
+  · intro c hc
+    have h5all := checkAll6RetMarg5_ok
+    unfold checkAll6RetMarg5 at h5all
+    have ⟨hW12, hTr⟩ := Bool.and_eq_true_iff.mp h5all
+    have ⟨hW1, hW2⟩ := Bool.and_eq_true_iff.mp hW12
+    have hPos1 : 0 ≤ evalFunc5 c ret5DecompW1 := by
+      unfold ret5DecompW1
+      repeat (first | rw [evalFunc5_add] | rw [evalFunc5_scale])
+      have h0 := nat_cast_mul_nonneg 16 _ (hc coreW1Subs)
+      have h1 := hc (boolPair5Subs 0 1)
+      have h2 := hc (boolPair5Subs 0 2)
+      have h3 := hc (boolPair5Subs 0 3)
+      have h4 := hc (boolPair5Subs 0 4)
+      have hs := nat_cast_mul_nonneg 20 _ (by omega : 0 ≤ evalFunc5 c (subspaceRank5 2 (boolPair5Subs 0 1)) +
+        evalFunc5 c (subspaceRank5 2 (boolPair5Subs 0 2)) +
+        evalFunc5 c (subspaceRank5 2 (boolPair5Subs 0 3)) +
+        evalFunc5 c (subspaceRank5 2 (boolPair5Subs 0 4)))
+      omega
+    have hPos2 : 0 ≤ evalFunc5 c ret5DecompW2 := by
+      unfold ret5DecompW2
+      repeat (first | rw [evalFunc5_add] | rw [evalFunc5_scale])
+      have h0 := hc (boolSing5Subs 0)
+      have p1 := hc (boolPair5Subs 0 1); have p2 := hc (boolPair5Subs 0 2)
+      have p3 := hc (boolPair5Subs 0 3); have p4 := hc (boolPair5Subs 0 4)
+      have s1 := hc (boolSing5Subs 1); have s2 := hc (boolSing5Subs 2)
+      have s3 := hc (boolSing5Subs 3); have s4 := hc (boolSing5Subs 4)
+      omega
+    have hPos12 : 0 ≤ evalFunc5 c ret5DecompW12 := by
+      unfold ret5DecompW12
+      repeat (first | rw [evalFunc5_add] | rw [evalFunc5_scale])
+      have h0 := hc gadgetG2Subs
+      have h1 := hc gadgetG1Subs
+      have p1 := hc (boolPair5Subs 0 2); have p2 := hc (boolPair5Subs 0 3); have p3 := hc (boolPair5Subs 0 4)
+      have q1 := hc (boolPair5Subs 1 2); have q2 := hc (boolPair5Subs 1 3); have q3 := hc (boolPair5Subs 1 4)
+      have s0 := hc (boolSing5Subs 0); have s1 := hc (boolSing5Subs 1)
+      omega
+    refine ⟨?_, ?_, ?_⟩
+    · rw [evalFunc5_congr c _ ret5DecompW1 (fun m hm1 hm31 => by
+        have h := allBelow_true_iff 31 _ hW1 (m - 1) (by omega)
+        have hm' : m - 1 + 1 = m := by omega
+        rw [hm'] at h; exact beq_iff_eq.mp h)]
+      exact hPos1
+    · rw [evalFunc5_congr c _ ret5DecompW2 (fun m hm1 hm31 => by
+        have h := allBelow_true_iff 31 _ hW2 (m - 1) (by omega)
+        have hm' : m - 1 + 1 = m := by omega
+        rw [hm'] at h; exact beq_iff_eq.mp h)]
+      exact hPos2
+    · intro t ht
+      have hmem := List.all_eq_true.mp hTr t ht
+      rw [evalFunc5_congr c _ ret5DecompW12 (fun m hm1 hm31 => by
+        have h := allBelow_true_iff 31 _ hmem (m - 1) (by omega)
+        have hm' : m - 1 + 1 = m := by omega
+        rw [hm'] at h; exact beq_iff_eq.mp h)]
+      exact hPos12
 
 end
 end TriadFrontier.PIRKoszul

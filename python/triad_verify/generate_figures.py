@@ -19,7 +19,14 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from triad_verify.mlwe_tightness import cbd_pmf_exact, dyadic256_pmf_exact, dyadic512_pmf_exact
+from triad_verify.mlwe_tightness import (
+    cbd_pmf_exact,
+    compute_bai_overhead_bits,
+    dyadic1024a_pmf_exact,
+    dyadic1024b_pmf_exact,
+    dyadic256_pmf_exact,
+    dyadic512_pmf_exact,
+)
 from triad_verify.pir_koszul import koszul_rate_exact, lfsr_rate_exact
 
 
@@ -275,18 +282,18 @@ def fig4_chen_step9_and_triad(out_dir: Path) -> None:
     ax1.set_title(r"(a) Chen Step-9 & $m$-Twisted DFT Rule (T2b, T2f)")
     ax1.legend(loc="upper right", frameon=True, framealpha=0.94, fontsize=7.6)
 
-    # Panel B: Unified 5-Node Mega Atlas V2 Architecture (23 Lean 4.35 Theorems T1a-T3h)
+    # Panel B: Unified 5-Node Mega Atlas Architecture (27 Lean 4.35 Theorems T1a-T3j)
     ax2.axis("off")
     ax2.set_xlim(0, 10.6)
     ax2.set_ylim(0, 8.6)
-    ax2.set_title("(b) Machine-Checked Frontier Bridges (23 Theorems T1a\u2013T3h)")
+    ax2.set_title("(b) Machine-Checked Frontier Bridges (27 Theorems T1a\u2013T3j)")
 
     nodes = {
-        "CS053": (2.25, 6.85, "CS-053: Coded/Byz. PIR\n(T1a\u2013T1h: Koszul, Flag-Priv,\n$h_{\\mathrm{uncond}}$, Mat\u00fa\u0161 $\\infty$-cone)", "#dbeafe", "#1d4ed8"),
-        "CS026": (8.35, 6.85, "CS-026 / QC-042 / CM-048\n(T2a\u2013T2g: Dyadic-256/512,\nQGTL $\\chi^2$ Law, $m$-DFT)", "#fce7f3", "#be185d"),
-        "CS004": (5.30, 4.35, "CS-004 ($\\omega$) & CS-012 (VP/VNP)\nT3e/T3g/T3h: $\\mathrm{rank}_F(\\langle 2,2,2\\rangle)=7$\n& All-$m$ $\\mathrm{rank}_F(\\langle m,m,m\\rangle)\\geq m^2+2$", "#ede9fe", "#6d28d9"),
+        "CS053": (2.25, 6.85, "CS-053: Coded/Byz. PIR\n(T1a\u2013T1i: Koszul, Flag-Priv,\n$h_{\\mathrm{uncond}} \\in I_4$ & 5-obj $\\mathbb{F}_2$)", "#dbeafe", "#1d4ed8"),
+        "CS026": (8.35, 6.85, "CS-026 / QC-042 / CM-048\n(T2a\u2013T2h: Dyadic-1024 Bai,\nAll-Order R\u00e9nyi, QGTL $\\chi^2$)", "#fce7f3", "#be185d"),
+        "CS004": (5.30, 4.35, "CS-004 ($\\omega$), CS-012 & CS-CMP-012\nT3e/T3g\u2013T3j: $\\mathrm{rank}_F(\\langle m,m,m\\rangle)\\geq 2m^2-m$,\nExact $\\mathrm{rank}(M_2)=7$, $\\Theta(C_5)=\\sqrt{5}$", "#ede9fe", "#6d28d9"),
         "CS051": (2.25, 1.55, "CS-051: Locally Decodable\nCodes (T3c: $d_{\\min}\\geq 2B+1$;\nT3f: Katz\u2013Trevisan Smoothness)", "#dcfce7", "#15803d"),
-        "CS001": (8.35, 1.55, "CS-001 / CS-010: $\\mathrm{P}\\neq\\mathrm{NP}$\n(T3a MLE, T3b Nat. Proofs,\nT3f Shannon; OPEN)", "#fef3c7", "#b45309"),
+        "CS001": (8.35, 1.55, "CS-001 / CS-010: $\\mathrm{P}\\neq\\mathrm{NP}$\n(T3a MLE, T3b Nat. Proofs,\nT3f Shannon; $\\Theta(C_7)$ OPEN)", "#fef3c7", "#b45309"),
     }
     for key, (nx, ny, txt, fc, ec) in nodes.items():
         ax2.text(
@@ -525,6 +532,105 @@ def fig6_mlkem_dfr_variational_and_allm_koszul(out_dir: Path) -> None:
     plt.close(fig)
 
 
+def fig7_bai_security_collapse_and_lovasz_bd(out_dir: Path) -> None:
+    """v4.0.0 Flagship Figure 7: End-to-End Bai et al. (2018) Security Overhead Collapse with 10-Bit
+    Dyadic-1024-A/B (T2h) & Quadratic Brockett-Dobkin Shattering Koszul Ceiling + Lovasz/Haemers (T3i, T3j)."""
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.4, 4.3), dpi=300, gridspec_kw={"width_ratios": [1.05, 1.05]})
+
+    # Panel A: End-to-End Bai et al. (2018) Security Overhead across ML-KEM-512 / 768 / 1024
+    cbd2, cbd3 = cbd_pmf_exact(2), cbd_pmf_exact(3)
+    d256, d512 = dyadic256_pmf_exact(), dyadic512_pmf_exact()
+    d1024a, d1024b = dyadic1024a_pmf_exact(), dyadic1024b_pmf_exact()
+
+    fips_bai = [
+        compute_bai_overhead_bits(cbd3, 1024, 128.0)["bai_overhead_bits"],
+        compute_bai_overhead_bits(cbd2, 1536, 192.0)["bai_overhead_bits"],
+        compute_bai_overhead_bits(cbd2, 2048, 256.0)["bai_overhead_bits"],
+    ]
+    d89_bai = [
+        compute_bai_overhead_bits(d512, 1024, 128.0)["bai_overhead_bits"],
+        compute_bai_overhead_bits(d256, 1536, 192.0)["bai_overhead_bits"],
+        compute_bai_overhead_bits(d256, 2048, 256.0)["bai_overhead_bits"],
+    ]
+    d10_bai = [
+        compute_bai_overhead_bits(d1024b, 1024, 128.0)["bai_overhead_bits"],
+        compute_bai_overhead_bits(d1024a, 1536, 192.0)["bai_overhead_bits"],
+        compute_bai_overhead_bits(d1024a, 2048, 256.0)["bai_overhead_bits"],
+    ]
+    sets = [
+        "ML-KEM-512\n($\\lambda=128, m=1024$)\nDFR $2^{-140.0} < 2^{-138.8}$",
+        "ML-KEM-768\n($\\lambda=192, m=1536$)\nDFR $2^{-166.0} < 2^{-164}$",
+        "ML-KEM-1024\n($\\lambda=256, m=2048$)\nDFR $2^{-174.1} < 2^{-174}$",
+    ]
+    x = np.arange(len(sets))
+    w = 0.26
+    b1 = ax1.bar(x - w, fips_bai, w, color="#dc2626", edgecolor="#1e293b", lw=0.7, label="FIPS 203 ($\\mathrm{CBD}_3 / \\mathrm{CBD}_2$)")
+    b2 = ax1.bar(x, d89_bai, w, color="#2563eb", edgecolor="#1e293b", lw=0.7, label="Ours 8/9-bit (Dyadic-512 / 256)")
+    b3 = ax1.bar(x + w, d10_bai, w, color="#047857", edgecolor="#1e293b", lw=0.7, label="Ours 10-bit (Dyadic-1024-B / A)")
+    for rect, val in zip(b1, fips_bai):
+        ax1.text(rect.get_x() + rect.get_width() / 2, val + 1.2, f"{val:.1f}b", ha="center", va="bottom", fontsize=7.2, color="#991b1b", fontweight="bold")
+    for rect, val in zip(b2, d89_bai):
+        ax1.text(rect.get_x() + rect.get_width() / 2, val + 1.2, f"{val:.1f}b", ha="center", va="bottom", fontsize=7.0, color="#1d4ed8")
+    for rect, val, fb in zip(b3, d10_bai, fips_bai):
+        ax1.text(rect.get_x() + rect.get_width() / 2, val + 1.2, f"{val:.1f}b\n({fb/val:.1f}$\\times$)", ha="center", va="bottom", fontsize=7.0, color="#065f46", fontweight="bold")
+    ax1.text(
+        0.02, 0.69,
+        "Bai et al. (2018) Optimal Loss:\n"
+        "$\\min_{\\alpha>1,\\sigma}[\\frac{\\lambda}{\\alpha-1}+m\\log_2 R_\\alpha]$\n"
+        "Dyadic-1024-A saves 59.8b\n"
+        "(67.1b $\\to$ 7.3b, 9.2$\\times$!)",
+        transform=ax1.transAxes,
+        va="top", fontsize=6.6,
+        bbox=dict(boxstyle="round,pad=0.26", facecolor="#f0fdf4", edgecolor="#047857", alpha=0.96),
+    )
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(sets, fontsize=7.3)
+    ax1.set_ylim(0, 92.0)
+    ax1.set_ylabel("End-to-End Bai et al. Security Overhead $\\Delta_{\\mathrm{Bai}}$ (bits)")
+    ax1.set_title("(a) End-to-End Bai et al. Overhead Collapse (T2h)")
+    ax1.legend(loc="upper left", frameon=True, framealpha=0.95, fontsize=7.1)
+
+    # Panel B: Quadratic Brockett-Dobkin (T3i) vs Koszul Ceiling + Lovasz/Haemers Shannon Capacity (T3j)
+    ms = np.array([2, 3, 4, 5, 6])
+    triv = ms ** 2
+    koszul_ceil = ms ** 2 + ms
+    bd = 2 * ms ** 2 - ms
+    ax2.fill_between(ms, koszul_ceil, bd, where=(ms >= 3), color="#fee2e2", alpha=0.45, label="Quadratic Gain Beyond Koszul ($m^2-2m$)")
+    ax2.plot(ms, triv, "o--", color="#64748b", lw=1.5, ms=4.8, label=r"Trivial Flattening ($m^2$)")
+    ax2.plot(ms, koszul_ceil, "^-.", color="#1d4ed8", lw=1.8, ms=5.5, label=r"Deg-$(m-1)$ Koszul Ceiling ($m^2+m$, T3g)")
+    ax2.plot(ms, bd, "D-", color="#b91c1c", lw=2.3, ms=5.8, label=r"Ours: Brockett–Dobkin ($2m^2-m\;\forall F$, T3i)")
+    ax2.scatter([2], [7], color="#7c3aed", s=110, marker="*", zorder=7, label=r"Strassen–Winograd $\mathrm{rank}_F(\langle 2,2,2\rangle)=7$ (T3h)")
+    for m_val, kc_val, bd_val in zip(ms, koszul_ceil, bd):
+        if m_val >= 3:
+            ax2.text(m_val - 0.14, bd_val + 2.4, f"{bd_val}", fontsize=7.4, color="#991b1b", fontweight="bold", ha="center")
+            ax2.text(
+                m_val + 0.12, kc_val + 2.6, f"{kc_val}", fontsize=7.0, color="#1e40af", ha="center",
+                bbox=dict(boxstyle="round,pad=0.10", facecolor="white", edgecolor="none", alpha=0.85),
+            )
+    ax2.text(
+        0.985, 0.03,
+        "Theorem T3j (CS-CMP-012, $\\mathbb{Z}[\\sqrt{5}]$):\n"
+        "$\\Theta(C_5)=\\sqrt{5}$: $k^2\\leq 5^t$ & $\\alpha(C_5^{\\boxtimes 2m})=5^m$\n"
+        "$\\sqrt{10}\\leq \\Theta(C_7)\\leq \\vartheta(C_7)\\approx 3.318$\n"
+        "$r_{\\mathrm{Haemers}}^{\\min}(C_7, F)=4\\;\\forall F$ (incl. $\\mathbb{F}_2$)",
+        transform=ax2.transAxes,
+        ha="right", va="bottom", fontsize=6.4,
+        bbox=dict(boxstyle="round,pad=0.26", facecolor="#f5f3ff", edgecolor="#6d28d9", alpha=0.96),
+    )
+    ax2.set_xticks(ms)
+    ax2.set_xticklabels([rf"$\langle {m},{m},{m}\rangle$" for m in ms], fontsize=8.0)
+    ax2.set_xlim(1.7, 6.35)
+    ax2.set_ylim(0, 82.0)
+    ax2.set_xlabel(r"Matrix Multiplication Tensor $\langle m, m, m \rangle$")
+    ax2.set_ylabel(r"Tensor Rank Lower Bound ($\forall F$, incl. $\mathbb{F}_2$)")
+    ax2.set_title("(b) Brockett–Dobkin $2m^2-m$ & Lovász/Haemers (T3i, T3j)")
+    ax2.legend(loc="upper left", frameon=True, framealpha=0.95, fontsize=6.9)
+
+    fig.tight_layout(w_pad=2.2)
+    fig.savefig(out_dir / "fig7_bai_security_collapse_and_lovasz_bd.pdf", bbox_inches="tight")
+    plt.close(fig)
+
+
 def generate_social_preview(svg_path: Path) -> None:
     svg = """<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
   <defs>
@@ -541,33 +647,33 @@ def generate_social_preview(svg_path: Path) -> None:
   </defs>
   <rect width="1280" height="640" fill="url(#bg)"/>
   <rect x="48" y="48" width="1184" height="544" rx="22" fill="#0b1220" fill-opacity="0.72" stroke="url(#accent)" stroke-width="2.5"/>
-  <text x="90" y="132" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#38bdf8" letter-spacing="2">CODED-PIR-MLWE-COMPLEXITY-LAB · v3.0.0</text>
+  <text x="90" y="132" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#38bdf8" letter-spacing="2">CODED-PIR-MLWE-COMPLEXITY-LAB · v4.0.0</text>
   <text x="90" y="196" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">Koszul-Veronese Byzantine PIR, MLWE Tightness,</text>
   <text x="90" y="248" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">and Machine-Checked Complexity Bridges</text>
   <rect x="90" y="276" width="260" height="4" rx="2" fill="url(#accent)"/>
   <g font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="19" fill="#e2e8f0">
     <rect x="90" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
-    <text x="112" y="350" font-weight="700" fill="#38bdf8">PILLAR I · CS-053 PIR (T1a–T1h)</text>
+    <text x="112" y="350" font-weight="700" fill="#38bdf8">PILLAR I · CS-053 PIR (T1a–T1i)</text>
     <text x="112" y="382" font-size="15.5">• Exact Koszul rank: 10/17 &gt; 4/7 (F_7)</text>
-    <text x="112" y="408" font-size="15.5">• All-M contraction &amp; E &lt; KT exact cap.</text>
-    <text x="112" y="434" font-size="15.5">• h_uncond defeats ALL Matúš (2007) M_s</text>
+    <text x="112" y="408" font-size="15.5">• Total 4-var I_4 barrier (all 510 4-margs)</text>
+    <text x="112" y="434" font-size="15.5">• All 6 five-obj marginals F_2-linear</text>
     <text x="112" y="460" font-size="15.5">• Projective P³ linear collapse ∀F</text>
 
     <rect x="468" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#f472b6" stroke-width="1.5"/>
-    <text x="490" y="350" font-weight="700" fill="#f472b6">PILLAR II · CS-026 MLWE (T2a–T2g)</text>
-    <text x="490" y="382" font-size="15.5">• Dyadic-256 (17.7x) &amp; Dyadic-512 (12.9x)</text>
-    <text x="490" y="408" font-size="15.5">• Exact ML-KEM-512/768/1024 DFRs pass</text>
-    <text x="490" y="434" font-size="15.5">• Non-asymp. QGTL χ²/H4 variational law</text>
-    <text x="490" y="460" font-size="15.5">• Luo det-ideal &amp; universal m-DFT rule</text>
+    <text x="490" y="350" font-weight="700" fill="#f472b6">PILLAR II · CS-026 MLWE (T2a–T2h)</text>
+    <text x="490" y="382" font-size="15.5">• Dyadic-1024-A/B: 9.2x Bai loss drop</text>
+    <text x="490" y="408" font-size="15.5">• ML-KEM-1024 Bai: 67.1b → 7.3b (DFR ok)</text>
+    <text x="490" y="434" font-size="15.5">• All-order Rényi Hölder &amp; TV-χ² laws</text>
+    <text x="490" y="460" font-size="15.5">• QGTL χ² law &amp; universal m-DFT rule</text>
 
     <rect x="846" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#fbbf24" stroke-width="1.5"/>
-    <text x="868" y="350" font-weight="700" fill="#fbbf24">PILLAR III · TRIAD (T3a–T3h)</text>
-    <text x="868" y="382" font-size="15.5">• Exact Strassen-Winograd rank(&lt;2,2,2&gt;)=7 ∀F</text>
-    <text x="868" y="408" font-size="15.5">• Symbolic all-m rank(&lt;m,m,m&gt;) ≥ m²+2 ∀F</text>
-    <text x="868" y="434" font-size="15.5">• Algebrization, Nat. Proofs, KT LDC</text>
-    <text x="868" y="460" font-size="15.5">• Honest: P≠NP, ω=2, VP≠VNP OPEN</text>
+    <text x="868" y="350" font-weight="700" fill="#fbbf24">PILLAR III · TRIAD (T3a–T3j)</text>
+    <text x="868" y="382" font-size="15.5">• Brockett-Dobkin rank(&lt;m,m,m&gt;) ≥ 2m²-m</text>
+    <text x="868" y="408" font-size="15.5">• Exact Strassen-Winograd rank(M_2)=7 ∀F</text>
+    <text x="868" y="434" font-size="15.5">• Exact Lovász Θ(C_5)=√5 &amp; C_7 rank=4 ∀F</text>
+    <text x="868" y="460" font-size="15.5">• Honest: P≠NP, ω=2, Θ(C_7) OPEN</text>
   </g>
-  <text x="90" y="544" font-family="ui-monospace, Consolas, monospace" font-size="16.5" fill="#94a3b8">Zero-Mathlib Lean 4.35.0 (23 Theorems · 6 Kernels · 2995 decls) · C11 · Eshkol AD · Alexander S. Donahue (ORCID 0009-0006-8168-9648)</text>
+  <text x="90" y="544" font-family="ui-monospace, Consolas, monospace" font-size="16.2" fill="#94a3b8">Zero-Mathlib Lean 4.35.0 (27 Theorems · 6 Kernels · 3589 decls) · C11 · Eshkol AD · Alexander S. Donahue (ORCID 0009-0006-8168-9648)</text>
 </svg>
 """
     svg_path.write_text(svg, encoding="utf-8", newline="\n")
@@ -584,8 +690,9 @@ def main() -> None:
     fig4_chen_step9_and_triad(fig_dir)
     fig5_dyadic256_and_koszul_tensor(fig_dir)
     fig6_mlkem_dfr_variational_and_allm_koszul(fig_dir)
+    fig7_bai_security_collapse_and_lovasz_bd(fig_dir)
     generate_social_preview(root / "docs" / "media" / "social-preview.svg")
-    print("Generated all 6 vector PDF figures and docs/media/social-preview.svg.")
+    print("Generated all 7 vector PDF figures and docs/media/social-preview.svg.")
 
 
 if __name__ == "__main__":

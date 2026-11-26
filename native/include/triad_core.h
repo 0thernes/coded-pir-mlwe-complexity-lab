@@ -56,20 +56,26 @@ triad_chen_res_t triad_verify_chen_step9(int D, int c);
 /* CS-026: QGTL shifted-LWE Fourier state metric & Berry curvature calculator. */
 triad_qgtl_res_t triad_qgtl_shifted_lwe(int eta, double sigma, double e0);
 
-/* CS-026: FIPS 203 CBD_eta & Optimal 8-Bit Dyadic-256 / 9-Bit Dyadic-512 Renyi-2 suite & Compress_1. */
+/* CS-026: FIPS 203 CBD_eta & Optimal 8/9/10-Bit Dyadic-256/512/1024-A/B Renyi suite & Compress_1. */
 triad_renyi_res_t triad_mlkem_renyi_opt(int eta);
 triad_renyi_res_t triad_mlkem_dyadic256_opt(void);
 triad_renyi_res_t triad_mlkem_dyadic512_opt(void);
+triad_renyi_res_t triad_mlkem_dyadic1024a_opt(void);
+triad_renyi_res_t triad_mlkem_dyadic1024b_opt(void);
 int triad_dyadic256_sample_ct(uint8_t byte);
 int triad_dyadic512_sample_ct(uint16_t raw9);
+int triad_dyadic1024a_sample_ct(uint16_t raw10);
+int triad_dyadic1024b_sample_ct(uint16_t raw10);
 int triad_mlkem_compress1(int x);
 
 /* CS-026 <-> QC-042: Universal m-twisted DFT selection rule verifier (T2f). */
 bool triad_verify_twisted_dft(int m, int D, int r, double *out_max_forb);
 
-/* CS-053 <-> CS-004/CS-012: Pure-integer Koszul flattening, all-m monomial, & Strassen-7 verifiers (T3e/T3g/T3h). */
+/* CS-053 <-> CS-004/CS-012/CS-CMP-012: Koszul flattening, Strassen-7, Brockett-Dobkin, & Lovasz/Haemers (T3e/T3g/T3h/T3i/T3j). */
 bool triad_verify_koszul_flattening_certs(void);
 bool triad_verify_strassen_7prod(void);
 bool triad_verify_all_m_koszul_monomial(int m);
+bool triad_verify_lovasz_c5_sos(void);
+bool triad_verify_c7_indep10_and_haemers(void);
 
 #endif /* TRIAD_CORE_H */

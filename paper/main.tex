@@ -11,6 +11,11 @@
 \usepackage{microtype}
 \usepackage[hidelinks,pdfauthor={Alexander S. Donahue},pdftitle={Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked Complexity-Barrier Bridges}]{hyperref}
 
+\renewcommand{\topfraction}{0.92}
+\renewcommand{\bottomfraction}{0.85}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.75}
+
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -42,17 +47,17 @@
 \email{0\_0@0thernes.art}
 \urladdr{https://orcid.org/0009-0006-8168-9648}
 
-\date{November 25, 2026 (Research Preprint, v3.0.0; not externally peer-reviewed)}
-\subjclass[2020]{94A60, 94B05, 68Q15, 15A69, 81P68, 03B35}
-\keywords{Private information retrieval, Byzantine servers, Koszul--Veronese rank, Mat\'u\v{s} non-Shannon barrier, Module-LWE, FIPS 203 ML-KEM, Dyadic-256, Dyadic-512, R\'enyi divergence, Quantum Geometric Tensor, Koszul flattening, Strassen--Winograd tensor rank, Algebrization, Lean 4 formal verification}
+\date{November 25, 2026 (Research Preprint, v4.0.0; not externally peer-reviewed)}
+\subjclass[2020]{94A60, 94B05, 68Q15, 15A69, 05C76, 81P68, 03B35}
+\keywords{Private information retrieval, Byzantine servers, Koszul--Veronese rank, linear rank inequalities, Module-LWE, FIPS 203 ML-KEM, Dyadic-1024, R\'enyi divergence, Quantum Geometric Tensor, Strassen--Winograd, Brockett--Dobkin, Shannon capacity, Lov\'asz theta, Haemers bound, Lean 4 formal verification}
 
 \begin{document}
 
 \begin{abstract}
-We present twenty-three zero-Mathlib Lean 4.35.0 machine-checked theorems (\texttt{T1a}--\texttt{T3h}) spanning three connected open frontiers: coded, colluding, robust, and Byzantine private information retrieval (PIR), post-quantum Module-LWE (MLWE) reduction tightness, and complexity-theoretic barriers around $\mathrm{P} \neq \mathrm{NP}$, matrix multiplication $\omega$, and algebraic circuit complexity ($\mathrm{VP}$ vs.\ $\mathrm{VNP}$).
-\textbf{Pillar I (Coded/Byzantine PIR):} We resolve the open Schur-product syzygy rank problem of Sun, Tao, Xu, and Zhang (\texttt{arXiv:2603.10769}) via a shifted-difference Koszul--Veronese identity proving $\lambda^\star(T,T',K) = \min\bigl(N\binom{T-1}{T'-1},\, K\binom{T}{T'},\, (K+T-T')\binom{T-1}{T'-1}\bigr)$ (\texttt{T1a}). This yields a universal $K \leftrightarrow T$ symmetric two-file rate $R^{\mathrm{Koszul}} = E^2(E-1)/[(N-U)(E^2+(K+T-2)E-KT)]$ ($E := N - U - 2B$) strictly dominating the linear full-support-rank (LFSR) capacity of Sun and Zhang (\texttt{arXiv:2610.37412}) by exact numerator excess $(K-1)(T-1)E^2 > 0$ for all $K,T \ge 2$ (\texttt{T1b}) and raising Example~VII.A of \texttt{arXiv:2603.10769} from $4/7$ to $10/17$ with zero error even over $\F_7$. Exterior-power subspaces $V_n = u_n \wedge \Lambda^{K-1}(\F_q^E)$ with single-orbit flag privacy settle exact linear capacity for $(M=2, K=2, T=2, E \ge 4)$ (kernel-certified over $\F_{11}$ at $2/5 > 8/21$), achieve exact \emph{unrestricted} capacity at $E = K+1$ breaking $E \ge KT$, and yield zero-error $T=3$ schemes including Byzantine $(8,3,3,B=1)$ at $15/34$ (\texttt{T1c}--\texttt{T1d}). Conversely, a 330-orbit pure-integer unconditioned 12-variable polymatroid $h_{\mathrm{uncond}}$ satisfies all 270{,}336 Shannon inequalities, all 99 PIR equalities, all 1{,}485 singleton and 3{,}814{,}209 retrieval Ingletons at $8/13 > 3/5$ (\texttt{T1e}), paired with a field-universal $\PP^3$ linear collapse theorem (\texttt{T1f}), exact algebraic Zhang--Yeung~(1998) reduction (\texttt{T1g}), and a universal 7-parameter non-Shannon cone theorem proving $h_{\mathrm{uncond}}$ unconditionally defeats \emph{all infinitely many} Mat\'u\v{s}~(2007) non-Shannon inequalities simultaneously alongside all-$M$ geometric Koszul contraction domination $\rho_{\mathrm{KV}}^j < \rho_{\mathrm{LFSR}}^j$ (\texttt{T1h}).
-\textbf{Pillar II (MLWE Tightness):} We refute determinant-ideal module-SVP attacks (\texttt{arXiv:2604.15858}) over arbitrary commutative rings (\texttt{T2a}), prove ring-universal Step-9 anti-periodic DFT cancellation for Chen (ePrint~2024/555; \texttt{T2b}) and its universal $m$-twisted DFT selection rule (\texttt{T2f}), certify to 60 digits a $4.96\times$ R\'enyi-2 cliff in NIST FIPS~203 ML-KEM from $\CBD_3$ (7.63~bits) to $\CBD_2$ (37.84~bits at ML-KEM-1024; \texttt{T2c}), prove a pure-integer Cauchy--Schwarz finite-support floor and non-asymptotic Pearson $\chi^2$/Hermite-4 QGTL variational lower bound linking metric defect $\frac{1}{2}-\det(g)$ directly to $R_2 - 1$ (\texttt{T2e}, \texttt{T2g}), and complete the constant-time drop-in FIPS~203 dyadic suite: 8-bit \texttt{Dyadic-256} ($\Var=1$, $17.7\times$ drop to $2.14$~bits at ML-KEM-1024; \texttt{T2e}) and 9-bit zero-excess-kurtosis \texttt{Dyadic-512} ($\Var=3/2$, exact $\kappa_{\mathrm{ex}} = 0$, exact Gaussian QGTL $\det(g) = 1/2$, $12.9\times$ drop to $0.592$~bits at ML-KEM-512; \texttt{T2g}), with exact discrete-convolution DFRs passing all three NIST targets ($2^{-139.26}, 2^{-166.12}, 2^{-174.26}$).
-\textbf{Pillar III (Complexity Triad \& Exact Strassen--Winograd):} We formalize multilinear extension uniqueness (Algebrization; \texttt{T3a}), LWE PRF $\Rightarrow$ Natural Proofs obstruction (\texttt{T3b}), Katz--Trevisan PIR $\leftrightarrow$ LDC distance and smoothness (\texttt{T3c}, \texttt{T3f}), sharp FIPS~203 \texttt{Compress\_1} margin $|e| \le 831$ (\texttt{T3d}), Shannon finite circuit counting (\texttt{T3f}), Landsberg--Ottaviani Koszul flattenings (\texttt{T3e}), a symbolic \emph{all-$m$} 1-nonzero-per-row monomial left-inverse proving $\rank_F(\langle m,m,m\rangle) \ge m^2 + 2$ for \emph{every} $m \ge 2$ and \emph{every} field $F$ including $\mathrm{char}\,2$ (\texttt{T3g}), and the complete characteristic-free \textbf{Strassen--Winograd exact optimality theorem} $\rank_F(\langle 2,2,2\rangle) = 7$ over \emph{every} field $F$ (\texttt{T3h}). \emph{We explicitly affirm that $\mathrm{P} \neq \mathrm{NP}$, $\omega = 2$, $\mathrm{VP} \neq \mathrm{VNP}$, non-linear $C(2,4,2,2) \in [3/5, 8/13]$, general $M \ge 3$ non-LFSR capacity, and worst-case quantum MLWE lower bounds remain completely open.}
+We present twenty-seven zero-Mathlib Lean 4.35.0 machine-checked theorems (\texttt{T1a}--\texttt{T3j}, 29 audited declarations across 6 independent proof kernels) spanning coded/Byzantine private information retrieval (PIR), post-quantum Module-LWE (MLWE) reduction tightness, and complexity-theoretic / zero-error information barriers around $\mathrm{P} \neq \mathrm{NP}$, matrix multiplication $\omega$, $\mathrm{VP}$ vs.\ $\mathrm{VNP}$, and graph Shannon capacity.
+\textbf{Pillar I (Coded/Byzantine PIR):} A shifted-difference Koszul--Veronese identity resolves the Schur-product syzygy rank problem of Sun et~al.\ (\texttt{arXiv:2603.10769}), proving $\lambda^\star(T,T',K) = \min\bigl(N\binom{T-1}{T'-1},\, K\binom{T}{T'},\, (K+T-T')\binom{T-1}{T'-1}\bigr)$ (\texttt{T1a}) and a $K \leftrightarrow T$ symmetric rate $R^{\mathrm{Koszul}} = E^2(E-1)/[(N-U)(E^2+(K+T-2)E-KT)]$ ($E := N - U - 2B$) strictly dominating Sun--Zhang (\texttt{arXiv:2610.37412}) LFSR capacity by $(K-1)(T-1)E^2 > 0$ (\texttt{T1b}), raising Example~VII.A from $4/7$ to zero-error $10/17$ even over $\F_7$. Single-orbit exterior-power flag privacy settles exact linear capacity for $(2,N,2,2,U,B)$ ($E \ge 4$, kernel-certified over $\F_{11}$ at $2/5 > 8/21$), achieves exact \emph{unrestricted} capacity at $E=K+1$ breaking $E \ge KT$, and yields zero-error $T=3$ Byzantine schemes including $(8,3,3,B=1)$ at $15/34$ (\texttt{T1c}--\texttt{T1d}). Conversely, our pure-integer 12-variable polymatroid $h_{\mathrm{uncond}}$ at $8/13 > 3/5$ (\texttt{T1e}), paired with $\PP^3$ linear collapse (\texttt{T1f}), Zhang--Yeung~(1998) (\texttt{T1g}), and all infinitely many Mat\'u\v{s}~(2007) inequalities (\texttt{T1h}), is elevated in \texttt{T1i} to a \textbf{Total 4-Variable Entropic \& 5-Object $\F_2$-Linear Barrier}: all $510$ four-marginals decompose into $23$ $\F_2/\F_3$ linear rays (defeating \emph{every} 4-variable linear information inequality) and all $6$ five-object retrieval marginals decompose into $\F_2$-linear arrangements, confining any converse for $C(2,4,2,2) \le 3/5$ to $\ge 6$-variable inequalities.
+\textbf{Pillar II (MLWE Tightness):} We refute determinant-ideal module-SVP attacks (\texttt{arXiv:2604.15858}; \texttt{T2a}), prove ring-universal Chen (ePrint~2024/555) Step-9 and general $m$-twisted DFT cancellation (\texttt{T2b}, \texttt{T2f}), certify the $4.96\times$ FIPS~203 R\'enyi-2 cliff (\texttt{T2c}), prove finite-support Cauchy--Schwarz (\texttt{T2e}), non-asymptotic Pearson $\chi^2$/Hermite-4 QGTL variational (\texttt{T2d}, \texttt{T2g}), all-order R\'enyi-$(m+1)$ H\"older, and exact TV--$\chi^2$ bounds (\texttt{T2h}), and deliver constant-time 8/9/10-bit FIPS~203 drop-ins: \texttt{Dyadic-256} ($17.7\times$ $R_2$ drop), zero-excess-kurtosis \texttt{Dyadic-512} ($\kappa_{\mathrm{ex}} = 0$, $\det(g)=1/2$), and 10-bit \texttt{Dyadic-1024-A/B}, collapsing end-to-end Bai et~al.~(2018) security overhead \textbf{$9.19\times$} at ML-KEM-1024 ($67.14 \to 7.31$~bits, saving $59.8$~bits) and \textbf{$4.83\times$} at ML-KEM-512 ($24.77 \to 5.13$~bits) while passing all three NIST DFR targets ($2^{-140.02}, 2^{-166.00}, 2^{-174.13}$).
+\textbf{Pillar III (Complexity Triad, Brockett--Dobkin, \& Exact Shannon Capacity):} We formalize Algebrization MLE uniqueness (\texttt{T3a}), LWE PRF $\Rightarrow$ Natural Proofs (\texttt{T3b}), Katz--Trevisan PIR $\leftrightarrow$ LDC distance/smoothness (\texttt{T3c}, \texttt{T3f}), sharp \texttt{Compress\_1} margin $|e| \le 831$ (\texttt{T3d}), Shannon circuit counting (\texttt{T3f}), all-$m$ Koszul flattenings $\rank_F(\langle m,m,m\rangle) \ge m^2+2$ (\texttt{T3e}, \texttt{T3g}), characteristic-free \textbf{Strassen--Winograd optimality} $\rank_F(\langle 2,2,2\rangle) = 7$ (\texttt{T3h}), field-universal \textbf{Brockett--Dobkin} $\rank_F(\langle m,m,m\rangle) \ge 2m^2 - m$ (shattering the Koszul ceiling $m^2+m$ for all $m \ge 3$) and Strassen lift $\rank_F(\langle m,2,p\rangle) \ge mp + 3$ (\texttt{T3i}), and \textbf{Zero-Error Shannon Capacity} (\texttt{T3j}) with zero real numbers: field-universal Haemers $|S| \le r^t$, exact \textbf{Lov\'asz Pentagon Theorem} $\Theta(C_5) = \sqrt{5}$ ($k^2 \le 5^t$ via a 3-term $\Z[\sqrt{5}]$ SOS factorization of $80 M_6$), and exact $C_7$ minimum Haemers rank $= 4$ over every field. \emph{We explicitly affirm that $\mathrm{P} \neq \mathrm{NP}$, $\omega = 2$, $\mathrm{VP} \neq \mathrm{VNP}$, non-linear $C(2,4,2,2) \in [3/5, 8/13]$, general $M \ge 3$ non-LFSR capacity, exact $\Theta(C_7) \in [\sqrt{10}, \vartheta(C_7)]$, and worst-case quantum MLWE lower bounds remain completely open.}
 \end{abstract}
 
 \maketitle
@@ -64,18 +69,18 @@ This work investigates three deeply interconnected open frontiers in theoretical
 \begin{enumerate}[leftmargin=1.8em]
   \item \textbf{Coded, Colluding, Robust, and Byzantine PIR (\texttt{CS-053}):} Determining the exact download capacity of $U$-unresponsive, $B$-Byzantine, $T$-colluding Private Information Retrieval from an $(N, K)$-MDS coded storage system storing $M$ files~\cite{Chor1998,BanawanUlukus2018,FreijHollanti2017,SunJafar2017,Holzbaur2021,SunTaoXuZhang2026,SunZhang2026}.
   \item \textbf{Post-Quantum MLWE Reduction Tightness (\texttt{CS-026}, \texttt{QC-042}, \texttt{CM-048}):} Quantifying concrete R\'enyi reduction losses for Module-LWE in NIST FIPS~203 ML-KEM~\cite{Regev2009,LangloisStehle2015,Bai2018,NISTFIPS203}, designing constant-time drop-in noise distributions overcoming finite-support floors, linking LWE noise geometry to the Provost--Vall\'ee Quantum Geometric Tensor~\cite{ProvostVallee1980}, and rigorously auditing proposed cryptanalytic attacks~\cite{Chen2024,Luo2026}.
-  \item \textbf{Complexity Barriers \& Koszul Tensor Rank (\texttt{CS-001}, \texttt{004}, \texttt{010}, \texttt{012}, \texttt{051}):} Formalizing how cryptographic hardness, local decoding~\cite{KatzTrevisan2000}, Shannon counting~\cite{Shannon1949}, exterior-algebra Koszul flattenings~\cite{LandsbergOttaviani2013}, and exact Strassen--Winograd bilinear optimality~\cite{Strassen1969,Winograd1971} interact with Relativization~\cite{BakerGillSolovay1975}, Natural Proofs~\cite{RazborovRudich1997}, and Algebrization~\cite{AaronsonWigderson2009}.
+  \item \textbf{Complexity Barriers, Tensor Rank, \& Shannon Capacity (\texttt{CS-001}, \texttt{004}, \texttt{010}, \texttt{012}, \texttt{051}, \texttt{CS-CMP-012}):} Formalizing how cryptographic hardness, local decoding~\cite{KatzTrevisan2000}, Shannon counting~\cite{Shannon1949}, exterior-algebra Koszul flattenings~\cite{LandsbergOttaviani2013}, exact Strassen--Winograd~\cite{Strassen1969,Winograd1971}, Brockett--Dobkin~\cite{BrockettDobkin1978}, and zero-error graph Shannon capacity~\cite{Lovasz1979,Haemers1979} interact with Relativization~\cite{BakerGillSolovay1975}, Natural Proofs~\cite{RazborovRudich1997}, and Algebrization~\cite{AaronsonWigderson2009}.
 \end{enumerate}
 
-Rather than making speculative claims on open conjectures, this study separates machine-checked theorems from genuinely open frontiers. Every primary result (\texttt{T1a}--\texttt{T3h}, twenty-three headline theorems and twenty-five audited declarations including the master conjunction and concrete non-vacuity witnesses) is proved from first principles in zero-Mathlib Lean~4.35.0~\cite{Moura2021} without \texttt{sorry}, without \texttt{native\_decide}, and using only the standard kernel axioms (\texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}). Every proof is replayed independently by \texttt{lean}, \texttt{leanchecker}, paranoid \texttt{leanchecker}, \texttt{con-leche}, \texttt{con-ron}, \texttt{nanoda\_bin}, and \texttt{lean4lean} in CI, and cross-verified differentially across exact Python, zero-warning C11, and Eshkol v1.3.6 forward-mode dual-number automatic differentiation.
+Rather than making speculative claims on open conjectures, this study separates machine-checked theorems from genuinely open frontiers. Every primary result (\texttt{T1a}--\texttt{T3j}, twenty-seven headline theorems and twenty-nine audited declarations including the master conjunction and concrete non-vacuity witnesses) is proved from first principles in zero-Mathlib Lean~4.35.0~\cite{Moura2021} without \texttt{sorry}, without \texttt{native\_decide}, and using only the standard kernel axioms (\texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}). Every proof is replayed independently by \texttt{lean}, \texttt{leanchecker}, paranoid \texttt{leanchecker}, \texttt{con-leche}, \texttt{con-ron}, \texttt{nanoda\_bin}, and \texttt{lean4lean} in CI, and cross-verified differentially across exact Python, zero-warning C11, and Eshkol v1.3.6 forward-mode dual-number automatic differentiation.
 
-\begin{table}[t]
+\begin{table}[tbp]
 \centering
-\caption{Claims Ledger mapping all 23 headline theorems (\texttt{T1a}--\texttt{T3h}) to their verification tier and scope. Tier-1 = zero-Mathlib Lean~4.35.0 kernel-checked (with concrete non-vacuity witnesses in \texttt{NonVacuity.lean}); Tier-2 = exact finite-field, integer, or 60-digit \texttt{Decimal} arithmetic; Tier-4 = explicitly open.}
+\caption{Claims Ledger mapping all 27 headline theorems (\texttt{T1a}--\texttt{T3j}) to their verification tier and scope. Tier-1 = zero-Mathlib Lean~4.35.0 kernel-checked (with concrete non-vacuity witnesses in \texttt{NonVacuity.lean}); Tier-2 = exact finite-field, integer, $\Z[\sqrt{5}]$, or 60-digit \texttt{Decimal} arithmetic; Tier-4 = explicitly open.}
 \label{tab:claims}
-\footnotesize
-\renewcommand{\arraystretch}{1.08}
-\begin{tabular}{@{}>{\ttfamily}l >{\raggedright\arraybackslash}p{8.5cm} l l@{}}
+\scriptsize
+\renewcommand{\arraystretch}{1.01}
+\begin{tabular}{@{}>{\ttfamily}l >{\raggedright\arraybackslash}p{8.9cm} l l@{}}
 \toprule
 \normalfont\textbf{ID} & \textbf{Mathematical Claim} & \textbf{Lean} & \textbf{Tier} \\
 \midrule
@@ -102,8 +107,12 @@ C20 & Field-universal Koszul-flattening tensor rank: $\rank_F(\langle 2,2,2\rang
 C21 & Shannon (1949) finite circuit-counting non-surjectivity (\texttt{CS-010}) \& Katz--Trevisan $q$-query LDC smoothness (\texttt{CS-051}) & \texttt{T3f} & Tier-1 + 2 \\
 C22 & Symbolic all-$m$ monomial left-inverse: $\rank_F(\langle m,m,m\rangle) \ge m^2+2$ $\forall m \ge 2$, $\forall F$; degree-$(m-1)$ ceiling $m^2+m$ & \texttt{T3g} & Tier-1 + 2 \\
 C23 & Exact Strassen--Winograd optimality: $\rank_F(\langle 2,2,2\rangle) = 7$ over \emph{every} field $F$ (including $\mathrm{char}\,F = 2$) & \texttt{T3h} & Tier-1 + 2 \\
+C24 & Total 4-var $I_4$ containment (all 510 four-marginals of $h_{\mathrm{uncond}}$) \& all 6 five-object $\F_2$-linear realizations & \texttt{T1i} & Tier-1 + 2 \\
+C25 & All-order R\'enyi-$(m+1)$ H\"older floor, TV--$\chi^2$ bridge, \& 10-bit \texttt{Dyadic-1024-A/B} ($9.19\times$ Bai collapse, DFRs pass) & \texttt{T2h} & Tier-1 + 2 \\
+C26 & Field-universal Brockett--Dobkin $\rank_F(\langle m,m,m\rangle) \ge 2m^2-m$ ($> m^2+m\;\forall m \ge 3$) \& Strassen lift $\ge mp+3$ & \texttt{T3i} & Tier-1 + 2 \\
+C27 & Field-universal Haemers $|S| \le r^t$, exact $\Z[\sqrt{5}]$ SOS Lov\'asz $\Theta(C_5)=\sqrt{5}$, \& exact $C_7$ min Haemers rank $= 4\;\forall F$ & \texttt{T3j} & Tier-1 + 2 \\
 \midrule
-\normalfont\texttt{O1}--\texttt{O5} & $\mathrm{P} \neq \mathrm{NP}$; $\omega = 2$ \& $\mathrm{VP} \neq \mathrm{VNP}$; non-linear $C(2,4,2,2) \in [3/5,8/13]$; general $M \ge 3$ PIR; quantum MLWE hardness & None & \textbf{Tier-4 OPEN} \\
+\normalfont\texttt{O1}--\texttt{O6} & $\mathrm{P} \neq \mathrm{NP}$; $\omega = 2$ \& $\mathrm{VP} \neq \mathrm{VNP}$; non-linear $C(2,4,2,2)$; $M \ge 3$ PIR; exact $\Theta(C_7)$; quantum MLWE hardness & None & \textbf{Tier-4 OPEN} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -200,7 +209,7 @@ Let $M = 2$, $E = N - U - 2B$, and $q$ be a sufficiently large prime power.
 Fix any $E$-subset $I \subseteq [N]$. Across $\delta$ copies, the interference space decomposes into $\delta\sigma$ copies of $\GRS_K$ (each requiring $K$ distinct servers from $I$) and $\delta\mu$ copies of $\GRS_{K+1}$ (each requiring $K+1$ distinct servers from $I$). Since $K < K + 1 \le E$, wrapping the $\delta(K\sigma + (K+1)\mu) = E y$ server-block assignments cyclically around $I \cong \Z_E$ assigns at most one copy of any block to any server and exactly $y$ blocks to every server $n \in I$. The resulting $(\delta d_{\mathrm{int}}) \times (\delta d_{\mathrm{int}})$ specialized evaluation matrix is block-diagonal with Vandermonde blocks of sizes $K$ and $K+1$, hence has nonzero determinant. Because the product of determinants over all $\binom{N}{E}$ subsets and all generic pairwise flag-privacy minors (non-vanishing by Lean \texttt{T1d}) is a nonzero polynomial of bounded degree, the Schwartz--Zippel lemma guarantees deterministic zero-error selectors over any sufficiently large $\F_q$.
 \end{proof}
 
-\begin{table}[t]
+\begin{table}[htbp]
 \centering
 \caption{Exact zero-error benchmarks achieved by our Koszul--Veronese exterior-power flag-private construction versus the 2026 state of the art (\cite{SunZhang2026} LFSR and \cite{SunTaoXuZhang2026} disguise-and-squeeze). Every finite-field row is verified across all $\binom{N}{E}$ subsets and all $\binom{N}{T}$ colluding tuples.}
 \label{tab:pir_bench}
@@ -229,10 +238,10 @@ $(8, 3, 3, 0, 1)$, $E=6 < KT$ & $\F_{1009}$ & Infeasible & $\mathbf{15/34}$ (0.4
   \label{fig:pir_frontier}
 \end{figure}
 
-\subsection{Infinite Mat\'u\v{s} Non-Shannon Cone Barrier, $\PP^3$ Impossibility, and All-$M$ Koszul (\texttt{T1e}--\texttt{T1h})}
-Why does the linear capacity $C_{\mathrm{lin}}(2,4,2,2) = 3/5$ fall strictly below the cyclic-collusion upper bound $8/13$ of~\cite{SunTaoXuZhang2026}? We prove unconditionally that this gap is an inherent barrier of \emph{all} Shannon-type inequalities, \emph{all} 4-variable Ingleton inequalities~\cite{Ingleton1971}, Zhang--Yeung~(1998)~\cite{ZhangYeung1998}, \emph{and the entire infinite Mat\'u\v{s}~(2007) family}~\cite{Matus2007} of non-Shannon inequalities.
+\subsection{Total 4-Variable Entropic \& 5-Object $\F_2$-Linear Barrier, $\PP^3$ Impossibility, and All-$M$ Koszul (\texttt{T1e}--\texttt{T1i})}
+Why does the linear capacity $C_{\mathrm{lin}}(2,4,2,2) = 3/5$ fall strictly below the cyclic-collusion upper bound $8/13$ of~\cite{SunTaoXuZhang2026}? We prove unconditionally that this gap is an inherent barrier not only of Shannon inequalities, Ingleton~\cite{Ingleton1971}, Zhang--Yeung~(1998)~\cite{ZhangYeung1998}, and the infinite Mat\'u\v{s}~(2007) family~\cite{Matus2007}, but of \textbf{every linear information inequality on 4 variables}~\cite{Hammer1997} and \textbf{every $\F_2$-linear 5-subspace rank inequality}~\cite{Kinser2011} on the 6-object retrieval subsystem.
 
-\begin{theorem}[Infinite Non-Shannon Cone Barrier, $\PP^3$ Obstruction, \& All-$M$ Koszul; Lean \texttt{T1e}--\texttt{T1h}]
+\begin{theorem}[Total 4-Var $I_4$ \& 5-Object $\F_2$-Linear Barrier, $\PP^3$ Obstruction, \& All-$M$ Koszul; Lean \texttt{T1e}--\texttt{T1i}]
 \label{thm:barrier}
 Consider the 12 unconditioned variables $(X_{1:4}, Y_{1:4}, A_{1:4})$ representing $(4,2)$-MDS storage of $(W_1, W_2)$ and server responses retrieving $W_1$ conditioned only on queries.
 \begin{enumerate}[leftmargin=1.8em]
@@ -246,10 +255,11 @@ Consider the 12 unconditioned variables $(X_{1:4}, Y_{1:4}, A_{1:4})$ representi
   \end{multline}
   lies inside the 7-parameter nonnegative cone $\alpha\,\mathrm{Ing}_H(C,D;A,B) + \sum c_i I_H(\cdot;\cdot\mid\cdot)$ and specializes identically at $s = 1$ to Zhang--Yeung~(1998)~\cite{ZhangYeung1998} (\texttt{T1g}). Consequently, every Shannon+Ingleton polymatroid—including $h_{\mathrm{uncond}}$ at $8/13$ (audited with $0$ violations across $14{,}850$ singleton $s \in \{1,\dots,5\}$ instances)—\emph{unconditionally defeats all infinitely many Mat\'u\v{s}~(2007) inequalities simultaneously!}
   \item \textbf{$M \ge 3$ Symmetric Koszul \& All-$M$ Geometric Contraction Domination (\texttt{T1g}--\texttt{T1h}):} The symmetric 1-flag Koszul denominator $\mathrm{Den}(M,E,K,T) = E(E-1) + (M-1)((K+T-1)E - KT)$ breaks $E \ge KT$ for all $M \ge 3$ (e.g., $M=3, E=3, K=T=2$ gives $3/8$). Moreover, for all $E,K,T \ge 2$ with $K, T \le E$ and every round $j \ge 1$, the Koszul contraction ratio $\rho_{\mathrm{KV}} = \frac{(K+T-1)E - KT}{E(E-1)}$ strictly beats Sun--Zhang's $\rho_{\mathrm{LFSR}} = \frac{K+T-1}{E}$ by exact surplus $(K-1)(T-1)E > 0$, forcing $\rho_{\mathrm{KV}}^j < \rho_{\mathrm{LFSR}}^j$ for every $j \ge 1$ (e.g., $9/19 > 16/37$ at $M=3, N=4, K=T=2$).
+  \item \textbf{Total 4-Variable Entropic \& 5-Object $\F_2$-Linear Subspace Barrier (\texttt{T1i}):} Module \texttt{PIRLinearCerts.lean} kernel-verifies $23$ explicit $\F_2/\F_3$ linear-subspace 4-variable arrangements ($23 \times 15 = 345$ exact ranks) and proves that ALL $24$ canonical $S_4$-orbits covering ALL $\binom{12}{4} = 495$ singleton 4-marginals and ALL $\binom{6}{4} = 15$ retrieval-object 4-marginals of $h_{\mathrm{uncond}}$ ($510 \times 15 = 7{,}650$ identities) decompose at common denominator~$3$ as nonnegative integer combinations of those $23$ linear rays! Consequently, for \emph{every} 4-variable linear functional $c$ nonnegative on $\F_2/\F_3$ linear-subspace arrangements (in particular, \emph{every} valid 4-variable linear information inequality~\cite{Hammer1997}, linear or non-linear!), $c(h_{\mathrm{uncond}}|_Q) \ge 0$ on ALL $510$ four-marginals. Furthermore, ALL $\binom{6}{5} = 6$ five-object retrieval marginals of $\{W_1, W_2, A_1, A_2, A_3, A_4\}$ decompose as exact nonnegative integer combinations of explicit $\F_2$-linear subspace arrangements ($\mathrm{Core}_{W_1} \subset \F_2^8$, $G_1 \subset \F_2^8$, $G_2 \subset \F_2^{12}$, and Boolean rays), defeating every 5-variable $\F_2$-linear subspace-rank inequality~\cite{Kinser2011} on the retrieval subsystem simultaneously!
 \end{enumerate}
 \end{theorem}
 
-Theorem~\ref{thm:barrier} narrows the remaining converse frontier at $(2,4,2,2)$ dramatically: neither Shannon inequalities, nor 4-variable Ingleton, nor Zhang--Yeung~(1998), nor any member of the infinite Mat\'u\v{s}~(2007) family can push the upper bound below $8/13$; any proof of $C(2,4,2,2) \le 3/5$ must deploy genuinely non-Ingleton $\ge 5$-subsystem non-Shannon inequalities (or else an asymmetric non-linear scheme must exceed $3/5$; CP-SAT rules out symmetric realization over $\F_4^2$).
+Theorem~\ref{thm:barrier} narrows the remaining converse frontier at $(2,4,2,2)$ to its sharpest known boundary: neither any 4-variable linear information inequality (Shannon, Ingleton, Zhang--Yeung, Mat\'u\v{s}, or unknown future 4-variable inequalities!) nor any 5-variable $\F_2$-linear rank inequality on retrieval marginals can push the upper bound below $8/13$; any converse proof of $C(2,4,2,2) \le 3/5$ must invoke genuinely $\ge 6$-variable (or non-linear) non-Shannon inequalities (or else an asymmetric non-linear scheme must exceed $3/5$).
 
 \begin{figure}[t]
   \centering
@@ -258,7 +268,7 @@ Theorem~\ref{thm:barrier} narrows the remaining converse frontier at $(2,4,2,2)$
   \label{fig:barrier}
 \end{figure}
 
-\section{Pillar II (\texttt{CS-026}, \texttt{QC-042}, \texttt{CM-048}): MLWE Tightness, \texttt{Dyadic-256/512}, and QGTL Variational Geometry}
+\section{Pillar II (\texttt{CS-026}, \texttt{QC-042}, \texttt{CM-048}): MLWE Tightness, \texttt{Dyadic-256/512/1024}, and QGTL Variational Geometry}
 \label{sec:mlwe}
 
 \subsection{Determinant-Ideal Refutation (\texttt{T2a}) and Universal $m$-Twisted DFT Rule (\texttt{T2b}, \texttt{T2f})}
@@ -279,10 +289,10 @@ Let $R$ be any commutative ring with unity.
 \end{enumerate}
 \end{theorem}
 
-\subsection{FIPS~203 R\'enyi-2 Cliff (\texttt{T2c}), Complete Constant-Time Dyadic Suite, \& QGTL $\chi^2$ Variational Law (\texttt{T2d}, \texttt{T2e}, \texttt{T2g})}
-NIST FIPS~203~\cite{NISTFIPS203} replaces theoretical discrete Gaussian noise $D_\sigma$ (used in worst-case-to-average-case MLWE reductions~\cite{LangloisStehle2015}) with centered binomial noise $\CBD_\eta$, choosing $\eta_1 = 3, \eta_2 = 2$ for ML-KEM-512 ($k=2$, $m = 1024$ keygen coordinates) and $\eta_1 = \eta_2 = 2$ for ML-KEM-768 ($k=3$, $m=1536$) and ML-KEM-1024 ($k=4$, $m=2048$). Using the R\'enyi divergence framework of Bai et~al.~\cite{Bai2018}, we certify to 60-digit precision a $4.96\times$ cumulative R\'enyi-2 reduction-tightness cliff from ML-KEM-512 ($7.630$~bits) to ML-KEM-1024 ($37.842$~bits; Table~\ref{tab:renyi}, Figure~\ref{fig:mlwe_qgtl}a). Theorems~\texttt{T2e} and \texttt{T2g} explain the exact mathematical cause of this cliff, connect it non-asymptotically to the Quantum Geometric Tensor, and eliminate it across \emph{all three} NIST FIPS~203 parameter sets while preserving exact DFR compliance.
+\subsection{FIPS~203 R\'enyi Cliff (\texttt{T2c}), All-Order H\"older \& Bai Collapse (\texttt{T2d}, \texttt{T2e}, \texttt{T2g}, \texttt{T2h})}
+NIST FIPS~203~\cite{NISTFIPS203} replaces theoretical discrete Gaussian noise $D_\sigma$ (used in worst-case-to-average-case MLWE reductions~\cite{LangloisStehle2015}) with centered binomial noise $\CBD_\eta$, choosing $\eta_1 = 3, \eta_2 = 2$ for ML-KEM-512 ($k=2$, $m = 1024$ keygen coordinates) and $\eta_1 = \eta_2 = 2$ for ML-KEM-768 ($k=3$, $m=1536$) and ML-KEM-1024 ($k=4$, $m=2048$). Under the end-to-end R\'enyi security-loss theorem of Bai et~al.~\cite{Bai2018}, replacing $m$ Gaussian coordinates by $P$ incurs concrete security overhead $\Delta_{\mathrm{Bai}}(\lambda) := \min_{\alpha > 1,\,\sigma > 0}\bigl[\frac{\lambda}{\alpha - 1} + m\log_2 R_\alpha(P \| D_\sigma)\bigr]$: for FIPS~203, this totals $24.77$~bits (ML-KEM-512), $50.36$~bits (ML-KEM-768), and $67.14$~bits (ML-KEM-1024; Table~\ref{tab:renyi}). Theorems~\texttt{T2e}, \texttt{T2g}, and \texttt{T2h} prove the exact all-order R\'enyi floor and TV--$\chi^2$ bounds, link them non-asymptotically to the Quantum Geometric Tensor, and collapse Bai et~al.'s end-to-end security overhead up to \textbf{$9.19\times$} across all three NIST FIPS~203 parameter sets while preserving exact DFR compliance.
 
-\begin{theorem}[Finite-Support Floor, Complete \texttt{Dyadic-256/512} Suite, \& QGTL Variational Law; Lean \texttt{T2d}, \texttt{T2e}, \texttt{T2g}]
+\begin{theorem}[All-Order R\'enyi Floor, TV--$\chi^2$ Bridge, \texttt{Dyadic-256/512/1024}, \& QGTL Law; Lean \texttt{T2d}, \texttt{T2e}, \texttt{T2g}, \texttt{T2h}]
 \label{thm:dyadic_qgtl}
 \leavevmode
 \begin{enumerate}[leftmargin=1.8em]
@@ -313,26 +323,41 @@ NIST FIPS~203~\cite{NISTFIPS203} replaces theoretical discrete Gaussian noise $D
     \Omega_{\theta\sigma} = \Cov\!\left(X,\, \frac{(X - e_0)^2}{\sigma^3}\right),
   \end{equation}
   vanishing identically iff noise is symmetric ($e_0 = 0$; Figure~\ref{fig:mlwe_qgtl}b), obeying universal PSD $4\det(g) \ge \Omega_{\theta\sigma}^2$, and at symmetric $\sigma = \sqrt{\Var}$ obeying $\det(g) = (\kappa_{\mathrm{ex}} + 2)/4$, giving $3/8 < 15/32 < 1/2$ ($\Var=1$) and $5/12 < 1/2 = \det(g)_{\mathrm{Dyadic\text{-}512}}$ ($\Var=3/2$).
+  \item \textbf{All-Order R\'enyi-$(m+1)$ H\"older Floor \& Pure-Integer TV--$\chi^2$ Bridge (\texttt{T2h}):} Extending \texttt{T2e} to \emph{every} integer R\'enyi order $\alpha = m + 1 \ge 2$ via a pure-\texttt{Nat} discrete Young inequality $(m+1)a b^m \le a^{m+1} + m b^{m+1}$, every finite-support distribution satisfies
+  \begin{equation}
+    M^m\Bigl(\sum_{i \in S} p_i\Bigr)^{\!m+1} \le \Bigl(\sum_{i \in S} q_i\Bigr)^{\!m}\!\Bigl(\sum_{i \in S} p_i^{m+1} w_i^m\Bigr)
+    \implies R_{m+1}(P \| D_\sigma) \ge \frac{1}{1 - \tau_S(\sigma)}\quad (\forall m \ge 1),
+  \end{equation}
+  while Cauchy--Schwarz yields the exact pure-integer Total Variation--$\chi^2$ bridge $4\,\mathrm{TV}(P, Q)^2 \le R_2(P \| Q) - 1$, certifying statistical distance collapse automatically whenever $R_2$ drops.
+  \item \textbf{10-Bit Constant-Time Bai-Optimal \texttt{Dyadic-1024-A/B} (\texttt{T2h}):} Optimizing the full Bai et~al.~\cite{Bai2018} tradeoff $\Delta_{\mathrm{Bai}}(\lambda)$ over 10-bit branchless constant-time distributions yields two exact-variance drop-in samplers:
+  \begin{itemize}[leftmargin=1.4em]
+    \item \textbf{\texttt{Dyadic-1024-A} (ML-KEM-768/1024, $\Var=1$):} $w = (4, 57, 248, 406, 248, 57, 4)/1024$ on $\{-3,\dots,3\}$ ($\mu_4 = 371/128$, QGTL $\det(g) = 243/512 > 15/32 > 3/8$, 6 constant-time comparisons) cuts $R_2$ loss \textbf{$25.1\times$} ($37.84 \to 1.509$~bits) and collapses end-to-end Bai overhead \textbf{$9.19\times$} at both ML-KEM-1024 ($67.14 \to \mathbf{7.31}$~bits, saving $59.8$~bits at $\alpha^*=296.6$) and ML-KEM-768 ($50.36 \to \mathbf{5.48}$~bits), with exact DFRs $2^{-174.13}$ and $2^{-166.00}$ (Table~\ref{tab:renyi}, Figure~\ref{fig:bai_lovasz}a).
+    \item \textbf{\texttt{Dyadic-1024-B} (ML-KEM-512, $\Var=3/2$):} $w = (1, 17, 90, 239, 330, 239, 90, 17, 1)/1024$ on $\{-4,\dots,4\}$ ($\mu_4 = 207/32$, QGTL $\det(g) = 15/32 > 5/12$, 8 comparisons) collapses ML-KEM-512 Bai overhead \textbf{$4.83\times$} ($24.77 \to \mathbf{5.13}$~bits at $\alpha^*=293.4$) with exact DFR $2^{-140.02} < 2^{-138.8}$.
+  \end{itemize}
 \end{enumerate}
 \end{theorem}
 
-\begin{table}[t]
+\begin{table}[htbp]
 \centering
-\caption{Exact moments, 60-digit certified R\'enyi-2 / R\'enyi-$\infty$ divergence optima, and exact discrete-convolution FIPS~203 union-bound DFRs for $\CBD_\eta$ vs.\ our constant-time \texttt{Dyadic-512}/\texttt{Dyadic-256} suite (cross-verified by Eshkol v1.3.6 AD and C11).}
+\caption{Exact moments, 60-digit $R_2$ loss, overflow-free Bai et~al.~\cite{Bai2018} end-to-end security overhead $\Delta_{\mathrm{Bai}}(\lambda)$, and exact discrete-convolution FIPS~203 DFRs for $\CBD_\eta$ vs.\ our constant-time 8/9/10-bit dyadic suite (cross-verified by Eshkol v1.3.6 AD and C11).}
 \label{tab:renyi}
-\footnotesize
-\setlength{\tabcolsep}{3.2pt}
+\scriptsize
+\setlength{\tabcolsep}{2.7pt}
 \begin{tabular}{@{}l c c c c c c@{}}
 \toprule
-\textbf{ML-KEM Set / Noise} & \textbf{$\Var$, $\kappa_{\mathrm{ex}}$} & \textbf{$\sigma_2^*$} & \textbf{$\min R_2$} & \textbf{$m$} & \textbf{Loss (bits)} & \textbf{Exact DFR (Target)} \\
+\textbf{ML-KEM Set / Noise} & \textbf{$\Var$, $\kappa_{\mathrm{ex}}$} & \textbf{$\min R_2$} & \textbf{$R_2$ Loss} & \textbf{Bai $\Delta_{\mathrm{Bai}}(\lambda)$} & \textbf{Gain} & \textbf{Exact DFR (Target)} \\
 \midrule
-512 ($\CBD_3/\CBD_2$)   & $3/2$, $-1/3$ & $1.236505$ & $1.00517798$ & $1024$ & $7.630$ & $2^{-141.59}$ ($\le 2^{-138.8}$) \\
-768 ($\CBD_2$)          & $1$, $-1/2$   & $1.022597$ & $1.01289004$ & $1536$ & $28.382$ & $2^{-168.25}$ ($\le 2^{-164}$) \\
-1024 ($\CBD_2$)         & $1$, $-1/2$   & $1.022597$ & $1.01289004$ & $2048$ & $37.842$ & $2^{-176.63}$ ($\le 2^{-174}$) \\
+512 ($\CBD_3/\CBD_2$)   & $3/2$, $-1/3$ & $1.00517798$ & $7.630$ b & $24.77$ b & $1.0\times$ & $2^{-141.59}$ ($\le 2^{-138.8}$) \\
+768 ($\CBD_2$)          & $1$, $-1/2$   & $1.01289004$ & $28.382$ b & $50.36$ b & $1.0\times$ & $2^{-168.25}$ ($\le 2^{-164}$) \\
+1024 ($\CBD_2$)         & $1$, $-1/2$   & $1.01289004$ & $37.842$ b & $67.14$ b & $1.0\times$ & $2^{-176.63}$ ($\le 2^{-174}$) \\
 \midrule
-512 (\textbf{Dyadic-512})  & $3/2$, $\mathbf{0}$ & $1.226115$ & $1.00040086$ & $1024$ & $\mathbf{0.592}$ ($12.9\times$) & $\mathbf{2^{-139.26}}$ (PASS) \\
-768 (\textbf{Dyadic-256})  & $1$, $-1/8$ & $1.001301$ & $1.00072397$ & $1536$ & $\mathbf{1.604}$ ($17.7\times$) & $\mathbf{2^{-166.12}}$ (PASS) \\
-1024 (\textbf{Dyadic-256}) & $1$, $-1/8$ & $1.001301$ & $1.00072397$ & $2048$ & $\mathbf{2.138}$ ($17.7\times$) & $\mathbf{2^{-174.26}}$ (PASS) \\
+512 (\textbf{Dyadic-512})  & $3/2$, $\mathbf{0}$ & $1.00040086$ & $\mathbf{0.592}$ b & $12.08$ b & $2.1\times$ & $\mathbf{2^{-139.26}}$ (PASS) \\
+768 (\textbf{Dyadic-256})  & $1$, $-1/8$ & $1.00072397$ & $1.604$ b & $17.35$ b & $2.9\times$ & $\mathbf{2^{-166.12}}$ (PASS) \\
+1024 (\textbf{Dyadic-256}) & $1$, $-1/8$ & $1.00072397$ & $2.138$ b & $23.14$ b & $2.9\times$ & $\mathbf{2^{-174.26}}$ (PASS) \\
+\midrule
+512 (\textbf{Dyadic-1024-B})  & $3/2$, $-1/8$ & $1.00075681$ & $1.118$ b & $\mathbf{5.13}$ b & $\mathbf{4.83\times}$ & $\mathbf{2^{-140.02}}$ (PASS) \\
+768 (\textbf{Dyadic-1024-A})  & $1$, $-13/128$ & $1.00051080$ & $\mathbf{1.132}$ b & $\mathbf{5.48}$ b & $\mathbf{9.19\times}$ & $\mathbf{2^{-166.00}}$ (PASS) \\
+1024 (\textbf{Dyadic-1024-A}) & $1$, $-13/128$ & $1.00051080$ & $\mathbf{1.509}$ b & $\mathbf{7.31}$ b & $\mathbf{9.19\times}$ & $\mathbf{2^{-174.13}}$ (PASS) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -344,10 +369,10 @@ NIST FIPS~203~\cite{NISTFIPS203} replaces theoretical discrete Gaussian noise $D
   \label{fig:mlwe_qgtl}
 \end{figure}
 
-\section{Pillar III (\texttt{CS-001}, \texttt{CS-004}, \texttt{CS-010}, \texttt{CS-012}, \texttt{CS-051}): Complexity Bridges, All-$m$ Koszul Rank, and Exact Strassen--Winograd Optimality}
+\section{Pillar III (\texttt{CS-001}, \texttt{CS-004}, \texttt{CS-012}, \texttt{CS-051}, \texttt{CS-CMP-012}): Complexity Bridges, Brockett--Dobkin, and Exact Shannon Capacity}
 \label{sec:triad}
 
-To connect our PIR and MLWE theorems structurally to $\mathrm{P} \neq \mathrm{NP}$, matrix multiplication $\omega$, $\mathrm{VP}$ vs.\ $\mathrm{VNP}$, and locally decodable codes without overclaiming, we machine-check eight unifying theorems (\texttt{T3a}--\texttt{T3h}, Figures~\ref{fig:chen_triad}b, \ref{fig:dyadic_koszul}b, and \ref{fig:dfr_allm}b).
+To connect our PIR and MLWE theorems structurally to $\mathrm{P} \neq \mathrm{NP}$, matrix multiplication $\omega$, $\mathrm{VP}$ vs.\ $\mathrm{VNP}$, locally decodable codes, and zero-error graph Shannon capacity without overclaiming, we machine-check ten unifying theorems (\texttt{T3a}--\texttt{T3j}, Figures~\ref{fig:chen_triad}b, \ref{fig:dyadic_koszul}b, \ref{fig:dfr_allm}b, and \ref{fig:bai_lovasz}b).
 
 \subsection{Algebrization, Natural Proofs, LDCs, and Shannon Counting (\texttt{T3a}--\texttt{T3d}, \texttt{T3f})}
 
@@ -385,10 +410,36 @@ Let $F$ be \emph{any} field (arbitrary characteristic, including $\F_2$!).
 \end{enumerate}
 \end{theorem}
 
+\subsection{Brockett--Dobkin Quadratic Bounds (\texttt{T3i}) and Exact Zero-Reals Lov\'asz Shannon Capacity (\texttt{T3j})}
+Version~4.0.0 shatters the Landsberg--Ottaviani Koszul ceiling $m^2 + m$ for every $m \ge 3$ via field-universal substitution arguments~\cite{BrockettDobkin1978} and bridges matrix rank directly to zero-error information theory (\texttt{CS-CMP-012}) via Haemers's rank bound~\cite{Haemers1979} and Lov\'asz's pentagon theorem~\cite{Lovasz1979}—proved completely without real numbers inside exact $\Z[\sqrt{5}]$ arithmetic!
+
+\begin{theorem}[Field-Universal Brockett--Dobkin \& Exact Zero-Reals Lov\'asz/Haemers Capacity; Lean \texttt{T3i}, \texttt{T3j}]
+\label{thm:bd_lovasz}
+Let $F$ be \emph{any} field (arbitrary characteristic, including $\F_2$!).
+\begin{enumerate}[leftmargin=1.8em]
+  \item \textbf{Rectangular \& Quadratic Brockett--Dobkin Lower Bound (\texttt{T3i}, \texttt{CS-004}):} Applying universal output elimination and subblock induction over every \texttt{SimpleField F} proves the 3-way symmetric rectangular matrix multiplication lower bound~\cite{BrockettDobkin1978}
+  \begin{equation}
+    \label{eq:bd_rect}
+    \rank_F(\langle m, k, p \rangle) \ge \max(mk + mp - m,\; mk + kp - k,\; mp + kp - p)
+    \qquad (\forall m, k, p \ge 1).
+  \end{equation}
+  Setting $m = k = p$ proves the quadratic bound $\rank_F(\langle m, m, m \rangle) \ge 2m^2 - m$, strictly shattering the degree-$(m-1)$ Koszul flattening ceiling $m^2 + m$ for every $m \ge 3$ ($15 > 12$ at $m=3$, $28 > 20$ at $m=4$, $45 > 30$ at $m=5$; Figure~\ref{fig:bai_lovasz}b). Lifting Theorem~\texttt{T3h} ($\rank_F(\langle 2,2,2\rangle) = 7$) yields $\rank_F(\langle m, 2, p \rangle) \ge mp + 3$ for all $m, p \ge 2$ over every field $F$.
+  \item \textbf{Field-Universal Haemers (1979) Rank Bound (\texttt{T3j}, \texttt{CS-CMP-012}):} If a matrix $M \in F^{n \times n}$ fits graph $G$ ($M_{ii} \neq 0$, $M_{ij} = 0$ on non-edges) and has rank $\le r$, then Kronecker-power factorization ($M^{\otimes t} = U^{\otimes t} V^{\otimes t}$) proves every independent set $S \subseteq V(G^{\boxtimes t})$ satisfies $|S| \le r^t$ over \emph{every} field $F$ (including $\F_2$)~\cite{Haemers1979}.
+  \item \textbf{Exact Lov\'asz (1979) Pentagon Theorem $\Theta(C_5) = \sqrt{5}$ in Exact $\Z[\sqrt{5}]$ SOS Arithmetic (\texttt{T3j}):} Let $80 M_6 \in \Z[\sqrt{5}]^{6 \times 6}$ be the scaled Lov\'asz umbrella Gram matrix (index~$0$ = handle $5^{1/4} c$, indices $1..5$ = umbrella vectors $u_0..u_4$, with $(80 M_6)_{0,0} = 80\sqrt{5}$, $(80 M_6)_{0,j+1} = (80 M_6)_{i+1,i+1} = 80$, $(80 M_6)_{\mathrm{edge}} = 40\sqrt{5} - 40$, and $(80 M_6)_{\mathrm{nonedge}} = 0$). We kernel-verify the exact 3-term positive-weight sum-of-squares factorization
+  \begin{equation}
+    \label{eq:lovasz_sos}
+    80 M_6 = 16\sqrt{5}\,z_0 z_0^\top + (5 - \sqrt{5})\,z_1 z_1^\top + 10\,z_2 z_2^\top
+    \qquad (z_0, z_1, z_2 \in \Z[\sqrt{5}]^6).
+  \end{equation}
+  Lifting~\eqref{eq:lovasz_sos} by Kronecker tensor products on the vector $e_0 - \sum_{i < k} e_{\mathrm{emb}(f(i))}$ (where non-adjacent vertices in $C_5^{\boxtimes t}$ are strictly orthogonal!) yields $80^t((\sqrt{5})^t - k) \ge 0$ in the exact ordered ring $\Z[\sqrt{5}]$, proving \textbf{$k^2 \le 5^t$} for \emph{every} $t \in \mathbb{N}$ and \emph{every} independent set of size $k$ in $C_5^{\boxtimes t}$—with zero Mathlib and zero real numbers! Paired with our lifted 5-element independent set in $C_5^{\boxtimes 2}$ ($\{0, 7, 14, 16, 23\}$), $\alpha(C_5^{\boxtimes 2m}) = 5^m$ for every $m \in \mathbb{N}$, proving $\Theta(C_5) = \sqrt{5}$~\cite{Lovasz1979}.
+  \item \textbf{Exact $C_7$ Minimum Haemers Rank $= 4$ Over Every Field (\texttt{T3j}):} Lifting the explicit 10-element independent set $\{0, 2, 11, 14, 16, 25, 29, 34, 38, 47\} \subset V(C_7^{\boxtimes 2})$ yields $\alpha(C_7^{\boxtimes 2m}) \ge 10^m$ for all $m \in \mathbb{N}$ ($\Theta(C_7) \ge \sqrt{10} \approx 3.1623$, vs.\ $\vartheta(C_7) = \frac{7\cos(\pi/7)}{1+\cos(\pi/7)} \approx 3.3177$). By Haemers's bound, $10 > 3^2$ rules out any rank-$\le 3$ fitting matrix over \emph{any} field $F$, while the explicit 4-clique partition $\{0,1\},\{2,3\},\{4,5\},\{6\}$ achieves rank~$4$ over \emph{every} field $F$!
+\end{enumerate}
+\end{theorem}
+
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{figures/fig4_chen_step9_and_triad.pdf}
-  \caption{(a)~DFT magnitude spectrum of Chen's~\cite{Chen2024} quadratic Gauss phase ($D=7, c=3$): all even frequencies vanish identically ($\hat{f}(2k) \equiv 0$, Theorems~\texttt{T2b}, \texttt{T2f}) while all odd modes equal $2\sqrt{D} \approx 5.292$. (b)~Machine-checked 5-node dependency architecture unifying \texttt{CS-053}, \texttt{CS-026}/\texttt{QC-042}/\texttt{CM-048}, \texttt{CS-004}/\texttt{CS-012}, \texttt{CS-051}, and \texttt{CS-001}/\texttt{CS-010} across all 23 theorems (\texttt{T1a}--\texttt{T3h}).}
+  \caption{(a)~DFT magnitude spectrum of Chen's~\cite{Chen2024} quadratic Gauss phase ($D=7, c=3$): all even frequencies vanish identically ($\hat{f}(2k) \equiv 0$, Theorems~\texttt{T2b}, \texttt{T2f}) while all odd modes equal $2\sqrt{D} \approx 5.292$. (b)~Machine-checked 5-node dependency architecture unifying \texttt{CS-053}, \texttt{CS-026}/\texttt{QC-042}/\texttt{CM-048}, \texttt{CS-004}/\texttt{CS-012}/\texttt{CS-CMP-012}, \texttt{CS-051}, and \texttt{CS-001}/\texttt{CS-010} across all 27 theorems (\texttt{T1a}--\texttt{T3j}).}
   \label{fig:chen_triad}
 \end{figure}
 
@@ -399,19 +450,26 @@ Let $F$ be \emph{any} field (arbitrary characteristic, including $\F_2$!).
   \label{fig:dyadic_koszul}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{figures/fig6_mlkem_dfr_variational_and_allm_koszul.pdf}
-  \caption{Version~3.0.0 breakthroughs. (a)~Complete FIPS~203 ML-KEM-512/768/1024 constant-time dyadic suite (\texttt{Dyadic-512} at $12.9\times$ and exact $\kappa_{\mathrm{ex}} = 0$, \texttt{Dyadic-256} at $17.7\times$) with exact discrete-convolution DFRs passing all three NIST targets and non-asymptotic QGTL $\chi^2$/Hermite-4 variational bounds (\texttt{T2g}). (b)~Symbolic all-$m$ Koszul MatMul bounds $\rank_F(\langle m,m,m\rangle) \ge m^2 + 2$ (\texttt{T3g}), degree-$(m-1)$ Koszul ceiling $m^2+m$ ($\Phi_2(\langle 3,3,3\rangle) \ge 12$), and exact Strassen--Winograd optimality $\rank_F(\langle 2,2,2\rangle) = 7$ over every field $F$ (\texttt{T3h}).}
+  \caption{Version~3.0.0 breakthroughs. (a)~Complete FIPS~203 ML-KEM-512/768/1024 constant-time dyadic suite (\texttt{Dyadic-512} at $12.9\times$ and exact $\kappa_{\mathrm{ex}} = 0$, \texttt{Dyadic-256} at $17.7\times$) with exact discrete-convolution DFRs passing all three NIST targets and non-asymptotic QGTL $\chi^2$/Hermite-4 variational bounds (\texttt{T2g}). (b)~Symbolic all-$m$ Koszul MatMul bounds $\rank_F(\langle m,m,m\rangle) \ge m^2 + 2$ (\texttt{T3g}), degree-$(m-1)$ ceiling $m^2+m$ ($\Phi_2(\langle 3,3,3\rangle) \ge 12$), and exact Strassen--Winograd $\rank_F(\langle 2,2,2\rangle) = 7$ over every field $F$ (\texttt{T3h}).}
   \label{fig:dfr_allm}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig7_bai_security_collapse_and_lovasz_bd.pdf}
+  \caption{Version~4.0.0 flagship breakthroughs. (a)~End-to-end Bai et~al.~\cite{Bai2018} security overhead $\Delta_{\mathrm{Bai}}(\lambda)$ across all three FIPS~203 ML-KEM parameter sets: 10-bit constant-time \texttt{Dyadic-1024-A/B} collapse security loss $9.19\times$ at ML-KEM-1024 ($67.14 \to 7.31$~bits, saving $59.8$~bits) and $4.83\times$ at ML-KEM-512 ($24.77 \to 5.13$~bits) while passing every NIST DFR target (\texttt{T2h}). (b)~Field-universal Brockett--Dobkin quadratic lower bound $2m^2-m$ shattering the degree-$(m-1)$ Koszul ceiling $m^2+m$ for all $m \ge 3$ (\texttt{T3i}), paired with our zero-reals $\Z[\sqrt{5}]$ Lov\'asz $\Theta(C_5) = \sqrt{5}$ and exact $C_7$ Haemers rank $= 4$ theorems (\texttt{T3j}).}
+  \label{fig:bai_lovasz}
 \end{figure}
 
 \section{Formal Verification, Multi-Language Cross-Audit, and Reproducibility}
 \label{sec:verify}
 
-All 23 headline theorems (\texttt{T1a}--\texttt{T3h}), their master conjunction (\texttt{Solution.lean}), and concrete non-vacuity witnesses (\texttt{NonVacuity.lean}, inhabiting \texttt{SimpleField (Fin 5)}, \texttt{SimpleField (Fin 11)}, \texttt{CommRing Int}, anti-periodic $D=3$ sequences, 2-variable Boolean XOR, and 3-repetition Byzantine LDCs)—25 audited declarations in total—compile in zero-Mathlib Lean~4.35.0 with zero warnings, zero \texttt{sorry}, zero \texttt{native\_decide} calls, and zero custom axioms. Every declaration is replayed independently across \texttt{lean}, \texttt{leanchecker}, \texttt{leanchecker-paranoid}, \texttt{con-leche --verified} (2{,}995 declarations), \texttt{con-ron --verified} (2{,}995 declarations), \texttt{nanoda\_bin}, and Ubuntu Linux CI \texttt{lake comparator --paranoid} (adding \texttt{lean4lean}).
+All 27 headline theorems (\texttt{T1a}--\texttt{T3j}), their master conjunction (\texttt{Solution.lean}), and concrete non-vacuity witnesses (\texttt{NonVacuity.lean}, inhabiting \texttt{SimpleField (Fin 5)}, \texttt{SimpleField (Fin 11)}, \texttt{CommRing Int}, anti-periodic $D=3$ sequences, 2-variable Boolean XOR, and 3-repetition Byzantine LDCs)—29 audited declarations in total—compile in zero-Mathlib Lean~4.35.0 with zero warnings, zero \texttt{sorry}, zero \texttt{native\_decide} calls, and zero custom axioms. Every declaration is replayed independently across \texttt{lean}, \texttt{leanchecker}, \texttt{leanchecker-paranoid}, \texttt{con-leche --verified} (3{,}589 declarations), \texttt{con-ron --verified} (3{,}589 declarations), \texttt{nanoda\_bin} (3{,}884 declarations), and Ubuntu Linux CI \texttt{lake comparator --paranoid} (adding \texttt{lean4lean}).
 
-Complementing the Lean kernel proofs, our public repository\footnote{\url{https://github.com/0thernes/coded-pir-mlwe-complexity-lab} (Apache-2.0 code / CC-BY-4.0 text \& figures); interactive Proof Blueprint at \url{https://0thernes.github.io/coded-pir-mlwe-complexity-lab/}.} provides: (i)~a zero-warning C11 core compiled under \texttt{-std=c11} \texttt{-Wall} \texttt{-Wextra} \texttt{-Wpedantic} \texttt{-Werror} (57/57 unit tests covering branchless constant-time \texttt{Dyadic-256} and \texttt{Dyadic-512} samplers, $m$-twisted DFT checks, Strassen 7-product and all-$m$ Koszul monomial verification, plus 512+ fuzz iterations with ASan/UBSan in CI); (ii)~three runnable Eshkol v1.3.6 forward-mode dual-number AD modules agreeing with 60-digit Python to $< 2\times 10^{-13}$ (certifying stationarity at both \texttt{Dyadic-256} and \texttt{Dyadic-512}); and (iii)~a 16-test \texttt{pytest} suite covering differential Python, C11, and Eshkol checks, exact FIPS~203 DFR convolutions, 14{,}850 Mat\'u\v{s}~(2007) singleton checks, randomized property tests, negative boundary tests, and a 10/10 core mutant-killing suite. During development, adversarial testing caught an off-by-one constant ($+1664$ vs.\ $+1665$) in \texttt{Compress\_1}, rejected an asymmetric 3-round $M=3$ flag scheme that leaked file identity before replacing it with the symmetric 1-flag scheme of \texttt{T1g}, and added explicit $K,T \le E$ hypotheses in \texttt{T1h}; all audit passes are logged in \texttt{HARDENING\_LOG.md}.
+Complementing the Lean kernel proofs, our public repository\footnote{\url{https://github.com/0thernes/coded-pir-mlwe-complexity-lab} (Apache-2.0 code / CC-BY-4.0 text \& figures); interactive Proof Blueprint at \url{https://0thernes.github.io/coded-pir-mlwe-complexity-lab/}.} provides: (i)~a zero-warning C11 core compiled under \texttt{-std=c11} \texttt{-Wall} \texttt{-Wextra} \texttt{-Wpedantic} \texttt{-Werror} (65/65 unit tests covering branchless constant-time \texttt{Dyadic-256}, \texttt{Dyadic-512}, and \texttt{Dyadic-1024-A/B} samplers, $m$-twisted DFT checks, Strassen 7-product, all-$m$ Koszul monomials, and exact $\Z[\sqrt{5}]$ Lov\'asz $C_5$ / $C_7$ certificates, plus 512+ fuzz iterations with ASan/UBSan in CI); (ii)~three runnable Eshkol v1.3.6 forward-mode dual-number AD modules agreeing with 60-digit Python to $< 2\times 10^{-13}$ (certifying stationarity across $\CBD_2, \CBD_3$ and all four dyadic samplers); and (iii)~a 17-test \texttt{pytest} suite covering differential Python, C11, and Eshkol checks, exact 510-marginal $I_4$ and 6 five-object $\F_2$ realizability, exact FIPS~203 DFR convolutions, overflow-free Bai et~al.~\cite{Bai2018} optimization, 14{,}850 Mat\'u\v{s}~(2007) checks, randomized property tests, negative boundaries, and a 12/12 core mutant-killing suite. During development, adversarial audits caught an off-by-one constant ($+1664$ vs.\ $+1665$) in \texttt{Compress\_1}, rejected an asymmetric 3-round $M=3$ flag scheme that leaked file identity, replaced an invalid $5\times 5$ $B_{C_5}$ Kronecker draft with the strictly orthogonal $6\times 6$ Lov\'asz umbrella Gram matrix~\eqref{eq:lovasz_sos}, and switched Bai optimization to overflow-free log-sum-exp; all 17 audit findings are logged in \texttt{HARDENING\_LOG.md}.
 
 \section{Honest Verification Boundaries, Open Frontiers, and Disclosures}
 \label{sec:limits}
@@ -420,13 +478,14 @@ Complementing the Lean kernel proofs, our public repository\footnote{\url{https:
 We explicitly affirm that the following remain \textbf{completely open}:
 \begin{itemize}[leftmargin=1.8em]
   \item \textbf{$\mathrm{P} \neq \mathrm{NP}$ (\texttt{CS-001}, \texttt{CS-010}):} Nothing in this paper proves or disproves $\mathrm{P} = \mathrm{NP}$ or proves super-linear explicit Boolean circuit lower bounds. Theorems~\texttt{T3a}, \texttt{T3b}, and \texttt{T3f} formalize Algebrization uniqueness, conditional Natural Proofs obstructions, and non-constructive Shannon counting.
-  \item \textbf{Matrix Multiplication Exponent $\omega = 2$ (\texttt{CS-004}) and $\mathrm{VP} \neq \mathrm{VNP}$ (\texttt{CS-012}):} Theorems~\texttt{T3e}, \texttt{T3g}, and \texttt{T3h} certify exact Strassen--Winograd optimality $\rank_F(\langle 2,2,2\rangle) = 7$ and symbolic all-$m$ Koszul bounds $\rank_F(\langle m,m,m\rangle) \ge m^2 + 2$ over every field $F$; determining the asymptotic exponent $\omega$ or separating $\mathrm{VP}$ from $\mathrm{VNP}$ remains open.
-  \item \textbf{Non-linear $C(2,4,2,2) \in [3/5, 8/13]$ and General $M \ge 3$ PIR (\texttt{CS-053}):} Theorems~\texttt{T1e}, \texttt{T1g}, and \texttt{T1h} prove Shannon, 4-variable Ingleton, Zhang--Yeung~(1998), and all infinitely many Mat\'u\v{s}~(2007) inequalities cannot lower $8/13$ to $3/5$, leaving open whether $5+$-variable non-Shannon inequalities close the gap or a non-linear scheme exceeds $3/5$. General $M \ge 3$ non-LFSR capacity above~\cite{SunZhang2026} when $E \ge KT$ and arbitrary $T \ge 4$ deterministic zero-error constructions remain open.
-  \item \textbf{Worst-Case Quantum MLWE Lower Bounds (\texttt{CS-026}, \texttt{QC-042}):} Refuting~\cite{Luo2026} (\texttt{T2a}), proving the $m$-twisted DFT selection rule (\texttt{T2b}, \texttt{T2f}), and tightening the discrete-Gaussian reduction via \texttt{Dyadic-256}/\texttt{Dyadic-512} (\texttt{T2e}, \texttt{T2g}) do not prove MLWE is quantum-hard; hardness remains a cryptographic assumption.
+  \item \textbf{Matrix Multiplication Exponent $\omega = 2$ (\texttt{CS-004}) and $\mathrm{VP} \neq \mathrm{VNP}$ (\texttt{CS-012}):} Theorems~\texttt{T3e}, \texttt{T3g}, \texttt{T3h}, and \texttt{T3i} certify exact Strassen--Winograd optimality $\rank_F(\langle 2,2,2\rangle) = 7$, Brockett--Dobkin $\rank_F(\langle m,m,m\rangle) \ge 2m^2 - m$, and Strassen lift $\rank_F(\langle m,2,p\rangle) \ge mp+3$ over every field $F$; determining asymptotic $\omega$ or separating $\mathrm{VP}$ from $\mathrm{VNP}$ remains open.
+  \item \textbf{Non-linear $C(2,4,2,2) \in [3/5, 8/13]$ and General $M \ge 3$ PIR (\texttt{CS-053}):} Theorems~\texttt{T1e}, \texttt{T1g}, \texttt{T1h}, and \texttt{T1i} prove NO 4-variable linear information inequality and NO 5-object retrieval $\F_2$-linear rank inequality can lower $8/13$ to $3/5$, leaving open whether genuinely $\ge 6$-variable non-Shannon inequalities close the gap or a non-linear scheme exceeds $3/5$. General $M \ge 3$ non-LFSR capacity above~\cite{SunZhang2026} when $E \ge KT$ and arbitrary $T \ge 4$ deterministic zero-error constructions remain open.
+  \item \textbf{Exact Zero-Error Shannon Capacity $\Theta(C_7) \in [\sqrt{10}, \vartheta(C_7)]$ (\texttt{CS-CMP-012}):} Theorem~\texttt{T3j} formally proves exact $\Theta(C_5) = \sqrt{5}$ and exact minimum Haemers rank~$4$ for $C_7$ over every field $F$, leaving the exact value of $\Theta(C_7)$ completely open.
+  \item \textbf{Worst-Case Quantum MLWE Lower Bounds (\texttt{CS-026}, \texttt{QC-042}):} Refuting~\cite{Luo2026} (\texttt{T2a}), proving the $m$-twisted DFT selection rule (\texttt{T2b}, \texttt{T2f}), and collapsing Bai et~al.~\cite{Bai2018} reduction overhead via \texttt{Dyadic-256/512/1024-A/B} (\texttt{T2e}, \texttt{T2g}, \texttt{T2h}) do not prove MLWE is quantum-hard; hardness remains a cryptographic assumption.
 \end{itemize}
 
 \paragraph{Statement Fidelity Boundary.}
-In Lean~4.35.0, transcendental logarithms, exponentials, and continuous DFR tail sums (Table~\ref{tab:renyi}) are verified in Tier-2 exact Python/C11/Eshkol while Lean certifies cleared-denominator rational/algebraic identities (\texttt{T2c}, \texttt{T2d}, \texttt{T2e}, \texttt{T2g}) and exact field-universal / pure-integer certificates (\texttt{T1c}, \texttt{T1e}, \texttt{T1h}, \texttt{T3e}, \texttt{T3g}, \texttt{T3h}) with zero Mathlib dependencies.
+In Lean~4.35.0, transcendental logarithms, exponentials, continuous Bai et~al.\ $\alpha$-$\sigma$ optima, trigonometric $\vartheta(C_7)$, and continuous DFR tail sums (Table~\ref{tab:renyi}) are verified in Tier-2 exact Python/C11/Eshkol while Lean certifies cleared-denominator rational/algebraic/$\Z[\sqrt{5}]$ identities (\texttt{T2c}, \texttt{T2d}, \texttt{T2e}, \texttt{T2g}, \texttt{T2h}, \texttt{T3j}) and exact field-universal / pure-integer certificates (\texttt{T1c}, \texttt{T1e}, \texttt{T1h}, \texttt{T1i}, \texttt{T3e}, \texttt{T3g}, \texttt{T3h}, \texttt{T3i}, \texttt{T3j}) with zero Mathlib dependencies.
 
 \paragraph{AI-Assistance (CRediT) and Conflict-of-Interest Disclosure.}
 Alexander S. Donahue (Independent Researcher, Spokane, WA, USA; ORCID \texttt{0009-0006-8168-9648}) conceived the research questions, directed the mathematical investigation and adversarial verification protocol, audited every theorem statement and verification boundary, and bears sole responsibility for the manuscript. Antigravity (Gemini-based AI agent) assisted with mathematical exploration, Lean~4.35.0 proof engineering, C11/Python/Eshkol verification code, figure generation, and manuscript drafting under human direction. All formal claims stand exclusively on independently checkable machine-verified proof terms and deterministic scripts. The author declares no competing financial interests, no external institutional funding, and no prior peer review or external DOI assignment.

@@ -721,3 +721,194 @@ bool triad_verify_all_m_koszul_monomial(int m) {
     }
     return true;
 }
+
+/* Constant-time 10-bit sampler for Dyadic-1024-A: w = (4,57,248,406,248,57,4)/1024 on {-3..3}.
+ * Exact Var = 1, mu_4 = 371/128, QGTL det(g) = 243/512; minimizes Bai et al. (2018) end-to-end loss! */
+int triad_dyadic1024a_sample_ct(uint16_t raw10) {
+    unsigned int r = (unsigned int)(raw10 & 1023U);
+    int val = -3;
+    val += (int)(r >= 4U);
+    val += (int)(r >= 61U);
+    val += (int)(r >= 309U);
+    val += (int)(r >= 715U);
+    val += (int)(r >= 963U);
+    val += (int)(r >= 1020U);
+    return val;
+}
+
+/* Constant-time 10-bit sampler for Dyadic-1024-B: w = (1,17,90,239,330,239,90,17,1)/1024 on {-4..4}.
+ * Exact Var = 3/2, mu_4 = 207/32, QGTL det(g) = 15/32; minimizes ML-KEM-512 Bai et al. (2018) loss! */
+int triad_dyadic1024b_sample_ct(uint16_t raw10) {
+    unsigned int r = (unsigned int)(raw10 & 1023U);
+    int val = -4;
+    val += (int)(r >= 1U);
+    val += (int)(r >= 18U);
+    val += (int)(r >= 108U);
+    val += (int)(r >= 347U);
+    val += (int)(r >= 677U);
+    val += (int)(r >= 916U);
+    val += (int)(r >= 1006U);
+    val += (int)(r >= 1023U);
+    return val;
+}
+
+static void eval_renyi_table(const int *xs, const double *probs, int len, double sigma,
+                             double *out_r2, double *out_rinf) {
+    double two_s2 = 2.0 * sigma * sigma;
+    double Z = 0.0;
+    for (int x = -35; x <= 35; x++) {
+        Z += exp(-(double)(x * x) / two_s2);
+    }
+    double r2 = 0.0, rinf = 0.0;
+    for (int i = 0; i < len; i++) {
+        double qx = exp(-(double)(xs[i] * xs[i]) / two_s2) / Z;
+        r2 += (probs[i] * probs[i]) / qx;
+        double ratio = probs[i] / qx;
+        if (ratio > rinf) rinf = ratio;
+    }
+    *out_r2 = r2;
+    *out_rinf = rinf;
+}
+
+static triad_renyi_res_t opt_renyi_table(int tag, const int *xs, const double *probs, int len,
+                                         int lo_milli, int hi_milli) {
+    triad_renyi_res_t res;
+    res.eta = tag;
+    res.min_r2 = 1e9;
+    res.min_rinf = 1e9;
+    res.sigma_opt_r2 = 1.0;
+    res.sigma_opt_rinf = 1.0;
+    for (int step = lo_milli; step <= hi_milli; step++) {
+        double s = (double)step / 1000.0;
+        double r2 = 0.0, rinf = 0.0;
+        eval_renyi_table(xs, probs, len, s, &r2, &rinf);
+        if (r2 < res.min_r2) { res.min_r2 = r2; res.sigma_opt_r2 = s; }
+        if (rinf < res.min_rinf) { res.min_rinf = rinf; res.sigma_opt_rinf = s; }
+    }
+    double lo = res.sigma_opt_r2 - 0.002, hi = res.sigma_opt_r2 + 0.002;
+    for (int it = 0; it < 60; it++) {
+        double m1 = lo + (hi - lo) / 3.0;
+        double m2 = hi - (hi - lo) / 3.0;
+        double r2_1, ri_1, r2_2, ri_2;
+        eval_renyi_table(xs, probs, len, m1, &r2_1, &ri_1);
+        eval_renyi_table(xs, probs, len, m2, &r2_2, &ri_2);
+        if (r2_1 < r2_2) hi = m2; else lo = m1;
+    }
+    res.sigma_opt_r2 = 0.5 * (lo + hi);
+    double dummy = 0.0;
+    eval_renyi_table(xs, probs, len, res.sigma_opt_r2, &res.min_r2, &dummy);
+
+    lo = res.sigma_opt_rinf - 0.002; hi = res.sigma_opt_rinf + 0.002;
+    for (int it = 0; it < 60; it++) {
+        double m1 = lo + (hi - lo) / 3.0;
+        double m2 = hi - (hi - lo) / 3.0;
+        double r2_1, ri_1, r2_2, ri_2;
+        eval_renyi_table(xs, probs, len, m1, &r2_1, &ri_1);
+        eval_renyi_table(xs, probs, len, m2, &r2_2, &ri_2);
+        if (ri_1 < ri_2) hi = m2; else lo = m1;
+    }
+    res.sigma_opt_rinf = 0.5 * (lo + hi);
+    eval_renyi_table(xs, probs, len, res.sigma_opt_rinf, &dummy, &res.min_rinf);
+    res.bits_per_coord_r2 = log2(res.min_r2);
+    return res;
+}
+
+triad_renyi_res_t triad_mlkem_dyadic1024a_opt(void) {
+    static const int xs[7] = {-3, -2, -1, 0, 1, 2, 3};
+    static const double probs[7] = {
+        4.0 / 1024.0, 57.0 / 1024.0, 248.0 / 1024.0, 406.0 / 1024.0,
+        248.0 / 1024.0, 57.0 / 1024.0, 4.0 / 1024.0
+    };
+    return opt_renyi_table(1024, xs, probs, 7, 800, 1400);
+}
+
+triad_renyi_res_t triad_mlkem_dyadic1024b_opt(void) {
+    static const int xs[9] = {-4, -3, -2, -1, 0, 1, 2, 3, 4};
+    static const double probs[9] = {
+        1.0 / 1024.0, 17.0 / 1024.0, 90.0 / 1024.0, 239.0 / 1024.0, 330.0 / 1024.0,
+        239.0 / 1024.0, 90.0 / 1024.0, 17.0 / 1024.0, 1.0 / 1024.0
+    };
+    return opt_renyi_table(1025, xs, probs, 9, 900, 1600);
+}
+
+typedef struct {
+    long long a;
+    long long b;
+} zsqrt5_t;
+
+static zsqrt5_t z5_add(zsqrt5_t x, zsqrt5_t y) {
+    zsqrt5_t r = {x.a + y.a, x.b + y.b};
+    return r;
+}
+
+static zsqrt5_t z5_mul(zsqrt5_t x, zsqrt5_t y) {
+    zsqrt5_t r = {x.a * y.a + 5LL * x.b * y.b, x.a * y.b + x.b * y.a};
+    return r;
+}
+
+static bool cyc_adj(int n, int i, int j) {
+    int d1 = (i - j + n) % n;
+    int d2 = (j - i + n) % n;
+    return (d1 == 1) || (d2 == 1);
+}
+
+/* Exact Z[sqrt(5)] 3-term SOS audit of Lovasz 6x6 umbrella Gram matrix 80*M_6 + C_5^2 5-set (T3j). */
+bool triad_verify_lovasz_c5_sos(void) {
+    static const zsqrt5_t W[3] = {{0, 16}, {5, -1}, {10, 0}};
+    static const zsqrt5_t Z[6][3] = {
+        {{0, 1},  {0, 0},   {0, 0}},
+        {{1, 0},  {4, 0},   {0, 0}},
+        {{1, 0},  {-1, 1},  {2, 0}},
+        {{1, 0},  {-1, -1}, {-1, 1}},
+        {{1, 0},  {-1, -1}, {1, -1}},
+        {{1, 0},  {-1, 1},  {-2, 0}}
+    };
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
+            zsqrt5_t acc = {0, 0};
+            for (int r = 0; r < 3; r++) {
+                acc = z5_add(acc, z5_mul(W[r], z5_mul(Z[i][r], Z[j][r])));
+            }
+            zsqrt5_t exp_m = {0, 0};
+            if (i == 0 && j == 0) { exp_m.a = 0; exp_m.b = 80; }
+            else if (i == 0 || j == 0 || i == j) { exp_m.a = 80; exp_m.b = 0; }
+            else if (cyc_adj(5, i - 1, j - 1)) { exp_m.a = -40; exp_m.b = 40; }
+            if (acc.a != exp_m.a || acc.b != exp_m.b) return false;
+        }
+    }
+    /* Verify explicit 5-element independent set in C_5^{box 2}: {0, 7, 14, 16, 23} */
+    static const int c5_ind[5] = {0, 7, 14, 16, 23};
+    for (int i = 0; i < 5; i++) {
+        for (int j = i + 1; j < 5; j++) {
+            int x0 = c5_ind[i] % 5, x1 = c5_ind[i] / 5;
+            int y0 = c5_ind[j] % 5, y1 = c5_ind[j] / 5;
+            bool ok0 = (x0 == y0) || cyc_adj(5, x0, y0);
+            bool ok1 = (x1 == y1) || cyc_adj(5, x1, y1);
+            if (ok0 && ok1) return false;
+        }
+    }
+    return true;
+}
+
+/* Exact C_7^{box 2} 10-element independent set & 4-clique Haemers rank-4 cover (T3j). */
+bool triad_verify_c7_indep10_and_haemers(void) {
+    static const int c7_ind[10] = {0, 2, 11, 14, 16, 25, 29, 34, 38, 47};
+    for (int i = 0; i < 10; i++) {
+        if (c7_ind[i] < 0 || c7_ind[i] >= 49) return false;
+        for (int j = i + 1; j < 10; j++) {
+            if (c7_ind[i] == c7_ind[j]) return false;
+            int x0 = c7_ind[i] % 7, x1 = c7_ind[i] / 7;
+            int y0 = c7_ind[j] % 7, y1 = c7_ind[j] / 7;
+            bool adj0 = (x0 == y0) || cyc_adj(7, x0, y0);
+            bool adj1 = (x1 == y1) || cyc_adj(7, x1, y1);
+            if (adj0 && adj1) return false;
+        }
+    }
+    /* Verify 4-clique cover c(i)=i/2 fits C_7 (same clique implies equal or adjacent) */
+    for (int i = 0; i < 7; i++) {
+        for (int j = 0; j < 7; j++) {
+            if (i != j && (i / 2) == (j / 2) && !cyc_adj(7, i, j)) return false;
+        }
+    }
+    return true;
+}

@@ -75,8 +75,19 @@ def main() -> int:
             f"768=2^{dfrs['ML_KEM_768_Dyadic256']['union_bound_log2_dfr']}, "
             f"1024=2^{dfrs['ML_KEM_1024_Dyadic256']['union_bound_log2_dfr']}"
         )
+    if "dyadic1024_bai_and_all_order" in mlwe:
+        d10 = mlwe["dyadic1024_bai_and_all_order"]
+        bai = d10["bai_overhead_suite"]
+        print(
+            f"[Pillar II | T2h] 10-bit CT Dyadic-1024-A/B Bai et al. (2018) end-to-end collapse: "
+            f"ML-KEM-1024 {bai['ML_KEM_1024_CBD2']['bai_overhead_bits']:.2f}b -> "
+            f"{bai['ML_KEM_1024_Dyadic1024A']['bai_overhead_bits']:.2f}b "
+            f"({bai['ML_KEM_1024_CBD2']['bai_overhead_bits']/bai['ML_KEM_1024_Dyadic1024A']['bai_overhead_bits']:.2f}x), "
+            f"ML-KEM-512 {bai['ML_KEM_512_CBD3']['bai_overhead_bits']:.2f}b -> "
+            f"{bai['ML_KEM_512_Dyadic1024B']['bai_overhead_bits']:.2f}b"
+        )
 
-    # Pillar III: CS-001 / CS-004 / CS-012 / CS-051 / CS-026 <-> CS-053
+    # Pillar III: CS-001 / CS-004 / CS-012 / CS-051 / CS-CMP-012 / CS-026 <-> CS-053
     triad = run_all_triad_checks()
     kt_info = ""
     if "koszul_flattening_tensor_rank" in triad:
@@ -91,6 +102,13 @@ def main() -> int:
         kt_info += (
             f" | Exact Strassen-Winograd rank_F(<2,2,2>)={sw['M2_exact_rank_every_field']} (all F incl. F_2) "
             f"& Phi_2(<3,3,3>) rank={sw['M3_phi2_rank_F2']} over F_2/F_101 (=> >={sw['M3_phi2_rank_lb']})"
+        )
+    if "brockett_dobkin_and_lovasz_shannon_capacity" in triad:
+        bl = triad["brockett_dobkin_and_lovasz_shannon_capacity"]
+        kt_info += (
+            f" | Brockett-Dobkin m=3: {bl['brockett_dobkin_m3_vs_koszul']['bd']} > {bl['brockett_dobkin_m3_vs_koszul']['koszul_ceiling']} "
+            f"| Lovasz C_5 Z[sqrt(5)] SOS={bl['lovasz_c5_6x6_zsqrt5_sos_36_entries_exact']}, "
+            f"C_7 min Haemers rank={bl['c7_exact_min_haemers_rank_every_field']}"
         )
     print(
         f"[Pillar III | Triad] Algebrization MLE points={triad['algebrization_mle']['points_multilinearity_verified']} | "

@@ -8,16 +8,18 @@ public import TriadFrontier.PIRKoszul
 public import TriadFrontier.MLWETightness
 public import TriadFrontier.ComplexityTriad
 public import TriadFrontier.KoszulTensor
+public import TriadFrontier.ShannonCapacity
 
 /-!
-# Concrete Non-Vacuity Witnesses (`TriadFrontier`)
+# Concrete Non-Vacuity Witnesses (`TriadFrontier` v4.0.0)
 
-Explicitly inhabits EVERY hypothesis bundle across all 19 theorems (`T1a`–`T3f`),
+Explicitly inhabits EVERY hypothesis bundle across all 27 theorems (`T1a`–`T3j`),
 including concrete `SimpleField (Fin 5)` and `SimpleField (Fin 11)` instances,
 concrete commutative ring `Int` with unit `u = -1`, concrete anti-periodic function
 on `D = 3`, concrete `m = 4` twisted root over `Fin 5` (`2^4 = 1, 1+2+4+3 = 0`),
-concrete symmetric PMFs `CBD_2` and `Dyadic-256`, concrete 2-variable Boolean function,
-concrete LDC repetition code (`N = 3, B = 1`), and concrete rank-8 decomposition of `M_2`,
+concrete symmetric PMFs `CBD_2`, `Dyadic-256`, `Dyadic-1024-A/B`, concrete 2-variable
+Boolean function, concrete LDC repetition code (`N = 3, B = 1`), concrete `C_5`/`C_7`
+strong-product independent sets, and concrete rank-8 decomposition of `M_2`,
 ensuring ZERO theorems can be vacuously true!
 -/
 
@@ -29,6 +31,7 @@ open TriadFrontier.PIRKoszul
 open TriadFrontier.MLWETightness
 open TriadFrontier.ComplexityTriad
 open TriadFrontier.KoszulTensor
+open TriadFrontier.ShannonCapacity
 
 @[expose] public section
 
@@ -132,7 +135,8 @@ theorem nonvac_all_hypotheses :
      (∀ (m : Bool) (r : List Bool), r.length = 3 → hammingDist (rep3Enc m) r ≤ 1 → rep3Dec r = m) ∧
      ((-831 : Int) ≤ 420 ∧ (420 : Int) ≤ 831 ∧ 0 < 16 ∧ 831 / 16 < 52) ∧
      (sumR 4 (fun q => rPow (⟨2, by decide⟩ : Fin 5) (q * (1 + 2))) = 0 ∧
-      dyadic256Weight 0 = 100 ∧ 4 < 16)) := by
+      dyadic256Weight 0 = 100 ∧ dyadic1024AWeight 0 = 406 ∧ dyadic1024BWeight 0 = 330 ∧
+      c5Adj 0 1 = true ∧ c7Adj 0 1 = true ∧ 4 < 16)) := by
   refine ⟨by decide, ?_, ?_, ?_, ?_⟩
   · refine ⟨⟨⟨0, by decide⟩, by decide⟩, ⟨1, 0, fun _ => by rw [CommRing.one_mul, zero_mul, add_zero]⟩⟩
   · refine ⟨by decide, ?_, by decide⟩

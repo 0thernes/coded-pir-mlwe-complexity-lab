@@ -1,6 +1,6 @@
 {
   "schema": "triad-exact-audit/v1",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "author": "Alexander S. Donahue",
   "orcid": "0009-0006-8168-9648",
   "pillar_1_cs053": {
@@ -80,6 +80,14 @@
       "D_over_L": "13/8",
       "C_shannon_ingleton": "8/13",
       "strictly_exceeds_linear_capacity_3_5": true
+    },
+    "t1i_linear_realizability": {
+      "linear_4var_rays_verified": 23,
+      "canonical_4var_orbits_verified": 24,
+      "singleton_4marginals_in_I4": 495,
+      "retrieval_4marginals_in_I4": 15,
+      "total_4marginals_in_I4": 510,
+      "retrieval_5marginals_F2_linear": 6
     }
   },
   "pillar_2_cs026": {
@@ -179,6 +187,92 @@
           "fraction_captured": 0.8951
         }
       }
+    },
+    "dyadic1024_bai_and_all_order": {
+      "dyadic1024a": {
+        "sigma_opt_r2": "1.0013931775513972",
+        "min_r2": "1.00051079800924132430",
+        "sigma_opt_rinf": "1.0093027470899745",
+        "min_rinf": "1.00308438088733029650",
+        "bits_per_coord_r2": 0.000736737608791172,
+        "bits_per_coord_rinf": 0.004442972617347348,
+        "loss_r2_768_bits": 1.1316,
+        "loss_r2_1024_bits": 1.5088,
+        "loss_rinf_768_bits": 6.8244,
+        "loss_rinf_1024_bits": 9.0992
+      },
+      "dyadic1024b": {
+        "sigma_opt_r2": "1.2270265563626812",
+        "min_r2": "1.00075681336544291753",
+        "sigma_opt_rinf": "1.2392966886978509",
+        "min_rinf": "1.00403371920967582559",
+        "bits_per_coord_r2": 0.0010914379338702491,
+        "bits_per_coord_rinf": 0.005807721200743204,
+        "loss_r2_512_bits": 1.1176,
+        "loss_rinf_512_bits": 5.9471
+      },
+      "bai_overhead_suite": {
+        "ML_KEM_512_CBD3": {
+          "bai_overhead_bits": 24.7732,
+          "alpha_opt": 37.4,
+          "sigma_opt": 1.2756
+        },
+        "ML_KEM_512_Dyadic512": {
+          "bai_overhead_bits": 12.0762,
+          "alpha_opt": 23.2,
+          "sigma_opt": 1.2392
+        },
+        "ML_KEM_512_Dyadic1024B": {
+          "bai_overhead_bits": 5.1261,
+          "alpha_opt": 293.4,
+          "sigma_opt": 1.2392
+        },
+        "ML_KEM_768_CBD2": {
+          "bai_overhead_bits": 50.3554,
+          "alpha_opt": 21.2,
+          "sigma_opt": 1.0504
+        },
+        "ML_KEM_768_Dyadic256": {
+          "bai_overhead_bits": 17.3535,
+          "alpha_opt": 28.65,
+          "sigma_opt": 1.0064
+        },
+        "ML_KEM_768_Dyadic1024A": {
+          "bai_overhead_bits": 5.4816,
+          "alpha_opt": 296.6,
+          "sigma_opt": 1.0092
+        },
+        "ML_KEM_1024_CBD2": {
+          "bai_overhead_bits": 67.1405,
+          "alpha_opt": 21.2,
+          "sigma_opt": 1.0504
+        },
+        "ML_KEM_1024_Dyadic256": {
+          "bai_overhead_bits": 23.138,
+          "alpha_opt": 28.65,
+          "sigma_opt": 1.0064
+        },
+        "ML_KEM_1024_Dyadic1024A": {
+          "bai_overhead_bits": 7.3088,
+          "alpha_opt": 296.6,
+          "sigma_opt": 1.0092
+        }
+      },
+      "dfr_1024_suite": {
+        "ML_KEM_512_Dyadic1024B_A": {
+          "pr_single_coeff_ge_832": 2.772401194475171e-45,
+          "union_bound_log2_dfr": -140.02
+        },
+        "ML_KEM_768_Dyadic1024A": {
+          "pr_single_coeff_ge_832": 4.181241073004799e-53,
+          "union_bound_log2_dfr": -166.0
+        },
+        "ML_KEM_1024_Dyadic1024A": {
+          "pr_single_coeff_ge_832": 1.4941297700105366e-55,
+          "union_bound_log2_dfr": -174.13
+        }
+      },
+      "all_order_renyi_k2_to_16_and_tv_chi2_verified": true
     },
     "chen_step9": {
       "tested_odd_D": [
@@ -326,6 +420,29 @@
       "M3_phi2_rank_F2": 324,
       "M3_phi2_rank_F101": 324,
       "M3_phi2_rank_lb": 12
+    },
+    "brockett_dobkin_and_lovasz_shannon_capacity": {
+      "brockett_dobkin_m3_vs_koszul": {
+        "m": 3,
+        "bd": 15,
+        "koszul_ceiling": 12
+      },
+      "brockett_dobkin_m4_vs_koszul": {
+        "m": 4,
+        "bd": 28,
+        "koszul_ceiling": 20
+      },
+      "brockett_dobkin_m5_vs_koszul": {
+        "m": 5,
+        "bd": 45,
+        "koszul_ceiling": 30
+      },
+      "lovasz_c5_6x6_zsqrt5_sos_36_entries_exact": true,
+      "c5_square_indep_size": 5,
+      "c7_square_indep_size": 10,
+      "c7_sqrt10": 3.1622776602,
+      "c7_lovasz_theta": 3.3176672074,
+      "c7_exact_min_haemers_rank_every_field": 4
     }
   }
 }

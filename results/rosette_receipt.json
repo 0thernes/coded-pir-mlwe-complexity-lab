@@ -1,8 +1,8 @@
 {
   "schema": "rosette-wire-receipt/v1-cleanroom",
   "project": "coded-pir-mlwe-complexity-lab",
-  "version": "3.0.0",
-  "generated_utc": "2026-11-26T02:06:24Z",
+  "version": "4.0.0",
+  "generated_utc": "2026-11-26T04:14:33Z",
   "author": "Alexander S. Donahue",
   "orcid": "0009-0006-8168-9648",
   "lean_toolchain": "leanprover/lean4:v4.35.0",
@@ -11,11 +11,11 @@
     "h_uncond_certified.json": "283493e5007b45b34293f1e17fac391f0fc3c0f4e90a06da5d321d9a80614b91"
   },
   "artifact_hashes": {
-    "pdf": "f4945ea24017df550a7b08e459b111095dcd1102c0c8a8c94beb414f1a0cd8a7",
-    "arxiv_tarball": "fdc5e244f58da913098f28e1191ee32ac5a81beec4b98c0caaf9bb8f59593463",
-    "lean_axioms": "6dc6dc06e9e5b6f0e6b374a857e5cd344d699ef052ae697bfc602e77e71be5c1",
-    "exact_audit_summary": "eba5f3e448e3e017aad9363dceeee93f543f6747c4b4696d648805963a958b18",
-    "manifest_sha256": "36b573493922736a9aa6145363b2a12128dcb2863737633ebcb6d981ae01b475"
+    "pdf": "9f9d3c83bd36110f87ef0f61f8ead0d2401a6b7f6de1e0551cedf058f615e43f",
+    "arxiv_tarball": "0b7f0c707cacb290d49c28893beded1e0a480f0a42e716c477fdf27946147f3f",
+    "lean_axioms": "9b944dc319ce6d181d67e124ef7071a0e8b727ceb67b3572704aeb86fd5e7a7b",
+    "exact_audit_summary": "011b785023b8e1476d24776da01cc461ee120fc6b48d2890b3058feea1c81092",
+    "manifest_sha256": "1fb97874acac282f7aed14a3902e2d1833713f4c8a3a528adee8f985662e1e84"
   },
   "all_checks_ok": true
 }

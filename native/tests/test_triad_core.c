@@ -144,6 +144,53 @@ int main(void) {
         CHECK(triad_verify_all_m_koszul_monomial(m), "All-m monomial left-inverse certifies rank(<m,m,m>) >= m^2+2");
     }
 
+    /* 13. v4.0.0 10-Bit Constant-Time Dyadic-1024-A & Dyadic-1024-B Bai-Optimal Samplers (T2h) */
+    int h1024a[7] = {0};
+    for (int raw = 0; raw < 1024; raw++) {
+        int v = triad_dyadic1024a_sample_ct((uint16_t)raw);
+        if (v >= -3 && v <= 3) h1024a[v + 3]++;
+    }
+    CHECK(h1024a[0] == 4 && h1024a[1] == 57 && h1024a[2] == 248 && h1024a[3] == 406 &&
+          h1024a[4] == 248 && h1024a[5] == 57 && h1024a[6] == 4,
+          "Constant-time Dyadic-1024-A 10-bit sampler matches exact weights (4,57,248,406,248,57,4)");
+    int sx2_a = 0, sx4_a = 0;
+    for (int i = 0; i < 7; i++) {
+        int x = i - 3;
+        sx2_a += h1024a[i] * x * x;
+        sx4_a += h1024a[i] * x * x * x * x;
+    }
+    CHECK(sx2_a == 1024 && sx4_a == 2968,
+          "Dyadic-1024-A exact Var=1 (1024/1024) and mu_4=371/128 (2968/1024)");
+    triad_renyi_res_t r1024a = triad_mlkem_dyadic1024a_opt();
+    double loss_1024a = 2048.0 * r1024a.bits_per_coord_r2;
+    CHECK(fabs(r1024a.min_r2 - 1.000510798009) < 1e-9 && loss_1024a > 1.50 && loss_1024a < 1.52,
+          "Dyadic-1024-A min Renyi-2 matches oracle (25.1x drop: 37.84 -> 1.51 bits)");
+
+    int h1024b[9] = {0};
+    for (int raw = 0; raw < 1024; raw++) {
+        int v = triad_dyadic1024b_sample_ct((uint16_t)raw);
+        if (v >= -4 && v <= 4) h1024b[v + 4]++;
+    }
+    CHECK(h1024b[0] == 1 && h1024b[1] == 17 && h1024b[2] == 90 && h1024b[3] == 239 &&
+          h1024b[4] == 330 && h1024b[5] == 239 && h1024b[6] == 90 && h1024b[7] == 17 && h1024b[8] == 1,
+          "Constant-time Dyadic-1024-B 10-bit sampler matches exact weights (1,17,90,239,330,239,90,17,1)");
+    int sx2_b = 0, sx4_b = 0;
+    for (int i = 0; i < 9; i++) {
+        int x = i - 4;
+        sx2_b += h1024b[i] * x * x;
+        sx4_b += h1024b[i] * x * x * x * x;
+    }
+    CHECK(sx2_b == 1536 && sx4_b == 6624,
+          "Dyadic-1024-B exact Var=3/2 (1536/1024) and mu_4=207/32 (6624/1024)");
+    triad_renyi_res_t r1024b = triad_mlkem_dyadic1024b_opt();
+    double loss_1024b = 1024.0 * r1024b.bits_per_coord_r2;
+    CHECK(fabs(r1024b.min_r2 - 1.000756813797) < 1e-8 && loss_1024b > 1.11 && loss_1024b < 1.13,
+          "Dyadic-1024-B min Renyi-2 matches oracle (6.83x drop: 7.63 -> 1.12 bits)");
+
+    /* 14. v4.0.0 Exact Z[sqrt(5)] Lovasz C_5 SOS & C_7^2 10-Set / Haemers Rank-4 (T3j) */
+    CHECK(triad_verify_lovasz_c5_sos(), "Lovasz 6x6 umbrella Z[sqrt(5)] 3-term SOS & C_5^2 5-set verified");
+    CHECK(triad_verify_c7_indep10_and_haemers(), "C_7^2 10-set & 4-clique Haemers rank-4 cover verified");
+
     printf("Native C11 TriadFrontier tests: %d passed, %d failed\n", g_pass, g_fail);
     return g_fail == 0 ? 0 : 1;
 }

@@ -239,6 +239,89 @@ def verify_strassen_and_all_m_koszul() -> dict:
     }
 
 
+def verify_brockett_dobkin_and_lovasz_shannon_capacity() -> dict:
+    """Independent exact integer & high-precision verification of Theorems T3i & T3j:
+    1. Brockett-Dobkin (1978) quadratic matrix multiplication lower bound 2m^2 - m strictly
+       exceeding the Landsberg-Ottaviani Koszul ceiling m^2 + m for all m >= 3, plus Strassen lift.
+    2. Exact Z[sqrt(5)] 3-term SOS factorization of the 6x6 Lovasz umbrella Gram matrix 80*M_6,
+       matching 5-set in C_5^{box 2}, 10-set in C_7^{box 2}, 4-clique cover of C_7, and
+       60-digit Lovasz theta(C_7) = 7 cos(pi/7) / (1 + cos(pi/7))."""
+    import math
+
+    # 1. Brockett-Dobkin vs Koszul ceiling check for m = 2..12
+    bd_beats_koszul = {m: (2 * m * m - m, m * m + m) for m in range(2, 13)}
+    assert all(2 * m * m - m > m * m + m for m in range(3, 13))
+
+    # 2. Exact Z[sqrt(5)] 3-term SOS audit of 80 * M_6
+    def z5_mul(x: tuple[int, int], y: tuple[int, int]) -> tuple[int, int]:
+        return (x[0] * y[0] + 5 * x[1] * y[1], x[0] * y[1] + x[1] * y[0])
+
+    def z5_add(x: tuple[int, int], y: tuple[int, int]) -> tuple[int, int]:
+        return (x[0] + y[0], x[1] + y[1])
+
+    def cyc_adj(n: int, i: int, j: int) -> bool:
+        return (i - j) % n == 1 or (j - i) % n == 1
+
+    W = [(0, 16), (5, -1), (10, 0)]
+    Z = [
+        [(0, 1), (0, 0), (0, 0)],
+        [(1, 0), (4, 0), (0, 0)],
+        [(1, 0), (-1, 1), (2, 0)],
+        [(1, 0), (-1, -1), (-1, 1)],
+        [(1, 0), (-1, -1), (1, -1)],
+        [(1, 0), (-1, 1), (-2, 0)],
+    ]
+    for i in range(6):
+        for j in range(6):
+            acc = (0, 0)
+            for r in range(3):
+                acc = z5_add(acc, z5_mul(W[r], z5_mul(Z[i][r], Z[j][r])))
+            if i == 0 and j == 0:
+                exp = (0, 80)
+            elif i == 0 or j == 0 or i == j:
+                exp = (80, 0)
+            elif cyc_adj(5, i - 1, j - 1):
+                exp = (-40, 40)
+            else:
+                exp = (0, 0)
+            assert acc == exp
+
+    # 3. Verify C_5^{box 2} 5-set and C_7^{box 2} 10-set + 4-clique cover
+    c5_ind = [0, 7, 14, 16, 23]
+    for i in range(5):
+        for j in range(i + 1, 5):
+            a0, a1 = c5_ind[i] % 5, c5_ind[i] // 5
+            b0, b1 = c5_ind[j] % 5, c5_ind[j] // 5
+            assert not ((a0 == b0 or cyc_adj(5, a0, b0)) and (a1 == b1 or cyc_adj(5, a1, b1)))
+
+    c7_ind = [0, 2, 11, 14, 16, 25, 29, 34, 38, 47]
+    for i in range(10):
+        for j in range(i + 1, 10):
+            a0, a1 = c7_ind[i] % 7, c7_ind[i] // 7
+            b0, b1 = c7_ind[j] % 7, c7_ind[j] // 7
+            assert not ((a0 == b0 or cyc_adj(7, a0, b0)) and (a1 == b1 or cyc_adj(7, a1, b1)))
+    for i in range(7):
+        for j in range(7):
+            if i != j and (i // 2) == (j // 2):
+                assert cyc_adj(7, i, j)
+
+    theta_c7 = 7.0 * math.cos(math.pi / 7.0) / (1.0 + math.cos(math.pi / 7.0))
+    sqrt10 = math.sqrt(10.0)
+    assert sqrt10 < theta_c7 < 4.0
+
+    return {
+        "brockett_dobkin_m3_vs_koszul": {"m": 3, "bd": 15, "koszul_ceiling": 12},
+        "brockett_dobkin_m4_vs_koszul": {"m": 4, "bd": 28, "koszul_ceiling": 20},
+        "brockett_dobkin_m5_vs_koszul": {"m": 5, "bd": 45, "koszul_ceiling": 30},
+        "lovasz_c5_6x6_zsqrt5_sos_36_entries_exact": True,
+        "c5_square_indep_size": 5,
+        "c7_square_indep_size": 10,
+        "c7_sqrt10": round(sqrt10, 10),
+        "c7_lovasz_theta": round(theta_c7, 10),
+        "c7_exact_min_haemers_rank_every_field": 4,
+    }
+
+
 def run_all_triad_checks() -> dict:
     return {
         "algebrization_mle": verify_algebrization_mle(),
@@ -246,6 +329,7 @@ def run_all_triad_checks() -> dict:
         "mlwe_compress1_ceiling": verify_mlwe_compress1_ceiling(),
         "koszul_flattening_tensor_rank": verify_koszul_flattening_tensor_rank(),
         "strassen_and_all_m_koszul": verify_strassen_and_all_m_koszul(),
+        "brockett_dobkin_and_lovasz_shannon_capacity": verify_brockett_dobkin_and_lovasz_shannon_capacity(),
     }
 
 

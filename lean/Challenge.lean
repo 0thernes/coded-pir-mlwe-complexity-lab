@@ -17,11 +17,14 @@ namespace TriadFrontier.Challenge
 
 open TriadFrontier.AlgebraCore
 open TriadFrontier.PIRCertificates
+open TriadFrontier.PIRLinearCerts
 open TriadFrontier.PIRKoszul
 open TriadFrontier.MLWETightness
 open TriadFrontier.ComplexityTriad
 open TriadFrontier.KoszulTensor
 open TriadFrontier.StrassenWinograd
+open TriadFrontier.BrockettDobkin
+open TriadFrontier.ShannonCapacity
 
 @[expose] public section
 
@@ -288,6 +291,93 @@ def T3h_StrassenWinogradExactRankSeven : Prop :=
     HasTensorRankAtMost 4 4 4 r (fun a b c => intToR (R := F) (matMul2Tensor a b c)) →
     7 ≤ r)
 
+def T1i_Total4VarEntropicAnd5ObjLinearBarrier : Prop :=
+  (∀ (c : Nat → Int),
+    (∀ r, r < 23 →
+      let sp := linRay4Spec.getD r (2, [])
+      0 ≤ evalFunc4 c (subspaceRank4 sp.1 sp.2)) →
+    ∀ ci, ci < 24 → 0 ≤ evalFunc4 c (fun m => canonProf4At ci (m - 1))) ∧
+  (∀ (c : Nat → Int),
+    (∀ subs : List (List (List Nat)), 0 ≤ evalFunc5 c (subspaceRank5 2 subs)) →
+    0 ≤ evalFunc5 c (hUncondMarg5 (retObjMask 0) (retObjMask 2) (retObjMask 3) (retObjMask 4) (retObjMask 5)) ∧
+    0 ≤ evalFunc5 c (hUncondMarg5 (retObjMask 1) (retObjMask 2) (retObjMask 3) (retObjMask 4) (retObjMask 5)) ∧
+    (∀ t ∈ ([(2, 3, 4), (2, 3, 5), (2, 4, 5), (3, 4, 5)] : List (Nat × Nat × Nat)),
+      0 ≤ evalFunc5 c (hUncondMarg5 (retObjMask 0) (retObjMask 1) (retObjMask t.1) (retObjMask t.2.1) (retObjMask t.2.2)))) ∧
+  (checkLinRay4Exact = true ∧ checkCanonDecomp4 = true ∧
+   checkAll510Marg4 = true ∧ checkQuadEnum495and15 = true ∧ checkAll6RetMarg5 = true)
+
+def T2h_AllOrderRenyiHolderTVAndDyadic1024 : Prop :=
+  (∀ (N m M : Nat) (p q w : Nat → Nat),
+    0 < M → (∀ i, i < N → w i * q i = M) →
+    M ^ m * (sumNatML N p) ^ (m + 1) ≤
+    (sumNatML N q) ^ m * sumNatML N (fun i => p i ^ (m + 1) * w i ^ m)) ∧
+  (∀ (N : Nat) (M : Int) (p q w : Nat → Int),
+    0 < M → (∀ i, i < N → 0 < q i ∧ 0 ≤ w i ∧ w i * q i = M) →
+    let P := sumInt N p
+    let Q := sumInt N q
+    let Sabs := sumInt N (fun i => intAbs (Q * p i - P * q i))
+    M * Sabs * Sabs ≤ Q * Q * (Q * sumInt N (fun i => p i * p i * w i) - M * P * P)) ∧
+  (dyadic1024AWeight (-3) + dyadic1024AWeight (-2) + dyadic1024AWeight (-1) + dyadic1024AWeight 0 +
+     dyadic1024AWeight 1 + dyadic1024AWeight 2 + dyadic1024AWeight 3 = 1024 ∧
+   9 * dyadic1024AWeight (-3) + 4 * dyadic1024AWeight (-2) + 1 * dyadic1024AWeight (-1) +
+     1 * dyadic1024AWeight 1 + 4 * dyadic1024AWeight 2 + 9 * dyadic1024AWeight 3 = 1024 ∧
+   81 * dyadic1024AWeight (-3) + 16 * dyadic1024AWeight (-2) + 1 * dyadic1024AWeight (-1) +
+     1 * dyadic1024AWeight 1 + 16 * dyadic1024AWeight 2 + 81 * dyadic1024AWeight 3 = 2968 ∧
+   2968 * 128 = 371 * 1024 ∧
+   15 * 512 < 243 * 32 ∧ 243 * 2 < 512 ∧
+   8672 * 77 < 67150 * 10 ∧ 1509 * 25 < 37842 ∧ 9100 * 11 < 100920) ∧
+  (dyadic1024BWeight (-4) + dyadic1024BWeight (-3) + dyadic1024BWeight (-2) + dyadic1024BWeight (-1) +
+     dyadic1024BWeight 0 + dyadic1024BWeight 1 + dyadic1024BWeight 2 + dyadic1024BWeight 3 +
+     dyadic1024BWeight 4 = 1024 ∧
+   16 * dyadic1024BWeight (-4) + 9 * dyadic1024BWeight (-3) + 4 * dyadic1024BWeight (-2) +
+     1 * dyadic1024BWeight (-1) + 1 * dyadic1024BWeight 1 + 4 * dyadic1024BWeight 2 +
+     9 * dyadic1024BWeight 3 + 16 * dyadic1024BWeight 4 = 1536 ∧
+   256 * dyadic1024BWeight (-4) + 81 * dyadic1024BWeight (-3) + 16 * dyadic1024BWeight (-2) +
+     1 * dyadic1024BWeight (-1) + 1 * dyadic1024BWeight 1 + 16 * dyadic1024BWeight 2 +
+     81 * dyadic1024BWeight 3 + 256 * dyadic1024BWeight 4 = 6624 ∧
+   6624 * 32 = 207 * 1024 ∧
+   5 * 32 < 15 * 12 ∧ 15 * 2 < 32 ∧
+   5591 * 44 < 24770 * 10 ∧ 5948 * 49 < 29520 * 10)
+
+def T3i_BrockettDobkinRectangularAndQuadraticMatMulBound : Prop :=
+  (∀ (F : Type) [SimpleField F] (m k p r : Nat),
+    1 ≤ m → 1 ≤ k → 1 ≤ p →
+    HasTensorRankAtMost (m * k) (k * p) (m * p) r
+      (fun a b c => intToR (R := F) (rectMatMulTensor m k p a b c)) →
+    m * k + m * p - m ≤ r ∧ m * k + k * p - k ≤ r ∧ m * p + k * p - p ≤ r) ∧
+  (∀ (F : Type) [SimpleField F] (m r : Nat),
+    1 ≤ m →
+    HasTensorRankAtMost (m * m) (m * m) (m * m) r
+      (fun a b c => intToR (R := F) (matMulTensor m a b c)) →
+    2 * m * m - m ≤ r) ∧
+  (∀ (m : Nat), 3 ≤ m → m * m + m < 2 * m * m - m) ∧
+  (∀ (F : Type) [SimpleField F] (m p r : Nat),
+    2 ≤ m → 2 ≤ p →
+    HasTensorRankAtMost (m * 2) (2 * p) (m * p) r
+      (fun a b c => intToR (R := F) (rectMatMulTensor m 2 p a b c)) →
+    m * p + 3 ≤ r)
+
+def T3j_ShannonCapacityLovaszC5AndHaemers : Prop :=
+  (∀ (F : Type) [SimpleField F] (n r t k : Nat) (adj : Nat → Nat → Bool)
+      (U V M : Nat → Nat → F) (f : Nat → Nat),
+    (∀ i j, i < n → j < n → sumR r (fun s => U i s * V s j) = M i j) →
+    FitsGraph n adj M →
+    IsIndepSet (n ^ t) (strongPowAdj n adj t) k f →
+    k ≤ r ^ t) ∧
+  (∀ (t k : Nat) (f : Nat → Nat),
+    IsIndepSet (5 ^ t) (strongPowAdj 5 c5Adj t) k f → k * k ≤ 5 ^ t) ∧
+  (∀ (m : Nat), ∃ f : Nat → Nat,
+    IsIndepSet (5 ^ (2 * m)) (strongPowAdj 5 c5Adj (2 * m)) (5 ^ m) f) ∧
+  (∀ (m : Nat), ∃ f : Nat → Nat,
+    IsIndepSet (7 ^ (2 * m)) (strongPowAdj 7 c7Adj (2 * m)) (10 ^ m) f) ∧
+  (∀ (F : Type) [SimpleField F] (r : Nat) (U V M : Nat → Nat → F),
+    (∀ i j, i < 7 → j < 7 → sumR r (fun s => U i s * V s j) = M i j) →
+    FitsGraph 7 c7Adj M → 4 ≤ r) ∧
+  (∀ (F : Type) [SimpleField F],
+    ∃ (U V M : Nat → Nat → F),
+      (∀ i j, i < 7 → j < 7 → sumR 4 (fun s => U i s * V s j) = M i j) ∧
+      FitsGraph 7 c7Adj M)
+
 def AllTriadFrontierTheorems : Prop :=
   T1a_KoszulVeroneseRankIdentity ∧
   T1b_UniversalKoszulDominationOverLFSR ∧
@@ -297,6 +387,7 @@ def AllTriadFrontierTheorems : Prop :=
   T1f_ProjectiveP3LinearImpossibility ∧
   T1g_ZhangYeungReductionAndMFileKoszul ∧
   T1h_InfiniteNonShannonConeAndContraction ∧
+  T1i_Total4VarEntropicAnd5ObjLinearBarrier ∧
   T2a_DeterminantIdealSecretIndependence ∧
   T2b_ChenStep9AntiPeriodicDFTCancellation ∧
   T2c_MLKEMCBDRenyiCliff ∧
@@ -304,6 +395,7 @@ def AllTriadFrontierTheorems : Prop :=
   T2e_Dyadic256RenyiFloorAndQGTLPSD ∧
   T2f_UniversalTwistedDFTSelectionRule ∧
   T2g_QGTLRenyiVariationalBridgeAndDyadic512 ∧
+  T2h_AllOrderRenyiHolderTVAndDyadic1024 ∧
   T3a_AlgebrizationMultilinearExtensionUniqueness ∧
   T3b_LWEToNaturalProofsObstruction ∧
   T3c_KatzTrevisanByzantinePIRToLDC ∧
@@ -311,7 +403,9 @@ def AllTriadFrontierTheorems : Prop :=
   T3e_KoszulFlatteningTensorRankBridge ∧
   T3f_ShannonCountingAndLDCSmoothness ∧
   T3g_AllMKoszulMatMulLowerBound ∧
-  T3h_StrassenWinogradExactRankSeven
+  T3h_StrassenWinogradExactRankSeven ∧
+  T3i_BrockettDobkinRectangularAndQuadraticMatMulBound ∧
+  T3j_ShannonCapacityLovaszC5AndHaemers
 
 end
 end TriadFrontier.Challenge

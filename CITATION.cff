@@ -2,7 +2,7 @@ cff-version: 1.2.0
 title: "Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked Complexity-Barrier Bridges"
 message: "If you use these Lean 4 proofs, verification artifacts, or white paper, please cite this software and preprint."
 type: software
-version: 3.0.0
+version: 4.0.0
 date-released: 2026-11-25
 license: Apache-2.0
 repository-code: "https://github.com/0thernes/coded-pir-mlwe-complexity-lab"
@@ -19,14 +19,21 @@ keywords:
   - koszul-veronese
   - zhang-yeung
   - matus-non-shannon
+  - linear-rank-inequalities
   - mlwe
   - fips-203
   - ml-kem
   - dyadic-256
   - dyadic-512
+  - dyadic-1024
+  - renyi-divergence
   - quantum-geometric-tensor
   - koszul-flattening
   - strassen-winograd
+  - brockett-dobkin
+  - shannon-capacity
+  - lovasz-theta
+  - haemers-bound
   - tensor-rank
   - algebrization
   - lean4

@@ -22,7 +22,10 @@ from triad_verify.pir_koszul import (  # noqa: E402
     verify_certified_f11_byzantine,
     verify_koszul_rank_grid,
 )
-from triad_verify.polymatroid_barrier import verify_h_uncond  # noqa: E402
+from triad_verify.polymatroid_barrier import (  # noqa: E402
+    verify_4var_i4_and_5obj_f2_realizability,
+    verify_h_uncond,
+)
 
 
 def sha256_file(path: Path) -> str:
@@ -61,6 +64,7 @@ def main() -> int:
     grid = verify_koszul_rank_grid()
     f11 = verify_certified_f11_byzantine(ROOT / "data" / "f11_byz_witness.json")
     poly = verify_h_uncond(ROOT / "data" / "h_uncond_certified.json")
+    t1i_lin = verify_4var_i4_and_5obj_f2_realizability(ROOT / "data" / "h_uncond_certified.json")
     mlwe = run_all_mlwe_checks()
     triad = run_all_triad_checks()
 
@@ -75,6 +79,7 @@ def main() -> int:
             "koszul_rank_grid": grid,
             "f11_byzantine_rate25": f11,
             "polymatroid_h_uncond": poly,
+            "t1i_linear_realizability": t1i_lin,
         },
         "pillar_2_cs026": mlwe,
         "pillar_3_triad": triad,
@@ -98,14 +103,18 @@ def main() -> int:
         "lean/PalomarChallenge.lean",
         "lean/PalomarSolution.lean",
         "lean/VerifyAxioms.lean",
+        "lean/TriadFrontier/PIRLinearCerts.lean",
         "lean/TriadFrontier/KoszulTensor.lean",
         "lean/TriadFrontier/StrassenWinograd.lean",
+        "lean/TriadFrontier/BrockettDobkin.lean",
+        "lean/TriadFrontier/ShannonCapacity.lean",
         "lean/comparator.json",
         "lean/formalization.yaml",
         "paper/main.tex",
         "paper/refs.bib",
         "paper/figures/fig5_dyadic256_and_koszul_tensor.pdf",
         "paper/figures/fig6_mlkem_dfr_variational_and_allm_koszul.pdf",
+        "paper/figures/fig7_bai_security_collapse_and_lovasz_bd.pdf",
         "results/lean_axioms.txt",
         "results/exact_audit_summary.json",
     ]
