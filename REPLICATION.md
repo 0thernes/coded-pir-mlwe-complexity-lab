@@ -37,11 +37,14 @@ lake comparator --config comparator.json --paranoid
 make -C native clean test
 ./native/build/triad_cli koszul 3 2 3
 ./native/build/triad_cli f11-byz
+./native/build/triad_cli ret6-f2
 ./native/build/triad_cli renyi 2
 ./native/build/triad_cli dyadic256
 ./native/build/triad_cli dyadic512
 ./native/build/triad_cli dyadic1024a
 ./native/build/triad_cli dyadic1024b
+./native/build/triad_cli dyadic16384a
+./native/build/triad_cli dyadic16384b
 ./native/build/triad_cli chen 7 3
 ./native/build/triad_cli twisted 4 5 1
 ./native/build/triad_cli qgtl 2 1.023 0.25
@@ -51,6 +54,8 @@ make -C native clean test
 ./native/build/triad_cli koszul-allm 4
 ./native/build/triad_cli lovasz-c5
 ./native/build/triad_cli c7-cap
+./native/build/triad_cli paley-cap 13
+./native/build/triad_cli paley-cap 17
 # On Linux:
 make -C native sanitizers
 ```
@@ -94,4 +99,5 @@ sha256sum -c MANIFEST.sha256
 | 2026-11-25 (v1.0.0) | Alexander S. Donahue | Windows 11 + Ubuntu CI (`run 45695797431`) | 6/6 kernels (14 theorems, 1,967 `con-leche`/`con-ron` decls) + `lake comparator --paranoid` | C11 40/40 + ASan/UBSan; Eshkol 3/3; pytest 14/14 (6/6 mutants); 23/23 HTTP 200 | 11 pp. PDF (0 overfull) + clean-room tarball + Sigstore Rekor `4111094089` | PASS |
 | 2026-11-25 (v2.0.0) | Alexander S. Donahue | Windows 11 + Ubuntu CI (`run 45698684366`) | 6/6 kernels (19 theorems `T1a`–`T3f`, 21 audited decls, 2,418 `con-leche`/`con-ron` decls) + `lake comparator --paranoid` | C11 49/49 + ASan/UBSan; Eshkol 3/3 (`Dyadic-256` `-7.77e-9`); pytest 15/15 (8/8 mutants); 26/26 live HTTP 200 | 14 pp. PDF (0 overfull, 5 figs) + clean-room tarball + interactive Pages Blueprint | PASS |
 | 2026-11-25 (v3.0.0) | Alexander S. Donahue | Windows 11 + Ubuntu CI (`run 45701164193`) | 6/6 kernels (23 theorems `T1a`–`T3h`, 25 audited decls, 2,995 `con-leche`/`con-ron` decls) + `lake comparator --paranoid` | C11 57/57 + ASan/UBSan; Eshkol 3/3 (`Dyadic-512` `-3.57e-6`); pytest 16/16 (10/10 mutants); 28/28 live HTTP 200 | 16 pp. PDF (0 overfull, 6 figs) + clean-room tarball + 23-theorem Pages Blueprint | PASS |
-| 2026-11-25 (v4.0.0) | Alexander S. Donahue | Windows 11 x86_64 (GCC 14.2.0, Node 25.8.2, Python 3.12, Tectonic 0.15) | 6/6 local kernels (27 theorems `T1a`–`T3j`, 29 audited decls, 3,589 `con-leche`/`con-ron` & 3,884 `nanoda` decls) | C11 65/65 + 512 fuzz; Eshkol 3/3 (`Dyadic-1024-A` `-3.79e-9`); pytest 17/17 (12/12 mutants); 33/33 live HTTP 200 | AMS-LaTeX PDF (0 overfull, 7 figs) + clean-room tarball + 27-theorem Pages Blueprint | PASS |
+| 2026-11-25 (v4.0.0) | Alexander S. Donahue | Windows 11 x86_64 + Ubuntu CI | 6/6 kernels (27 theorems `T1a`–`T3j`, 29 audited decls, 3,589 `con-leche`/`con-ron` & 3,884 `nanoda` decls) | C11 65/65 + 512 fuzz; Eshkol 3/3 (`Dyadic-1024-A` `-3.79e-9`); pytest 17/17 (12/12 mutants); 33/33 live HTTP 200 | AMS-LaTeX PDF (0 overfull, 7 figs) + clean-room tarball + 27-theorem Pages Blueprint | PASS |
+| 2026-11-26 (v5.0.0) | Alexander S. Donahue | Windows 11 x86_64 (GCC 14.2.0, Node 25.8.2, Python 3.12, Tectonic 0.15) | 6/6 local kernels (31 theorems `T1a`–`T3l` + 7 adversarial refutations, 34 audited decls, 4,300 `con-leche`/`con-ron`, silent 0-error `nanoda`, live negative tamper gate) | C11 79/79 + 512 fuzz; Eshkol 3/3 (`Dyadic-16384-A` `-9.13e-10`); pytest 18/18 (14/14 mutants); strict `0 ruff / 0 mypy`; 36/36 live HTTP 200 | AMS-LaTeX PDF (0 overfull, 8 figs) + clean-room tarball + DigiCert RFC 3161 TSA + 31-theorem Pages Blueprint | PASS |

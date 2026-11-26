@@ -1,29 +1,34 @@
 # coded-pir-mlwe-complexity-lab
 
-> Zero-Mathlib Lean 4.35.0 formal proofs (27 theorems `T1a`–`T3j` across 6 kernels, 3,589 `con-leche`/`con-ron` & 3,884 `nanoda` decls), C11/Python/Eshkol multi-language verifiers, an interactive GitHub Pages Proof Blueprint, and an AMS-LaTeX preprint (`v4.0.0`) on Coded/Byzantine PIR & Total 4-Var $I_4$/5-Obj $\mathbb{F}_2$ Linear Barriers (`CS-053`), Module-LWE reduction tightness & `Dyadic-256/512/1024-A/B` Bai security collapse (`CS-026`/`QC-042`/`CM-048`), Brockett–Dobkin $2m^2-m$ & Exact Strassen–Winograd $\mathrm{rank}_F(\langle 2,2,2\rangle) = 7$ (`CS-001`/`CS-004`/`CS-010`/`CS-012`/`CS-051`), and Exact Zero-Reals Lovász $\Theta(C_5)=\sqrt{5}$ & Haemers $C_7$ Rank $=4$ (`CS-CMP-012`).
+> Zero-Mathlib Lean 4.35.0 formal proofs (31 theorems `T1a`–`T3l` + 7 adversarial boundary refutations, 34 audited declarations, 4,300 `con-leche`/`con-ron` verified decls across 6 independent kernels + live negative tamper gate), C11 (79 tests + 512 fuzz) / Python (`0 ruff`, `0 mypy`, 18 tests, 14/14 mutants) / Eshkol v1.3.6 AD multi-language verifiers, an interactive GitHub Pages Proof Blueprint, and an AMS-LaTeX preprint (`v5.0.0`, 8 figures, 36 live HTTP-200 citations) on Coded/Byzantine PIR & Total 6-Obj $\mathbb{F}_2^{64}$ Subspace Realization (`CS-053`), Module-LWE Formal Bai Engine, Gaussian DFR Paradox & 14-Bit `Dyadic-16384-A/B` Sub-1-Bit Bai Collapse (`CS-026`/`QC-042`/`CM-048`), Schwartz–Zippel & Power-of-2 Strassen Sandwich (`CS-001`/`CS-004`/`CS-010`/`CS-012`/`CS-051`), and the Infinite Zero-Reals Paley Shannon Capacity Family $\Theta(P_p) = \sqrt{p}$ (`CS-CMP-012`).
 
 - Author: Alexander S. Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648)
 - Code License: Apache-2.0 | Docs & Paper License: CC-BY-4.0
 - Interactive Proof Blueprint: https://0thernes.github.io/coded-pir-mlwe-complexity-lab/
 
 ## Primary Documentation
-- [README.md](README.md): Project overview, 27 headline theorems (`T1a`–`T3j`), verbatim 29-declaration Lean axiom audit, and quickstart.
-- [CLAIMS.md](CLAIMS.md): Claim-by-claim ledger (`C1`–`C27`), open frontiers (`O1`–`O6`), and falsification protocol.
+- [README.md](README.md): Project overview, 31 headline theorems (`T1a`–`T3l`), verbatim 34-declaration Lean axiom audit, and quickstart.
+- [CLAIMS.md](CLAIMS.md): Claim-by-claim ledger (`C1`–`C31`), open frontiers (`O1`–`O6`), and falsification protocol.
 - [LIMITATIONS.md](LIMITATIONS.md): Explicit non-claims, formal vs. computational boundaries, and real-vs-metaphor breakdown.
+- [ERRATA.md](ERRATA.md): Versioned errata, clarifications, and mathematical boundary updates (`v1.0.0`–`v5.0.0`).
 - [REPLICATION.md](REPLICATION.md): Clean-room replication commands and verification log.
-- [HARDENING_LOG.md](HARDENING_LOG.md): 17 real defects/holes found and resolved across audit passes.
+- [HARDENING_LOG.md](HARDENING_LOG.md): 21 real defects/holes found and resolved across audit passes.
 - [AGENTS.md](AGENTS.md): Canonical instructions for AI coding agents.
 
 ## Technical Artifacts
-- [lean/Solution.lean](lean/Solution.lean): Master zero-Mathlib Lean 4.35.0 solution (`T1a`–`T3j`).
-- [lean/TriadFrontier/PIRLinearCerts.lean](lean/TriadFrontier/PIRLinearCerts.lean): Kernel-certified 23 $\mathbb{F}_2/\mathbb{F}_3$ linear rays, 510 four-marginals in $I_4$, & 6 five-object $\mathbb{F}_2$ realizations (`T1i`).
+- [lean/Solution.lean](lean/Solution.lean): Master zero-Mathlib Lean 4.35.0 solution (`T1a`–`T3l`).
+- [lean/TriadFrontier/PIRLinearCerts.lean](lean/TriadFrontier/PIRLinearCerts.lean): Kernel-certified 23 $\mathbb{F}_2/\mathbb{F}_3$ linear rays, 510 four-marginals in $I_4$, 6 five-object $\mathbb{F}_2$ realizations (`T1i`), & exact 6-object $\mathbb{F}_2^{64}$ realization (`T1j`).
+- [lean/TriadFrontier/MLWETightness.lean](lean/TriadFrontier/MLWETightness.lean): `T2a`–`T2i`, incl. formal Bai et al. (2018) Rényi DPI/tensorization engine & 14-bit CT `Dyadic-16384-A/B`.
 - [lean/TriadFrontier/KoszulTensor.lean](lean/TriadFrontier/KoszulTensor.lean): Field-universal Koszul flattening tensor rank bridge & symbolic ALL-$m$ MatMul bound (`T3e`, `T3g`).
 - [lean/TriadFrontier/StrassenWinograd.lean](lean/TriadFrontier/StrassenWinograd.lean): Complete characteristic-free Exact Strassen–Winograd $\mathrm{rank}_F(\langle 2,2,2\rangle) = 7$ proof over every field (`T3h`).
 - [lean/TriadFrontier/BrockettDobkin.lean](lean/TriadFrontier/BrockettDobkin.lean): Field-universal Brockett–Dobkin rectangular & quadratic $2m^2-m$ MatMul lower bound + Strassen lift (`T3i`).
 - [lean/TriadFrontier/ShannonCapacity.lean](lean/TriadFrontier/ShannonCapacity.lean): Field-universal Haemers rank bound, exact zero-reals $\mathbb{Z}[\sqrt{5}]$ SOS proof of Lovász $\Theta(C_5)=\sqrt{5}$, & exact $C_7$ min Haemers rank $= 4$ (`T3j`).
-- [lean/VerifyAxioms.lean](lean/VerifyAxioms.lean): Strict `#print axioms` audit script (29 declarations).
+- [lean/TriadFrontier/AlgebraicComplexity.lean](lean/TriadFrontier/AlgebraicComplexity.lean): Universal constructive Schwartz–Zippel lemma & exact power-of-2 Strassen sandwich $2\cdot 4^k - 2^k \le \mathrm{rank}_F(\langle 2^k,2^k,2^k\rangle) \le 7^k$ (`T3k`).
+- [lean/TriadFrontier/PaleyCapacity.lean](lean/TriadFrontier/PaleyCapacity.lean): Infinite zero-reals $\mathbb{Z}[\sqrt{p}]$ conference-matrix SOS theorem $\Theta(P_p) = \sqrt{p}$ instantiated for $P_5, P_{13}, P_{17}$ (`T3l`).
+- [lean/TriadFrontier/AdversarialTests.lean](lean/TriadFrontier/AdversarialTests.lean): 7 kernel-checked negative/sharpness boundary refutations (`adv_all_boundary_refutations`).
+- [lean/VerifyAxioms.lean](lean/VerifyAxioms.lean): Strict `#print axioms` audit script (34 declarations).
 - [lean/formalization.yaml](lean/formalization.yaml): Machine-readable formalization registry metadata.
-- [docs/site/blueprint.html](docs/site/blueprint.html): Interactive 27-theorem Proof Blueprint DAG.
+- [docs/site/blueprint.html](docs/site/blueprint.html): Interactive 31-theorem Proof Blueprint DAG.
 - [docs/architecture.md](docs/architecture.md): System and mathematical dependency architecture.
 - [docs/statement-fidelity.md](docs/statement-fidelity.md): Line-by-line Lean-to-paper statement fidelity table.
-- [dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf](dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf): Frozen AMS-LaTeX preprint (`v4.0.0`).
+- [dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf](dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf): Frozen AMS-LaTeX preprint (`v5.0.0`).

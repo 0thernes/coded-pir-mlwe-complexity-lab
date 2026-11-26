@@ -56,26 +56,34 @@ triad_chen_res_t triad_verify_chen_step9(int D, int c);
 /* CS-026: QGTL shifted-LWE Fourier state metric & Berry curvature calculator. */
 triad_qgtl_res_t triad_qgtl_shifted_lwe(int eta, double sigma, double e0);
 
-/* CS-026: FIPS 203 CBD_eta & Optimal 8/9/10-Bit Dyadic-256/512/1024-A/B Renyi suite & Compress_1. */
+/* CS-026: FIPS 203 CBD_eta & Optimal 8/9/10/14-Bit Dyadic-256/512/1024/16384-A/B Renyi suite & Compress_1. */
 triad_renyi_res_t triad_mlkem_renyi_opt(int eta);
 triad_renyi_res_t triad_mlkem_dyadic256_opt(void);
 triad_renyi_res_t triad_mlkem_dyadic512_opt(void);
 triad_renyi_res_t triad_mlkem_dyadic1024a_opt(void);
 triad_renyi_res_t triad_mlkem_dyadic1024b_opt(void);
+triad_renyi_res_t triad_mlkem_dyadic16384a_opt(void);
+triad_renyi_res_t triad_mlkem_dyadic16384b_opt(void);
 int triad_dyadic256_sample_ct(uint8_t byte);
 int triad_dyadic512_sample_ct(uint16_t raw9);
 int triad_dyadic1024a_sample_ct(uint16_t raw10);
 int triad_dyadic1024b_sample_ct(uint16_t raw10);
+int triad_dyadic16384a_sample_ct(uint16_t raw14);
+int triad_dyadic16384b_sample_ct(uint16_t raw14);
 int triad_mlkem_compress1(int x);
 
 /* CS-026 <-> QC-042: Universal m-twisted DFT selection rule verifier (T2f). */
 bool triad_verify_twisted_dft(int m, int D, int r, double *out_max_forb);
 
-/* CS-053 <-> CS-004/CS-012/CS-CMP-012: Koszul flattening, Strassen-7, Brockett-Dobkin, & Lovasz/Haemers (T3e/T3g/T3h/T3i/T3j). */
+/* CS-053: Single F_2^64 6-subspace realization of all 64 subsets of h_uncond retrieval (T1j). */
+bool triad_verify_ret6_f2_64(void);
+
+/* CS-053 <-> CS-004/CS-012/CS-CMP-012: Koszul flattening, Strassen-7, Brockett-Dobkin, Lovasz/Haemers, & Paley family (T3e/T3g-T3l). */
 bool triad_verify_koszul_flattening_certs(void);
 bool triad_verify_strassen_7prod(void);
 bool triad_verify_all_m_koszul_monomial(int m);
 bool triad_verify_lovasz_c5_sos(void);
 bool triad_verify_c7_indep10_and_haemers(void);
+bool triad_verify_paley_conference_sos(int p);
 
 #endif /* TRIAD_CORE_H */

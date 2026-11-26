@@ -5,8 +5,8 @@ build-backend = "setuptools.build_backend"
 
 [project]
 name = "coded-pir-mlwe-complexity-lab"
-version = "4.0.0"
-description = "Zero-Mathlib Lean 4.35.0 proofs (27 theorems T1a-T3j across 6 kernels, 3,589 decls) and multi-language verification for Coded/Byzantine PIR (CS-053), MLWE Tightness & CT Dyadic-256/512/1024-A/B Bai Security Collapse (CS-026), Brockett-Dobkin 2m^2-m & Exact Strassen-Winograd rank_F(<2,2,2>)=7 (CS-004), and Exact Lovasz Shannon Capacity Theta(C_5)=sqrt(5) & Haemers C_7 Rank=4 (CS-CMP-012)"
+version = "5.0.0"
+description = "Zero-Mathlib Lean 4.35.0 proofs (31 theorems T1a-T3l + 7 adversarial refutations across 6 kernels, 4,300 decls) and multi-language verification for Coded/Byzantine PIR & Single F_2^64 6-Obj Realization (CS-053), MLWE Tightness, Gaussian DFR Paradox & 14-Bit Dyadic-16384-A/B (CS-026), Schwartz-Zippel & Strassen-Brockett-Dobkin Sandwich (CS-004), and Infinite Paley/Conference Shannon Capacity Theta(G)=sqrt(4k+1) (CS-CMP-012)"
 readme = "README.md"
 license = {text = "Apache-2.0"}
 authors = [

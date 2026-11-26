@@ -138,14 +138,12 @@ def verify_certified_f11_byzantine(witness_path: Path) -> dict:
     PUs = [mat_mul_mod(B_sels[n], U_mats[n], p) for n in range(6)]
 
     des_ok = 0
-    int_ok = 0
     for I in combinations(range(6), 4):
         Mdes = [row + [(x * alphas[n]) % p for x in row] for n in I for row in V_mats[n]]
         Mint = [row + [(x * alphas[n]) % p for x in row] for n in I for row in PUs[n]]
         assert rref_rank_mod(Mdes, p) == 12
         assert rref_rank_mod(Mint, p) == 8
         des_ok += 1
-        int_ok += 1
     priv_ok = 0
     for i in range(6):
         for j in range(6):
@@ -216,14 +214,14 @@ def verify_overlap_sub_kt_scheme(N: int, K: int, B: int, p: int = 101, seed: int
         a = alphas[n]
         rows = []
         for s in range(sigma):
-            r = [0] * u_dim
-            r[s] = 1
-            rows.append(r)
+            row_vec = [0] * u_dim
+            row_vec[s] = 1
+            rows.append(row_vec)
         for m_i in range(mu):
-            r = [0] * u_dim
-            r[sigma + 2 * m_i] = 1
-            r[sigma + 2 * m_i + 1] = a % p
-            rows.append(r)
+            row_vec = [0] * u_dim
+            row_vec[sigma + 2 * m_i] = 1
+            row_vec[sigma + 2 * m_i + 1] = a % p
+            rows.append(row_vec)
         U_mats.append(rows)
 
     # Repeat delta copies of U_n (each copy has D rows in u_dim ambient space -> delta*D rows in delta*u_dim)

@@ -9,11 +9,13 @@ public import TriadFrontier.MLWETightness
 public import TriadFrontier.ComplexityTriad
 public import TriadFrontier.KoszulTensor
 public import TriadFrontier.ShannonCapacity
+public import TriadFrontier.PaleyCapacity
+public import TriadFrontier.AlgebraicComplexity
 
 /-!
-# Concrete Non-Vacuity Witnesses (`TriadFrontier` v4.0.0)
+# Concrete Non-Vacuity Witnesses (`TriadFrontier` v5.0.0)
 
-Explicitly inhabits EVERY hypothesis bundle across all 27 theorems (`T1a`–`T3j`),
+Explicitly inhabits EVERY hypothesis bundle across all 31 theorems (`T1a`–`T3l`),
 including concrete `SimpleField (Fin 5)` and `SimpleField (Fin 11)` instances,
 concrete commutative ring `Int` with unit `u = -1`, concrete anti-periodic function
 on `D = 3`, concrete `m = 4` twisted root over `Fin 5` (`2^4 = 1, 1+2+4+3 = 0`),
@@ -32,6 +34,8 @@ open TriadFrontier.MLWETightness
 open TriadFrontier.ComplexityTriad
 open TriadFrontier.KoszulTensor
 open TriadFrontier.ShannonCapacity
+open TriadFrontier.PaleyCapacity
+open TriadFrontier.AlgebraicComplexity
 
 @[expose] public section
 
@@ -136,7 +140,8 @@ theorem nonvac_all_hypotheses :
      ((-831 : Int) ≤ 420 ∧ (420 : Int) ≤ 831 ∧ 0 < 16 ∧ 831 / 16 < 52) ∧
      (sumR 4 (fun q => rPow (⟨2, by decide⟩ : Fin 5) (q * (1 + 2))) = 0 ∧
       dyadic256Weight 0 = 100 ∧ dyadic1024AWeight 0 = 406 ∧ dyadic1024BWeight 0 = 330 ∧
-      c5Adj 0 1 = true ∧ c7Adj 0 1 = true ∧ 4 < 16)) := by
+      dyadic16384AWeight 0 = 6496 ∧ dyadic16384BWeight 0 = 5332 ∧
+      c5Adj 0 1 = true ∧ c7Adj 0 1 = true ∧ paley13Adj 0 1 = true ∧ paley17Adj 0 1 = true ∧ 4 < 16)) := by
   refine ⟨by decide, ?_, ?_, ?_, ?_⟩
   · refine ⟨⟨⟨0, by decide⟩, by decide⟩, ⟨1, 0, fun _ => by rw [CommRing.one_mul, zero_mul, add_zero]⟩⟩
   · refine ⟨by decide, ?_, by decide⟩

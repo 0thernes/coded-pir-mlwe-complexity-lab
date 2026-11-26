@@ -5,10 +5,11 @@ module
 import Solution
 
 /-!
-# Strict Axiom Allowlist Audit (`TriadFrontier` v4.0.0)
+# Strict Axiom Allowlist Audit (`TriadFrontier` v5.0.0)
 
-Every exported theorem (`T1a`–`T3j`), the master conjunction `prove_all_triad_theorems`,
-and the concrete non-vacuity certificate `nonvac_all_hypotheses` (29 audited declarations)
+Every exported theorem (`T1a`–`T3l`), the master conjunction `prove_all_triad_theorems`,
+the concrete non-vacuity certificate `nonvac_all_hypotheses`, and the 7 adversarial
+negative boundary refutations `adv_all_boundary_refutations` (34 audited declarations)
 must depend strictly on a subset of `[propext, Classical.choice, Quot.sound]`.
 -/
 
@@ -21,6 +22,7 @@ must depend strictly on a subset of `[propext, Classical.choice, Quot.sound]`.
 #print axioms TriadFrontier.Solution.t1g_zhang_yeung_reduction_and_mfile_koszul
 #print axioms TriadFrontier.Solution.t1h_infinite_nonshannon_cone_barrier_and_contraction
 #print axioms TriadFrontier.Solution.t1i_total_4var_entropic_and_5obj_linear_barrier
+#print axioms TriadFrontier.Solution.t1j_total_6obj_f2_entropic_realizability_barrier
 #print axioms TriadFrontier.Solution.t2a_determinant_ideal_secret_independence
 #print axioms TriadFrontier.Solution.t2b_chen_step9_antiperiodic_dft_cancellation
 #print axioms TriadFrontier.Solution.t2c_mlkem_cbd_renyi_cliff
@@ -29,6 +31,7 @@ must depend strictly on a subset of `[propext, Classical.choice, Quot.sound]`.
 #print axioms TriadFrontier.Solution.t2f_universal_twisted_dft_selection_rule
 #print axioms TriadFrontier.Solution.t2g_qgtl_renyi_variational_bridge_and_dyadic512
 #print axioms TriadFrontier.Solution.t2h_all_order_renyi_holder_tv_and_dyadic1024
+#print axioms TriadFrontier.Solution.t2i_bai_engine_dpi_tensorization_and_dyadic16384
 #print axioms TriadFrontier.Solution.t3a_algebrization_multilinear_extension_uniqueness
 #print axioms TriadFrontier.Solution.t3b_lwe_to_natural_proofs_obstruction
 #print axioms TriadFrontier.Solution.t3c_katz_trevisan_byzantine_pir_ldc_distance
@@ -39,5 +42,8 @@ must depend strictly on a subset of `[propext, Classical.choice, Quot.sound]`.
 #print axioms TriadFrontier.Solution.t3h_strassen_winograd_exact_rank_seven
 #print axioms TriadFrontier.Solution.t3i_brockett_dobkin_rectangular_and_quadratic_matmul_bound
 #print axioms TriadFrontier.Solution.t3j_shannon_capacity_lovasz_c5_and_haemers
+#print axioms TriadFrontier.Solution.t3k_schwartz_zippel_and_strassen_sandwich
+#print axioms TriadFrontier.Solution.t3l_infinite_paley_conference_shannon_capacity
 #print axioms TriadFrontier.Solution.prove_all_triad_theorems
 #print axioms TriadFrontier.NonVacuity.nonvac_all_hypotheses
+#print axioms TriadFrontier.AdversarialTests.adv_all_boundary_refutations

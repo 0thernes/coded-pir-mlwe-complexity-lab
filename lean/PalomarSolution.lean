@@ -6,10 +6,10 @@ public import Challenge
 public import Solution
 
 /-!
-# Palomar Comparator Verified Solution (`coded-pir-mlwe-complexity-lab` v4.0.0)
+# Palomar Comparator Verified Solution (`coded-pir-mlwe-complexity-lab` v5.0.0)
 
-Zero-`sorry`, zero-`native_decide`, zero-Mathlib implementation of all 27 headline
-theorems (`T1a`–`T3j`) and master conjunction verified across all six independent
+Zero-`sorry`, zero-`native_decide`, zero-Mathlib implementation of all 31 headline
+theorems (`T1a`–`T3l`) and master conjunction verified across all six independent
 Lean 4.35.0 proof kernels.
 -/
 
@@ -35,6 +35,8 @@ public theorem t1h_infinite_nonshannon_cone_barrier_and_contraction : T1h_Infini
   TriadFrontier.Solution.t1h_infinite_nonshannon_cone_barrier_and_contraction
 public theorem t1i_total_4var_entropic_and_5obj_linear_barrier : T1i_Total4VarEntropicAnd5ObjLinearBarrier :=
   TriadFrontier.Solution.t1i_total_4var_entropic_and_5obj_linear_barrier
+public theorem t1j_total_6obj_f2_entropic_realizability_barrier : T1j_Total6ObjF2EntropicRealizabilityBarrier :=
+  TriadFrontier.Solution.t1j_total_6obj_f2_entropic_realizability_barrier
 public theorem t2a_determinant_ideal_secret_independence : T2a_DeterminantIdealSecretIndependence :=
   TriadFrontier.Solution.t2a_determinant_ideal_secret_independence
 public theorem t2b_chen_step9_antiperiodic_dft_cancellation : T2b_ChenStep9AntiPeriodicDFTCancellation :=
@@ -51,6 +53,8 @@ public theorem t2g_qgtl_renyi_variational_bridge_and_dyadic512 : T2g_QGTLRenyiVa
   TriadFrontier.Solution.t2g_qgtl_renyi_variational_bridge_and_dyadic512
 public theorem t2h_all_order_renyi_holder_tv_and_dyadic1024 : T2h_AllOrderRenyiHolderTVAndDyadic1024 :=
   TriadFrontier.Solution.t2h_all_order_renyi_holder_tv_and_dyadic1024
+public theorem t2i_bai_engine_dpi_tensorization_and_dyadic16384 : T2i_BaiEngineDPITensorizationAndDyadic16384 :=
+  TriadFrontier.Solution.t2i_bai_engine_dpi_tensorization_and_dyadic16384
 public theorem t3a_algebrization_multilinear_extension_uniqueness : T3a_AlgebrizationMultilinearExtensionUniqueness :=
   TriadFrontier.Solution.t3a_algebrization_multilinear_extension_uniqueness
 public theorem t3b_lwe_to_natural_proofs_obstruction : T3b_LWEToNaturalProofsObstruction :=
@@ -71,6 +75,10 @@ public theorem t3i_brockett_dobkin_rectangular_and_quadratic_matmul_bound : T3i_
   TriadFrontier.Solution.t3i_brockett_dobkin_rectangular_and_quadratic_matmul_bound
 public theorem t3j_shannon_capacity_lovasz_c5_and_haemers : T3j_ShannonCapacityLovaszC5AndHaemers :=
   TriadFrontier.Solution.t3j_shannon_capacity_lovasz_c5_and_haemers
+public theorem t3k_schwartz_zippel_and_strassen_sandwich : T3k_SchwartzZippelAndStrassenSandwich :=
+  TriadFrontier.Solution.t3k_schwartz_zippel_and_strassen_sandwich
+public theorem t3l_infinite_paley_conference_shannon_capacity : T3l_InfinitePaleyConferenceShannonCapacity :=
+  TriadFrontier.Solution.t3l_infinite_paley_conference_shannon_capacity
 public theorem prove_all_triad_theorems : AllTriadFrontierTheorems :=
   TriadFrontier.Solution.prove_all_triad_theorems
 

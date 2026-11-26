@@ -65,10 +65,12 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
         abort();
     }
 
-    /* 5. Fuzz 10-bit constant-time Dyadic-1024-A and Dyadic-1024-B range bounds */
+    /* 5. Fuzz 10-bit & 14-bit constant-time Dyadic-1024/16384-A/B range bounds */
     const int va = triad_dyadic1024a_sample_ct(raw_u);
     const int vb = triad_dyadic1024b_sample_ct(raw_u);
-    if (va < -3 || va > 3 || vb < -4 || vb > 4) {
+    const int v16a = triad_dyadic16384a_sample_ct(raw_u);
+    const int v16b = triad_dyadic16384b_sample_ct(raw_u);
+    if (va < -3 || va > 3 || vb < -4 || vb > 4 || v16a < -3 || v16a > 3 || v16b < -5 || v16b > 5) {
         abort();
     }
 

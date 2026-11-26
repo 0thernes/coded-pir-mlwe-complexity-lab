@@ -359,5 +359,190 @@ def checkAll6RetMarg5 : Bool :=
 
 theorem checkAll6RetMarg5_ok : checkAll6RetMarg5 = true := by decide
 
+/-! ### Exact Single `F_2^64` Linear-Subspace Realization of ALL 6 Retrieval Objects (`T1j`) -/
+
+/-- Exact 6-variable marginal of `h_uncond` on `{W1, W2, A1, A2, A3, A4}` (`mask ∈ 1..63`). -/
+def hUncondRet6 (mask : Nat) : Nat :=
+  let u0 := if (mask &&& 1) != 0 then retObjMask 0 else 0
+  let u1 := if (mask &&& 2) != 0 then retObjMask 1 else 0
+  let u2 := if (mask &&& 4) != 0 then retObjMask 2 else 0
+  let u3 := if (mask &&& 8) != 0 then retObjMask 3 else 0
+  let u4 := if (mask &&& 16) != 0 then retObjMask 4 else 0
+  let u5 := if (mask &&& 32) != 0 then retObjMask 5 else 0
+  hUncond (u0 ||| u1 ||| u2 ||| u3 ||| u4 ||| u5)
+
+/-- Evaluate a 6-variable integer linear functional `c` (on masks 1..63) on a rank function `r`. -/
+def evalFunc6 (c : Nat → Int) (r : Nat → Nat) : Int :=
+  evalFuncGo c r 63
+
+/-- Toggle bit `b` in a strictly increasing `List Nat` (exact `F_2` addition of `e_b`, pure structural recursion). -/
+def toggleBit (b : Nat) : List Nat → List Nat
+  | [] => [b]
+  | x :: xs =>
+    if b < x then b :: x :: xs
+    else if b == x then xs
+    else x :: toggleBit b xs
+
+/-- Normalize any list of coordinate indices `< d` into a canonical strictly increasing `F_2^d` support. -/
+def toSparseF2Go (d : Nat) : List Nat → List Nat → List Nat
+  | [], acc => acc
+  | b :: bs, acc => toSparseF2Go d bs (if b < d then toggleBit b acc else acc)
+
+def toSparseF2 (d : Nat) (bits : List Nat) : List Nat :=
+  toSparseF2Go d bits []
+
+/-- Exact `F_2` vector XOR on strictly increasing `List Nat` supports (100% structural recursion!). -/
+def xorSparse (a : List Nat) : List Nat → List Nat
+  | [] => a
+  | x :: xs => xorSparse (toggleBit x a) xs
+
+/-- Transparent bucket lookup (zero external `List.lookup` module opacity!). -/
+def bucketLookup (key : Nat) : List (Nat × List Nat) → Option (List Nat)
+  | [] => none
+  | (k, row) :: rest => if k == key then some row else bucketLookup key rest
+
+/-- 6-level binary radix trie (`0..63` in exact depth 6, bucketed mod 64 for arbitrary `d : Nat`). -/
+inductive PivotTrie where
+  | empty
+  | leaf (bucket : List (Nat × List Nat))
+  | node (l r : PivotTrie)
+
+def trieLookup : Nat → Nat → Nat → PivotTrie → Option (List Nat)
+  | _, _, _, PivotTrie.empty => none
+  | _, key, _, PivotTrie.leaf b => bucketLookup key b
+  | 0, _, _, PivotTrie.node _ _ => none
+  | d + 1, key, bits, PivotTrie.node l r =>
+    if bits % 2 == 0 then trieLookup d key (bits / 2) l else trieLookup d key (bits / 2) r
+
+def trieInsert : Nat → Nat → Nat → List Nat → PivotTrie → PivotTrie
+  | 0, key, _, row, PivotTrie.empty => PivotTrie.leaf [(key, row)]
+  | 0, key, _, row, PivotTrie.leaf b => PivotTrie.leaf ((key, row) :: b)
+  | 0, _, _, _, PivotTrie.node l r => PivotTrie.node l r
+  | d + 1, key, bits, row, PivotTrie.empty =>
+    if bits % 2 == 0 then
+      PivotTrie.node (trieInsert d key (bits / 2) row PivotTrie.empty) PivotTrie.empty
+    else
+      PivotTrie.node PivotTrie.empty (trieInsert d key (bits / 2) row PivotTrie.empty)
+  | _ + 1, key, _, row, PivotTrie.leaf b => PivotTrie.leaf ((key, row) :: b)
+  | d + 1, key, bits, row, PivotTrie.node l r =>
+    if bits % 2 == 0 then
+      PivotTrie.node (trieInsert d key (bits / 2) row l) r
+    else
+      PivotTrie.node l (trieInsert d key (bits / 2) row r)
+
+def reduceSparse : Nat → PivotTrie → List Nat → List Nat
+  | 0, _, v => v
+  | _, _, [] => []
+  | fuel + 1, t, p :: rest =>
+    match trieLookup 6 p p t with
+    | none => p :: rest
+    | some brow => reduceSparse fuel t (xorSparse (p :: rest) brow)
+
+def gf2RankSparseGo (d : Nat) : List (List Nat) → PivotTrie → Nat → Nat
+  | [], _, rk => rk
+  | row :: rest, t, rk =>
+    let v := toSparseF2 d row
+    match reduceSparse d t v with
+    | [] => gf2RankSparseGo d rest t rk
+    | p :: pt => gf2RankSparseGo d rest (trieInsert 6 p p (p :: pt) t) (rk + 1)
+
+/-- Exact `F_2^d` Gaussian elimination rank on sparse coordinate-support rows (100% structural recursion,
+    zero `Nat.bitwise`, zero `WellFounded.fix`, blazingly fast across ALL 6 proof kernels!). -/
+def gf2RankSparse (d : Nat) (rows : List (List Nat)) : Nat :=
+  gf2RankSparseGo d rows PivotTrie.empty 0
+
+/-- Transparent list indexing helper (zero `List.getD` / `List.range` module opacity). -/
+def getSub6 : List (List (List Nat)) → Nat → List (List Nat)
+  | [], _ => []
+  | x :: _, 0 => x
+  | _ :: xs, n + 1 => getSub6 xs n
+
+/-- Exact 6-subspace rank over `F_2^d` for any `mask ∈ 1..63` (each row given by its set-bit indices). -/
+def subspaceRank6F2 (d : Nat) (subs : List (List (List Nat))) (mask : Nat) : Nat :=
+  let s0 := if (mask % 2) == 1 then getSub6 subs 0 else []
+  let s1 := if ((mask / 2) % 2) == 1 then getSub6 subs 1 else []
+  let s2 := if ((mask / 4) % 2) == 1 then getSub6 subs 2 else []
+  let s3 := if ((mask / 8) % 2) == 1 then getSub6 subs 3 else []
+  let s4 := if ((mask / 16) % 2) == 1 then getSub6 subs 4 else []
+  let s5 := if ((mask / 32) % 2) == 1 then getSub6 subs 5 else []
+  gf2RankSparse d (s0 ++ s1 ++ s2 ++ s3 ++ s4 ++ s5)
+
+/-- Helper building `[base, base+1, ..., base+len-1]` as singleton unit-vector rows `[b]` (100% transparent). -/
+def unitRows (base : Nat) : Nat → List (List Nat)
+  | 0 => []
+  | n + 1 => [base] :: unitRows (base + 1) n
+
+/-- The 3 sparse 3-bit `Z_4`-cyclic generator rows in `F_2^20` (total weight 9!):
+    `[8, 17, 19]`, `[11, 12, 18]`, `[5, 11, 18]` rotated by `+5i mod 20` for server `i ∈ {0..3}`. -/
+def ret6CyclicBaseBits : List (List Nat) :=
+  [[8, 17, 19], [11, 12, 18], [5, 11, 18]]
+
+/-- Server `i`'s 3 paired interference vectors shifted into `W_2` coordinates `32..51` of `F_2^64`. -/
+def ret6ServerPairedRows (i : Nat) : List (List Nat) :=
+  [ [20 + 3 * i + 0, 32 + (8 + 5 * i) % 20, 32 + (17 + 5 * i) % 20, 32 + (19 + 5 * i) % 20],
+    [20 + 3 * i + 1, 32 + (11 + 5 * i) % 20, 32 + (12 + 5 * i) % 20, 32 + (18 + 5 * i) % 20],
+    [20 + 3 * i + 2, 32 + (5 + 5 * i) % 20, 32 + (11 + 5 * i) % 20, 32 + (18 + 5 * i) % 20] ]
+
+/-- Server `i`'s 13-dimensional subspace `A_i ⊂ F_2^64`:
+    5 pure `W_1` basis vectors (`P_i`), 5 pure `W_2` basis vectors (`Q_i`), and 3 paired vectors. -/
+def ret6ServerSub (i : Nat) : List (List Nat) :=
+  unitRows (5 * i) 5 ++ unitRows (32 + 5 * i) 5 ++ ret6ServerPairedRows i
+
+/-- The SINGLE explicit `F_2^64` 6-subspace arrangement `(W1, W2, A0, A1, A2, A3)` realizing
+    ALL 64 subset entropies of `h_uncond` on `{W1, W2, A1, A2, A3, A4}` at exact scale factor 4! -/
+def ret6F2Arrangement : List (List (List Nat)) :=
+  [ unitRows 0 32,
+    unitRows 32 32,
+    ret6ServerSub 0,
+    ret6ServerSub 1,
+    ret6ServerSub 2,
+    ret6ServerSub 3 ]
+
+/-- Slice helper checking `hUncondRet6 m == 4 * subspaceRank6F2 64 ret6F2Arrangement m` on `[lo, hi)`. -/
+def checkRet6F2Slice (lo hi : Nat) : Bool :=
+  allBelow (hi - lo) fun t =>
+    let m := lo + t
+    hUncondRet6 m == 4 * subspaceRank6F2 64 ret6F2Arrangement m
+
+private theorem allBelow_ok (n : Nat) (p : Nat → Bool) (h : allBelow n p = true) :
+    ∀ k, k < n → p k = true := by
+  induction n with
+  | zero => intro _ hk; omega
+  | succ m ih =>
+    simp only [allBelow, Bool.and_eq_true] at h
+    intro k hk
+    cases Nat.eq_or_lt_of_le (Nat.lt_succ_iff.mp hk) with
+    | inl heq => subst heq; exact h.2
+    | inr hlt => exact ih h.1 k hlt
+
+/-- Balanced sliced kernel verification of ALL 63 non-empty subsets of `(W1, W2, A0, A1, A2, A3)`
+    directly in `F_2^64` (`0` mismatches, zero `native_decide`, blazingly fast across all 6 kernels!). -/
+theorem checkRet6F2Slice_1_16 : checkRet6F2Slice 1 16 = true := by decide
+theorem checkRet6F2Slice_16_32 : checkRet6F2Slice 16 32 = true := by decide
+theorem checkRet6F2Slice_32_48 : checkRet6F2Slice 32 48 = true := by decide
+theorem checkRet6F2Slice_48_64 : checkRet6F2Slice 48 64 = true := by decide
+
+/-- Exact `F_2^64` realization theorem for EVERY mask `1 ≤ m ≤ 63`:
+    `hUncondRet6 m = 4 * subspaceRank6F2 64 ret6F2Arrangement m`. -/
+theorem h_uncond_ret6_eq_4_times_f2_64 :
+    ∀ m : Nat, 1 ≤ m → m ≤ 63 →
+      hUncondRet6 m = 4 * subspaceRank6F2 64 ret6F2Arrangement m := by
+  intro m hm1 hm63
+  by_cases h1 : m < 16
+  · have h := allBelow_ok 15 _ checkRet6F2Slice_1_16 (m - 1) (by omega)
+    have hidx : 1 + (m - 1) = m := by omega
+    rw [hidx] at h; exact beq_iff_eq.mp h
+  · by_cases h2 : m < 32
+    · have h := allBelow_ok 16 _ checkRet6F2Slice_16_32 (m - 16) (by omega)
+      have hidx : 16 + (m - 16) = m := by omega
+      rw [hidx] at h; exact beq_iff_eq.mp h
+    · by_cases h3 : m < 48
+      · have h := allBelow_ok 16 _ checkRet6F2Slice_32_48 (m - 32) (by omega)
+        have hidx : 32 + (m - 32) = m := by omega
+        rw [hidx] at h; exact beq_iff_eq.mp h
+      · have h := allBelow_ok 16 _ checkRet6F2Slice_48_64 (m - 48) (by omega)
+        have hidx : 48 + (m - 48) = m := by omega
+        rw [hidx] at h; exact beq_iff_eq.mp h
+
 end
 end TriadFrontier.PIRLinearCerts

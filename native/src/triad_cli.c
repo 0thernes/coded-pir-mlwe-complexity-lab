@@ -9,7 +9,7 @@
 
 int main(int argc, char **argv) {
     if (argc < 2) {
-        fprintf(stderr, "Usage: triad_cli <koszul|f11-byz|chen|qgtl|renyi|dyadic256|dyadic512|dyadic1024a|dyadic1024b|twisted|koszul-tensor|strassen|koszul-allm|lovasz-c5|c7-cap>\n");
+        fprintf(stderr, "Usage: triad_cli <koszul|f11-byz|ret6-f2|chen|qgtl|renyi|dyadic256|dyadic512|dyadic1024a|dyadic1024b|dyadic16384a|dyadic16384b|twisted|koszul-tensor|strassen|koszul-allm|lovasz-c5|c7-cap|paley-cap>\n");
         return 2;
     }
     if (strcmp(argv[1], "koszul") == 0) {
@@ -108,6 +108,29 @@ int main(int argc, char **argv) {
     if (strcmp(argv[1], "c7-cap") == 0) {
         bool ok = triad_verify_c7_indep10_and_haemers();
         printf("{\"c7_indep10_and_haemers_rank4_exact\":%s,\"min_haemers_rank_every_field\":4}\n", ok ? "true" : "false");
+        return ok ? 0 : 1;
+    }
+    if (strcmp(argv[1], "dyadic16384a") == 0) {
+        triad_renyi_res_t r = triad_mlkem_dyadic16384a_opt();
+        printf("{\"dist\":\"dyadic16384a\",\"sigma_opt_r2\":%.6f,\"min_r2\":%.12f,\"sigma_opt_rinf\":%.6f,\"min_rinf\":%.12f,\"bits_per_coord_r2\":%.12f,\"loss_1024_bits\":%.6f}\n",
+               r.sigma_opt_r2, r.min_r2, r.sigma_opt_rinf, r.min_rinf, r.bits_per_coord_r2, 2048.0 * r.bits_per_coord_r2);
+        return 0;
+    }
+    if (strcmp(argv[1], "dyadic16384b") == 0) {
+        triad_renyi_res_t r = triad_mlkem_dyadic16384b_opt();
+        printf("{\"dist\":\"dyadic16384b\",\"sigma_opt_r2\":%.6f,\"min_r2\":%.12f,\"sigma_opt_rinf\":%.6f,\"min_rinf\":%.12f,\"bits_per_coord_r2\":%.12f,\"loss_512_bits\":%.6f}\n",
+               r.sigma_opt_r2, r.min_r2, r.sigma_opt_rinf, r.min_rinf, r.bits_per_coord_r2, 1024.0 * r.bits_per_coord_r2);
+        return 0;
+    }
+    if (strcmp(argv[1], "ret6-f2") == 0) {
+        bool ok = triad_verify_ret6_f2_64();
+        printf("{\"ret6_f2_64_all64_subsets_exact\":%s,\"scale_factor\":4}\n", ok ? "true" : "false");
+        return ok ? 0 : 1;
+    }
+    if (strcmp(argv[1], "paley-cap") == 0) {
+        int p = (argc > 2) ? atoi(argv[2]) : 13;
+        bool ok = triad_verify_paley_conference_sos(p);
+        printf("{\"p\":%d,\"paley_zsqrtp_sos_and_selfcomp_exact\":%s,\"theta_sq\":%d}\n", p, ok ? "true" : "false", p);
         return ok ? 0 : 1;
     }
     fprintf(stderr, "Unknown command: %s\n", argv[1]);

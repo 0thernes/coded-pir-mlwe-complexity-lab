@@ -8,22 +8,24 @@ from __future__ import annotations
 import hashlib
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "python"))
 
-from triad_verify.complexity_triad import run_all_triad_checks  # noqa: E402
-from triad_verify.mlwe_tightness import run_all_mlwe_checks  # noqa: E402
-from triad_verify.pir_koszul import (  # noqa: E402
+from triad_verify.complexity_triad import run_all_triad_checks
+from triad_verify.mlwe_tightness import run_all_mlwe_checks
+from triad_verify.pir_koszul import (
     koszul_rate_exact,
     lfsr_rate_exact,
     verify_certified_f11_byzantine,
     verify_koszul_rank_grid,
 )
-from triad_verify.polymatroid_barrier import (  # noqa: E402
+from triad_verify.polymatroid_barrier import (
     verify_4var_i4_and_5obj_f2_realizability,
+    verify_6obj_f2_64_realization,
     verify_h_uncond,
 )
 
@@ -65,6 +67,7 @@ def main() -> int:
     f11 = verify_certified_f11_byzantine(ROOT / "data" / "f11_byz_witness.json")
     poly = verify_h_uncond(ROOT / "data" / "h_uncond_certified.json")
     t1i_lin = verify_4var_i4_and_5obj_f2_realizability(ROOT / "data" / "h_uncond_certified.json")
+    t1j_f2 = verify_6obj_f2_64_realization(ROOT / "data" / "h_uncond_certified.json")
     mlwe = run_all_mlwe_checks()
     triad = run_all_triad_checks()
 
@@ -80,6 +83,7 @@ def main() -> int:
             "f11_byzantine_rate25": f11,
             "polymatroid_h_uncond": poly,
             "t1i_linear_realizability": t1i_lin,
+            "t1j_6obj_f2_64_realization": t1j_f2,
         },
         "pillar_2_cs026": mlwe,
         "pillar_3_triad": triad,
@@ -91,6 +95,7 @@ def main() -> int:
     # 3. Root release & proof manifest (Build Standard B37)
     root_targets = [
         "VERSION",
+        "ERRATA.md",
         "data/f11_byz_witness.json",
         "data/h_uncond_certified.json",
         "data/MANIFEST.sha256",
@@ -108,6 +113,9 @@ def main() -> int:
         "lean/TriadFrontier/StrassenWinograd.lean",
         "lean/TriadFrontier/BrockettDobkin.lean",
         "lean/TriadFrontier/ShannonCapacity.lean",
+        "lean/TriadFrontier/AlgebraicComplexity.lean",
+        "lean/TriadFrontier/PaleyCapacity.lean",
+        "lean/TriadFrontier/AdversarialTests.lean",
         "lean/comparator.json",
         "lean/formalization.yaml",
         "paper/main.tex",
@@ -115,6 +123,7 @@ def main() -> int:
         "paper/figures/fig5_dyadic256_and_koszul_tensor.pdf",
         "paper/figures/fig6_mlkem_dfr_variational_and_allm_koszul.pdf",
         "paper/figures/fig7_bai_security_collapse_and_lovasz_bd.pdf",
+        "paper/figures/fig8_v5_gaussian_paradox_and_paley_family.pdf",
         "results/lean_axioms.txt",
         "results/exact_audit_summary.json",
     ]
@@ -123,22 +132,23 @@ def main() -> int:
     root_hashes = write_manifest(ROOT / "MANIFEST.sha256", root_targets, ROOT)
 
     # 4. Rosette-Wire style deterministic provenance receipt
-    receipt = {
+    artifact_hashes: dict[str, str] = {
+        "pdf": root_hashes["dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf"],
+        "arxiv_tarball": root_hashes["dist/arxiv_submission.tar.gz"],
+        "lean_axioms": root_hashes["results/lean_axioms.txt"],
+        "exact_audit_summary": root_hashes["results/exact_audit_summary.json"],
+        "manifest_sha256": sha256_file(ROOT / "MANIFEST.sha256"),
+    }
+    receipt: dict[str, Any] = {
         "schema": "rosette-wire-receipt/v1-cleanroom",
         "project": "coded-pir-mlwe-complexity-lab",
         "version": version,
-        "generated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_utc": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "author": "Alexander S. Donahue",
         "orcid": "0009-0006-8168-9648",
         "lean_toolchain": (ROOT / "lean" / "lean-toolchain").read_text(encoding="utf-8").strip(),
         "data_hashes": data_hashes,
-        "artifact_hashes": {
-            "pdf": root_hashes["dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf"],
-            "arxiv_tarball": root_hashes["dist/arxiv_submission.tar.gz"],
-            "lean_axioms": root_hashes["results/lean_axioms.txt"],
-            "exact_audit_summary": root_hashes["results/exact_audit_summary.json"],
-            "manifest_sha256": sha256_file(ROOT / "MANIFEST.sha256"),
-        },
+        "artifact_hashes": artifact_hashes,
         "all_checks_ok": bool(poly["violations"] == 0 and mlwe["chen_step9"]["all_even_modes_vanish"]),
     }
     (ROOT / "results" / "rosette_receipt.json").write_text(
@@ -146,8 +156,8 @@ def main() -> int:
     )
 
     print("Generated data/MANIFEST.sha256, MANIFEST.sha256, results/exact_audit_summary.json, results/rosette_receipt.json")
-    print(f"PDF SHA-256:     {receipt['artifact_hashes']['pdf']}")
-    print(f"Tarball SHA-256: {receipt['artifact_hashes']['arxiv_tarball']}")
+    print(f"PDF SHA-256:     {artifact_hashes['pdf']}")
+    print(f"Tarball SHA-256: {artifact_hashes['arxiv_tarball']}")
     return 0 if receipt["all_checks_ok"] else 1
 
 

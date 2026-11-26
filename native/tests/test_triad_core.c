@@ -191,6 +191,59 @@ int main(void) {
     CHECK(triad_verify_lovasz_c5_sos(), "Lovasz 6x6 umbrella Z[sqrt(5)] 3-term SOS & C_5^2 5-set verified");
     CHECK(triad_verify_c7_indep10_and_haemers(), "C_7^2 10-set & 4-clique Haemers rank-4 cover verified");
 
+    /* 15. v5.0.0 14-Bit Pareto Dyadic-16384-A/B (T2i), F_2^64 6-Obj Realization (T1j), & Paley Family (T3l) */
+    int h16a[7] = {0};
+    for (int raw = 0; raw < 16384; raw++) {
+        int v = triad_dyadic16384a_sample_ct((uint16_t)raw);
+        if (v >= -3 && v <= 3) h16a[v + 3]++;
+    }
+    CHECK(h16a[0] == 67 && h16a[1] == 904 && h16a[2] == 3973 && h16a[3] == 6496 &&
+          h16a[4] == 3973 && h16a[5] == 904 && h16a[6] == 67,
+          "Constant-time Dyadic-16384-A 14-bit sampler matches exact weights (67,904,3973,6496,3973,904,67)");
+    int sx2_16a = 0, sx4_16a = 0;
+    for (int i = 0; i < 7; i++) {
+        int x = i - 3;
+        sx2_16a += h16a[i] * x * x;
+        sx4_16a += h16a[i] * x * x * x * x;
+    }
+    CHECK(sx2_16a == 16384 && sx4_16a == 47728,
+          "Dyadic-16384-A exact Var=1 (16384/16384) and mu_4=2983/1024 (47728/16384)");
+    triad_renyi_res_t r16a = triad_mlkem_dyadic16384a_opt();
+    double loss_16a = 2048.0 * r16a.bits_per_coord_r2;
+    CHECK(fabs(r16a.min_r2 - 1.000390198995) < 1e-9 && loss_16a > 1.14 && loss_16a < 1.16,
+          "Dyadic-16384-A min Renyi-2 matches oracle (32.8x drop: 37.84 -> 1.15 bits)");
+
+    int h16b[11] = {0};
+    for (int raw = 0; raw < 16384; raw++) {
+        int v = triad_dyadic16384b_sample_ct((uint16_t)raw);
+        if (v >= -5 && v <= 5) h16b[v + 5]++;
+    }
+    CHECK(h16b[0] == 1 && h16b[1] == 25 && h16b[2] == 267 && h16b[3] == 1409 && h16b[4] == 3824 &&
+          h16b[5] == 5332 && h16b[6] == 3824 && h16b[7] == 1409 && h16b[8] == 267 && h16b[9] == 25 && h16b[10] == 1,
+          "Constant-time Dyadic-16384-B 14-bit sampler matches exact weights");
+    int sx2_16b = 0, sx4_16b = 0;
+    for (int i = 0; i < 11; i++) {
+        int x = i - 5;
+        sx2_16b += h16b[i] * x * x;
+        sx4_16b += h16b[i] * x * x * x * x;
+    }
+    CHECK(sx2_16b == 24576 && sx4_16b == 110040,
+          "Dyadic-16384-B exact Var=3/2 (24576/16384) and mu_4=13755/2048 (110040/16384)");
+    triad_renyi_res_t r16b = triad_mlkem_dyadic16384b_opt();
+    double loss_16b = 1024.0 * r16b.bits_per_coord_r2;
+    CHECK(fabs(r16b.min_r2 - 1.000015905984) < 1e-8 && loss_16b > 0.02 && loss_16b < 0.03,
+          "Dyadic-16384-B min Renyi-2 matches oracle (324.7x drop: 7.63 -> 0.0235 bits)");
+
+    CHECK(triad_verify_ret6_f2_64(),
+          "Single Z_4-cyclic F_2^64 6-subspace arrangement matches ALL 64 subsets of h_uncond / 4 (T1j)");
+    int paleys[6] = {5, 13, 17, 29, 37, 41};
+    for (int i = 0; i < 6; i++) {
+        CHECK(triad_verify_paley_conference_sos(paleys[i]),
+              "Paley graph exact Z[sqrt(p)] 2-block SOS & self-complement anti-automorphism verified (T3l)");
+    }
+    CHECK(!triad_verify_paley_conference_sos(7),
+          "Negative control: p=7 (3 mod 4) rejected by Paley conference verifier");
+
     printf("Native C11 TriadFrontier tests: %d passed, %d failed\n", g_pass, g_fail);
     return g_fail == 0 ? 0 : 1;
 }

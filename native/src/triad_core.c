@@ -912,3 +912,205 @@ bool triad_verify_c7_indep10_and_haemers(void) {
     }
     return true;
 }
+
+/* Constant-time 14-bit sampler for Pareto-optimal Dyadic-16384-A (ML-KEM-768/1024, Var=1, T2i):
+ * w = (67, 904, 3973, 6496, 3973, 904, 67) / 16384 on {-3..3} (6 branchless comparisons). */
+int triad_dyadic16384a_sample_ct(uint16_t raw14) {
+    unsigned int r = (unsigned int)(raw14 & 16383U);
+    int val = -3;
+    val += (int)(r >= 67U);
+    val += (int)(r >= 971U);
+    val += (int)(r >= 4944U);
+    val += (int)(r >= 11440U);
+    val += (int)(r >= 15413U);
+    val += (int)(r >= 16317U);
+    return val;
+}
+
+/* Constant-time 14-bit sampler for sub-1-bit Bai-optimal Dyadic-16384-B (ML-KEM-512, Var=3/2, T2i):
+ * w = (1, 25, 267, 1409, 3824, 5332, 3824, 1409, 267, 25, 1) / 16384 on {-5..5} (10 branchless comparisons). */
+int triad_dyadic16384b_sample_ct(uint16_t raw14) {
+    unsigned int r = (unsigned int)(raw14 & 16383U);
+    int val = -5;
+    val += (int)(r >= 1U);
+    val += (int)(r >= 26U);
+    val += (int)(r >= 293U);
+    val += (int)(r >= 1702U);
+    val += (int)(r >= 5526U);
+    val += (int)(r >= 10858U);
+    val += (int)(r >= 14682U);
+    val += (int)(r >= 16091U);
+    val += (int)(r >= 16358U);
+    val += (int)(r >= 16383U);
+    return val;
+}
+
+triad_renyi_res_t triad_mlkem_dyadic16384a_opt(void) {
+    static const int xs[7] = {-3, -2, -1, 0, 1, 2, 3};
+    static const double probs[7] = {
+        67.0 / 16384.0, 904.0 / 16384.0, 3973.0 / 16384.0, 6496.0 / 16384.0,
+        3973.0 / 16384.0, 904.0 / 16384.0, 67.0 / 16384.0
+    };
+    return opt_renyi_table(16384, xs, probs, 7, 800, 1400);
+}
+
+triad_renyi_res_t triad_mlkem_dyadic16384b_opt(void) {
+    static const int xs[11] = {-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5};
+    static const double probs[11] = {
+        1.0 / 16384.0, 25.0 / 16384.0, 267.0 / 16384.0, 1409.0 / 16384.0, 3824.0 / 16384.0,
+        5332.0 / 16384.0,
+        3824.0 / 16384.0, 1409.0 / 16384.0, 267.0 / 16384.0, 25.0 / 16384.0, 1.0 / 16384.0
+    };
+    return opt_renyi_table(16385, xs, probs, 11, 900, 1600);
+}
+
+/* Exact F_2^64 Gaussian elimination rank on 64-bit sparse bitmask rows (T1j). */
+static int gf2_rank_u64(const uint64_t *rows, int n) {
+    uint64_t basis[64];
+    memset(basis, 0, sizeof(basis));
+    int rk = 0;
+    for (int i = 0; i < n; i++) {
+        uint64_t v = rows[i];
+        while (v != 0ULL) {
+            int bit = 0;
+            uint64_t tmp = v;
+            while ((tmp & 1ULL) == 0ULL) {
+                tmp >>= 1;
+                bit++;
+            }
+            if (basis[bit] == 0ULL) {
+                basis[bit] = v;
+                rk++;
+                break;
+            }
+            v ^= basis[bit];
+        }
+    }
+    return rk;
+}
+
+/* Verify ALL 64 subsets of the single Z_4-cyclic F_2^64 6-subspace arrangement match h_uncond / 4 (T1j). */
+bool triad_verify_ret6_f2_64(void) {
+    uint64_t subs[6][32];
+    int lens[6] = {32, 32, 13, 13, 13, 13};
+    for (int j = 0; j < 32; j++) {
+        subs[0][j] = (1ULL << j);
+        subs[1][j] = (1ULL << (32 + j));
+    }
+    for (int i = 0; i < 4; i++) {
+        int s = 2 + i;
+        for (int j = 0; j < 5; j++) {
+            subs[s][j] = (1ULL << (5 * i + j));
+            subs[s][5 + j] = (1ULL << (32 + 5 * i + j));
+        }
+        subs[s][10] = (1ULL << (20 + 3 * i + 0))
+                    | (1ULL << (32 + (8 + 5 * i) % 20))
+                    | (1ULL << (32 + (17 + 5 * i) % 20))
+                    | (1ULL << (32 + (19 + 5 * i) % 20));
+        subs[s][11] = (1ULL << (20 + 3 * i + 1))
+                    | (1ULL << (32 + (11 + 5 * i) % 20))
+                    | (1ULL << (32 + (12 + 5 * i) % 20))
+                    | (1ULL << (32 + (18 + 5 * i) % 20));
+        subs[s][12] = (1ULL << (20 + 3 * i + 2))
+                    | (1ULL << (32 + (5 + 5 * i) % 20))
+                    | (1ULL << (32 + (11 + 5 * i) % 20))
+                    | (1ULL << (32 + (18 + 5 * i) % 20));
+    }
+    /* Exact h_uncond retrieval-6 values indexed by [w1][w2][popcount(A)] */
+    static const int target[2][2][5] = {
+        { {0, 52, 104, 156, 208}, {128, 160, 192, 224, 256} },
+        { {128, 160, 192, 208, 208}, {256, 256, 256, 256, 256} }
+    };
+    uint64_t buf[128];
+    for (int mask = 0; mask < 64; mask++) {
+        int cnt = 0;
+        for (int idx = 0; idx < 6; idx++) {
+            if ((mask >> idx) & 1) {
+                for (int r = 0; r < lens[idx]; r++) buf[cnt++] = subs[idx][r];
+            }
+        }
+        int rk = gf2_rank_u64(buf, cnt);
+        int w1 = mask & 1;
+        int w2 = (mask >> 1) & 1;
+        int popA = ((mask >> 2) & 1) + ((mask >> 3) & 1) + ((mask >> 4) & 1) + ((mask >> 5) & 1);
+        if (4 * rk != target[w1][w2][popA]) return false;
+    }
+    return true;
+}
+
+/* Verify exact Z[sqrt(p)] 2-block SOS identity R^T R = 2p*sqrt(p)*R & self-complement map for Paley P_p (T3l). */
+bool triad_verify_paley_conference_sos(int p) {
+    if (p < 5 || p > 41 || ((p - 1) % 4) != 0) return false;
+    for (int d = 2; d * d <= p; d++) {
+        if ((p % d) == 0) return false;
+    }
+    int k = (p - 1) / 4;
+    bool qr[42];
+    memset(qr, 0, sizeof(qr));
+    for (int x = 1; x < p; x++) qr[(x * x) % p] = true;
+
+    int A[41][41];
+    for (int i = 0; i < p; i++) {
+        for (int j = 0; j < p; j++) {
+            int diff = (i - j + p) % p;
+            A[i][j] = (i != j && qr[diff]) ? 1 : 0;
+        }
+    }
+    /* 1. Verify symmetric, loopless, 2k-regular, and conference equation A^2 + A - kI = kJ */
+    for (int i = 0; i < p; i++) {
+        int deg = 0;
+        if (A[i][i] != 0) return false;
+        for (int j = 0; j < p; j++) {
+            if (A[i][j] != A[j][i]) return false;
+            deg += A[i][j];
+            int a2 = 0;
+            for (int t = 0; t < p; t++) a2 += A[i][t] * A[t][j];
+            int lhs = a2 + A[i][j] - ((i == j) ? k : 0);
+            if (lhs != k) return false;
+        }
+        if (deg != 2 * k) return false;
+    }
+    /* 2. Exact Z[sqrt(p)] 2-block SOS audit: R = 2p*A + p*(1+sqrt(p))*I - (p+sqrt(p))*J => R^T R = 2p*sqrt(p)*R */
+    long long Ra[41][41], Rb[41][41];
+    for (int i = 0; i < p; i++) {
+        for (int j = 0; j < p; j++) {
+            if (i == j) {
+                Ra[i][j] = 0LL;
+                Rb[i][j] = (long long)(p - 1);
+            } else if (A[i][j] == 1) {
+                Ra[i][j] = (long long)p;
+                Rb[i][j] = -1LL;
+            } else {
+                Ra[i][j] = -(long long)p;
+                Rb[i][j] = -1LL;
+            }
+        }
+    }
+    for (int i = 0; i < p; i++) {
+        for (int j = 0; j < p; j++) {
+            long long acc_a = 0LL, acc_b = 0LL;
+            for (int t = 0; t < p; t++) {
+                acc_a += Ra[t][i] * Ra[t][j] + (long long)p * Rb[t][i] * Rb[t][j];
+                acc_b += Ra[t][i] * Rb[t][j] + Rb[t][i] * Ra[t][j];
+            }
+            long long exp_a = 2LL * (long long)p * (long long)p * Rb[i][j];
+            long long exp_b = 2LL * (long long)p * Ra[i][j];
+            if (acc_a != exp_a || acc_b != exp_b) return false;
+        }
+    }
+    /* 3. Verify explicit self-complement anti-automorphism phi(x) = (g*x) % p giving p-set in P_p^{box 2} */
+    int g = -1;
+    for (int x = 2; x < p; x++) {
+        if (!qr[x]) { g = x; break; }
+    }
+    if (g < 0) return false;
+    for (int x = 0; x < p; x++) {
+        for (int y = x + 1; y < p; y++) {
+            int px = (g * x) % p;
+            int py = (g * y) % p;
+            if (px == py) return false;
+            if (A[x][y] == A[px][py]) return false;
+        }
+    }
+    return true;
+}

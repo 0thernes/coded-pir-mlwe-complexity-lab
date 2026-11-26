@@ -6,7 +6,7 @@ public import Challenge
 public import TriadFrontier
 
 /-!
-# Verified Solutions to All 27 Formalized Theorems (`T1a`–`T3j`)
+# Verified Solutions to All 31 Formalized Theorems (`T1a`–`T3l`, v5.0.0)
 
 Zero-Mathlib Lean 4.35.0 proofs depending strictly on a subset of
 `[propext, Classical.choice, Quot.sound]`, zero `sorry`, zero `native_decide`, zero custom axioms.
@@ -21,7 +21,9 @@ open TriadFrontier.ComplexityTriad
 open TriadFrontier.KoszulTensor
 open TriadFrontier.StrassenWinograd
 open TriadFrontier.BrockettDobkin
+open TriadFrontier.AlgebraicComplexity
 open TriadFrontier.ShannonCapacity
+open TriadFrontier.PaleyCapacity
 
 public theorem t1a_koszul_veronese_rank_identity : T1a_KoszulVeroneseRankIdentity :=
   PIRKoszul.t1a_koszul_veronese_rank_identity
@@ -50,6 +52,9 @@ public theorem t1h_infinite_nonshannon_cone_barrier_and_contraction : T1h_Infini
 public theorem t1i_total_4var_entropic_and_5obj_linear_barrier : T1i_Total4VarEntropicAnd5ObjLinearBarrier :=
   PIRKoszul.t1i_total_4var_entropic_and_5obj_linear_barrier
 
+public theorem t1j_total_6obj_f2_entropic_realizability_barrier : T1j_Total6ObjF2EntropicRealizabilityBarrier :=
+  PIRKoszul.t1j_total_6obj_f2_entropic_realizability_barrier
+
 public theorem t2a_determinant_ideal_secret_independence : T2a_DeterminantIdealSecretIndependence :=
   MLWETightness.t2a_determinant_ideal_secret_independence
 
@@ -73,6 +78,9 @@ public theorem t2g_qgtl_renyi_variational_bridge_and_dyadic512 : T2g_QGTLRenyiVa
 
 public theorem t2h_all_order_renyi_holder_tv_and_dyadic1024 : T2h_AllOrderRenyiHolderTVAndDyadic1024 :=
   MLWETightness.t2h_all_order_renyi_holder_tv_and_dyadic1024
+
+public theorem t2i_bai_engine_dpi_tensorization_and_dyadic16384 : T2i_BaiEngineDPITensorizationAndDyadic16384 :=
+  MLWETightness.t2i_bai_engine_dpi_tensorization_and_dyadic16384
 
 public theorem t3a_algebrization_multilinear_extension_uniqueness : T3a_AlgebrizationMultilinearExtensionUniqueness :=
   ComplexityTriad.t3a_algebrization_multilinear_extension_uniqueness
@@ -104,6 +112,12 @@ public theorem t3i_brockett_dobkin_rectangular_and_quadratic_matmul_bound : T3i_
 public theorem t3j_shannon_capacity_lovasz_c5_and_haemers : T3j_ShannonCapacityLovaszC5AndHaemers :=
   ShannonCapacity.t3j_shannon_capacity_lovasz_c5_and_haemers
 
+public theorem t3k_schwartz_zippel_and_strassen_sandwich : T3k_SchwartzZippelAndStrassenSandwich :=
+  AlgebraicComplexity.t3k_schwartz_zippel_and_strassen_sandwich
+
+public theorem t3l_infinite_paley_conference_shannon_capacity : T3l_InfinitePaleyConferenceShannonCapacity :=
+  PaleyCapacity.t3l_infinite_paley_conference_shannon_capacity
+
 public theorem prove_all_triad_theorems : AllTriadFrontierTheorems :=
   ⟨t1a_koszul_veronese_rank_identity,
    t1b_universal_koszul_domination_over_lfsr,
@@ -114,6 +128,7 @@ public theorem prove_all_triad_theorems : AllTriadFrontierTheorems :=
    t1g_zhang_yeung_reduction_and_mfile_koszul,
    t1h_infinite_nonshannon_cone_barrier_and_contraction,
    t1i_total_4var_entropic_and_5obj_linear_barrier,
+   t1j_total_6obj_f2_entropic_realizability_barrier,
    t2a_determinant_ideal_secret_independence,
    t2b_chen_step9_antiperiodic_dft_cancellation,
    t2c_mlkem_cbd_renyi_cliff,
@@ -122,6 +137,7 @@ public theorem prove_all_triad_theorems : AllTriadFrontierTheorems :=
    t2f_universal_twisted_dft_selection_rule,
    t2g_qgtl_renyi_variational_bridge_and_dyadic512,
    t2h_all_order_renyi_holder_tv_and_dyadic1024,
+   t2i_bai_engine_dpi_tensorization_and_dyadic16384,
    t3a_algebrization_multilinear_extension_uniqueness,
    t3b_lwe_to_natural_proofs_obstruction,
    t3c_katz_trevisan_byzantine_pir_ldc_distance,
@@ -131,6 +147,8 @@ public theorem prove_all_triad_theorems : AllTriadFrontierTheorems :=
    t3g_all_m_koszul_matmul_lower_bound,
    t3h_strassen_winograd_exact_rank_seven,
    t3i_brockett_dobkin_rectangular_and_quadratic_matmul_bound,
-   t3j_shannon_capacity_lovasz_c5_and_haemers⟩
+   t3j_shannon_capacity_lovasz_c5_and_haemers,
+   t3k_schwartz_zippel_and_strassen_sandwich,
+   t3l_infinite_paley_conference_shannon_capacity⟩
 
 end TriadFrontier.Solution

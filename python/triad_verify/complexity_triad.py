@@ -52,8 +52,7 @@ def verify_katz_trevisan_ldc_distance() -> dict:
             if c0 == 0 and c1 == 0:
                 continue
             wt = sum(1 for a in alphas if (c0 + c1 * a) % p != 0)
-            if wt < min_dist:
-                min_dist = wt
+            min_dist = min(min_dist, wt)
     assert min_dist == 5 and min_dist >= 2 * 1 + 1
     return {"code": "GRS_2(F_11, N=6)", "min_hamming_distance": min_dist, "byzantine_bound_2B_plus_1": 3}
 
@@ -249,7 +248,6 @@ def verify_brockett_dobkin_and_lovasz_shannon_capacity() -> dict:
     import math
 
     # 1. Brockett-Dobkin vs Koszul ceiling check for m = 2..12
-    bd_beats_koszul = {m: (2 * m * m - m, m * m + m) for m in range(2, 13)}
     assert all(2 * m * m - m > m * m + m for m in range(3, 13))
 
     # 2. Exact Z[sqrt(5)] 3-term SOS audit of 80 * M_6
@@ -322,6 +320,64 @@ def verify_brockett_dobkin_and_lovasz_shannon_capacity() -> dict:
     }
 
 
+def verify_schwartz_zippel_and_paley_family() -> dict:
+    """Independent exact verification of Theorems T3k & T3l:
+    1. Multivariate Schwartz-Zippel root bound over finite fields (F_2, F_5, F_11).
+    2. Exact two-sided Strassen-Brockett-Dobkin sandwich 2*4^k - 2^k <= R(<2^k,2^k,2^k>) <= 7^k.
+    3. Infinite-family zero-reals Z[sqrt(p)] 2-block SOS identity R^T R = 2p*sqrt(p)*R and
+       self-complement anti-automorphism for Paley conference graphs P_5, P_13, P_17, P_29, P_37, P_41."""
+    # 1. Schwartz-Zippel over F_5 for nonzero degree-3 polynomial x0*x1*x2 + x0 + 2
+    p_sz = 5
+    roots = sum(
+        1 for x0 in range(p_sz) for x1 in range(p_sz) for x2 in range(p_sz)
+        if (x0 * x1 * x2 + x0 + 2) % p_sz == 0
+    )
+    assert roots <= 3 * (p_sz ** 2) and roots < p_sz ** 3
+
+    # 2. Strassen-Brockett-Dobkin sandwich k = 0..8
+    sandwich = []
+    for k in range(9):
+        lb = 2 * (4 ** k) - (2 ** k)
+        ub = 7 ** k
+        assert lb <= ub
+        sandwich.append({"k": k, "m": 2 ** k, "bd_lower": lb, "strassen_upper": ub})
+
+    # 3. Exact Z[sqrt(p)] 2-block SOS & self-complement anti-automorphism for Paley P_p
+    paley_primes = [5, 13, 17, 29, 37, 41]
+    verified_paleys = []
+    for p in paley_primes:
+        k_conf = (p - 1) // 4
+        qrs = {(x * x) % p for x in range(1, p)}
+        A = [[1 if (i != j and ((i - j) % p) in qrs) else 0 for j in range(p)] for i in range(p)]
+        for i in range(p):
+            assert A[i][i] == 0 and sum(A[i]) == 2 * k_conf
+            for j in range(p):
+                assert A[i][j] == A[j][i]
+                a2 = sum(A[i][t] * A[t][j] for t in range(p))
+                assert a2 + A[i][j] - (k_conf if i == j else 0) == k_conf
+        R = [
+            [(0, p - 1) if i == j else ((p, -1) if A[i][j] == 1 else (-p, -1)) for j in range(p)]
+            for i in range(p)
+        ]
+        for i in range(p):
+            for j in range(p):
+                acc_a = sum(R[t][i][0] * R[t][j][0] + p * R[t][i][1] * R[t][j][1] for t in range(p))
+                acc_b = sum(R[t][i][0] * R[t][j][1] + R[t][i][1] * R[t][j][0] for t in range(p))
+                assert acc_a == 2 * p * p * R[i][j][1] and acc_b == 2 * p * R[i][j][0]
+        g = next(x for x in range(2, p) if x not in qrs)
+        for x in range(p):
+            for y in range(x + 1, p):
+                assert A[x][y] != A[(g * x) % p][(g * y) % p]
+        verified_paleys.append({"p": p, "k": k_conf, "non_residue_g": g, "theta_exact": f"sqrt({p})"})
+
+    return {
+        "schwartz_zippel_f5_deg3_roots": roots,
+        "schwartz_zippel_bound": 3 * (p_sz ** 2),
+        "strassen_bd_sandwich_k0_to_8": sandwich,
+        "paley_conference_sos_verified": verified_paleys,
+    }
+
+
 def run_all_triad_checks() -> dict:
     return {
         "algebrization_mle": verify_algebrization_mle(),
@@ -330,6 +386,7 @@ def run_all_triad_checks() -> dict:
         "koszul_flattening_tensor_rank": verify_koszul_flattening_tensor_rank(),
         "strassen_and_all_m_koszul": verify_strassen_and_all_m_koszul(),
         "brockett_dobkin_and_lovasz_shannon_capacity": verify_brockett_dobkin_and_lovasz_shannon_capacity(),
+        "schwartz_zippel_and_paley_family": verify_schwartz_zippel_and_paley_family(),
     }
 
 

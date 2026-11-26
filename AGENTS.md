@@ -24,8 +24,10 @@ make -C native clean test
 # Run Eshkol v1.3.6 dual-number AD modules
 node eshkol/run_eshkol_ad.mjs
 
-# Run full pytest suite (claims, differential, property, negative, mutation, version consistency)
+# Run full pytest suite (claims, differential, property, negative, mutation, version consistency) & strict lint/type gates
 PYTHONPATH=python pytest tests/test_all.py -v
+ruff check python tests scripts examples
+mypy python/triad_verify scripts --ignore-missing-imports
 
 # Audit README axiom parity & live citations
 python scripts/check_readme_axioms.py
@@ -37,9 +39,9 @@ python scripts/check_citations.py
 
 ## Key Architectural Paths
 
-- `lean/TriadFrontier/` — Zero-Mathlib Lean 4.35.0 proof modules (`AlgebraCore`, `PIRCertificates`, `PIRLinearCerts`, `PIRKoszul`, `MLWETightness`, `KoszulTensor`, `StrassenWinograd`, `BrockettDobkin`, `ShannonCapacity`, `ComplexityTriad`, `NonVacuity`; 27 theorems `T1a`–`T3j`).
-- `native/` — C11 implementation, CLI, and 65-test + 512-case fuzz harness.
-- `eshkol/` — Forward-mode dual-number AD modules (`.esk`) and Node.js runner.
-- `python/triad_verify/` — Exact finite-field rank, 12-variable polymatroid + $I_4$/5-obj $\mathbb{F}_2$ linear realizability, 60-digit ML-KEM `Dyadic-256/512/1024-A/B` & Bai et al. (2018) optimizer + exact FIPS 203 DFR convolution, Koszul/Strassen/Brockett–Dobkin/Lovász checks, and 7-figure vector PDF generation.
-- `paper/main.tex` & `paper/refs.bib` — AMS-LaTeX manuscript (`v4.0.0`, 33 live HTTP-200 citations).
-- `docs/` — Architecture, ADRs, threat model, statement fidelity, 10-pass review, adversarial red-team review, and interactive GitHub Pages Blueprint (`docs/site/`).
+- `lean/TriadFrontier/` — Zero-Mathlib Lean 4.35.0 proof modules (`AlgebraCore`, `PIRCertificates`, `PIRLinearCerts`, `PIRKoszul`, `MLWETightness`, `KoszulTensor`, `StrassenWinograd`, `BrockettDobkin`, `ShannonCapacity`, `AlgebraicComplexity`, `PaleyCapacity`, `ComplexityTriad`, `NonVacuity`, `AdversarialTests`; 31 theorems `T1a`–`T3l` + 7 boundary refutations, 34 audited declarations).
+- `native/` — C11 implementation, CLI (`dyadic16384a/b`, `ret6-f2`, `paley-cap`, etc.), and 79-test + 512-case fuzz harness.
+- `eshkol/` — Forward-mode dual-number AD modules (`.esk`) and Node.js runner (`Dyadic-256` through `Dyadic-16384-A/B`).
+- `python/triad_verify/` — Exact finite-field rank, 12-variable polymatroid + $I_4$/5-obj/6-obj $\mathbb{F}_2^{64}$ linear realizability, 60-digit ML-KEM `Dyadic-256..16384-A/B` & Bai et al. (2018) optimizer + exact FIPS 203 DFR convolution (Gaussian DFR Paradox), Koszul/Strassen/Brockett–Dobkin/Schwartz–Zippel/Lovász/Paley checks, and 8-figure vector PDF generation (`0 ruff`, `0 mypy`).
+- `paper/main.tex` & `paper/refs.bib` — AMS-LaTeX manuscript (`v5.0.0`, 8 figures, 36 live HTTP-200 citations).
+- `docs/` & `ERRATA.md` — Architecture, ADRs, threat model, statement fidelity, 10-pass review, adversarial red-team review, errata ledger, and interactive GitHub Pages Blueprint (`docs/site/`).

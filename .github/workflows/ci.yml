@@ -28,11 +28,14 @@ jobs:
           make -C native clean all test
           ./native/build/triad_cli koszul 3 2 3
           ./native/build/triad_cli f11-byz
+          ./native/build/triad_cli ret6-f2
           ./native/build/triad_cli renyi 2
           ./native/build/triad_cli dyadic256
           ./native/build/triad_cli dyadic512
           ./native/build/triad_cli dyadic1024a
           ./native/build/triad_cli dyadic1024b
+          ./native/build/triad_cli dyadic16384a
+          ./native/build/triad_cli dyadic16384b
           ./native/build/triad_cli chen 7 3
           ./native/build/triad_cli twisted 4 5 1
           ./native/build/triad_cli qgtl 2 1.023 0.25
@@ -42,6 +45,8 @@ jobs:
           ./native/build/triad_cli koszul-allm 4
           ./native/build/triad_cli lovasz-c5
           ./native/build/triad_cli c7-cap
+          ./native/build/triad_cli paley-cap 13
+          ./native/build/triad_cli paley-cap 17
       - name: Run AddressSanitizer, UBSan & standalone libFuzzer smoke (Ubuntu)
         if: runner.os == 'Linux'
         shell: bash
@@ -87,8 +92,8 @@ jobs:
           PYTHONPATH=python pytest tests/test_all.py -v
           python scripts/check_readme_axioms.py
           python scripts/check_citations.py
-          ruff check python tests scripts examples || true
-          mypy python/triad_verify scripts --ignore-missing-imports || true
+          ruff check python tests scripts examples
+          mypy python/triad_verify scripts --ignore-missing-imports
 
   lean4-six-kernels:
     name: Zero-Mathlib Lean 4.35.0 Six-Kernel & Palomar Comparator Audit
@@ -113,7 +118,7 @@ jobs:
           lake env leanchecker PalomarSolution
           lake env leanchecker-paranoid Solution
           lake env leanchecker-paranoid PalomarSolution
-          lake env leanexport Solution -- TriadFrontier.Solution.prove_all_triad_theorems TriadFrontier.NonVacuity.nonvac_all_hypotheses > /tmp/Solution.export
+          lake env leanexport Solution -- TriadFrontier.Solution.prove_all_triad_theorems TriadFrontier.NonVacuity.nonvac_all_hypotheses TriadFrontier.AdversarialTests.adv_all_boundary_refutations > /tmp/Solution.export
           lake env con-leche --verified /tmp/Solution.export
           lake env con-ron --verified /tmp/Solution.export
           cat << 'EOF' > /tmp/nanoda.json
@@ -127,6 +132,16 @@ jobs:
           }
           EOF
           lake env nanoda_bin /tmp/nanoda.json
+          cat << 'EOF' > /tmp/NegativeTamperTest.lean
+          import TriadFrontier.ComplexityTriad
+          open TriadFrontier.ComplexityTriad
+          theorem tampered_false_compress1 : mlkemCompress1 832 = 0 := by decide
+          EOF
+          if lake env lean /tmp/NegativeTamperTest.lean; then
+            echo "ERROR: Lean kernel failed to reject tampered false theorem!" >&2
+            exit 1
+          fi
+          echo "OK: Live negative kernel-rejection gate confirmed false theorem rejected."
           lake comparator --config comparator.json --paranoid
 
   white-paper-and-provenance:

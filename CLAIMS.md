@@ -1,15 +1,15 @@
 <!-- SPDX-License-Identifier: CC-BY-4.0 -->
 # Claims Ledger & Falsification Protocol (`CLAIMS.md`)
 
-Every mathematical and computational claim in `coded-pir-mlwe-complexity-lab` (`v4.0.0`) is assigned a unique ID, an explicit verification tier, exact artifact paths, and a concrete falsification test ("what would prove us wrong").
+Every mathematical and computational claim in `coded-pir-mlwe-complexity-lab` (`v5.0.0`) is assigned a unique ID, an explicit verification tier, exact artifact paths, and a concrete falsification test ("what would prove us wrong").
 
 ## Verification Tiers
 
-- **Tier 1 (Machine-Checked Formal Proof):** Zero-Mathlib Lean 4.35.0 proof depending strictly on a subset of `[propext, Classical.choice, Quot.sound]`, zero `sorry`, zero `native_decide`, independently replayed across all six Lean 4.35.0 kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda` 3,884 decls, `con-leche --verified` 3,589 decls, `con-ron --verified` 3,589 decls).
-- **Tier 2 (Exact / Arbitrary-Precision Computation):** Deterministic integer, rational, finite-field, $\mathbb{Z}[\sqrt{5}]$, or 60-digit `Decimal` computation cross-checked differentially across Python, C11, and Eshkol v1.3.6 dual-number AD.
+- **Tier 1 (Machine-Checked Formal Proof):** Zero-Mathlib Lean 4.35.0 proof depending strictly on a subset of `[propext, Classical.choice, Quot.sound]`, zero `sorry`, zero `native_decide`, independently replayed across all six Lean 4.35.0 kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, silent 0-error `nanoda`, `con-leche --verified` 4,300 decls, `con-ron --verified` 4,300 decls) plus 7 machine-checked negative refutations (`AdversarialTests.lean`) and a live negative kernel-rejection gate.
+- **Tier 2 (Exact / Arbitrary-Precision Computation):** Deterministic integer, rational, finite-field, $\mathbb{F}_2^{64}$, $\mathbb{Z}[\sqrt{p}]$, or 60-digit `Decimal` computation cross-checked differentially across Python (strict `0 ruff / 0 mypy`), C11 (`79/79` tests), and Eshkol v1.3.6 dual-number AD.
 - **Open (Explicitly Unproved):** Conjectures and open frontiers intentionally separated from claimed results.
 
-## Verified Claims (`C1`–`C27`)
+## Verified Claims (`C1`–`C31`)
 
 | ID | Pillar | Statement Summary | Tier | Formal / Code Artifacts | Falsifying Condition ("What Would Prove Us Wrong") |
 |---|---|---|---|---|---|
@@ -40,16 +40,20 @@ Every mathematical and computational claim in `coded-pir-mlwe-complexity-lab` (`
 | **C25** | `CS-026 / CM-048` | **All-Order Rényi-$(m+1)$ Hölder Floor, Exact TV–$\chi^2$ Bridge ($4\mathrm{TV}^2 \le R_2-1$), & 10-Bit Constant-Time `Dyadic-1024-A/B` (`T2h`):** Pure-`Nat` all-order finite-support floor; pure-integer TV–$\chi^2$ bridge; 10-bit `Dyadic-1024-A` (`(4,57,248,406,248,57,4)/1024`, $\mathrm{Var}=1, \mu_4=371/128, \det(g)=243/512$, collapsing ML-KEM-1024 Bai et al. 2018 overhead $9.19\times$ from $67.14 \to 7.31$ bits and $R_2$ loss $25.1\times$ to $1.509$ bits) & `Dyadic-1024-B` ($\mathrm{Var}=3/2$, ML-KEM-512 Bai overhead $24.77 \to 5.13$ bits, $4.83\times$), all passing exact FIPS 203 DFRs | Tier 1 + Tier 2 | `lean/TriadFrontier/MLWETightness.lean` (`t2h`), `native/src/triad_core.c`, `eshkol/renyi_cbd_ad.esk`, `python/triad_verify/mlwe_tightness.py` | Any integer $m \ge 1$ violating the finite-support Rényi-$(m+1)$ Hölder floor, any distribution violating $4\mathrm{TV}^2 \le R_2 - 1$, any 10-bit input deviating from `Dyadic-1024-A/B`, or any FIPS 203 DFR exceeding target |
 | **C26** | `CS-004 / CS-012` | **Field-Universal Brockett–Dobkin (1978) Rectangular & Quadratic MatMul Bound (`T3i`):** Over EVERY `SimpleField F` (incl. $\mathbb{F}_2$), $\mathrm{rank}_F(\langle m,k,p\rangle) \ge \max(mk+mp-m, mk+kp-k, mp+kp-p)$, quadratic $\mathrm{rank}_F(\langle m,m,m\rangle) \ge 2m^2-m$ (strictly beating Koszul ceiling $m^2+m$ for all $m \ge 3$!), and Strassen–Winograd lift $\mathrm{rank}_F(\langle m,2,p\rangle) \ge mp+3$ ($\forall m,p \ge 2$) | Tier 1 + Tier 2 | `lean/TriadFrontier/BrockettDobkin.lean` (`t3i`), `python/triad_verify/complexity_triad.py` | Any field $F$ and integers $m,k,p \ge 1$ admitting a bilinear algorithm for $\langle m,k,p\rangle$ of rank $< \max(mk+mp-m, mk+kp-k, mp+kp-p)$ |
 | **C27** | `CS-CMP-012 ↔ CS-053/004` | **Zero-Error Shannon Capacity (`T3j`, Zero Reals!):** Field-universal Haemers (1979) rank bound $|S| \le r^t$ ($\forall F$), **exact Lovász (1979) Pentagon Theorem $\Theta(C_5)=\sqrt{5}$** ($k^2 \le 5^t$ via exact 3-term $\mathbb{Z}[\sqrt{5}]$ SOS of $80 M_6$ + $\alpha(C_5^{\boxtimes 2m})=5^m$), and **exact $C_7$ minimum Haemers rank $= 4$** over EVERY field $F$ ($\alpha(C_7^{\boxtimes 2m}) \ge 10^m$ ruling out rank $\le 3$, matched by 4-clique cover) | Tier 1 + Tier 2 | `lean/TriadFrontier/ShannonCapacity.lean` (`t3j`), `native/src/triad_core.c`, `python/triad_verify/complexity_triad.py` | Any independent set in $C_5^{\boxtimes t}$ with $k^2 > 5^t$, any entry of the $6\times 6$ $\mathbb{Z}[\sqrt{5}]$ SOS failing, any edge inside the 10-set of $C_7^{\boxtimes 2}$, or any rank-$\le 3$ fitting matrix for $C_7$ over any field $F$ |
+| **C28** | `CS-053` | **Total 6-Object Retrieval $\mathbb{F}_2^{64}$ Subspace Realization (`T1j`):** Full 6-object retrieval marginal $(W_1, W_2, A_1, A_2, A_3, A_4)$ of `h_uncond` (all $2^6 = 64$ subsets) is realized **EXACTLY** by six explicit linear subspaces of $\mathbb{F}_2^{64}$ (`4 * rank` scaling), defeating every 6-variable $\mathbb{F}_2$-linear rank inequality (including all Dougherty–Freiling–Zeger 6-var inequalities) and proving any converse tightening $C(2,4,2,2) < 8/13$ must couple storage $Y_n$ with retrieval ($\ge 7$-variable inequalities) | Tier 1 + Tier 2 | `lean/TriadFrontier/PIRLinearCerts.lean`, `lean/TriadFrontier/PIRKoszul.lean` (`t1j`), `native/src/triad_core.c` (`ret6-f2`), `python/triad_verify/polymatroid_barrier.py` | Any subset $S \subseteq \{W_1,W_2,A_1,A_2,A_3,A_4\}$ where $4\,\mathrm{rank}_{\mathbb{F}_2}(\sum_{i\in S} V_i) \neq h_{\mathrm{uncond}}(S)$ |
+| **C29** | `CS-026 / CM-048` | **Formal Bai et al. (2018) Rényi Engine, Gaussian DFR Paradox, & 14-Bit Constant-Time `Dyadic-16384-A/B` (`T2i`):** Discrete DPI for $R_2/R_\infty$, multiplicative tensorization $R_2(P^{\otimes m}\|Q^{\otimes m}) = R_2^m$, sub-additive tail transfer; discovery that true unit-variance discrete Gaussian $D_{\sigma\approx 1.0000001}$ gives ML-KEM-1024 DFR $= 2^{-173.42}$ (FAILS NIST $< 2^{-174}$); 14-bit CT **`Dyadic-16384-A`** collapses ML-KEM-1024 Bai overhead $11.17\times$ ($67.14 \to 6.013$ bits, DFR $2^{-174.03}$ PASS) & **`Dyadic-16384-B`** collapses ML-KEM-512 Bai overhead $41.9\times$ to **sub-1-bit `0.5916` bits** ($R_2$ loss $324.7\times$ to $0.0235$ bits, DFR $2^{-139.31}$ PASS) | Tier 1 + Tier 2 | `lean/TriadFrontier/MLWETightness.lean` (`t2i`), `native/src/triad_core.c`, `eshkol/renyi_cbd_ad.esk`, `python/triad_verify/mlwe_tightness.py` | Any discrete channel violating $R_2$/$R_\infty$ DPI, any 14-bit input $u \in [0,16383]$ deviating from `Dyadic-16384-A/B`, or any FIPS 203 DFR exceeding NIST threshold |
+| **C30** | `CS-004 / CS-012` | **Universal Constructive Schwartz–Zippel Lemma & Exact Power-of-2 Strassen Sandwich (`T3k`):** Over EVERY `SimpleField F` (incl. $\mathbb{F}_2$), $|Z(P) \cap S^n| \le d |S|^{n-1}$ for every nonzero $n$-variate polynomial of total degree $\le d$ on finite grid $S^n$; and recursive Kronecker submultiplicativity proving $2\cdot 4^k - 2^k \le \mathrm{rank}_F(\langle 2^k,2^k,2^k\rangle) \le 7^k$ for EVERY $k \ge 0$ and EVERY `SimpleField F` ($\implies \omega \le \log_2 7$) | Tier 1 + Tier 2 | `lean/TriadFrontier/AlgebraicComplexity.lean` (`t3k`), `python/triad_verify/complexity_triad.py` | Any nonzero multivariate polynomial over any field exceeding $d|S|^{n-1}$ roots on $S^n$, or any $k \ge 0$ violating $2\cdot 4^k - 2^k \le \mathrm{rank}_F(\langle 2^k,2^k,2^k\rangle) \le 7^k$ |
+| **C31** | `CS-CMP-012 ↔ CS-053/004` | **Infinite Paley Conference Shannon Capacity Family $\Theta(P_p) = \sqrt{p}$ (`T3l`, Zero Reals!):** Universal 2-block $\mathbb{Z}[\sqrt{p}]$ conference-matrix SOS theorem proving $k^2 \le p^t$ AND $\alpha(P_p^{\boxtimes 2m}) = p^m$ for EVERY prime $p \equiv 1 \pmod 4$ with symmetric Paley conference matrix & self-complement automorphism, concretely instantiated in Lean for $P_5, P_{13}, P_{17}$ and verified in C11/Python through $P_{41}$ (plus negative $p=7$ control) | Tier 1 + Tier 2 | `lean/TriadFrontier/PaleyCapacity.lean` (`t3l`), `native/src/triad_core.c` (`paley-cap`), `python/triad_verify/complexity_triad.py` | Any prime $p \equiv 1 \pmod 4$ whose Paley conference SOS fails $R^\top R = 2p\sqrt{p} R$, or any independent set in $P_p^{\boxtimes t}$ with $k^2 > p^t$ |
 
 ## Explicitly Open Problems (`O1`–`O6` — NOT Claimed Solved)
 
 | ID | Frontier | Open Statement |
 |---|---|---|
 | **O1** | `CS-001 / CS-010` | $\mathrm{P} \neq \mathrm{NP}$ and super-linear explicit Boolean circuit lower bounds remain completely open. |
-| **O2** | `CS-004 / CS-012` | Matrix multiplication exponent $\omega = 2$ and Valiant's algebraic separation $\mathrm{VP} \neq \mathrm{VNP}$ remain completely open. |
-| **O3** | `CS-053` | Closing $C(2,4,2,2) \in [3/5, 8/13]$ via genuinely $\ge 6$-variable (or non-linear) non-Shannon inequalities or a non-linear PIR scheme remains open (ALL 4-variable linear inequalities and ALL 5-object retrieval $\mathbb{F}_2$-linear inequalities are defeated by `h_uncond` in `T1i`). |
+| **O2** | `CS-004 / CS-012` | Matrix multiplication exponent $\omega = 2$ and Valiant's algebraic separation $\mathrm{VP} \neq \mathrm{VNP}$ remain completely open (`T3k` establishes the exact field-universal sandwich $2\cdot 4^k - 2^k \le \mathrm{rank}_F(\langle 2^k,2^k,2^k\rangle) \le 7^k$). |
+| **O3** | `CS-053` | Closing $C(2,4,2,2) \in [3/5, 8/13]$ via genuinely $\ge 7$-variable storage-coupled non-Shannon inequalities or a non-linear PIR scheme remains open (ALL 4-variable linear inequalities, ALL 5-object retrieval $\mathbb{F}_2$-linear inequalities, AND the entire 6-object retrieval marginal $(W_1,W_2,A_1..A_4)$ are exactly realized in $\mathbb{F}_2^{64}$ by `T1i`/`T1j`!). |
 | **O4** | `CS-053` | General $M \ge 3$ non-LFSR coded-colluding capacity above Sun–Zhang when $E \ge KT$ and deterministic arbitrary-$T \ge 4$ zero-error schemes remain open. |
-| **O5** | `CS-CMP-012` | Exact zero-error Shannon capacity $\Theta(C_7) \in [\sqrt{10}, \vartheta(C_7) \approx 3.317667]$ remains completely open (`T3j` settles $\Theta(C_5)=\sqrt{5}$ and exact $C_7$ minimum Haemers rank $=4$). |
+| **O5** | `CS-CMP-012` | Exact zero-error Shannon capacity $\Theta(C_7) \in [\sqrt{10}, \vartheta(C_7) \approx 3.317667]$ remains completely open (`T3j`/`T3l` settle $\Theta(C_5)=\sqrt{5}$, the entire Paley family $\Theta(P_p)=\sqrt{p}$ for $p \equiv 1 \pmod 4$, and exact $C_7$ minimum Haemers rank $=4$). |
 | **O6** | `CS-026 / QC-042` | Worst-case quantum hardness lower bounds for MLWE/RLWE remain open cryptographic assumptions. |
 
 ## What Would Prove Us Wrong (Falsification Protocol)
@@ -57,7 +61,7 @@ Every mathematical and computational claim in `coded-pir-mlwe-complexity-lab` (`
 Any independent reviewer can attempt to refute every claim in one command sequence from a clean clone:
 
 ```bash
-# 1. Attempt to break Lean 4 proofs, find hidden axioms, or trigger kernel mismatch (27 theorems)
+# 1. Attempt to break Lean 4 proofs, find hidden axioms, or trigger kernel mismatch (31 theorems + 7 refutations)
 cd lean
 lake build
 lake env lean VerifyAxioms.lean
@@ -65,14 +69,16 @@ lake env leanchecker Solution
 lake env leanchecker-paranoid Solution
 lake comparator --config comparator.json --paranoid   # Ubuntu/Linux with bubblewrap
 
-# 2. Attempt to falsify C11 arithmetic, Dyadic-256/512/1024-A/B CT samplers, Lovasz SOS, C_7 cap, or 512+ fuzz
+# 2. Attempt to falsify C11 arithmetic, Dyadic-256..16384-A/B CT samplers, ret6-f2, Paley SOS, or 512+ fuzz
 cd ..
 make -C native clean test
 make -C native sanitizers   # Ubuntu/Linux ASan + UBSan
 
-# 3. Attempt to falsify differential agreement across Python (60-digit), Eshkol AD, C11, and 12/12 mutation suite
+# 3. Attempt to falsify differential agreement across Python (60-digit), Eshkol AD, C11, and 14/14 mutation suite
 node eshkol/run_eshkol_ad.mjs
 PYTHONPATH=python pytest tests/test_all.py -v
+ruff check python tests scripts examples
+mypy python/triad_verify scripts --ignore-missing-imports
 python scripts/check_readme_axioms.py
 python scripts/check_citations.py --online
 ```

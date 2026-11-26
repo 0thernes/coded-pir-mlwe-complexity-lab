@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Interactive 27-Theorem Proof Blueprint DAG — Triad Frontier Lab v4.0.0</title>
+<title>Interactive 31-Theorem Proof Blueprint DAG — Triad Frontier Lab v5.0.0</title>
 <style>
   :root {
     --bg: #0b1120; --panel: #111827; --panel2: #1e293b; --border: #334155;
@@ -47,7 +47,7 @@
 </head>
 <body>
 <header>
-  <h1>Interactive Lean 4.35.0 Proof Blueprint DAG — 27 Theorems (T1a–T3j)</h1>
+  <h1>Interactive Lean 4.35.0 Proof Blueprint DAG — 31 Theorems (T1a–T3l) + 7 Boundary Refutations</h1>
   <div>
     <a href="index.html">&larr; Back to Triad Explorer</a> &nbsp;|&nbsp;
     <a href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab/tree/main/lean">Browse Lean Source</a>
@@ -56,14 +56,14 @@
 <div class="layout">
   <div class="canvas-wrap">
     <div class="legend">
-      <span><span class="dot" style="background:#38bdf8"></span>Pillar I: CS-053 PIR (T1a–T1i)</span>
-      <span><span class="dot" style="background:#f472b6"></span>Pillar II: CS-026 MLWE / QC-042 / CM-048 (T2a–T2h)</span>
-      <span><span class="dot" style="background:#a78bfa"></span>Pillar III: Triad, Brockett–Dobkin &amp; Lovász Capacity (T3a–T3j)</span>
-      <span><span class="dot" style="background:#34d399"></span>Master &amp; NonVacuity Audit</span>
+      <span><span class="dot" style="background:#38bdf8"></span>Pillar I: CS-053 PIR (T1a–T1j)</span>
+      <span><span class="dot" style="background:#f472b6"></span>Pillar II: CS-026 MLWE / QC-042 / CM-048 (T2a–T2i)</span>
+      <span><span class="dot" style="background:#a78bfa"></span>Pillar III: Triad, Schwartz–Zippel &amp; Infinite Paley Capacity (T3a–T3l)</span>
+      <span><span class="dot" style="background:#34d399"></span>Master, NonVacuity &amp; Adversarial Audit</span>
       <span><span class="dot" style="background:#fbbf24"></span>Explicitly Open Frontiers (O1–O6)</span>
       <span><em>Click any node to inspect Lean declaration, axioms, and cross-checks.</em></span>
     </div>
-    <svg id="dag" viewBox="0 0 980 880" role="img" aria-label="Dependency graph of 27 machine-checked Lean 4 theorems">
+    <svg id="dag" viewBox="0 0 980 1040" role="img" aria-label="Dependency graph of 31 machine-checked Lean 4 theorems and 7 adversarial boundary refutations">
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b"/>
@@ -93,6 +93,7 @@ const NODES = [
   {id:"T1g", x:30, y:480, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1g · ZY98 & M≥3 Koszul", decl:"TriadFrontier.Solution.t1g_zhang_yeung_reduction_and_mfile_koszul", file:"lean/TriadFrontier/PIRKoszul.lean", axioms:"[propext, Quot.sound]", desc:"Exact algebraic identity ZY98(A,B;C,D) = Ing(C,D;A,B) + I(A;C|D) + I(A;D|C) + I(C;D|A) proving h_uncond defeats Zhang–Yeung (1998) too; symmetric M>=3 Koszul breaks E>=KT.", checks:"Lean 6 kernels · Python 200k 4-tuple check"},
   {id:"T1h", x:30, y:555, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1h · Matúš ∞-Cone & ρ^j", decl:"TriadFrontier.Solution.t1h_infinite_nonshannon_cone_barrier_and_contraction", file:"lean/TriadFrontier/PIRKoszul.lean", axioms:"[propext, Quot.sound]", desc:"Universal 7-parameter non-Shannon cone & infinite Matúš (2007) family M_s (∀s∈ℕ, equals ZY98 at s=1): h_uncond defeats ALL infinitely many Matúš inequalities! Plus all-M contraction ρ_KV^j < ρ_LFSR^j.", checks:"Lean 6 kernels · Python 14,850 Matúš singleton checks"},
   {id:"T1i", x:30, y:630, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1i · Total 4-Var I_4 & 5-F₂", decl:"TriadFrontier.Solution.t1i_total_4var_entropic_and_5obj_linear_barrier", file:"lean/TriadFrontier/PIRLinearCerts.lean", axioms:"[propext, Quot.sound]", desc:"Kernel-verified 23 F_2/F_3 linear rays decomposing all 24 canonical 4-marginals (all 510 four-marginals of h_uncond) at denom 3 + all 6 five-object retrieval marginals decomposed into explicit F_2-linear subspace arrangements!", checks:"Lean 6 kernels (7,650+186 identities) · Python polymatroid_barrier.py"},
+  {id:"T1j", x:30, y:705, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1j · Exact 6-Obj F₂⁶⁴", decl:"TriadFrontier.Solution.t1j_total_6obj_f2_entropic_realizability_barrier", file:"lean/TriadFrontier/PIRLinearCerts.lean", axioms:"[propext, Quot.sound]", desc:"Entire 6-object retrieval marginal (W_1,W_2,A_1,A_2,A_3,A_4) of h_uncond (all 64 subsets!) realized EXACTLY by 6 subspaces in F_2^64 (4*rank scaling), defeating every 6-var F_2-linear rank inequality and forcing >=7-var storage-coupled converses!", checks:"Lean 6 kernels · C11 triad_cli ret6-f2 · Python"},
 
   // Pillar II (middle column x=330..515)
   {id:"T2a", x:330, y:30, w:180, h:54, col:"#f472b6", fill:"#341029", title:"T2a · Det-Ideal Refutation", decl:"TriadFrontier.Solution.t2a_determinant_ideal_secret_independence", file:"lean/TriadFrontier/MLWETightness.lean", axioms:"[propext, Quot.sound]", desc:"Over any commutative ring R, MLWE q-ary and Kannan bases have det = q^m, carrying identically zero information about (s,e). Refutes Luo (2026) det-ideal reductions.", checks:"Lean 6 kernels · NonVacuity over Int · Python"},
@@ -103,6 +104,7 @@ const NODES = [
   {id:"T2f", x:330, y:405, w:180, h:54, col:"#f472b6", fill:"#341029", title:"T2f · m-Twisted DFT Rule", decl:"TriadFrontier.Solution.t2f_universal_twisted_dft_selection_rule", file:"lean/TriadFrontier/MLWETightness.lean", axioms:"[propext]", desc:"Universal m-twisted DFT selection rule over any commutative ring R: ω^D=ζ, f(qD+x)=ζ^{qr}f(x), Σ ζ^{q(r+k)}=0 ⇒ f̂_{mD}(k)=0 identically (QC-042).", checks:"Lean 6 kernels ([propext] alone!) · C11 triad_cli twisted · Python"},
   {id:"T2g", x:330, y:480, w:180, h:54, col:"#f472b6", fill:"#341029", title:"T2g · QGTL χ² & Dyadic-512", decl:"TriadFrontier.Solution.t2g_qgtl_renyi_variational_bridge_and_dyadic512", file:"lean/TriadFrontier/MLWETightness.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Universal pure-integer Pearson χ²/Hermite-4 variational law R₂-1 >= (E_P[φ]-E_Q[φ])²/Var_Q(φ) + 9-bit zero-excess-kurtosis Dyadic-512 (Var=3/2, κ_ex=0, det(g)=1/2, 12.9× ML-KEM-512 drop, exact DFR 2^-139.26 < 2^-138.8).", checks:"Lean 6 kernels · C11 9-bit CT sampler · Eshkol AD · Python exact DFR"},
   {id:"T2h", x:330, y:555, w:180, h:54, col:"#f472b6", fill:"#341029", title:"T2h · All-Order & D1024", decl:"TriadFrontier.Solution.t2h_all_order_renyi_holder_tv_and_dyadic1024", file:"lean/TriadFrontier/MLWETightness.lean", axioms:"[propext, Quot.sound]", desc:"All-order Rényi-(m+1) finite-support Hölder floor (∀m∈ℕ), exact pure-integer TV-χ² bridge (4TV²<=R₂-1), & 10-bit Bai-optimal Dyadic-1024-A/B collapsing ML-KEM-1024 Bai overhead 9.19× (67.14→7.31 b) & ML-KEM-512 4.83× (24.77→5.13 b), all DFRs pass!", checks:"Lean 6 kernels · C11 10-bit CT samplers · Eshkol AD (-3.79e-9) · Python Bai log-sum-exp"},
+  {id:"T2i", x:330, y:630, w:180, h:54, col:"#f472b6", fill:"#341029", title:"T2i · Bai Engine & D16384", decl:"TriadFrontier.Solution.t2i_bai_engine_dpi_tensorization_and_dyadic16384", file:"lean/TriadFrontier/MLWETightness.lean", axioms:"[propext, Quot.sound]", desc:"Formal Bai et al. (2018) Rényi DPI/tensorization/tail-transfer engine + ML-KEM-1024 Gaussian DFR Paradox (D_1 FAILS at 2^-173.42!) + 14-bit CT Dyadic-16384-A (6.013 b Bai = 11.17× drop, DFR 2^-174.03 PASS) & Dyadic-16384-B (0.5916 b SUB-1-BIT Bai = 41.9× drop, DFR 2^-139.31 PASS!).", checks:"Lean 6 kernels · C11 14-bit CT samplers · Eshkol AD (-9.13e-10) · Python"},
 
   // Pillar III (right column x=605..795)
   {id:"T3a", x:605, y:30, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3a · Algebrization MLE", decl:"TriadFrontier.Solution.t3a_algebrization_multilinear_extension_uniqueness", file:"lean/TriadFrontier/ComplexityTriad.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Constructive existence and global uniqueness of multilinear extension f̃: F^n -> F over any field F (algebraic core of Aaronson–Wigderson Algebrization).", checks:"Lean 6 kernels · Python F_11/F_101"},
@@ -115,23 +117,26 @@ const NODES = [
   {id:"T3h", x:605, y:555, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3h · Exact Strassen = 7", decl:"TriadFrontier.Solution.t3h_strassen_winograd_exact_rank_seven", file:"lean/TriadFrontier/StrassenWinograd.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Complete zero-Mathlib, characteristic-free proof of exact Strassen–Winograd optimality: rank_F(<2,2,2>) = 7 over EVERY SimpleField F (including F_2!), via 4×6 Gauss–Jordan RREF, rank-1 clique ≤ 2, & Cramer kill.", checks:"Lean 6 kernels · C11 triad_cli strassen · Python"},
   {id:"T3i", x:605, y:630, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3i · Brockett–Dobkin 2m²-m", decl:"TriadFrontier.Solution.t3i_brockett_dobkin_rectangular_and_quadratic_matmul_bound", file:"lean/TriadFrontier/BrockettDobkin.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Over EVERY SimpleField F (incl. F_2): 3-way symmetric rectangular Brockett–Dobkin rank_F(<m,k,p>) >= max(mk+mp-m, mk+kp-k, mp+kp-p), quadratic rank_F(<m,m,m>) >= 2m²-m (shattering Koszul m²+m ∀m>=3!), & Strassen lift rank_F(<m,2,p>) >= mp+3.", checks:"Lean 6 kernels · Python complexity_triad.py"},
   {id:"T3j", x:605, y:705, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3j · Lovász Θ(C₅)=√5", decl:"TriadFrontier.Solution.t3j_shannon_capacity_lovasz_c5_and_haemers", file:"lean/TriadFrontier/ShannonCapacity.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Zero-reals Shannon capacity (CS-CMP-012): field-universal Haemers rank bound |S|<=r^t, exact Lovász Θ(C_5)=√5 via 3-term Z[√5] SOS of 6×6 umbrella Gram matrix 80 M_6 (k²<=5^t & α(C_5^{⊠2m})=5^m), & exact C_7 min Haemers rank = 4 ∀F!", checks:"Lean 6 kernels · C11 lovasz-c5 & c7-cap · Python"},
+  {id:"T3k", x:605, y:780, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3k · S–Z & 2^k Sandwich", decl:"TriadFrontier.Solution.t3k_schwartz_zippel_and_strassen_sandwich", file:"lean/TriadFrontier/AlgebraicComplexity.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Universal constructive Schwartz–Zippel lemma |Z(P)∩S^n|<=d|S|^{n-1} + exact Strassen power-of-2 MatMul sandwich 2·4^k - 2^k <= rank_F(<2^k,2^k,2^k>) <= 7^k for EVERY k >= 0 & EVERY SimpleField F (incl. F_2!).", checks:"Lean 6 kernels · Python complexity_triad.py"},
+  {id:"T3l", x:605, y:855, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3l · Paley Θ(Pₚ)=√p", decl:"TriadFrontier.Solution.t3l_infinite_paley_conference_shannon_capacity", file:"lean/TriadFrontier/PaleyCapacity.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Infinite family of exact zero-reals Shannon capacities: universal 2-block Z[√p] conference-matrix SOS theorem proving Θ(P_p)=√p (k²<=p^t & α(P_p^{⊠2m})=p^m) for EVERY prime p≡1(4), concretely instantiated for P_5, P_13, P_17!", checks:"Lean 6 kernels · C11 triad_cli paley-cap (P_5..P_41) · Python"},
 
-  // Master & NonVacuity (bottom row)
-  {id:"SOL", x:220, y:795, w:240, h:58, col:"#34d399", fill:"#063024", title:"Solution.lean · Master Bundle", decl:"TriadFrontier.Solution.prove_all_triad_theorems", file:"lean/Solution.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Single conjunction of all 27 headline theorems T1a–T3j, checked by Palomar Comparator (lake comparator --paranoid) + 6 kernels (3,589 con-leche/con-ron & 3,884 nanoda decls).", checks:"lean · leanchecker-paranoid · lean4lean · nanoda · con-leche · con-ron"},
-  {id:"NV", x:495, y:795, w:220, h:58, col:"#34d399", fill:"#063024", title:"NonVacuity.lean · Witnesses", decl:"TriadFrontier.NonVacuity.nonvac_all_hypotheses", file:"lean/TriadFrontier/NonVacuity.lean", axioms:"[propext, Quot.sound]", desc:"Concrete non-vacuity inhabitants proving every theorem's typeclass & hypothesis is non-empty (SimpleField Fin 5/11, CommRing Int, D=3 anti-periodic, 2-var XOR, 3-rep LDC).", checks:"Lean 6 kernels · VerifyAxioms.lean"},
+  // Master, NonVacuity & AdversarialTests (bottom row)
+  {id:"SOL", x:40, y:950, w:245, h:58, col:"#34d399", fill:"#063024", title:"Solution.lean · Master (31)", decl:"TriadFrontier.Solution.prove_all_triad_theorems", file:"lean/Solution.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Single conjunction of all 31 headline theorems T1a–T3l, checked by Palomar Comparator (lake comparator --paranoid) + 6 kernels (4,300 con-leche/con-ron verified decls + nanoda + live negative tamper gate).", checks:"lean · leanchecker-paranoid · lean4lean · nanoda · con-leche · con-ron"},
+  {id:"NV", x:315, y:950, w:215, h:58, col:"#34d399", fill:"#063024", title:"NonVacuity.lean · Witnesses", decl:"TriadFrontier.NonVacuity.nonvac_all_hypotheses", file:"lean/TriadFrontier/NonVacuity.lean", axioms:"[propext, Quot.sound]", desc:"Concrete non-vacuity inhabitants proving every theorem's typeclass & hypothesis is non-empty (SimpleField Fin 5/11, CommRing Int, D=3 anti-periodic, 2-var XOR, 3-rep LDC).", checks:"Lean 6 kernels · VerifyAxioms.lean"},
+  {id:"ADV", x:560, y:950, w:230, h:58, col:"#34d399", fill:"#063024", title:"AdversarialTests · 7 Kills", decl:"TriadFrontier.AdversarialTests.adv_all_boundary_refutations", file:"lean/TriadFrontier/AdversarialTests.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"7 kernel-checked negative/sharpness boundary refutations (Compress_1 e=832 fail, E=3 flag-privacy fail, rank<7 kill, C_7 rank<=3 kill, etc.) + live CI kernel-rejection tamper gate.", checks:"Lean 6 kernels · VerifyAxioms.lean · CI tamper gate"},
 
   // Explicitly Open Frontiers (far right)
-  {id:"OPEN", x:818, y:260, w:145, h:235, col:"#fbbf24", fill:"#2c1e07", open:true, title:"O1–O6 · OPEN", decl:"(No Lean Proof Claimed)", file:"LIMITATIONS.md", axioms:"Tier-4 OPEN", desc:"Explicit epistemic boundary: O1 P≠NP & circuit lower bounds (CS-001/010); O2 ω=2 & VP≠VNP (CS-004/012); O3 non-linear C(2,4,2,2) ∈ [3/5, 8/13] (>=6-var); O4 M>=3 non-LFSR PIR when E>=KT; O5 exact Θ(C_7) ∈ [√10, ϑ(C_7)]; O6 worst-case quantum MLWE hardness.", checks:"Honestly documented in LIMITATIONS.md, CLAIMS.md, and Section 6"}
+  {id:"OPEN", x:818, y:310, w:145, h:255, col:"#fbbf24", fill:"#2c1e07", open:true, title:"O1–O6 · OPEN", decl:"(No Lean Proof Claimed)", file:"LIMITATIONS.md", axioms:"Tier-4 OPEN", desc:"Explicit epistemic boundary: O1 P≠NP & circuit lower bounds (CS-001/010); O2 ω=2 & VP≠VNP (CS-004/012); O3 non-linear C(2,4,2,2) ∈ [3/5, 8/13] (>=7-var storage-coupled!); O4 M>=3 non-LFSR PIR when E>=KT; O5 exact Θ(C_7) ∈ [√10, ϑ(C_7)]; O6 worst-case quantum MLWE hardness.", checks:"Honestly documented in LIMITATIONS.md, CLAIMS.md, ERRATA.md, and Section 6"}
 ];
 
 const EDGES = [
-  ["T1a","T1b",""], ["T1b","T1c",""], ["T1c","T1d",""], ["T1e","T1g",""], ["T1f","T1e",""], ["T1g","T1h",""], ["T1h","T1i",""],
-  ["T2b","T2f",""], ["T2c","T2e",""], ["T2d","T2e",""], ["T2e","T2g",""], ["T2g","T2h",""],
+  ["T1a","T1b",""], ["T1b","T1c",""], ["T1c","T1d",""], ["T1e","T1g",""], ["T1f","T1e",""], ["T1g","T1h",""], ["T1h","T1i",""], ["T1i","T1j",""],
+  ["T2b","T2f",""], ["T2c","T2e",""], ["T2d","T2e",""], ["T2e","T2g",""], ["T2g","T2h",""], ["T2h","T2i",""],
   ["T1a","T3e","bridge"], ["T2c","T3d","bridge"], ["T1c","T3c","bridge"], ["T3c","T3f",""],
-  ["T2a","T3b","bridge"], ["T3e","T3g",""], ["T3e","T3h",""], ["T3h","T3i",""], ["T3e","T3j","bridge"],
-  ["T1i","SOL",""], ["T2h","SOL",""], ["T3f","SOL",""], ["T3i","SOL",""], ["T3j","SOL",""],
-  ["NV","SOL",""],
-  ["T3a","OPEN","open"], ["T3b","OPEN","open"], ["T3i","OPEN","open"], ["T3j","OPEN","open"]
+  ["T2a","T3b","bridge"], ["T3e","T3g",""], ["T3e","T3h",""], ["T3h","T3i",""], ["T3i","T3k",""], ["T3e","T3j","bridge"], ["T3j","T3l",""],
+  ["T1j","SOL",""], ["T2i","SOL",""], ["T3k","SOL",""], ["T3l","SOL",""],
+  ["NV","SOL",""], ["ADV","SOL",""],
+  ["T3a","OPEN","open"], ["T3b","OPEN","open"], ["T3k","OPEN","open"], ["T3l","OPEN","open"]
 ];
 
 const map = Object.fromEntries(NODES.map(n => [n.id, n]));
@@ -197,7 +202,7 @@ NODES.forEach(n => {
   nodesG.appendChild(g);
 });
 
-selectNode("T3j");
+selectNode("T3l");
 </script>
 </body>
 </html>

@@ -5,7 +5,7 @@ module
 public import TriadFrontier
 
 /-!
-# Formal Challenge Specification (`T1a`–`T3d`)
+# Formal Challenge Specification (`T1a`–`T3l`, v5.0.0)
 
 Clean exported theorem specification contract for independent 6-kernel verification
 (`lean`, `leanchecker`, `leanchecker-paranoid`, `lean4lean`, `nanoda_bin`, `con-leche`,
@@ -24,7 +24,9 @@ open TriadFrontier.ComplexityTriad
 open TriadFrontier.KoszulTensor
 open TriadFrontier.StrassenWinograd
 open TriadFrontier.BrockettDobkin
+open TriadFrontier.AlgebraicComplexity
 open TriadFrontier.ShannonCapacity
+open TriadFrontier.PaleyCapacity
 
 @[expose] public section
 
@@ -378,6 +380,96 @@ def T3j_ShannonCapacityLovaszC5AndHaemers : Prop :=
       (∀ i j, i < 7 → j < 7 → sumR 4 (fun s => U i s * V s j) = M i j) ∧
       FitsGraph 7 c7Adj M)
 
+def T1j_Total6ObjF2EntropicRealizabilityBarrier : Prop :=
+  (hUncondRet6 0 = 0 ∧
+   ∀ m : Nat, 1 ≤ m → m ≤ 63 →
+     hUncondRet6 m = 4 * subspaceRank6F2 64 ret6F2Arrangement m) ∧
+  (∀ c : Nat → Int,
+    (∀ (d : Nat) (subs : List (List (List Nat))), 0 ≤ evalFunc6 c (subspaceRank6F2 d subs)) →
+    0 ≤ evalFunc6 c hUncondRet6) ∧
+  (hUncondRet6 1 = 128 ∧ hUncondRet6 4 = 52 ∧ hUncondRet6 60 = 208 ∧
+   hUncondRet6 61 = 208 ∧ 4 * 52 * 3 < 128 * 5)
+
+def T2i_BaiEngineDPITensorizationAndDyadic16384 : Prop :=
+  (∀ (N L M Mout D : Nat) (K : Nat → Nat → Nat) (p q w W : Nat → Nat),
+    0 < M → (∀ i, i < N → w i * q i = M) →
+    (∀ j, j < L → W j * sumNatML N (fun i => K j i * q i) = Mout) →
+    (∀ i, i < N → sumNatML L (fun j => K j i) = D) →
+    M * sumNatML L (fun j => (sumNatML N (fun i => K j i * p i)) ^ 2 * W j) ≤
+    Mout * D * sumNatML N (fun i => p i * p i * w i)) ∧
+  (∀ (N r m : Nat) (p w : Nat → Nat), 0 < N →
+    sumNatML (N ^ m) (fun x => (prodNatPow N p m x) ^ (r + 1) * (prodNatPow N w m x) ^ r) =
+    (sumNatML N (fun i => p i ^ (r + 1) * w i ^ r)) ^ m) ∧
+  (∀ (N r D M Rmax : Nat) (p q w : Nat → Nat),
+    (∀ i, i < N → w i * q i = M) →
+    (∀ i, i < N → p i * D ≤ Rmax * q i) →
+    D ^ r * sumNatML N (fun i => p i ^ (r + 1) * w i ^ r) ≤
+      Rmax ^ r * M ^ r * sumNatML N p ∧
+    D * sumNatML N p ≤ Rmax * sumNatML N q) ∧
+  (dyadic16384AWeight (-3) + dyadic16384AWeight (-2) + dyadic16384AWeight (-1) +
+     dyadic16384AWeight 0 + dyadic16384AWeight 1 + dyadic16384AWeight 2 + dyadic16384AWeight 3 = 16384 ∧
+   9 * dyadic16384AWeight (-3) + 4 * dyadic16384AWeight (-2) + dyadic16384AWeight (-1) +
+     dyadic16384AWeight 1 + 4 * dyadic16384AWeight 2 + 9 * dyadic16384AWeight 3 = 16384 ∧
+   81 * dyadic16384AWeight (-3) + 16 * dyadic16384AWeight (-2) + dyadic16384AWeight (-1) +
+     dyadic16384AWeight 1 + 16 * dyadic16384AWeight 2 + 81 * dyadic16384AWeight 3 = 47728 ∧
+   47728 * 1024 = 2983 * 16384 ∧
+   243 * 4096 < 1959 * 512 ∧ 1959 * 2 < 4096 ∧
+   6013 * 111 < 67140 * 10) ∧
+  (dyadic16384BWeight (-5) + dyadic16384BWeight (-4) + dyadic16384BWeight (-3) +
+     dyadic16384BWeight (-2) + dyadic16384BWeight (-1) + dyadic16384BWeight 0 +
+     dyadic16384BWeight 1 + dyadic16384BWeight 2 + dyadic16384BWeight 3 +
+     dyadic16384BWeight 4 + dyadic16384BWeight 5 = 16384 ∧
+   25 * dyadic16384BWeight (-5) + 16 * dyadic16384BWeight (-4) + 9 * dyadic16384BWeight (-3) +
+     4 * dyadic16384BWeight (-2) + dyadic16384BWeight (-1) + dyadic16384BWeight 1 +
+     4 * dyadic16384BWeight 2 + 9 * dyadic16384BWeight 3 + 16 * dyadic16384BWeight 4 +
+     25 * dyadic16384BWeight 5 = 24576 ∧
+   625 * dyadic16384BWeight (-5) + 256 * dyadic16384BWeight (-4) + 81 * dyadic16384BWeight (-3) +
+     16 * dyadic16384BWeight (-2) + dyadic16384BWeight (-1) + dyadic16384BWeight 1 +
+     16 * dyadic16384BWeight 2 + 81 * dyadic16384BWeight 3 + 256 * dyadic16384BWeight 4 +
+     625 * dyadic16384BWeight 5 = 110040 ∧
+   110040 * 2048 = 13755 * 16384 ∧
+   15 * 6144 < 3049 * 32 ∧ 3049 * 2 < 6144 ∧
+   5916 * 418 < 24770 * 100)
+
+def T3k_SchwartzZippelAndStrassenSandwich : Prop :=
+  (∀ (F : Type) [SimpleField F] (n d : Nat) (S : List F) (P : MPoly F n),
+    ListNodup S → mpNonZero P → mpDegLe d P →
+    S.length * countGridRoots S (mpEval P) ≤ d * S.length ^ n) ∧
+  (∀ (F : Type) [SimpleField F] (n d : Nat) (S : List F) (P : MPoly F n),
+    ListNodup S → mpNonZero P → mpDegLe d P → d < S.length →
+    ∃ a : Fin n → F, (∀ i, a i ∈ S) ∧ mpEval P a ≠ 0) ∧
+  (∀ (F : Type) [SimpleField F] (m k p r : Nat),
+    HasTensorRankAtMost (m * k) (k * p) (m * p) r
+      (fun a b c => intToR (R := F) (rectMatMulTensor m k p a b c)) →
+    HasTensorRankAtMost (p * k) (k * m) (p * m) r
+      (fun a b c => intToR (R := F) (rectMatMulTensor p k m a b c))) ∧
+  (∀ (F : Type) [SimpleField F] (k : Nat),
+    HasTensorRankAtMost (2 ^ k * 2 ^ k) (2 ^ k * 2 ^ k) (2 ^ k * 2 ^ k) (7 ^ k)
+      (fun a b c => intToR (R := F) (matMulTensor (2 ^ k) a b c)) ∧
+    ∀ r : Nat,
+      HasTensorRankAtMost (2 ^ k * 2 ^ k) (2 ^ k * 2 ^ k) (2 ^ k * 2 ^ k) r
+        (fun a b c => intToR (R := F) (matMulTensor (2 ^ k) a b c)) →
+      2 * 4 ^ k - 2 ^ k ≤ r)
+
+def T3l_InfinitePaleyConferenceShannonCapacity : Prop :=
+  (∀ (k : Nat) (adj : Nat → Nat → Bool),
+    IsConferenceGraph k adj →
+    ∀ (t m : Nat) (f : Nat → Nat),
+      IsIndepSet ((4 * k + 1) ^ t) (strongPowAdj (4 * k + 1) adj t) m f →
+      m * m ≤ (4 * k + 1) ^ t) ∧
+  (∀ (n : Nat) (adj : Nat → Nat → Bool) (φ : Nat → Nat),
+    0 < n → IsSelfCompMap n adj φ →
+    ∀ (m : Nat), ∃ f : Nat → Nat,
+      IsIndepSet (n ^ (2 * m)) (strongPowAdj n adj (2 * m)) (n ^ m) f) ∧
+  ((∀ (t m : Nat) (f : Nat → Nat),
+      IsIndepSet (13 ^ t) (strongPowAdj 13 paley13Adj t) m f → m * m ≤ 13 ^ t) ∧
+   (∀ (m : Nat), ∃ f : Nat → Nat,
+      IsIndepSet (13 ^ (2 * m)) (strongPowAdj 13 paley13Adj (2 * m)) (13 ^ m) f)) ∧
+  ((∀ (t m : Nat) (f : Nat → Nat),
+      IsIndepSet (17 ^ t) (strongPowAdj 17 paley17Adj t) m f → m * m ≤ 17 ^ t) ∧
+   (∀ (m : Nat), ∃ f : Nat → Nat,
+      IsIndepSet (17 ^ (2 * m)) (strongPowAdj 17 paley17Adj (2 * m)) (17 ^ m) f))
+
 def AllTriadFrontierTheorems : Prop :=
   T1a_KoszulVeroneseRankIdentity ∧
   T1b_UniversalKoszulDominationOverLFSR ∧
@@ -388,6 +480,7 @@ def AllTriadFrontierTheorems : Prop :=
   T1g_ZhangYeungReductionAndMFileKoszul ∧
   T1h_InfiniteNonShannonConeAndContraction ∧
   T1i_Total4VarEntropicAnd5ObjLinearBarrier ∧
+  T1j_Total6ObjF2EntropicRealizabilityBarrier ∧
   T2a_DeterminantIdealSecretIndependence ∧
   T2b_ChenStep9AntiPeriodicDFTCancellation ∧
   T2c_MLKEMCBDRenyiCliff ∧
@@ -396,6 +489,7 @@ def AllTriadFrontierTheorems : Prop :=
   T2f_UniversalTwistedDFTSelectionRule ∧
   T2g_QGTLRenyiVariationalBridgeAndDyadic512 ∧
   T2h_AllOrderRenyiHolderTVAndDyadic1024 ∧
+  T2i_BaiEngineDPITensorizationAndDyadic16384 ∧
   T3a_AlgebrizationMultilinearExtensionUniqueness ∧
   T3b_LWEToNaturalProofsObstruction ∧
   T3c_KatzTrevisanByzantinePIRToLDC ∧
@@ -405,7 +499,9 @@ def AllTriadFrontierTheorems : Prop :=
   T3g_AllMKoszulMatMulLowerBound ∧
   T3h_StrassenWinogradExactRankSeven ∧
   T3i_BrockettDobkinRectangularAndQuadraticMatMulBound ∧
-  T3j_ShannonCapacityLovaszC5AndHaemers
+  T3j_ShannonCapacityLovaszC5AndHaemers ∧
+  T3k_SchwartzZippelAndStrassenSandwich ∧
+  T3l_InfinitePaleyConferenceShannonCapacity
 
 end
 end TriadFrontier.Challenge

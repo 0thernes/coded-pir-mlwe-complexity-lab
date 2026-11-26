@@ -11,5 +11,8 @@ public import TriadFrontier.ComplexityTriad
 public import TriadFrontier.KoszulTensor
 public import TriadFrontier.StrassenWinograd
 public import TriadFrontier.BrockettDobkin
+public import TriadFrontier.AlgebraicComplexity
 public import TriadFrontier.ShannonCapacity
+public import TriadFrontier.PaleyCapacity
 public import TriadFrontier.NonVacuity
+public import TriadFrontier.AdversarialTests

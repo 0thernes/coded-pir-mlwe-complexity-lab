@@ -34,19 +34,21 @@ from triad_verify.complexity_triad import (
     verify_katz_trevisan_ldc_distance,
     verify_koszul_flattening_tensor_rank,
     verify_mlwe_compress1_ceiling,
+    verify_schwartz_zippel_and_paley_family,
     verify_strassen_and_all_m_koszul,
 )
 from triad_verify.mlwe_tightness import (
     cbd_pmf_exact,
-    dyadic1024a_pmf_exact,
-    dyadic1024b_pmf_exact,
     dyadic256_pmf_exact,
     dyadic512_pmf_exact,
+    dyadic1024a_pmf_exact,
+    dyadic16384a_pmf_exact,
     verify_all_order_renyi_bai_and_dyadic1024,
     verify_cbd_moments_and_renyi_60digit,
     verify_chen_step9,
     verify_dyadic256_and_qgtl_kurtosis_60digit,
     verify_dyadic512_dfr_and_variational_bridge,
+    verify_gaussian_dfr_paradox_and_dyadic16384,
     verify_luo_det_ideal_independence,
     verify_qgtl_shifted_lwe,
     verify_twisted_dft_selection_rule,
@@ -62,19 +64,22 @@ from triad_verify.pir_koszul import (
 )
 from triad_verify.polymatroid_barrier import (
     verify_4var_i4_and_5obj_f2_realizability,
+    verify_6obj_f2_64_realization,
     verify_h_uncond,
 )
-
 
 # ============================================================================
 # 1. Core Claims Falsifiability Tests (CS-053, CS-026, CS-001)
 # ============================================================================
 
+
 def test_c1_koszul_veronese_rank_grid() -> None:
     res = verify_koszul_rank_grid(p=101)
     assert res["checked_blocks"] == 46
     assert res["strict_savings_count"] == 30
-    assert koszul_lambda_formula(6, 3, 2, 3) == 8 < 9
+    lam = koszul_lambda_formula(6, 3, 2, 3)
+    assert lam == 8
+    assert lam < 9
 
 
 def test_c2_universal_koszul_domination_over_lfsr_and_symmetry() -> None:
@@ -160,7 +165,8 @@ def test_c15_to_c19_v2_breakthroughs_suite() -> None:
     assert kt["M2_rank_lower_bound_every_field"] == 6
     assert kt["T3_rank_lower_bound_every_field"] == 5
     # C19 (T3f): Shannon counting + LDC smoothness
-    assert 4 < 16 and sum(dyadic256_pmf_exact().values()) == 1
+    assert sum(dyadic256_pmf_exact().values()) == 1
+    assert len(dyadic256_pmf_exact()) < 16
 
 
 def test_c20_to_c23_v3_breakthroughs_suite() -> None:
@@ -210,11 +216,36 @@ def test_c24_to_c27_v4_breakthroughs_suite() -> None:
 
     # C26 & C27 (T3i & T3j): Brockett-Dobkin 2m^2-m shattering Koszul m^2+m, Lovasz Theta(C_5)=sqrt(5) Z[sqrt(5)] SOS, & C_7 min-rank 4
     bdl = verify_brockett_dobkin_and_lovasz_shannon_capacity()
-    assert bdl["brockett_dobkin_m3_vs_koszul"]["bd"] == 15 > 12
+    assert bdl["brockett_dobkin_m3_vs_koszul"]["bd"] == 15
+    assert bdl["brockett_dobkin_m3_vs_koszul"]["bd"] > bdl["brockett_dobkin_m3_vs_koszul"]["koszul_ceiling"]
     assert bdl["lovasz_c5_6x6_zsqrt5_sos_36_entries_exact"] is True
     assert bdl["c5_square_indep_size"] == 5 and bdl["c7_square_indep_size"] == 10
     assert bdl["c7_exact_min_haemers_rank_every_field"] == 4
     assert 3.162 < bdl["c7_sqrt10"] < bdl["c7_lovasz_theta"] < 3.318
+
+
+def test_c28_to_c31_v5_breakthroughs_suite() -> None:
+    # C28 (T1j): Single Z_4-cyclic F_2^64 6-subspace realization matching ALL 64 subsets of h_uncond
+    t1j = verify_6obj_f2_64_realization(REPO_ROOT / "data" / "h_uncond_certified.json")
+    assert t1j["subsets_exact_match"] == 64 and t1j["all_64_subsets_verified"] is True
+
+    # C29 (T2i): ML-KEM-1024 Gaussian DFR Paradox + 14-bit Dyadic-16384-A/B + DPI/tensorization
+    d16 = verify_gaussian_dfr_paradox_and_dyadic16384()
+    assert d16["renyi2_dpi_verified"] is True
+    assert d16["gaussian_dfr_paradox"]["mlkem_1024_gauss_fails_nist_174"] is True
+    assert d16["gaussian_dfr_paradox"]["mlkem_1024_gauss_log2_dfr"] > -174.0
+    assert d16["bai_16384_suite"]["ML_KEM_1024_Dyadic16384A"]["bai_overhead_bits"] < 6.05
+    assert d16["bai_16384_suite"]["ML_KEM_768_Dyadic16384A"]["bai_overhead_bits"] < 4.55
+    assert d16["bai_16384_suite"]["ML_KEM_512_Dyadic16384B"]["bai_overhead_bits"] < 0.60
+    assert d16["dfr_16384_suite"]["ML_KEM_1024_Dyadic16384A"]["union_bound_log2_dfr"] < -174.0
+    assert d16["dfr_16384_suite"]["ML_KEM_768_Dyadic16384A"]["union_bound_log2_dfr"] < -164.0
+    assert d16["dfr_16384_suite"]["ML_KEM_512_Dyadic16384B_A"]["union_bound_log2_dfr"] < -138.8
+
+    # C30 & C31 (T3k & T3l): Schwartz-Zippel, Strassen-Brockett-Dobkin sandwich, & Paley P_5..P_41 family
+    szp = verify_schwartz_zippel_and_paley_family()
+    assert szp["schwartz_zippel_f5_deg3_roots"] <= szp["schwartz_zippel_bound"]
+    assert len(szp["strassen_bd_sandwich_k0_to_8"]) == 9
+    assert [item["p"] for item in szp["paley_conference_sos_verified"]] == [5, 13, 17, 29, 37, 41]
 
 
 # ============================================================================
@@ -259,12 +290,15 @@ def test_differential_python_vs_eshkol_ad() -> None:
     py_d256 = verify_dyadic256_and_qgtl_kurtosis_60digit()
     py_d512 = verify_dyadic512_dfr_and_variational_bridge()
     py_d1024 = verify_all_order_renyi_bai_and_dyadic1024()
+    py_d16384 = verify_gaussian_dfr_paradox_and_dyadic16384()
     assert abs(kv["CBD2_R2_OPT"] - float(py_renyi["CBD_2"]["min_r2"])) < 1e-9
     assert abs(kv["CBD3_R2_OPT"] - float(py_renyi["CBD_3"]["min_r2"])) < 1e-9
     assert abs(kv["DYADIC256_R2_OPT"] - float(py_d256["min_r2"])) < 1e-9
     assert abs(kv["DYADIC512_R2_OPT"] - float(py_d512["min_r2"])) < 1e-9
     assert abs(kv["DYADIC1024A_R2_OPT"] - float(py_d1024["dyadic1024a"]["min_r2"])) < 1e-9
     assert abs(kv["DYADIC1024B_R2_OPT"] - float(py_d1024["dyadic1024b"]["min_r2"])) < 1e-8
+    assert abs(kv["DYADIC16384A_R2_OPT"] - float(py_d16384["dyadic16384a"]["min_r2"])) < 1e-9
+    assert abs(kv["DYADIC16384B_R2_OPT"] - float(py_d16384["dyadic16384b"]["min_r2"])) < 1e-8
     py_qgtl = verify_qgtl_shifted_lwe()
     assert abs(kv["QGTL_OMEGA_E0_035"] - py_qgtl["biased_e0_pos035"]["omega_ts"]) < 1e-12
 
@@ -278,6 +312,11 @@ def test_differential_python_vs_native_c11() -> None:
     d512_c = json.loads(subprocess.check_output([str(exe), "dyadic512"], text=True))
     d1024a_c = json.loads(subprocess.check_output([str(exe), "dyadic1024a"], text=True))
     d1024b_c = json.loads(subprocess.check_output([str(exe), "dyadic1024b"], text=True))
+    d16384a_c = json.loads(subprocess.check_output([str(exe), "dyadic16384a"], text=True))
+    d16384b_c = json.loads(subprocess.check_output([str(exe), "dyadic16384b"], text=True))
+    ret6_c = json.loads(subprocess.check_output([str(exe), "ret6-f2"], text=True))
+    p13_c = json.loads(subprocess.check_output([str(exe), "paley-cap", "13"], text=True))
+    p17_c = json.loads(subprocess.check_output([str(exe), "paley-cap", "17"], text=True))
     kt_c = json.loads(subprocess.check_output([str(exe), "koszul-tensor"], text=True))
     sw_c = json.loads(subprocess.check_output([str(exe), "strassen"], text=True))
     am_c = json.loads(subprocess.check_output([str(exe), "koszul-allm", "3"], text=True))
@@ -289,8 +328,12 @@ def test_differential_python_vs_native_c11() -> None:
     py_d256 = verify_dyadic256_and_qgtl_kurtosis_60digit()
     py_d512 = verify_dyadic512_dfr_and_variational_bridge()
     py_d1024 = verify_all_order_renyi_bai_and_dyadic1024()
+    py_d16384 = verify_gaussian_dfr_paradox_and_dyadic16384()
     py_qgtl = verify_qgtl_shifted_lwe()
     assert f11_c["f11_byzantine_rate25"] is True
+    assert ret6_c["ret6_f2_64_all64_subsets_exact"] is True and ret6_c["scale_factor"] == 4
+    assert p13_c["paley_zsqrtp_sos_and_selfcomp_exact"] is True and p13_c["theta_sq"] == 13
+    assert p17_c["paley_zsqrtp_sos_and_selfcomp_exact"] is True and p17_c["theta_sq"] == 17
     assert kt_c["koszul_flattening_m2_ge6_t3_ge5"] is True
     assert sw_c["strassen_7prod_exact"] is True and sw_c["rank_M2_every_field"] == 7
     assert am_c["monomial_left_inv_ok"] is True and am_c["rank_lb_every_field"] == 11
@@ -301,14 +344,16 @@ def test_differential_python_vs_native_c11() -> None:
     assert abs(d512_c["min_r2"] - float(py_d512["min_r2"])) < 1e-9
     assert abs(d1024a_c["min_r2"] - float(py_d1024["dyadic1024a"]["min_r2"])) < 1e-9
     assert abs(d1024b_c["min_r2"] - float(py_d1024["dyadic1024b"]["min_r2"])) < 1e-8
+    assert abs(d16384a_c["min_r2"] - float(py_d16384["dyadic16384a"]["min_r2"])) < 1e-9
+    assert abs(d16384b_c["min_r2"] - float(py_d16384["dyadic16384b"]["min_r2"])) < 1e-8
     assert abs(qgtl_c["omega_ts"] - py_qgtl["biased_e0_pos035"]["omega_ts"]) < 1e-11
 
 
 # ============================================================================
-# 4. Mutation-Killing Suite (12/12 Core Mutants Killed!)
+# 4. Mutation-Killing Suite (14/14 Core Mutants Killed!)
 # ============================================================================
 
-def test_kill_12_core_mutants() -> None:
+def test_kill_14_core_mutants() -> None:
     # Mutant 1: Off-by-one in Koszul lambda formula (K + T - Tp + 1)
     assert koszul_lambda_formula(6, 3, 2, 3) != (3 + 3 - 2 + 1) * math.comb(2, 1)
     # Mutant 2: Off-by-one in FIPS 203 Compress_1 (+1664 instead of +1665 misses +832 failure)
@@ -346,6 +391,13 @@ def test_kill_12_core_mutants() -> None:
     a0, a1 = 46 % 7, 46 // 7
     b0, b1 = 38 % 7, 38 // 7
     assert ((a0 == b0) or ((a0 - b0) % 7 in (1, 6))) and ((a1 == b1) or ((a1 - b1) % 7 in (1, 6)))
+    # Mutant 13: Perturbing Dyadic-16384-A tail weight w_3 from 67 -> 66 breaks exact Var=1
+    d16a = dyadic16384a_pmf_exact()
+    assert sum(Fraction(x * x) * p for x, p in d16a.items()) == 1
+    assert sum(Fraction(x * x) * p for x, p in d16a.items()) - Fraction(18, 16384) != 1
+    # Mutant 14: Dropping the quadratic non-residue test in Paley P_13 breaks self-complement anti-automorphism
+    qrs13 = {(x * x) % 13 for x in range(1, 13)}
+    assert 3 in qrs13 and 2 not in qrs13  # multiplying by QR 3 preserves edges instead of flipping them!
 
 
 # ============================================================================

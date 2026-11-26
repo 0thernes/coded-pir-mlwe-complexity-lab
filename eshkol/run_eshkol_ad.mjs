@@ -169,6 +169,10 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   if (Math.abs(kv.DYADIC1024A_R2_OPT - 1.000510798009) > 1e-9) throw new Error('Dyadic-1024-A R2 optimum mismatch');
   if (Math.abs(kv.DYADIC1024B_DR2_DSIGMA) > 1e-3) throw new Error('Dyadic-1024-B stationarity check failed');
   if (Math.abs(kv.DYADIC1024B_R2_OPT - 1.000756813797) > 1e-8) throw new Error('Dyadic-1024-B R2 optimum mismatch');
+  if (Math.abs(kv.DYADIC16384A_DR2_DSIGMA) > 1e-3) throw new Error('Dyadic-16384-A stationarity check failed');
+  if (Math.abs(kv.DYADIC16384A_R2_OPT - 1.000390198995) > 1e-9) throw new Error('Dyadic-16384-A R2 optimum mismatch');
+  if (Math.abs(kv.DYADIC16384B_DR2_DSIGMA) > 1e-3) throw new Error('Dyadic-16384-B stationarity check failed');
+  if (Math.abs(kv.DYADIC16384B_R2_OPT - 1.000015905984) > 1e-8) throw new Error('Dyadic-16384-B R2 optimum mismatch');
   if (Math.abs(kv.KOSZUL_RATE_E6 - 10 / 17) > 1e-12) throw new Error('Koszul E=6 rate mismatch');
   if (Math.abs(kv.QGTL_OMEGA_E0_0) > 1e-15) throw new Error('QGTL symmetry vanishing failed');
   if (Math.abs(kv.QGTL_OMEGA_E0_035) < 1e-3) throw new Error('QGTL bias witness failed');

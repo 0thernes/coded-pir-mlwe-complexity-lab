@@ -1247,5 +1247,317 @@ theorem t2h_all_order_renyi_holder_tv_and_dyadic1024 :
      5591 * 44 < 24770 * 10 ∧ 5948 * 49 < 29520 * 10) :=
   ⟨renyi_all_order_holder_floor, tv_chi2_bridge_int, by decide, by decide⟩
 
+-- ============================================================================
+-- Section 9: Bai et al. (2018) Analytic Engine & 14-Bit Pareto Dyadic-16384 (T2i)
+-- ============================================================================
+
+/-- Pure-`Nat` Cauchy–Schwarz on weighted sums:
+    `M * (∑ K_i p_i)^2 ≤ (∑ K_i q_i) * (∑ K_i p_i^2 w_i)` whenever `w_i * q_i = M`. -/
+theorem nat_weighted_cs (N M : Nat) (K p q w : Nat → Nat)
+    (hM : 0 < M) (hqw : ∀ i, i < N → w i * q i = M) :
+    M * (sumNatML N (fun i => K i * p i)) ^ 2 ≤
+    sumNatML N (fun i => K i * q i) * sumNatML N (fun i => K i * (p i * p i * w i)) := by
+  have _ := hM
+  induction N with
+  | zero => simp [sumNatML]
+  | succ n ih =>
+    have hqn : ∀ i, i < n → w i * q i = M := fun i hi => hqw i (Nat.lt_succ_of_lt hi)
+    have hih := ih hqn
+    have hlast := hqw n (Nat.lt_succ_self n)
+    simp only [sumNatML]
+    let S1 := sumNatML n (fun i => K i * p i)
+    let Q1 := sumNatML n (fun i => K i * q i)
+    let R1 := sumNatML n (fun i => K i * (p i * p i * w i))
+    let a := K n * p n
+    let b := K n * q n
+    let c := K n * (p n * p n * w n)
+    change M * (S1 + a) ^ 2 ≤ (Q1 + b) * (R1 + c)
+    have hbc : M * (a * a) = b * c := by
+      dsimp only [a, b, c]
+      calc M * ((K n * p n) * (K n * p n))
+          = (w n * q n) * ((K n * p n) * (K n * p n)) := by rw [hlast]
+        _ = (K n * q n) * (K n * (p n * p n * w n)) := by
+            simp only [Nat.mul_left_comm, Nat.mul_comm]
+    have hcross_sq : (2 * M * S1 * a) * (2 * M * S1 * a) ≤ (Q1 * c + b * R1) * (Q1 * c + b * R1) := by
+      have h1 : (2 * M * S1 * a) * (2 * M * S1 * a) = 4 * (M * (S1 * S1)) * (M * (a * a)) := by
+        have h4 : (4 : Nat) = 2 * 2 := rfl
+        rw [h4]
+        simp only [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
+      have h2 : 4 * (M * (S1 * S1)) * (M * (a * a)) ≤ 4 * (Q1 * R1) * (b * c) := by
+        have hih' : M * (S1 * S1) ≤ Q1 * R1 := by simpa [Nat.pow_two] using hih
+        rw [hbc]
+        exact Nat.mul_le_mul_right (b * c) (Nat.mul_le_mul_left 4 hih')
+      have h3 : 4 * (Q1 * R1) * (b * c) = 4 * ((Q1 * c) * (b * R1)) := by
+        simp only [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
+      have h4 : ∀ x y : Nat, 4 * (x * y) ≤ (x + y) * (x + y) := by
+        intro x y
+        cases Nat.le_total x y with
+        | inl hxy =>
+          obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hxy
+          have : (x + (x + d)) * (x + (x + d)) = 4 * (x * (x + d)) + d * d := by
+            simp only [Nat.add_mul, Nat.mul_add]
+            rw [Nat.mul_comm d x]; omega
+          omega
+        | inr hyx =>
+          obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hyx
+          have : ((y + d) + y) * ((y + d) + y) = 4 * ((y + d) * y) + d * d := by
+            simp only [Nat.add_mul, Nat.mul_add]
+            rw [Nat.mul_comm y d]; omega
+          omega
+      rw [h1]
+      exact Nat.le_trans h2 (by rw [h3]; exact h4 (Q1 * c) (b * R1))
+    have hcross : 2 * M * S1 * a ≤ Q1 * c + b * R1 := by
+      by_cases hle : 2 * M * S1 * a ≤ Q1 * c + b * R1
+      · exact hle
+      · have hlt : Q1 * c + b * R1 < 2 * M * S1 * a := by omega
+        have hsqlt : (Q1 * c + b * R1) * (Q1 * c + b * R1) < (2 * M * S1 * a) * (2 * M * S1 * a) :=
+          Nat.mul_lt_mul_of_lt_of_lt hlt hlt
+        omega
+    have hih' : M * (S1 * S1) ≤ Q1 * R1 := by simpa [Nat.pow_two] using hih
+    have hlhs : M * (S1 + a) ^ 2 = M * (S1 * S1) + 2 * M * S1 * a + M * (a * a) := by
+      have h2 : 2 * M * S1 * a = M * S1 * a + M * S1 * a := by
+        rw [Nat.two_mul, Nat.add_mul, Nat.add_mul]
+      rw [Nat.pow_two, h2]
+      simp only [Nat.add_mul, Nat.mul_add, Nat.mul_assoc]
+      rw [Nat.mul_comm a S1]
+      omega
+    have hrhs : (Q1 + b) * (R1 + c) = Q1 * R1 + (Q1 * c + b * R1) + b * c := by
+      simp only [Nat.add_mul, Nat.mul_add]; omega
+    rw [hlhs, hrhs, hbc]
+    omega
+
+private theorem sumNatML_swap (L N : Nat) (f : Nat → Nat → Nat) :
+    sumNatML L (fun j => sumNatML N (fun i => f j i)) =
+    sumNatML N (fun i => sumNatML L (fun j => f j i)) := by
+  induction L with
+  | zero =>
+    simp only [sumNatML]
+    induction N with
+    | zero => rfl
+    | succ n ih => simp only [sumNatML, ← ih]
+  | succ l ihl =>
+    simp only [sumNatML, ihl]
+    clear ihl
+    induction N with
+    | zero => rfl
+    | succ n ihn =>
+      simp only [sumNatML]
+      omega
+
+private theorem sumNatML_mul_left' (N c : Nat) (f : Nat → Nat) :
+    sumNatML N (fun i => c * f i) = c * sumNatML N f := by
+  induction N with
+  | zero => simp [sumNatML]
+  | succ n ih => simp only [sumNatML, ih, Nat.mul_add]
+
+private theorem sumNatML_mul_right' (N c : Nat) (f : Nat → Nat) :
+    sumNatML N (fun i => f i * c) = sumNatML N f * c := by
+  induction N with
+  | zero => simp [sumNatML]
+  | succ n ih => simp only [sumNatML, ih, Nat.add_mul]
+
+private theorem sumNatML_le_of_le (N : Nat) (f g : Nat → Nat)
+    (h : ∀ i, i < N → f i ≤ g i) : sumNatML N f ≤ sumNatML N g := by
+  induction N with
+  | zero => simp [sumNatML]
+  | succ n ih =>
+    simp only [sumNatML]
+    exact Nat.add_le_add (ih (fun i hi => h i (Nat.lt_succ_of_lt hi))) (h n (Nat.lt_succ_self n))
+
+private theorem sumNatML_congr' (N : Nat) (f g : Nat → Nat)
+    (h : ∀ i, i < N → f i = g i) : sumNatML N f = sumNatML N g := by
+  induction N with
+  | zero => rfl
+  | succ n ih =>
+    simp only [sumNatML]
+    rw [ih (fun i hi => h i (Nat.lt_succ_of_lt hi)), h n (Nat.lt_succ_self n)]
+
+/-- **Pure-Integer Data-Processing Inequality (DPI) for Rényi-2 / Pearson χ² (`renyi2_dpi_nat`):**
+    Under ANY finite Markov channel `K : [L] × [N] → Nat` with column sums `∑_{j < L} K j i = D`,
+    `M * ∑_{j < L} (KP j)^2 * W j ≤ Mout * D * ∑_{i < N} p_i^2 * w_i`,
+    i.e. `R_2(KP ‖ KQ) ≤ R_2(P ‖ Q)` unconditionally! -/
+theorem renyi2_dpi_nat (N L M Mout D : Nat) (K : Nat → Nat → Nat) (p q w W : Nat → Nat)
+    (hM : 0 < M)
+    (hqw : ∀ i, i < N → w i * q i = M)
+    (hW : ∀ j, j < L → W j * sumNatML N (fun i => K j i * q i) = Mout)
+    (hMarkov : ∀ i, i < N → sumNatML L (fun j => K j i) = D) :
+    M * sumNatML L (fun j => (sumNatML N (fun i => K j i * p i)) ^ 2 * W j) ≤
+    Mout * D * sumNatML N (fun i => p i * p i * w i) := by
+  have hterm : ∀ j, j < L →
+      M * ((sumNatML N (fun i => K j i * p i)) ^ 2 * W j) ≤
+      Mout * sumNatML N (fun i => K j i * (p i * p i * w i)) := by
+    intro j hj
+    have hcs := nat_weighted_cs N M (K j) p q w hM hqw
+    have hmul := Nat.mul_le_mul_left (W j) hcs
+    have h1 : W j * (M * (sumNatML N (fun i => K j i * p i)) ^ 2) =
+        M * ((sumNatML N (fun i => K j i * p i)) ^ 2 * W j) := by
+      simp only [Nat.mul_left_comm, Nat.mul_comm]
+    have h2 : W j * (sumNatML N (fun i => K j i * q i) * sumNatML N (fun i => K j i * (p i * p i * w i))) =
+        (W j * sumNatML N (fun i => K j i * q i)) * sumNatML N (fun i => K j i * (p i * p i * w i)) := by
+      rw [Nat.mul_assoc]
+    rw [h1, h2, hW j hj] at hmul
+    exact hmul
+  have hsum := sumNatML_le_of_le L _ _ hterm
+  rw [sumNatML_mul_left', sumNatML_mul_left', sumNatML_swap] at hsum
+  have hcollapse : sumNatML N (fun i => sumNatML L (fun j => K j i * (p i * p i * w i))) =
+      D * sumNatML N (fun i => p i * p i * w i) := by
+    rw [← sumNatML_mul_left']
+    apply sumNatML_congr'
+    intro i hi
+    rw [sumNatML_mul_right', hMarkov i hi]
+  rw [hcollapse, ← Nat.mul_assoc] at hsum
+  exact hsum
+
+/-- Exact base-`N` product weight `∏_{d < m} f((idx / N^d) % N)` on `idx < N^m`. -/
+def prodNatPow (N : Nat) (f : Nat → Nat) : Nat → Nat → Nat
+  | 0, _ => 1
+  | m + 1, idx => prodNatPow N f m (idx / N) * f (idx % N)
+
+private theorem sumNatML_split_prod (A B : Nat) (f : Nat → Nat) :
+    sumNatML (A * B) f = sumNatML A (fun q => sumNatML B (fun r => f (q * B + r))) := by
+  induction A with
+  | zero => simp [sumNatML]
+  | succ a ih =>
+    have hadd : ∀ (base len : Nat) (g : Nat → Nat),
+        sumNatML (base + len) g = sumNatML base g + sumNatML len (fun r => g (base + r)) := by
+      intro base len g
+      induction len with
+      | zero => simp [sumNatML]
+      | succ l ihl => rw [Nat.add_succ, sumNatML, ihl, sumNatML, Nat.add_assoc]
+    rw [Nat.succ_mul, hadd (a * B) B f, ih, sumNatML]
+
+/-- **Exact All-Order Rényi-`(r+1)` Tensorization Identity (`renyi_tensorization_nat`):**
+    For EVERY integer order `r ≥ 1` and EVERY dimension `m : Nat`,
+    `∑_{x < N^m} (P^{⊗ m}(x))^{r+1} (W^{⊗ m}(x))^r = (∑_{i < N} p_i^{r+1} w_i^r)^m`! -/
+theorem renyi_tensorization_nat (N r m : Nat) (p w : Nat → Nat) (hN : 0 < N) :
+    sumNatML (N ^ m) (fun x => (prodNatPow N p m x) ^ (r + 1) * (prodNatPow N w m x) ^ r) =
+    (sumNatML N (fun i => p i ^ (r + 1) * w i ^ r)) ^ m := by
+  induction m with
+  | zero => simp [sumNatML, prodNatPow]
+  | succ k ih =>
+    rw [Nat.pow_succ, sumNatML_split_prod (N ^ k) N]
+    have hinner : ∀ q, q < N ^ k →
+        sumNatML N (fun rem =>
+          (prodNatPow N p (k + 1) (q * N + rem)) ^ (r + 1) *
+          (prodNatPow N w (k + 1) (q * N + rem)) ^ r) =
+        ((prodNatPow N p k q) ^ (r + 1) * (prodNatPow N w k q) ^ r) *
+        sumNatML N (fun rem => p rem ^ (r + 1) * w rem ^ r) := by
+      intro q _
+      rw [← sumNatML_mul_left']
+      apply sumNatML_congr'
+      intro rem hrem
+      have hdiv : (q * N + rem) / N = q := by
+        rw [Nat.mul_comm q N, Nat.mul_add_div hN, Nat.div_eq_of_lt hrem, Nat.add_zero]
+      have hmod : (q * N + rem) % N = rem := by
+        rw [Nat.mul_comm q N, Nat.mul_add_mod, Nat.mod_eq_of_lt hrem]
+      simp only [prodNatPow, hdiv, hmod, Nat.mul_pow]
+      simp only [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
+    rw [sumNatML_congr' (N ^ k) _ _ hinner, sumNatML_mul_right', ih, Nat.pow_succ]
+
+/-- **Exact `R_∞` (Max-Divergence) Monotonicity & Finite-Support Floor (`renyi_inf_upper_and_floor`):**
+    If `p_i * D ≤ Rmax * q_i` for all `i < N` and `w_i * q_i = M`:
+    1. `D^r * ∑ p_i^{r+1} w_i^r ≤ Rmax^r * M^r * ∑ p_i` (`R_{r+1} ≤ R_∞`);
+    2. `D * ∑ p_i ≤ Rmax * ∑ q_i` (`R_∞(P ‖ D_σ) ≥ (1 - τ_S)^{-1}`). -/
+theorem renyi_inf_upper_and_floor (N r D M Rmax : Nat) (p q w : Nat → Nat)
+    (hqw : ∀ i, i < N → w i * q i = M)
+    (hinf : ∀ i, i < N → p i * D ≤ Rmax * q i) :
+    D ^ r * sumNatML N (fun i => p i ^ (r + 1) * w i ^ r) ≤
+      Rmax ^ r * M ^ r * sumNatML N p ∧
+    D * sumNatML N p ≤ Rmax * sumNatML N q := by
+  constructor
+  · rw [← sumNatML_mul_left', ← sumNatML_mul_left']
+    apply sumNatML_le_of_le
+    intro i hi
+    have hpow : (p i * D) ^ r ≤ (Rmax * q i) ^ r := Nat.pow_le_pow_left (hinf i hi) r
+    have hmul1 : (p i * D) ^ r * w i ^ r ≤ (Rmax * q i) ^ r * w i ^ r :=
+      Nat.mul_le_mul_right (w i ^ r) hpow
+    have hmul2 : p i * ((p i * D) ^ r * w i ^ r) ≤ p i * ((Rmax * q i) ^ r * w i ^ r) :=
+      Nat.mul_le_mul_left (p i) hmul1
+    have hlhs : D ^ r * (p i ^ (r + 1) * w i ^ r) = p i * ((p i * D) ^ r * w i ^ r) := by
+      rw [Nat.pow_succ, Nat.mul_pow]
+      simp only [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
+    have hrhs : Rmax ^ r * M ^ r * p i = p i * ((Rmax * q i) ^ r * w i ^ r) := by
+      rw [Nat.mul_pow, ← hqw i hi, Nat.mul_pow]
+      simp only [Nat.mul_assoc, Nat.mul_comm]
+    rw [hlhs, hrhs]; exact hmul2
+  · rw [← sumNatML_mul_left', ← sumNatML_mul_left']
+    apply sumNatML_le_of_le
+    intro i hi
+    rw [Nat.mul_comm D (p i)]
+    exact hinf i hi
+
+/-- Pareto-optimal 14-bit constant-time `Dyadic-16384-A` (ML-KEM-768/1024, `Var = 1`):
+    `(67, 904, 3973, 6496, 3973, 904, 67) / 16384` on `{-3..3}` — 6 branchless comparisons,
+    collapses ML-KEM-1024 Bai overhead `11.17×` (`67.14 → 6.013` b) while clearing DFR `2^-174.03 < 2^-174`
+    (even though true discrete Gaussian `D_{σ=1}` FAILS ML-KEM-1024 at `2^-173.42`!). -/
+def dyadic16384AWeight (x : Int) : Int :=
+  if x = -3 ∨ x = 3 then 67
+  else if x = -2 ∨ x = 2 then 904
+  else if x = -1 ∨ x = 1 then 3973
+  else if x = 0 then 6496
+  else 0
+
+/-- Sub-1-bit Bai-optimal 14-bit constant-time `Dyadic-16384-B` (ML-KEM-512, `Var = 3/2`):
+    `(1, 25, 267, 1409, 3824, 5332, 3824, 1409, 267, 25, 1) / 16384` on `{-5..5}` —
+    collapses ML-KEM-512 Bai overhead `41.9×` (`24.77 → 0.5916` b, sub-1-bit!) with DFR `2^-139.32 < 2^-138.8`! -/
+def dyadic16384BWeight (x : Int) : Int :=
+  if x = -5 ∨ x = 5 then 1
+  else if x = -4 ∨ x = 4 then 25
+  else if x = -3 ∨ x = 3 then 267
+  else if x = -2 ∨ x = 2 then 1409
+  else if x = -1 ∨ x = 1 then 3824
+  else if x = 0 then 5332
+  else 0
+
+/-- **Theorem T2i (Bai et al. Analytic Engine: Rényi-2 DPI, All-Order Tensorization, `R_∞` Floor, & 14-Bit Pareto `Dyadic-16384-A/B`):**
+    1. **Pure-Integer Data-Processing Inequality (DPI):** `R_2(KP ‖ KQ) ≤ R_2(P ‖ Q)` under ANY finite Markov channel `K`.
+    2. **Exact All-Order Rényi-`(r+1)` Tensorization:** `Z_{r+1}(P^{⊗ m} ‖ Q^{⊗ m}) = Z_{r+1}(P ‖ Q)^m` for ALL `r, m : Nat`.
+    3. **Exact `R_∞` Monotonicity & Finite-Support Floor:** `R_{r+1}(P ‖ Q) ≤ R_∞(P ‖ Q)` and `R_∞(P ‖ D_σ) ≥ (1 - τ_S)^{-1}`.
+    4. **14-Bit Constant-Time `Dyadic-16384-A/B`:**
+       Exact moments (`Var = 1`, `μ_4 = 2983/1024`, QGTL `det(g) = 1959/4096 > 243/512 > 15/32 > 3/8`;
+       `Var = 3/2`, `μ_4 = 13755/2048`, QGTL `det(g) = 3049/6144 > 15/32 > 5/12`) and cleared-denominator
+       Bai collapse (`> 11.1×` at ML-KEM-1024 riding the Gaussian DFR Pareto wall; `> 41.8×` sub-1-bit at ML-KEM-512)! -/
+theorem t2i_bai_engine_dpi_tensorization_and_dyadic16384 :
+    (∀ (N L M Mout D : Nat) (K : Nat → Nat → Nat) (p q w W : Nat → Nat),
+      0 < M → (∀ i, i < N → w i * q i = M) →
+      (∀ j, j < L → W j * sumNatML N (fun i => K j i * q i) = Mout) →
+      (∀ i, i < N → sumNatML L (fun j => K j i) = D) →
+      M * sumNatML L (fun j => (sumNatML N (fun i => K j i * p i)) ^ 2 * W j) ≤
+      Mout * D * sumNatML N (fun i => p i * p i * w i)) ∧
+    (∀ (N r m : Nat) (p w : Nat → Nat), 0 < N →
+      sumNatML (N ^ m) (fun x => (prodNatPow N p m x) ^ (r + 1) * (prodNatPow N w m x) ^ r) =
+      (sumNatML N (fun i => p i ^ (r + 1) * w i ^ r)) ^ m) ∧
+    (∀ (N r D M Rmax : Nat) (p q w : Nat → Nat),
+      (∀ i, i < N → w i * q i = M) →
+      (∀ i, i < N → p i * D ≤ Rmax * q i) →
+      D ^ r * sumNatML N (fun i => p i ^ (r + 1) * w i ^ r) ≤
+        Rmax ^ r * M ^ r * sumNatML N p ∧
+      D * sumNatML N p ≤ Rmax * sumNatML N q) ∧
+    (dyadic16384AWeight (-3) + dyadic16384AWeight (-2) + dyadic16384AWeight (-1) +
+       dyadic16384AWeight 0 + dyadic16384AWeight 1 + dyadic16384AWeight 2 + dyadic16384AWeight 3 = 16384 ∧
+     9 * dyadic16384AWeight (-3) + 4 * dyadic16384AWeight (-2) + dyadic16384AWeight (-1) +
+       dyadic16384AWeight 1 + 4 * dyadic16384AWeight 2 + 9 * dyadic16384AWeight 3 = 16384 ∧
+     81 * dyadic16384AWeight (-3) + 16 * dyadic16384AWeight (-2) + dyadic16384AWeight (-1) +
+       dyadic16384AWeight 1 + 16 * dyadic16384AWeight 2 + 81 * dyadic16384AWeight 3 = 47728 ∧
+     47728 * 1024 = 2983 * 16384 ∧
+     243 * 4096 < 1959 * 512 ∧ 1959 * 2 < 4096 ∧
+     6013 * 111 < 67140 * 10) ∧
+    (dyadic16384BWeight (-5) + dyadic16384BWeight (-4) + dyadic16384BWeight (-3) +
+       dyadic16384BWeight (-2) + dyadic16384BWeight (-1) + dyadic16384BWeight 0 +
+       dyadic16384BWeight 1 + dyadic16384BWeight 2 + dyadic16384BWeight 3 +
+       dyadic16384BWeight 4 + dyadic16384BWeight 5 = 16384 ∧
+     25 * dyadic16384BWeight (-5) + 16 * dyadic16384BWeight (-4) + 9 * dyadic16384BWeight (-3) +
+       4 * dyadic16384BWeight (-2) + dyadic16384BWeight (-1) + dyadic16384BWeight 1 +
+       4 * dyadic16384BWeight 2 + 9 * dyadic16384BWeight 3 + 16 * dyadic16384BWeight 4 +
+       25 * dyadic16384BWeight 5 = 24576 ∧
+     625 * dyadic16384BWeight (-5) + 256 * dyadic16384BWeight (-4) + 81 * dyadic16384BWeight (-3) +
+       16 * dyadic16384BWeight (-2) + dyadic16384BWeight (-1) + dyadic16384BWeight 1 +
+       16 * dyadic16384BWeight 2 + 81 * dyadic16384BWeight 3 + 256 * dyadic16384BWeight 4 +
+       625 * dyadic16384BWeight 5 = 110040 ∧
+     110040 * 2048 = 13755 * 16384 ∧
+     15 * 6144 < 3049 * 32 ∧ 3049 * 2 < 6144 ∧
+     5916 * 418 < 24770 * 100) :=
+  ⟨renyi2_dpi_nat, renyi_tensorization_nat, renyi_inf_upper_and_floor, by decide, by decide⟩
+
 end
 end TriadFrontier.MLWETightness
