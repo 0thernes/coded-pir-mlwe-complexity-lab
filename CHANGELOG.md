@@ -6,6 +6,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Changed
+- **2026-11-26 correction note:** README, CLAIMS, LIMITATIONS, the Markdown docs, the Pages site (`docs/site/`) and the social preview image were corrected to match an independent statement audit (see [ERRATA.md](ERRATA.md)). The entries below record what was claimed at the time. Withdrawn: the refutation of Luo (`T2a` is a diagonal-product identity), the zero-error rate $10/17$ over $\mathbb{F}_7$ and an exact Koszul rank (`T1a`; the rate is numerical for one design, privacy and decoding not verified), the "Gaussian DFR Paradox" and DFR pass/fail verdicts (float64 model; FIPS 203 sets no $2^{-174}$ threshold), the sharp $+832$ `Compress_1` failure (the Lean model differs from FIPS 203 at $x=832$), the $\ge 7$-variable storage-coupled confinement (`T1j`), and the count 270,336 (67,584 elemental submodularity inequalities plus 12 monotonicity).
+
 ## [5.0.0] - 2026-11-26
 
 ### Added

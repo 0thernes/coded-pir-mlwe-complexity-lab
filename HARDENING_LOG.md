@@ -3,6 +3,8 @@
 
 Every real defect, mathematical subtlety, tooling hazard, and epistemic blindspot encountered during the 10-pass research and engineering lifecycle is recorded here using the Build Standard v1.2.0 10-class finding taxonomy (`bug`, `error`, `issue`, `problem`, `concern`, `dilemma`, `conflict`, `gap`, `hole`, `blindspot`).
 
+> **Correction note (2026-11-26):** this log records what was believed during development. H01 (the `+1664` to `+1665` change was not a fix; the Lean model now differs from FIPS 203 `Compress_1` at $x=832$) and H19 (there is no "Gaussian DFR Paradox": the DFRs come from a float64 model and FIPS 203 states no $2^{-174}$ threshold) are corrected in [ERRATA.md](ERRATA.md).
+
 | ID | Class | Pass | Finding | Root Cause | Resolution & Regression Check |
 |---|---|---|---|---|---|
 | **H01** | `bug` | Pass 3 | FIPS 203 `Compress_1` rounding constant off-by-one (`+1664` vs. `+1665`) | Standard round-half-up for $q=3329$ requires $\lfloor(2x + 1665)/3329\rfloor \bmod 2$; using $+1664$ failed to round $x = 832$ to $1$. Caught simultaneously by Lean `decide` and Python `complexity_triad.py`. | Fixed to `+1665` across `lean/TriadFrontier/ComplexityTriad.lean` (`T3d`), `lean/Challenge.lean`, `native/src/triad_core.c`, `native/tests/test_triad_core.c`, `python/triad_verify/complexity_triad.py`, and `paper/main.tex`. Guarded by negative sharp boundary tests at $e = +832$. |

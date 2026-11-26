@@ -20,14 +20,14 @@
   <g font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="19" fill="#e2e8f0">
     <rect x="90" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
     <text x="112" y="350" font-weight="700" fill="#38bdf8">PILLAR I · CS-053 PIR (T1a–T1j)</text>
-    <text x="112" y="382" font-size="15.5">• Exact Koszul rank: 10/17 &gt; 4/7 (F_7)</text>
+    <text x="112" y="382" font-size="15.5">• 10/17 vs 4/7 for one design (numerical)</text>
     <text x="112" y="408" font-size="15.5">• Single F_2^64 6-obj realization (64/64)</text>
-    <text x="112" y="434" font-size="15.5">• Barrier pushed to ≥7-var storage cone</text>
+    <text x="112" y="434" font-size="15.5">• F_2 certificates (4 vars, 5-6 objects)</text>
     <text x="112" y="460" font-size="15.5">• Projective P³ linear collapse ∀F</text>
 
     <rect x="468" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#f472b6" stroke-width="1.5"/>
     <text x="490" y="350" font-weight="700" fill="#f472b6">PILLAR II · CS-026 MLWE (T2a–T2i)</text>
-    <text x="490" y="382" font-size="15.5">• ML-KEM-1024 Gaussian DFR Paradox</text>
+    <text x="490" y="382" font-size="15.5">• ML-KEM-1024 DFRs (float64 model)</text>
     <text x="490" y="408" font-size="15.5">• 14b Dyadic-16384-A: 6.01b (11.2× drop)</text>
     <text x="490" y="434" font-size="15.5">• 14b Dyadic-16384-B: 0.59b (41.9× sub-1b)</text>
     <text x="490" y="460" font-size="15.5">• Formalized Rényi DPI, Tensor &amp; R_∞</text>
