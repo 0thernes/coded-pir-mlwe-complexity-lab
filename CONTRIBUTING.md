@@ -14,7 +14,7 @@ This repository follows Build Standard v1.2.0:
 # 1. Verify zero-Mathlib Lean 4.35.0 proofs, --wfail, strict & exhaustive axiom audits
 cd lean && lake build --wfail && lake env lean VerifyAxioms.lean && lake env lean AuditExhaustiveAxioms.lean
 
-# 2. Build and test native C11 core (-Wall -Wextra -Wpedantic -Werror, 87/87 unit tests)
+# 2. Build and test native C11 core (-Wall -Wextra -Wpedantic -Werror, 90/90 unit tests incl. live F_101 encode/decode)
 make -C native clean all test
 
 # 3. Run Eshkol v1.3.6 forward-mode AD checks

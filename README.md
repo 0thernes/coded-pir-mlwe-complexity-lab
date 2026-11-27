@@ -8,7 +8,7 @@
 [![CI](https://github.com/0thernes/coded-pir-mlwe-complexity-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/0thernes/coded-pir-mlwe-complexity-lab/actions/workflows/ci.yml)
 [![Pages](https://img.shields.io/badge/Interactive-Proof%20Blueprint-0284c7.svg)](https://0thernes.github.io/coded-pir-mlwe-complexity-lab/)
 
-Zero-Mathlib **Lean 4.35.0** proofs (32 theorems `T1a`–`T3l` & `T1k` plus 10 adversarial tests, 35 audited declarations + programmatic 1,656-declaration `Lean.collectAxioms` sweep under `module`, replayed by 6 proof kernels in CI; 4,745 declarations checked by `con-leche`/`con-ron` on the standalone `Solution` export), cross-checks in hardened C11 (88/88 tests + 1,024 fuzz), strict 0-`ruff`/0-`mypy` Python 3.12 (25/25 pytest, 16/16 killed mutants) and Eshkol v1.3.6 dual-number AD, dual RFC 3161 + 3-calendar Bitcoin OpenTimestamps receipts, a CSP/WCAG-AA interactive Proof Blueprint, and an AMS-LaTeX preprint (`v5.2.0`).
+Zero-Mathlib **Lean 4.35.0** proofs (32 theorems `T1a`–`T3l` & `T1k` plus 10 adversarial tests, 35 audited declarations + programmatic 1,656-declaration `Lean.collectAxioms` sweep under `module`, replayed by 6 proof kernels in CI; 4,745 declarations checked by `con-leche`/`con-ron` on the standalone `Solution` export), cross-checks in hardened C11 (90/90 tests + 1,024 fuzz), strict 0-`ruff`/0-`mypy` Python 3.12 (25/25 pytest, 16/16 killed mutants) and Eshkol v1.3.6 dual-number AD, dual RFC 3161 + 3-calendar Bitcoin OpenTimestamps receipts, a CSP/WCAG-AA interactive Proof Blueprint, and an AMS-LaTeX preprint (`v5.3.0`).
 
 **What this repository is.** A suite of elementary algebraic identities, sound linear-algebraic certificates (`T1k`), a field-universal linear flag-private PIR protocol with zero-error decoding and exact $T$-collusion privacy bijection (`T1k`, instantiated by an explicit $\mathbb{F}_{101}$ $(6,3,3)$ rate-$10/17$ witness), and formalisations of classical results across coded/Byzantine PIR (`CS-053`), noise analysis for Module-LWE and FIPS 203 ML-KEM (`CS-026`/`QC-042`/`CM-048`, including exact coupled FIPS 203 DFRs cross-verified by a 90-digit Kronecker exact interval oracle reproducing NIST Table 1 within `0.04` bits), and tensor rank, Schwartz–Zippel and zero-error graph capacity (`CS-001`/`CS-004`/`CS-010`/`CS-012`/`CS-051`/`CS-CMP-012`). It resolves no grand published open problem in Lean (`0 / 1,900` retired) and refutes no published claim. An independent statement audit (2026-11-26) is recorded in [ERRATA.md](ERRATA.md) and in the [archive audit log](https://github.com/0thernes/0thernes-research-archive/blob/main/docs/reviews/2026-11-26-statement-audit.md); `v5.1.0`–`v5.2.0` directly close all paper errata `A01`–`A12`, all formal errata `L01`–`L07`, and all script/CI items `S01`–`S04`.
 
@@ -150,7 +150,7 @@ cd coded-pir-mlwe-complexity-lab
 # 1. Zero-Mathlib Lean 4.35.0 proofs + axiom & kernel audit (32 theorems + 10 adversarial tests + 1,656-decl sweep)
 (cd lean && lake build --wfail && lake env lean VerifyAxioms.lean && lake env lean AuditExhaustiveAxioms.lean && lake env leanchecker Solution && lake env leanchecker-paranoid Solution)
 
-# 2. Native C11 core (-std=c11 -Wall -Wextra -Wpedantic -Werror, 88/88 tests + 1,024 fuzz)
+# 2. Native C11 core (-std=c11 -Wall -Wextra -Wpedantic -Werror, 90/90 tests + 1,024 fuzz)
 make -C native clean test
 
 # 3. Eshkol v1.3.6 forward-mode dual-number AD modules (3/3 + 7 negative guards, incl. Dyadic-256/512/1024/16384-A/B)

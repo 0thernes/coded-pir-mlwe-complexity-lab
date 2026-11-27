@@ -115,6 +115,10 @@ def main() -> int:
         for p in (ROOT / "eshkol").iterdir()
         if p.is_file() and p.suffix in {".esk", ".mjs"}
     )
+    py_script_files = sorted(
+        p.relative_to(ROOT).as_posix()
+        for p in (ROOT / "scripts").glob("*.py")
+    )
     root_targets = (
         [
             "VERSION",
@@ -139,14 +143,18 @@ def main() -> int:
             "native/include/triad_core.h",
             "native/src/triad_core.c",
             "native/src/triad_cli.c",
+            "native/tests/test_triad_core.c",
+            "native/tests/fuzz_triad.c",
             "paper/main.tex",
             "paper/refs.bib",
             "results/lean_axioms.txt",
             "results/exact_audit_summary.json",
+            "tests/test_all.py",
         ]
         + lean_files
         + figure_files
         + py_core_files
+        + py_script_files
         + eshkol_files
     )
     if (ROOT / "results" / "six_kernel_audit.txt").is_file():
@@ -162,6 +170,22 @@ def main() -> int:
         "manifest_sha256": sha256_file(ROOT / "MANIFEST.sha256"),
         "manifest_entries": str(len(root_hashes)),
     }
+    all_ok = bool(
+        grid["checked_blocks"] == 46
+        and f11["subsets_verified"] == 15
+        and f101_t3k3["flag_isomorphisms_verified"] == 20
+        and f101_t3k3["live_zero_error_decode_trials_passed"] == 10
+        and poly["violations"] == 0
+        and t1i_lin["total_4marginals_in_I4"] == 510
+        and t1j_f2["all_64_subsets_verified"]
+        and mlwe["chen_step9"]["all_even_modes_vanish"]
+        and mlwe["twisted_dft_m2_to_6"]["all_forbidden_modes_vanish"]
+        and mlwe["dyadic1024_bai_and_all_order"]["all_order_renyi_k2_to_16_and_tv_chi2_verified"]
+        and mlwe["dyadic16384_gaussian_paradox"]["renyi2_dpi_verified"]
+        and triad["strassen_and_all_m_koszul"]["strassen_7prod_exact_Z"]
+        and triad["brockett_dobkin_and_lovasz_shannon_capacity"]["lovasz_c5_6x6_zsqrt5_sos_36_entries_exact"]
+        and len(triad["schwartz_zippel_and_paley_family"]["paley_conference_sos_verified"]) == 6
+    )
     receipt: dict[str, Any] = {
         "schema": "rosette-wire-receipt/v1-cleanroom",
         "project": "coded-pir-mlwe-complexity-lab",
@@ -172,7 +196,7 @@ def main() -> int:
         "lean_toolchain": (ROOT / "lean" / "lean-toolchain").read_text(encoding="utf-8").strip(),
         "data_hashes": data_hashes,
         "artifact_hashes": artifact_hashes,
-        "all_checks_ok": bool(poly["violations"] == 0 and mlwe["chen_step9"]["all_even_modes_vanish"]),
+        "all_checks_ok": all_ok,
     }
     (ROOT / "results" / "rosette_receipt.json").write_text(
         json.dumps(receipt, indent=2) + "\n", encoding="utf-8", newline="\n"

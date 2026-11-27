@@ -1266,6 +1266,8 @@ bool triad_verify_f101_t3_k3_e6_zero_error(void) {
 
         for (int idx = 0; idx < 3; idx++) {
             int n = (int)F101_T3K3_SUBSETS[s][idx];
+            int pm7[7 * 20];
+            int pmc10[10 * 20];
             int stk14[14 * 20];
             int stk20[20 * 20];
             int q7[7 * 20];
@@ -1275,6 +1277,8 @@ bool triad_verify_f101_t3_k3_e6_zero_error(void) {
                     int acc = 0;
                     for (int t = 0; t < 20; t++) acc += P[n][r][t] * M_mat[t * 20 + j];
                     int pm = acc % p;
+                    pm7[r * 20 + j] = pm;
+                    pmc10[r * 20 + j] = pm;
                     q7[r * 20 + j] = Q[n][r][j];
                     qd10[r * 20 + j] = Q[n][r][j];
                     stk14[r * 20 + j] = pm;
@@ -1288,15 +1292,162 @@ bool triad_verify_f101_t3_k3_e6_zero_error(void) {
                     int acc = 0;
                     for (int t = 0; t < 20; t++) acc += C[n][r][t] * M_mat[t * 20 + j];
                     int cm = acc % p;
+                    pmc10[(7 + r) * 20 + j] = cm;
                     qd10[(7 + r) * 20 + j] = D[n][r][j];
                     stk20[(7 + r) * 20 + j] = cm;
                     stk20[(17 + r) * 20 + j] = D[n][r][j];
                 }
             }
+            if (triad_rank_mod_p(pm7, 7, 20, p) != 7) return false;
             if (triad_rank_mod_p(q7, 7, 20, p) != 7) return false;
             if (triad_rank_mod_p(stk14, 14, 20, p) != 7) return false;
+            if (triad_rank_mod_p(pmc10, 10, 20, p) != 10) return false;
             if (triad_rank_mod_p(qd10, 10, 20, p) != 10) return false;
             if (triad_rank_mod_p(stk20, 20, 20, p) != 10) return false;
+        }
+    }
+
+    /* 3. End-to-end live C11 encode + zero-error decode round-trip for BOTH theta=0 and theta=1 (H49):
+     *    Compute exact 60x60 DecInv = M_des^{-1} mod 101 and 18x42 Cancel with Cancel * M_pure = M_mixed,
+     *    encode two distinct 60-symbol files W1, W2 across 6 MDS servers (102 downloaded symbols = rate 10/17),
+     *    strip pure interference via Cancel, apply DecInv, and assert bit-for-bit recovery of all 60 symbols! */
+    int aug_des[60][120];
+    for (int i = 0; i < 60; i++) {
+        for (int j = 0; j < 60; j++) {
+            aug_des[i][j] = M_des[i * 60 + j];
+            aug_des[i][60 + j] = (i == j) ? 1 : 0;
+        }
+    }
+    for (int c = 0; c < 60; c++) {
+        int piv = -1;
+        for (int i = c; i < 60; i++) {
+            if (aug_des[i][c] != 0) { piv = i; break; }
+        }
+        if (piv < 0) return false;
+        if (piv != c) {
+            for (int j = 0; j < 120; j++) {
+                int tmp = aug_des[c][j]; aug_des[c][j] = aug_des[piv][j]; aug_des[piv][j] = tmp;
+            }
+        }
+        int inv = triad_mod_inv(aug_des[c][c], p);
+        for (int j = 0; j < 120; j++) aug_des[c][j] = (aug_des[c][j] * inv) % p;
+        for (int i = 0; i < 60; i++) {
+            if (i != c && aug_des[i][c] != 0) {
+                int f = aug_des[i][c];
+                for (int j = 0; j < 120; j++) {
+                    aug_des[i][j] = mod_norm(aug_des[i][j] - f * aug_des[c][j], p);
+                }
+            }
+        }
+    }
+
+    /* Solve M_pure^T * Cancel^T = M_mixed^T (60 equations in 42 vars for each of 18 RHS columns) */
+    int aug_can[60][60];
+    for (int i = 0; i < 60; i++) {
+        for (int j = 0; j < 42; j++) aug_can[i][j] = M_pure[j * 60 + i];
+        for (int m = 0; m < 18; m++) {
+            int n_srv = m / 3;
+            int r_blk = m % 3;
+            int k_mds = i / 20;
+            int col_j = i % 20;
+            aug_can[i][42 + m] = (G[n_srv][k_mds] * D[n_srv][r_blk][col_j]) % p;
+        }
+    }
+    int piv_row = 0;
+    int piv_cols[42];
+    for (int c = 0; c < 42; c++) {
+        int piv = -1;
+        for (int i = piv_row; i < 60; i++) {
+            if (aug_can[i][c] != 0) { piv = i; break; }
+        }
+        if (piv < 0) return false;
+        if (piv != piv_row) {
+            for (int j = 0; j < 60; j++) {
+                int tmp = aug_can[piv_row][j]; aug_can[piv_row][j] = aug_can[piv][j]; aug_can[piv][j] = tmp;
+            }
+        }
+        int inv = triad_mod_inv(aug_can[piv_row][c], p);
+        for (int j = 0; j < 60; j++) aug_can[piv_row][j] = (aug_can[piv_row][j] * inv) % p;
+        for (int i = 0; i < 60; i++) {
+            if (i != piv_row && aug_can[i][c] != 0) {
+                int f = aug_can[i][c];
+                for (int j = 0; j < 60; j++) {
+                    aug_can[i][j] = mod_norm(aug_can[i][j] - f * aug_can[piv_row][j], p);
+                }
+            }
+        }
+        piv_cols[c] = piv_row;
+        piv_row++;
+    }
+    for (int i = 42; i < 60; i++) {
+        for (int m = 0; m < 18; m++) {
+            if (aug_can[i][42 + m] != 0) return false;
+        }
+    }
+    int Cancel[18][42];
+    for (int m = 0; m < 18; m++) {
+        for (int j = 0; j < 42; j++) Cancel[m][j] = aug_can[piv_cols[j]][42 + m];
+    }
+
+    /* Deterministic non-trivial 60-symbol files W1, W2 and MDS storage Y1, Y2 */
+    int W1[3][20], W2[3][20], Y1[6][20], Y2[6][20];
+    for (int k = 0; k < 3; k++) {
+        for (int j = 0; j < 20; j++) {
+            W1[k][j] = (7 * k + 13 * j + 5) % p;
+            W2[k][j] = (19 * k + 31 * j + 11) % p;
+        }
+    }
+    for (int n = 0; n < 6; n++) {
+        for (int j = 0; j < 20; j++) {
+            int s1 = 0, s2v = 0;
+            for (int k = 0; k < 3; k++) {
+                s1 += G[n][k] * W1[k][j];
+                s2v += G[n][k] * W2[k][j];
+            }
+            Y1[n][j] = s1 % p;
+            Y2[n][j] = s2v % p;
+        }
+    }
+    for (int theta = 0; theta < 2; theta++) {
+        int A1[6][7], A2[6][7], A3[6][3];
+        for (int n = 0; n < 6; n++) {
+            for (int r = 0; r < 7; r++) {
+                int s1 = 0, s2v = 0;
+                for (int j = 0; j < 20; j++) {
+                    s1 += (theta == 0 ? P[n][r][j] : Q[n][r][j]) * Y1[n][j];
+                    s2v += (theta == 0 ? Q[n][r][j] : P[n][r][j]) * Y2[n][j];
+                }
+                A1[n][r] = s1 % p;
+                A2[n][r] = s2v % p;
+            }
+            for (int r = 0; r < 3; r++) {
+                int s3 = 0;
+                for (int j = 0; j < 20; j++) {
+                    s3 += (theta == 0 ? C[n][r][j] : D[n][r][j]) * Y1[n][j];
+                    s3 += (theta == 0 ? D[n][r][j] : C[n][r][j]) * Y2[n][j];
+                }
+                A3[n][r] = s3 % p;
+            }
+        }
+        int int_flat[42];
+        for (int n = 0; n < 6; n++) {
+            for (int r = 0; r < 7; r++) int_flat[n * 7 + r] = (theta == 0) ? A2[n][r] : A1[n][r];
+        }
+        int des_flat[60];
+        for (int n = 0; n < 6; n++) {
+            for (int r = 0; r < 7; r++) des_flat[n * 10 + r] = (theta == 0) ? A1[n][r] : A2[n][r];
+            for (int r = 0; r < 3; r++) {
+                int mix = 0;
+                for (int j = 0; j < 42; j++) mix += Cancel[n * 3 + r][j] * int_flat[j];
+                des_flat[n * 10 + 7 + r] = mod_norm(A3[n][r] - (mix % p), p);
+            }
+        }
+        for (int i = 0; i < 60; i++) {
+            int acc = 0;
+            for (int j = 0; j < 60; j++) acc += aug_des[i][60 + j] * des_flat[j];
+            int rec = acc % p;
+            int exp_val = (theta == 0) ? W1[i / 20][i % 20] : W2[i / 20][i % 20];
+            if (rec != exp_val) return false;
         }
     }
     return true;

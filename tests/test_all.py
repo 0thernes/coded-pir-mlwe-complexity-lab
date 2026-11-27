@@ -495,7 +495,7 @@ def test_timestamps_tsr_and_ots_integrity_and_tamper(tmp_path: Path) -> None:
     script = REPO_ROOT / "scripts" / "stamp_timestamps.py"
     r_ok = subprocess.run([sys.executable, str(script), "--verify"], cwd=REPO_ROOT, capture_output=True, text=True, check=False)
     assert r_ok.returncode == 0, f"Timestamp verification failed: {r_ok.stdout}\n{r_ok.stderr}"
-    assert "RFC3161 OK" in r_ok.stdout and "OTS OK" in r_ok.stdout
+    assert "RFC3161 CRYPTO-OK" in r_ok.stdout and "OTS OK" in r_ok.stdout
 
     tampered = tmp_path / "MANIFEST.tampered"
     tampered.write_bytes((REPO_ROOT / "MANIFEST.sha256").read_bytes() + b"\n# tampered\n")
@@ -507,6 +507,20 @@ def test_timestamps_tsr_and_ots_integrity_and_tamper(tmp_path: Path) -> None:
         check=False,
     )
     assert r_bad.returncode != 0, "Timestamp verifier failed to reject tampered manifest!"
+
+    # Also verify cryptographic RSA/SHA-256 signature tamper rejection (H51):
+    tsr_bytes = bytearray((REPO_ROOT / "data" / "MANIFEST.sha256.tsr").read_bytes())
+    tsr_bytes[-10] ^= 0xFF
+    bad_tsr = tmp_path / "forged.tsr"
+    bad_tsr.write_bytes(bytes(tsr_bytes))
+    r_sig = subprocess.run(
+        [sys.executable, str(script), "--verify", "--tsr", str(bad_tsr)],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert r_sig.returncode != 0, "Cryptographic RFC 3161 verifier failed to reject forged TSR signature!"
 
 
 def test_zero_broken_relative_markdown_and_blueprint_links() -> None:

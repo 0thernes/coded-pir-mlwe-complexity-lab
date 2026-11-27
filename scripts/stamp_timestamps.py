@@ -127,10 +127,44 @@ def parse_tsr_message_digest(openssl_text: str) -> str:
     return "".join(hex_bytes)
 
 
+def find_ca_bundle() -> str | None:
+    """Locate a root CA certificate bundle for full cryptographic RFC 3161 TSA verification."""
+    candidates = [
+        Path("/etc/ssl/certs/ca-certificates.crt"),
+        Path("/etc/pki/tls/certs/ca-bundle.crt"),
+        Path("/etc/ssl/cert.pem"),
+        Path(r"C:\Program Files\Git\usr\ssl\certs\ca-bundle.crt"),
+        Path(r"C:\Program Files\Git\mingw64\etc\ssl\certs\ca-bundle.crt"),
+    ]
+    for cand in candidates:
+        if cand.is_file():
+            return str(cand)
+    try:
+        import certifi  # type: ignore[import-not-found]
+
+        p = Path(certifi.where())
+        if p.is_file():
+            return str(p)
+    except ImportError:
+        pass
+    return None
+
+
 def verify_rfc3161(manifest: Path, tsr: Path) -> str:
     if not tsr.is_file():
         raise FileNotFoundError(f"Missing RFC 3161 receipt: {tsr}")
     openssl = find_openssl()
+    ca_bundle = find_ca_bundle()
+    if ca_bundle is None:
+        raise FileNotFoundError("Root CA bundle not found for cryptographic openssl ts -verify")
+    v = subprocess.run(
+        [openssl, "ts", "-verify", "-data", str(manifest), "-in", str(tsr), "-CAfile", ca_bundle],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if v.returncode != 0 or "Verification: OK" not in v.stdout:
+        raise ValueError(f"Cryptographic RFC 3161 signature/chain verification failed: {v.stdout} {v.stderr}")
     r = subprocess.run(
         [openssl, "ts", "-reply", "-in", str(tsr), "-text"],
         capture_output=True,
@@ -150,7 +184,7 @@ def verify_rfc3161(manifest: Path, tsr: Path) -> str:
     time_m = re.search(r"Time stamp:\s*(.+)", text)
     serial = serial_m.group(1) if serial_m else "unknown"
     ts_str = time_m.group(1).strip() if time_m else "unknown"
-    return f"RFC3161 OK (serial={serial}, time={ts_str}, sha256={expected_hex[:16]}...)"
+    return f"RFC3161 CRYPTO-OK (serial={serial}, time={ts_str}, sha256={expected_hex[:16]}...)"
 
 
 def verify_ots(manifest: Path, ots: Path) -> str:

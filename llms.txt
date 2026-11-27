@@ -37,4 +37,4 @@
 - [docs/LITERATURE_SEARCH.md](docs/LITERATURE_SEARCH.md): Logged prior-art search & Crossref 0-retraction audit.
 - [docs/MEGA_ATLAS_CROSSCHECK.md](docs/MEGA_ATLAS_CROSSCHECK.md): Honest Mega-Atlas crosswalk (`0 / 1,900` grand problems retired).
 - [docs/SUBMISSION_PACKET.md](docs/SUBMISSION_PACKET.md): Export-control, AI-disclosure & preservation packet.
-- [dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf](dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf): Frozen AMS-LaTeX preprint (`v5.2.0`).
+- [dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf](dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf): Frozen AMS-LaTeX preprint (`v5.3.0`).

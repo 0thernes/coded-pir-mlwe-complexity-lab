@@ -91,14 +91,16 @@ theorem t2a_determinant_ideal_secret_independence :
   rw [h2, ← CommRing.mul_assoc, CommRing.mul_comm uInv u, hu, CommRing.one_mul]
 
 -- ============================================================================
--- T2b: Yilei Chen (2024/555) Step-9 Exact Anti-Periodic DFT Cancellation
+-- T2b: Ring-Universal Anti-Periodic DFT Cancellation (Proposed Explanation of Chen Step 9)
 -- ============================================================================
 
 /-- Discrete Fourier coefficient `f̂(freq) = ∑_{x=0}^{N-1} f(x) ω^{freq * x}` over any `CommRing R`. -/
 def dftCoeff {R : Type} [CommRing R] (N : Nat) (ω : R) (f : Nat → R) (freq : Nat) : R :=
   sumR N (fun x => f x * rPow ω (freq * x))
 
-/-- **Theorem T2b (Yilei Chen Step-9 Exact Anti-Periodic DFT Cancellation):**
+/-- **Theorem T2b (Ring-Universal Anti-Periodic DFT Cancellation):**
+Proposed algebraic explanation of the Chen (ePrint 2024/555) Step-9 failure (bug identified by
+Hongxun Wu and independently by Thomas Vidick, April 2024; nothing from Chen's preprint is formalized):
 1. Over ANY commutative ring `R`, for EVERY `D ≥ 1`, root `ω` with `ω^D = -1`,
    anti-periodic function `f(x + D) = -f(x)`, and EVERY integer frequency `k`,
    the even Fourier mode vanishes identically: `f̂(2k) = 0`.
@@ -1484,10 +1486,10 @@ theorem renyi_inf_upper_and_floor (N r D M Rmax : Nat) (p q w : Nat → Nat)
     rw [Nat.mul_comm D (p i)]
     exact hinf i hi
 
-/-- Pareto-optimal 14-bit constant-time `Dyadic-16384-A` (ML-KEM-768/1024, `Var = 1`):
+/-- 14-bit constant-time `Dyadic-16384-A` (ML-KEM-768/1024, `Var = 1`):
     `(67, 904, 3973, 6496, 3973, 904, 67) / 16384` on `{-3..3}` — 6 branchless comparisons,
-    collapses ML-KEM-1024 Bai overhead `11.17×` (`67.14 → 6.013` b) while clearing DFR `2^-174.03 < 2^-174`
-    (even though true discrete Gaussian `D_{σ=1}` FAILS ML-KEM-1024 at `2^-173.42`!). -/
+    reducing ML-KEM-1024 Bai overhead `11.17×` (`67.14 → 6.013` b) with exact coupled FIPS 203
+    DFR `2^-171.80` (90-digit verified outside Lean; NIST Table 1 CBD_2 baseline is `2^-174.8`). -/
 def dyadic16384AWeight (x : Int) : Int :=
   if x = -3 ∨ x = 3 then 67
   else if x = -2 ∨ x = 2 then 904
@@ -1497,7 +1499,8 @@ def dyadic16384AWeight (x : Int) : Int :=
 
 /-- Sub-1-bit Bai-optimal 14-bit constant-time `Dyadic-16384-B` (ML-KEM-512, `Var = 3/2`):
     `(1, 25, 267, 1409, 3824, 5332, 3824, 1409, 267, 25, 1) / 16384` on `{-5..5}` —
-    collapses ML-KEM-512 Bai overhead `41.9×` (`24.77 → 0.5916` b, sub-1-bit!) with DFR `2^-139.32 < 2^-138.8`! -/
+    reducing ML-KEM-512 Bai overhead `41.9×` (`24.77 → 0.5916` b, sub-1-bit) with exact coupled
+    FIPS 203 DFR `2^-136.19` (90-digit verified outside Lean; NIST Table 1 baseline is `2^-138.8`). -/
 def dyadic16384BWeight (x : Int) : Int :=
   if x = -5 ∨ x = 5 then 1
   else if x = -4 ∨ x = 4 then 25
@@ -1507,14 +1510,14 @@ def dyadic16384BWeight (x : Int) : Int :=
   else if x = 0 then 5332
   else 0
 
-/-- **Theorem T2i (Bai et al. Analytic Engine: Rényi-2 DPI, All-Order Tensorization, `R_∞` Floor, & 14-Bit Pareto `Dyadic-16384-A/B`):**
+/-- **Theorem T2i (Bai et al. Analytic Engine: Rényi-2 DPI, All-Order Tensorization, `R_∞` Floor, & 14-Bit `Dyadic-16384-A/B`):**
     1. **Pure-Integer Data-Processing Inequality (DPI):** `R_2(KP ‖ KQ) ≤ R_2(P ‖ Q)` under ANY finite Markov channel `K`.
     2. **Exact All-Order Rényi-`(r+1)` Tensorization:** `Z_{r+1}(P^{⊗ m} ‖ Q^{⊗ m}) = Z_{r+1}(P ‖ Q)^m` for ALL `r, m : Nat`.
     3. **Exact `R_∞` Monotonicity & Finite-Support Floor:** `R_{r+1}(P ‖ Q) ≤ R_∞(P ‖ Q)` and `R_∞(P ‖ D_σ) ≥ (1 - τ_S)^{-1}`.
     4. **14-Bit Constant-Time `Dyadic-16384-A/B`:**
        Exact moments (`Var = 1`, `μ_4 = 2983/1024`, QGTL `det(g) = 1959/4096 > 243/512 > 15/32 > 3/8`;
        `Var = 3/2`, `μ_4 = 13755/2048`, QGTL `det(g) = 3049/6144 > 15/32 > 5/12`) and cleared-denominator
-       Bai collapse (`> 11.1×` at ML-KEM-1024 riding the Gaussian DFR Pareto wall; `> 41.8×` sub-1-bit at ML-KEM-512)! -/
+       Bai reduction inequalities (`> 11.1×` at ML-KEM-1024; `> 41.8×` sub-1-bit at ML-KEM-512; DFRs verified outside Lean). -/
 theorem t2i_bai_engine_dpi_tensorization_and_dyadic16384 :
     (∀ (N L M Mout D : Nat) (K : Nat → Nat → Nat) (p q w W : Nat → Nat),
       0 < M → (∀ i, i < N → w i * q i = M) →

@@ -1,11 +1,17 @@
+# SPDX-License-Identifier: Apache-2.0
 version = 1
 
 [[annotations]]
-path = ["lean/**", "native/**", "eshkol/**", "python/**", "tests/**", "scripts/**", "examples/**", "justfile", "pyproject.toml", ".github/**", "VERSION", "repo.yaml", ".env.example"]
+path = [
+  "lean/**", "native/**", "eshkol/**", "python/**", "tests/**", "scripts/**", "examples/**",
+  "justfile", "pyproject.toml", "requirements.lock.txt", ".github/**", ".cursor/**",
+  "VERSION", "repo.yaml", "repo-standard.schema.json", "CITATION.cff",
+  ".env.example", ".editorconfig", ".gitattributes", ".gitignore", "REUSE.toml"
+]
 SPDX-FileCopyrightText = "2026 Alexander S. Donahue"
 SPDX-License-Identifier = "Apache-2.0"
 
 [[annotations]]
-path = ["paper/**", "docs/**", "dist/**", "data/**", "results/**", "*.md", "CITATION.cff", "llms*.txt"]
+path = ["paper/**", "docs/**", "dist/**", "data/**", "results/**", "*.md", "llms*.txt", "LICENSE-DOCS"]
 SPDX-FileCopyrightText = "2026 Alexander S. Donahue"
 SPDX-License-Identifier = "CC-BY-4.0"

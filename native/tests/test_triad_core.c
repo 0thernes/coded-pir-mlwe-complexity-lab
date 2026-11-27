@@ -271,6 +271,15 @@ int main(void) {
           "Twisted DFT rejects signed-overflow m*D safely");
     CHECK(triad_rank_mod_p(NULL, 4, 4, 11) == 0,
           "Matrix rank handles NULL input safely");
+    int dummy_mat[1] = {1};
+    CHECK(triad_rank_mod_p(dummy_mat, 2000, 2000, 101) == -1,
+          "Matrix rank rejects oversized dimensions (>1M entries) safely");
+    bool inv_all_ok = true;
+    for (int a = 1; a < 101; a++) {
+        if ((a * triad_mod_inv(a, 101)) % 101 != 1) inv_all_ok = false;
+    }
+    CHECK(inv_all_ok,
+          "Modular inverse exact for all 100 nonzero elements of F_101");
 
     printf("Native C11 TriadFrontier tests: %d passed, %d failed\n", g_pass, g_fail);
     return g_fail == 0 ? 0 : 1;

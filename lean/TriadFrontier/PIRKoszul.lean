@@ -345,7 +345,7 @@ theorem t1d_flag_privacy_and_feasibility_dimensions :
 
 /-- **Theorem T1e (Exact Unconditioned Shannon+Ingleton Converse Barrier for `(2,4,2,2)`):**
 The explicit 330-orbit pure-integer unconditioned polymatroid `h_uncond` (scale 128) on
-`(X_0..3, Y_0..3, A_0..3)` satisfies ALL monotonicity inequalities, ALL 270,336 elemental
+`(X_0..3, Y_0..3, A_0..3)` satisfies ALL 12 monotonicity inequalities, ALL 67,584 elemental
 Shannon submodularity inequalities (via exact `S_4`-orbit reduction), ALL 99 exact PIR
 equalities (MDS `K=2`, file independence, deterministic answers, correctness of `W_1`,
 and ALL 89 full `T=2` privacy equalities), and ALL 1,485 singleton Ingleton inequalities,

@@ -106,7 +106,7 @@ theorem adv_p13_no_4_indep (f : Nat → Nat) :
   have hle := lovasz_conference_strong_pow_upper 3 paley13Adj paley13_isConference 1 4 f h1
   omega
 
-/-- 7. Sharpness of `T3i` (`L07` universal refutation): Brockett–Dobkin `2m^2-m` does NOT stay below Koszul `m^2+m` for all `m ≥ 1` (refuted at `m = 3`). -/
+/-- 7. Sharpness of `T3i` (`L07` universal refutation): substitution bound `2m^2-m` does NOT stay below Koszul `m^2+m` for all `m ≥ 1` (refuted at `m = 3`). -/
 theorem adv_koszul_ceiling_broken_at_m3 :
     ¬ (∀ m : Nat, 1 ≤ m → 2 * m * m - m ≤ m * m + m) := by
   intro hall

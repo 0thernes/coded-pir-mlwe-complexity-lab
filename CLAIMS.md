@@ -1,12 +1,12 @@
 <!-- SPDX-License-Identifier: CC-BY-4.0 -->
 # Claims Ledger & Falsification Protocol (`CLAIMS.md`)
 
-Every claim in `coded-pir-mlwe-complexity-lab` (`v5.2.0`) has an ID, a verification tier, artifact paths, and a falsifying condition. This ledger tracks the 2026-11-26 statement audit and its complete resolutions across `v5.1.0` (`A01`–`A12`, `L01`, `L03`–`L06`, `S03`–`S04`) and `v5.2.0` (`L02`, `L06`, `L07`, `S01`/`A02`, `S02`); see [ERRATA.md](ERRATA.md) and the [archive audit log](https://github.com/0thernes/0thernes-research-archive/blob/main/docs/reviews/2026-11-26-statement-audit.md).
+Every claim in `coded-pir-mlwe-complexity-lab` (`v5.3.0`) has an ID, a verification tier, artifact paths, and a falsifying condition. This ledger tracks the 2026-11-26 statement audit and its complete resolutions across `v5.1.0` (`A01`–`A12`, `L01`, `L03`–`L06`, `S03`–`S04`) and `v5.2.0` (`L02`, `L06`, `L07`, `S01`/`A02`, `S02`); see [ERRATA.md](ERRATA.md) and the [archive audit log](https://github.com/0thernes/0thernes-research-archive/blob/main/docs/reviews/2026-11-26-statement-audit.md).
 
 ## Verification Tiers
 
 - **Tier 1 (Lean proof):** Zero-Mathlib Lean 4.35.0 proof using only axioms from `[propext, Classical.choice, Quot.sound]`, no `sorry`, no `native_decide`, audited by both `VerifyAxioms.lean` (35 declarations) and `AuditExhaustiveAxioms.lean` (`1,656` `TriadFrontier.*` declarations under `module`), and replayed in CI by six kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche --verified`, `con-ron --verified`; 4,745 declarations on the standalone `Solution` export). Tier 1 certifies the proof of the Lean statement as written; challenge propositions use definitions from `TriadFrontier`.
-- **Tier 2 (Computation):** Deterministic integer, rational, finite-field, 60-digit `Decimal`, or 90-digit Kronecker exact interval computation in Python, cross-checked in ISO C11 (88/88 tests) and Eshkol v1.3.6 dual-number AD. Exact coupled FIPS 203 DFRs (`e^T r - s^T(e_1 + c_u) + e_2 + c_v`) are cross-verified by the 90-digit Kronecker interval oracle (width $< 10^{-30}$ bits) reproducing NIST FIPS 203 Table 1 within `0.04` bits. Tier 2 results are not machine-checked.
+- **Tier 2 (Computation):** Deterministic integer, rational, finite-field, 60-digit `Decimal`, or 90-digit Kronecker exact interval computation in Python, cross-checked in ISO C11 (90/90 tests) and Eshkol v1.3.6 dual-number AD. Exact coupled FIPS 203 DFRs (`e^T r - s^T(e_1 + c_u) + e_2 + c_v`) are cross-verified by the 90-digit Kronecker interval oracle (width $< 10^{-30}$ bits) reproducing NIST FIPS 203 Table 1 within `0.04` bits. Tier 2 results are not machine-checked.
 - **Reading:** An interpretation given in prose or in identifier names that the Lean statement does not contain.
 - **Open:** Problems not claimed solved.
 
@@ -73,7 +73,7 @@ lake env leanchecker Solution
 lake env leanchecker-paranoid Solution
 lake comparator --config comparator.json --paranoid   # Ubuntu/Linux with bubblewrap
 
-# 2. C11 arithmetic, samplers, f101-t3k3, ret6-f2, Paley checks and fuzzing (88 unit + 1,024 fuzz)
+# 2. C11 arithmetic, samplers, f101-t3k3, ret6-f2, Paley checks and fuzzing (90 unit + 1,024 fuzz)
 cd ..
 make -C native clean test
 make -C native sanitizers   # Ubuntu/Linux ASan + UBSan

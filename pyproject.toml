@@ -5,7 +5,7 @@ build-backend = "setuptools.build_backend"
 
 [project]
 name = "coded-pir-mlwe-complexity-lab"
-version = "5.2.0"
+version = "5.3.0"
 description = "Zero-Mathlib Lean 4.35.0 proofs (32 theorem bundles T1a-T3l & T1k + 10 adversarial refutations across 6 kernels + 1,656-decl Lean.collectAxioms sweep) and multi-language verification for Coded/Byzantine PIR, Linear-Rank Soundness, & Universal PIR Protocol (CS-053), Coupled FIPS 203 MLWE Tightness & 14-Bit Dyadic-16384-A/B (CS-026), Schwartz-Zippel & Two-Sided Strassen Bounds (CS-004), and Conditional Paley/Conference Shannon Capacity Theta(G)=sqrt(4k+1) (CS-CMP-012)"
 readme = "README.md"
 license = {text = "Apache-2.0"}

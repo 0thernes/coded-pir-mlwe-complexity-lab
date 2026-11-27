@@ -6,6 +6,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [5.3.0] - 2026-11-27
+
+### Added
+- **End-to-End Live C11 $\mathbb{F}_{101}$ $(6,3,3)$ PIR Encode/Decode Verifier & 90/90 Unit Suite (`H49`):** Upgraded `triad_verify_f101_t3_k3_e6_zero_error` in `native/src/triad_core.c` with explicit `rank(P_n M)=7` and `rank([P_n M; C_n M])=10` checks across all 20 colluding triples plus full in-C11 $60 \times 60$ `DecInv` inversion, $18 \times 42$ `Cancel` interference-stripping solver, and live end-to-end encode + 102-symbol download + bit-for-bit decode round-trips for both $\theta \in \{0,1\}$; added 2 new C11 tests (`triad_mod_inv` exactness on $\mathbb{F}_{101}$ & oversized-matrix guard) bringing C11 to **90/90** unit tests + 1,024 fuzz iterations.
+- **Cryptographic RFC 3161 CA-Chain Verification (`H51`):** Upgraded `scripts/stamp_timestamps.py` `verify_rfc3161` to execute real cryptographic `openssl ts -verify -data ... -in ... -CAfile ...` DigiCert signature/chain validation (`RFC3161 CRYPTO-OK`) alongside `Status: Granted.` and digest parity, plus a forged-TSR-signature byte-flip negative test in `tests/test_all.py`.
+- **Permanent Software Heritage SWHID in `CITATION.cff` (`H52`):** Embedded verified permanent snapshot identifier `swh:1:snp:6b7497ece0bdaa40476d97fb26bee75bf7d7747c` (Playbook v1.3 Item 30).
+- **Full 75-File Manifest & Complete Receipt Gate (`H50`):** Expanded `MANIFEST.sha256` to also seal `native/tests/*`, `tests/test_all.py`, and all `scripts/*.py` (`75` files), and expanded `rosette_receipt.json` `all_checks_ok` to assert all verification pillars (grid, $\mathbb{F}_{11}$, $\mathbb{F}_{101}$ 20/20 + 10/10 decode, polymatroid, `T1i`, `T1j`, Chen, 90-digit coupled DFR oracle, Strassen, Lovász).
+
+### Fixed
+- **Residual Lean Docstrings & Web Portal Audit (`H46`):** Cleaned all surviving pre-audit phrasing in `MLWETightness.lean` (`T2b`, `T2i` old uncoupled DFR numbers removed), `PIRKoszul.lean:348` (`270,336` → `67,584`), `BrockettDobkin.lean`, `AlgebraicComplexity.lean`, `AdversarialTests.lean`, and 8 tooltips/rows across `docs/site/blueprint.html` and `docs/site/index.html`.
+- **Windows Runner, SPDX/REUSE Conflict, BOM, LaTeX Font Warning & Build Standard v1.2.0 CI Pins (`H47`, `H48`, `H52`–`H55`):** Fixed `scripts/run_all.ps1` (pure LF, `$PSNativeCommandUseErrorActionPreference = $true`, non-destructive golden axiom compare, bracket-safe directory creation); aligned `REUSE.toml` with `CITATION.cff` (`Apache-2.0`); stripped accidental UTF-8 BOM from `scripts/Audit-Repo.ps1`; added SPDX to `docs/media/social-preview.svg`; fixed `paper/main.tex:211` eliminating the final `LaTeX Font Warning` (**0 warnings of any kind** in `paper/build/main.log`); upgraded `.github/workflows/ci.yml` & `pages.yml` to live Build Standard v1.2.0 action pins (`checkout@v7`, `setup-node@v7`, `setup-python@v7`, `attest-build-provenance@v4`, `configure-pages@v6`, `upload-pages-artifact@v5`, `deploy-pages@v5`) with R1 report-only lint summary; updated live GitHub About description and all remaining governance docs (`ROADMAP.md`, `CONTRIBUTING.md`, `UPGRADING.md`, `docs/threat-model.md`, `docs/operations.md`, `REPLICATION.md`, `ERRATA.md`).
+
 ## [5.2.0] - 2026-11-27
 
 ### Added

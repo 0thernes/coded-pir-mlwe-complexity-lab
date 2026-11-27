@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: CC-BY-4.0 -->
 # System & Mathematical Architecture (`docs/architecture.md`)
 
-`coded-pir-mlwe-complexity-lab` (`v5.2.0`) is structured as a four-layer verification stack: **32 Lean 4.35.0 proofs (`T1a`–`T3l` & `T1k`) + 10 adversarial tests (`AdversarialTests.lean`, 35 audited declarations + 1,656 `TriadFrontier.*` declarations swept by `AuditExhaustiveAxioms.lean` under `module`)** of identities, sound linear-rank certificates, the field-universal PIR protocol, and finite certificates, cross-checked by hardened C11 (88 tests + 1,024 fuzz), Eshkol dual-number AD and Python computations (including the live $\mathbb{F}_{101}$ $(6,3,3)$ 20/20 zero-error witness and 90-digit Kronecker coupled FIPS 203 DFR oracle), and upward into the AMS-LaTeX preprint and CSP/WCAG-AA interactive GitHub Pages Proof Blueprint.
+`coded-pir-mlwe-complexity-lab` (`v5.3.0`) is structured as a four-layer verification stack: **32 Lean 4.35.0 proofs (`T1a`–`T3l` & `T1k`) + 10 adversarial tests (`AdversarialTests.lean`, 35 audited declarations + 1,656 `TriadFrontier.*` declarations swept by `AuditExhaustiveAxioms.lean` under `module`)** of identities, sound linear-rank certificates, the field-universal PIR protocol, and finite certificates, cross-checked by hardened C11 (88 tests + 1,024 fuzz), Eshkol dual-number AD and Python computations (including the live $\mathbb{F}_{101}$ $(6,3,3)$ 20/20 zero-error witness and 90-digit Kronecker coupled FIPS 203 DFR oracle), and upward into the AMS-LaTeX preprint and CSP/WCAG-AA interactive GitHub Pages Proof Blueprint.
 
 ```text
                         +----------------------------------------------+

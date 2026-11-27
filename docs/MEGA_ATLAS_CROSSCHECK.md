@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: CC-BY-4.0 -->
 # Mega-Atlas Frontier Crosswalk (`docs/MEGA_ATLAS_CROSSCHECK.md`)
 
-Honest status crosswalk mapping every theorem (`T1a`–`T3l` & `T1k`) and adversarial refutation (`AdversarialTests.lean`, 10/10) in `coded-pir-mlwe-complexity-lab` (`v5.2.0`) against the **Unsolved Problems Mega-Atlas** (1,900 tracked open problems).
+Honest status crosswalk mapping every theorem (`T1a`–`T3l` & `T1k`) and adversarial refutation (`AdversarialTests.lean`, 10/10) in `coded-pir-mlwe-complexity-lab` (`v5.3.0`) against the **Unsolved Problems Mega-Atlas** (1,900 tracked open problems).
 
 ## Executive Integrity Verdict
 
@@ -10,7 +10,7 @@ Honest status crosswalk mapping every theorem (`T1a`–`T3l` & `T1k`) and advers
 
 ## Problem-by-Problem Crosswalk
 
-| Atlas ID | Grand Problem | Contribution in `coded-pir-mlwe-complexity-lab` (`v5.2.0`) | Lean Theorems | Grand Problem Status |
+| Atlas ID | Grand Problem | Contribution in `coded-pir-mlwe-complexity-lab` (`v5.3.0`) | Lean Theorems | Grand Problem Status |
 |---|---|---|---|---|
 | **CS-053** | General Coded, Colluding, Robust & Byzantine PIR Capacity | Moment-vector annihilation & Pascal identity (`T1a`); closed-form $K \leftrightarrow T$ expression dominating Sun–Zhang's linear full-support-rank capacity (`T1b`, `T1g`, `T1h`; at $T=2$ equals `arXiv:2603.10769` Thm. IV.4); arithmetic double-counting & $\mathbb{F}_{11}$ 90-matrix inverse certificate (`T1c`, `T1d`); pure-integer `h_uncond` Shannon+Ingleton+Matúš+all-510 $I_4$+5-obj+single $\mathbb{F}_2^{64}$ 6-obj retrieval realization (`T1e`, `T1g`–`T1j`), now backed by in-Lean vector-space `HasSpanDim` soundness (`T1k`, closing `L02`); field-universal linear flag-private PIR zero-error decoding + two-sided colluder bijection $\Psi_I$ (`T1k`) instantiated by an explicit $\mathbb{F}_{101}$ $(6,3,3)$ rate-$10/17$ witness verified across all 20/20 triples & 10/10 live trials in Python and ISO C11 (closing `S01`/`A02`); classical projective $\mathbb{P}^3$ concurrency dichotomy (`T1f`). | `T1a`–`T1k` | **OPEN** ($C(2,4,2,2) \in [3/5, 8/13]$ non-linear; Sun–Tao–Xu–Zhang max-redundancy question; general $M \ge 3$ when $E \ge KT$; general $T \ge 4$ zero-error schemes) |
 | **CS-026** | Module-LWE Reduction Tightness & Worst-Case Hardness | Elementary $q^m$ diagonal-product identity (`T2a`; records $q$-ary MLWE basis determinant $q^m$; no published claim is refuted); exact FIPS 203 $\mathrm{CBD}_2/\mathrm{CBD}_3$ moments & numerical $4.96\times$ Rényi-2 ratio (`T2c`); cleared-denominator Cauchy–Schwarz / all-order Hölder / TV–$\chi^2$ / DPI / tensorization inequalities (`T2e`, `T2h`, `T2i`); numerical 60-digit Bai et al. (2018) overheads & exact coupled FIPS 203 DFRs (`e^T r - s^T(e_1+c_u)+e_2+c_v`, cross-verified by 90-digit Kronecker exact interval oracle reproducing NIST Table 1 within `0.04` b, closing `S02`) for branchless 8/9/10/14-bit `Dyadic-256`/`512`/`1024-A/B`/`16384-A/B` (`Dyadic-16384-A` $11.17\times$ drop $67.14 \to 6.013$ b at $2^{-171.80}$; `Dyadic-16384-B` $41.9\times$ drop to $0.5916$ b at $2^{-136.19}$; $1\%$ shrinkage $\sigma=0.990 \implies 2^{-177.25} < 2^{-174.8}$); exact NIST FIPS 203 Eq. (4.7) `Compress_1` (`T3d`). | `T2a`, `T2c`, `T2e`, `T2g`–`T2i`, `T3d` | **OPEN** (worst-case-to-average-case quantum & classical MLWE lower bounds) |

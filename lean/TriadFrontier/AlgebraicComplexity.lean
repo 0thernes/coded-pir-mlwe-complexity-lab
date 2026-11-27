@@ -8,19 +8,19 @@ public import TriadFrontier.StrassenWinograd
 public import TriadFrontier.BrockettDobkin
 
 /-!
-# Multivariate Schwartz–Zippel & Two-Sided Strassen–Brockett–Dobkin MatMul Sandwich (`T3k`)
+# Multivariate Schwartz–Zippel & Two-Sided Strassen–Substitution MatMul Bounds (`T3k`)
 
 Zero-Mathlib, characteristic-free Lean 4.35.0 formalization over **EVERY `SimpleField F` (incl. `F_2`)**:
 1. **Multivariate Schwartz–Zippel Lemma (`schwartz_zippel_root_bound`, `schwartz_zippel_nonvanishing`):**
    Any nonzero `n`-variate polynomial `P ∈ F[x_1,...,x_n]` of total degree `≤ d` has at most
    `d * |S|^{n-1}` roots in any finite grid `S^n` (`Nodup S`), and whenever `d < |S|`,
-   `∃ a ∈ S^n, P(a) ≠ 0`. Closes the formal algebraic foundation of both Pillar I's deterministic
+   `∃ a ∈ S^n, P(a) ≠ 0`. Provides the formal algebraic foundation of Pillar I's deterministic
    zero-error PIR existence proof (Theorem 2.4) and Polynomial Identity Testing (`CS-012`, `VP` vs `VNP`).
-2. **Kronecker Tensor-Rank Submultiplicativity & Two-Sided Strassen–Brockett–Dobkin Sandwich:**
+2. **Kronecker Tensor-Rank Submultiplicativity & Two-Sided Strassen–Substitution Bounds:**
    Proves `rank_F(⟨m1*m2, k1*k2, p1*p2⟩) ≤ rank_F(⟨m1,k1,p1⟩) * rank_F(⟨m2,k2,p2⟩)` and
    transposition symmetry `rank_F(⟨m,k,p⟩) = rank_F(⟨p,k,m⟩)` over EVERY `SimpleField F`,
-   establishing the exact two-sided asymptotic sandwich for EVERY `k : Nat` and EVERY field `F`:
-   `2 * 4^k - 2^k ≤ rank_F(⟨2^k, 2^k, 2^k⟩) ≤ 7^k`!
+   establishing the two-sided power-of-2 bounds for EVERY `k : Nat` and EVERY field `F`:
+   `2 * 4^k - 2^k ≤ rank_F(⟨2^k, 2^k, 2^k⟩) ≤ 7^k`.
 -/
 
 namespace TriadFrontier.AlgebraicComplexity
@@ -924,16 +924,16 @@ theorem strassen_power_upper_bound (F : Type) [SimpleField F] (k : Nat) :
   rw [← rectMatMulTensor_eq_square (2 ^ k) a b c ha hb hc]
   exact hT a b c ha hb hc
 
-/-- **Theorem T3k (Field-Universal Multivariate Schwartz–Zippel Lemma & Strassen–Brockett–Dobkin Two-Sided Sandwich):**
+/-- **Theorem T3k (Field-Universal Multivariate Schwartz–Zippel Lemma & Two-Sided Strassen–Substitution Bounds):**
     Over **EVERY `SimpleField F` (including `F_2`!)**:
     1. **Multivariate Schwartz–Zippel Root Bound (`∀ n, d, S, P`):**
        `|S| * |{a ∈ S^n : P(a) = 0}| ≤ d * |S|^n` for every nonzero `n`-variate polynomial `P` of degree `≤ d`.
     2. **Combinatorial Non-Vanishing (`d < |S| ⇒ ∃ a ∈ S^n, P(a) ≠ 0`):**
-       Closes the formal algebraic foundation of Pillar I's deterministic zero-error PIR existence proof and PIT (`CS-012`).
+       Provides the formal algebraic foundation of Pillar I's deterministic zero-error PIR existence proof and PIT (`CS-012`).
     3. **Full `S_3` Transposition Symmetry & Kronecker Submultiplicativity:**
        `rank_F(⟨m,k,p⟩) = rank_F(⟨p,k,m⟩)` and `rank_F(⟨m1*m2,k1*k2,p1*p2⟩) ≤ r1 * r2`.
-    4. **Two-Sided Strassen–Brockett–Dobkin Asymptotic Sandwich (`∀ k : Nat`, `∀ F`):**
-       `2 * 4^k - 2^k ≤ rank_F(⟨2^k, 2^k, 2^k⟩) ≤ 7^k` (certifying `ω ≤ log_2 7` alongside Brockett–Dobkin)! -/
+    4. **Two-Sided Power-of-2 Strassen–Substitution Bounds (`∀ k : Nat`, `∀ F`):**
+       `2 * 4^k - 2^k ≤ rank_F(⟨2^k, 2^k, 2^k⟩) ≤ 7^k` (certifying `ω ≤ log_2 7` alongside the `2n^2 - n` substitution lower bound). -/
 theorem t3k_schwartz_zippel_and_strassen_sandwich :
     (∀ (F : Type) [SimpleField F] (n d : Nat) (S : List F) (P : MPoly F n),
       ListNodup S → mpNonZero P → mpDegLe d P →

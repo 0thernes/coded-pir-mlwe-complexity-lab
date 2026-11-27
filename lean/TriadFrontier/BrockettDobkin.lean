@@ -673,7 +673,7 @@ theorem rect_matmul_vec_rank_ge {F : Type} [SimpleField F] (m k r : Nat)
       fun h => hne ⟨h.2.2.2.2.2.2.1, h.2.2.2.2.2.2.2.1⟩
     rw [ite_f hneg, ite_f heq]; exact intToR_zero
 
-/-- Core Brockett–Dobkin bound: `rank_F(⟨m, k, p⟩) ≥ m*k + m*p - m` over EVERY `SimpleField F`. -/
+/-- Core substitution-method bound: `rank_F(⟨m, k, p⟩) ≥ m*k + m*p - m` over EVERY `SimpleField F` (weaker than Brockett–Dobkin's published `2n^2 - 1` for `m=k=p=n ≥ 2`). -/
 theorem brockett_dobkin_one {F : Type} [SimpleField F] (m k p r : Nat)
     (hm : 1 ≤ m) (hk : 1 ≤ k) (hp : 1 ≤ p)
     (hr : HasTensorRankAtMost (m * k) (k * p) (m * p) r
@@ -688,14 +688,14 @@ theorem brockett_dobkin_one {F : Type} [SimpleField F] (m k p r : Nat)
       _ ≤ m * p := Nat.mul_le_mul_left m hp
   omega
 
-/-- **Theorem T3i (Universal Brockett–Dobkin Rectangular & Quadratic MatMul Bound + Strassen Lift):**
+/-- **Theorem T3i (Universal Substitution-Method Rectangular & Quadratic MatMul Bound + Strassen Lift):**
     Over **EVERY `SimpleField F` (including characteristic 2 / `F_2`!)**:
     1. **3-Way Symmetric Rectangular Bound (`∀ m, k, p ≥ 1`):**
        `rank_F(⟨m, k, p⟩) ≥ max(m*k + m*p - m, m*k + k*p - k, m*p + k*p - p)`.
     2. **All-`m` Quadratic Square MatMul Bound (`∀ m ≥ 1`):**
-       `rank_F(⟨m, m, m⟩) ≥ 2 * m^2 - m` — strictly beating `T3g`'s `m^2 + 2` AND the entire
-       degree-`(m-1)` Landsberg–Ottaviani Koszul flattening ceiling `m^2 + m` for EVERY `m ≥ 3`
-       (e.g. `≥ 15 > 12` at `m=3`, `≥ 28 > 20` at `m=4`, `≥ 45 > 30` at `m=5`)!
+       `rank_F(⟨m, m, m⟩) ≥ 2 * m^2 - m` (weaker than Brockett–Dobkin's published `2m^2 - 1`
+       for `m ≥ 2`, while exceeding `T3g`'s `m^2 + 2` and the degree-`(m-1)` Landsberg–Ottaviani
+       Koszul flattening ceiling `m^2 + m` for EVERY `m ≥ 3`, e.g. `≥ 15 > 12` at `m=3`).
     3. **Strassen–Winograd `T3h` Subblock Lift (`∀ m ≥ 2, p ≥ 2`):**
        `rank_F(⟨m, 2, p⟩) ≥ m * p + 3` over EVERY `SimpleField F`! -/
 theorem t3i_brockett_dobkin_rectangular_and_quadratic_matmul_bound :

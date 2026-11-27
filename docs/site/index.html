@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; frame-ancestors 'none'; base-uri 'self';">
-<title>Triad Frontier Lab (v5.2.0) — Coded/Byzantine PIR, MLWE Tightness, Schwartz–Zippel &amp; Conference Capacity</title>
+<title>Triad Frontier Lab (v5.3.0) — Coded/Byzantine PIR, MLWE Tightness, Schwartz–Zippel &amp; Conference Capacity</title>
 <meta name="description" content="32 Zero-Mathlib Lean 4.35.0 machine-checked theorem bundles (T1a–T3l &amp; T1k) + 10 adversarial boundary refutations + 1,656 exhaustive axiom-swept declarations across 6 independent kernels on Coded/Byzantine PIR, Linear-Rank Soundness &amp; Certified F_101 (6,3,3) Rate-10/17 Zero-Error PIR (CS-053), Coupled FIPS 203 MLWE Tightness &amp; Dyadic-16384-A/B (CS-026), Schwartz–Zippel &amp; Strassen Two-Sided Bound (CS-004), and Conference/Paley Capacity (CS-CMP-012).">
 <style>
   :root {
@@ -116,7 +116,7 @@
 <header>
   <div class="wrap">
     <div class="badge-row">
-      <span class="badge cyan">v5.2.0 · Zero-Mathlib Lean 4.35.0</span>
+      <span class="badge cyan">v5.3.0 · Zero-Mathlib Lean 4.35.0</span>
       <span class="badge green">32 Bundles (T1a–T3l &amp; T1k) + 10 Refutations · 6 Kernels</span>
       <span class="badge violet">0 sorry · 0 native_decide · 4,745 Decls · 1,656 Axiom-Swept</span>
       <span class="badge amber">Honest Scope: P≠NP, ω=2, Θ(C₇) OPEN</span>
@@ -125,12 +125,12 @@
     <p class="subtitle">
       Interactive formal-verification companion by <strong>Alexander S. Donahue</strong>
       (Independent Researcher, Spokane, WA, USA · <a href="https://orcid.org/0009-0006-8168-9648">ORCID 0009-0006-8168-9648</a>).
-      Cross-audited across 6 Lean proof kernels + 1,656-decl exhaustive axiom sweep (under <code>module</code>) + live negative tamper gate, hardened zero-warning C11 (88 tests + 1,024 fuzz), Eshkol v1.3.6 forward-mode AD, and strict 0-ruff/0-mypy Python (25 pytest, 16/16 mutants, 90-digit Kronecker coupled FIPS 203 DFR oracle).
+      Cross-audited across 6 Lean proof kernels + 1,656-decl exhaustive axiom sweep (under <code>module</code>) + live negative tamper gate, hardened zero-warning C11 (90 tests incl. live F₁₀₁ PIR decode + 1,024 fuzz), Eshkol v1.3.6 forward-mode AD, and strict 0-ruff/0-mypy Python (25 pytest, 16/16 mutants, cryptographic RFC 3161 CA-chain verify, 90-digit Kronecker coupled FIPS 203 DFR oracle).
     </p>
     <div class="cta-row">
       <a class="btn primary" href="blueprint.html">Open Interactive 32-Theorem Proof Blueprint DAG &rarr;</a>
       <a class="btn" href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab">GitHub Repository</a>
-      <a class="btn" href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab/releases">v5.2.0 Frozen PDF, arXiv Bundle &amp; TSA/OTS</a>
+      <a class="btn" href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab/releases">v5.3.0 Frozen PDF, arXiv Bundle &amp; TSA/OTS</a>
       <a class="btn" href="https://github.com/0thernes/0thernes-research-archive">Master Research Archive (0TH-2026-012)</a>
     </div>
     <div class="stat-row">
@@ -350,7 +350,7 @@ const CLAIMS = [
   ["C12","p2","T2d","propext, Quot.sound","QGTL shifted-LWE Berry curvature Ω_{θσ} = Cov(X,(X-e₀)²/σ³); vanishes iff symmetric (e₀=0)","t1"],
   ["C13","p2","T2e","propext, Quot.sound","Cauchy–Schwarz support-2 Rényi floor, 1-byte Dyadic-256 (17.7× drop to 2.14 bits), QGTL PSD & 3/8 < 15/32 < 1/2","t1"],
   ["C14","p2","T2f","propext","Universal m-twisted DFT selection rule over any commutative ring (QC-042; axioms [propext] alone)","t1"],
-  ["C15","p2","T2g","propext, Classical.choice, Quot.sound","Non-asymptotic Pearson χ²/Hermite-4 QGTL variational law & 9-bit κ_ex=0 Dyadic-512 (12.9× drop; DFRs from the float64 model)","t1"],
+  ["C15","p2","T2g","propext, Classical.choice, Quot.sound","Non-asymptotic Pearson χ²/Hermite-4 QGTL variational law & 9-bit κ_ex=0 Dyadic-512 (12.9× drop; coupled 90-digit DFR 2^-136.13)","t1"],
   ["C16","p3","T3a","propext, Classical.choice, Quot.sound","Constructive existence & global uniqueness of multilinear extension f̃: F^n -> F ∀F (Algebrization core)","t1"],
   ["C17","p3","T3b","propext, Quot.sound","LWE/LWR PRF ε-indistinguishability blocks δ-large constructive Natural Proofs (CS-026 -> CS-001)","t1"],
   ["C18","p3","T3c","propext, Classical.choice, Quot.sound","Katz–Trevisan B-Byzantine zero-error PIR / LDC induces minimum Hamming distance d_min >= 2B + 1","t1"],
@@ -360,7 +360,7 @@ const CLAIMS = [
   ["C22","p3","T3g","propext, Classical.choice, Quot.sound","Symbolic all-m monomial left-inverse: rank_F(<m,m,m>) >= m²+2 ∀m>=2 ∀F; degree-(m-1) ceiling m²+m (Φ₂(<3,3,3>)>=12)","t1"],
   ["C23","p3","T3h","propext, Classical.choice, Quot.sound","Exact Strassen–Winograd optimality: rank_F(<2,2,2>) = 7 over EVERY field F (including char F = 2)","t1"],
   ["C24","p1","T1i","propext, Quot.sound","Total 4-var I_4 containment (all 510 four-marginals of h_uncond) & all 6 five-object retrieval marginals F_2-linear","t1"],
-  ["C25","p2","T2h","propext, Quot.sound","All-order Rényi-(m+1) Hölder floor, TV-χ² bridge (4TV²<=R₂-1), & 10-bit Dyadic-1024-A/B (9.19× Bai collapse; DFRs from the float64 model)","t1"],
+  ["C25","p2","T2h","propext, Quot.sound","All-order Rényi-(m+1) Hölder floor, TV-χ² bridge (4TV²<=R₂-1), & 10-bit Dyadic-1024-A/B (9.19× Bai collapse; coupled 90-digit DFRs 2^-171.91 / 2^-137.00)","t1"],
   ["C26","p3","T3i","propext, Classical.choice, Quot.sound","Field-universal substitution-method bound rank_F(<m,m,m>) >= 2m²-m (weaker than Brockett–Dobkin 2m²-1) & Strassen lift rank_F(<m,2,p>) >= mp+3","t1"],
   ["C27","p3","T3j","propext, Classical.choice, Quot.sound","Field-universal Haemers |S|<=r^t, exact Z[√5] SOS integer form of Lovász Θ(C_5)=√5 (k²<=5^t & α=5^m), & exact C_7 min Haemers rank=4 ∀F","t1"],
   ["C28","p1","T1j","propext, Quot.sound","Exact 6-subspace F_2^64 realization (all 64 subsets!) of full 6-object retrieval marginal (W_1,W_2,A_1..A_4) of h_uncond (in-Lean HasSpanDim sound via T1k)","t1"],

@@ -3,6 +3,7 @@
 # Copyright (c) 2026 Alexander S. Donahue
 # Bracket-safe full Windows verification runner for coded-pir-mlwe-complexity-lab.
 $ErrorActionPreference = 'Stop'
+$PSNativeCommandUseErrorActionPreference = $true
 
 $Root = Split-Path -Parent $PSScriptRoot
 $Py = if ($env:TRIAD_PYTHON) { $env:TRIAD_PYTHON } else { 'python' }
@@ -10,8 +11,11 @@ $Py = if ($env:TRIAD_PYTHON) { $env:TRIAD_PYTHON } else { 'python' }
 Write-Host "=== [1/5] Lean 4.35.0 Build (--wfail), Axiom Audits & Kernel Checks ==="
 Set-Location -LiteralPath (Join-Path $Root 'lean')
 lake build --wfail
-$axioms = lake env lean VerifyAxioms.lean
-$axioms | Set-Content -LiteralPath (Join-Path $Root 'results\lean_axioms.txt') -Encoding UTF8
+$axioms = (lake env lean VerifyAxioms.lean) -join "`n"
+$golden = ((Get-Content -LiteralPath (Join-Path $Root 'results\lean_axioms.txt') -Raw) -replace "`r`n", "`n").TrimEnd("`n")
+if ($axioms.TrimEnd("`n") -ne $golden) {
+    throw "VerifyAxioms.lean output drifted from results/lean_axioms.txt"
+}
 lake env lean AuditExhaustiveAxioms.lean
 lake env leanchecker Solution
 lake env leanchecker PalomarSolution
@@ -21,7 +25,7 @@ lake env leanchecker-paranoid PalomarSolution
 Write-Host "=== [2/5] Native C11 Core, CLI & 1024-Iter Fuzz ==="
 Set-Location -LiteralPath $Root
 $cc = if ($env:CC) { $env:CC } else { 'gcc' }
-New-Item -ItemType Directory -Force -Path (Join-Path $Root 'native\build') | Out-Null
+[void][System.IO.Directory]::CreateDirectory((Join-Path $Root 'native\build'))
 & $cc -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -I native/include native/src/triad_core.c native/tests/test_triad_core.c -o native/build/test_triad_core.exe -lm
 & $cc -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -I native/include native/src/triad_core.c native/src/triad_cli.c -o native/build/triad_cli.exe -lm
 & $cc -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -DFUZZ_STANDALONE -I native/include native/src/triad_core.c native/tests/fuzz_triad.c -o native/build/fuzz_triad.exe -lm

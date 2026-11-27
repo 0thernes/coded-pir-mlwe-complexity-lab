@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: CC-BY-4.0 -->
 # Examples (`examples/`)
 
-Self-contained runnable demonstrations of the `coded-pir-mlwe-complexity-lab` (`v5.2.0`) computational verification engines.
+Self-contained runnable demonstrations of the `coded-pir-mlwe-complexity-lab` (`v5.3.0`) computational verification engines.
 
 ## Quickstart Demo
 
