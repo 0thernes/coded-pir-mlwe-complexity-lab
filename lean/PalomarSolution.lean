@@ -6,10 +6,10 @@ public import Challenge
 public import Solution
 
 /-!
-# Palomar Comparator Verified Solution (`coded-pir-mlwe-complexity-lab` v5.2.0)
+# Palomar Comparator Verified Solution (`coded-pir-mlwe-complexity-lab` v5.4.0)
 
-Zero-`sorry`, zero-`native_decide`, zero-Mathlib implementation of all 32 headline
-theorems (`T1a`–`T3l`, `T1k`) and master conjunction verified across all six independent
+Zero-`sorry`, zero-`native_decide`, zero-Mathlib implementation of all 34 headline
+theorems (`T1a`–`T3m`) and master conjunction verified across all six independent
 Lean 4.35.0 proof kernels.
 -/
 
@@ -39,6 +39,8 @@ public theorem t1j_total_6obj_f2_entropic_realizability_barrier : T1j_Total6ObjF
   TriadFrontier.Solution.t1j_total_6obj_f2_entropic_realizability_barrier
 public theorem t1k_linear_rank_soundness_and_pir_protocol : T1k_LinearRankSoundnessAndPIRProtocol :=
   TriadFrontier.Solution.t1k_linear_rank_soundness_and_pir_protocol
+public theorem t1l_f101_certified_pir_existence : T1l_F101CertifiedPIRExistence :=
+  TriadFrontier.Solution.t1l_f101_certified_pir_existence
 public theorem t2a_determinant_ideal_secret_independence : T2a_DeterminantIdealSecretIndependence :=
   TriadFrontier.Solution.t2a_determinant_ideal_secret_independence
 public theorem t2b_chen_step9_antiperiodic_dft_cancellation : T2b_ChenStep9AntiPeriodicDFTCancellation :=
@@ -81,6 +83,8 @@ public theorem t3k_schwartz_zippel_and_strassen_sandwich : T3k_SchwartzZippelAnd
   TriadFrontier.Solution.t3k_schwartz_zippel_and_strassen_sandwich
 public theorem t3l_infinite_paley_conference_shannon_capacity : T3l_InfinitePaleyConferenceShannonCapacity :=
   TriadFrontier.Solution.t3l_infinite_paley_conference_shannon_capacity
+public theorem t3m_blaser_five_halves_matmul_bound : T3m_BlaserFiveHalvesMatMulBound :=
+  TriadFrontier.Solution.t3m_blaser_five_halves_matmul_bound
 public theorem prove_all_triad_theorems : AllTriadFrontierTheorems :=
   TriadFrontier.Solution.prove_all_triad_theorems
 

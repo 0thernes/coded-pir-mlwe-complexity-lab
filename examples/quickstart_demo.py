@@ -42,7 +42,7 @@ def main() -> int:
     )
     print(f"[Pillar I | CS-053] F_11 Byzantine rate-2/5 witness: {f11}")
     print(
-        f"[Pillar I | T1k/S01] F_101 zero-error T=3-private (6,3,3) rate-10/17 witness: "
+        f"[Pillar I | T1k/T1l] In-kernel F_101 zero-error T=3-private (6,3,3) rate-10/17 witness: "
         f"des={f101_t3k3['desired_rank']}/60, int={f101_t3k3['interference_rank']}/42, "
         f"isos={f101_t3k3['flag_isomorphisms_verified']}/20, live_decode={f101_t3k3['live_zero_error_decode_trials_passed']}/10, "
         f"bijection={f101_t3k3['exact_transcript_bijection_triples_passed']}/20"
@@ -114,6 +114,7 @@ def main() -> int:
     kt = triad["koszul_flattening_tensor_rank"]
     sw = triad["strassen_and_all_m_koszul"]
     bl = triad["brockett_dobkin_and_lovasz_shannon_capacity"]
+    blaser = triad["blaser_five_halves_matmul"]
     szp = triad["schwartz_zippel_and_paley_family"]
     primes = [item["p"] for item in szp["paley_conference_sos_verified"]]
     print(
@@ -122,7 +123,9 @@ def main() -> int:
         f"Compress_1 margin={triad['mlwe_compress1_ceiling']['exact_safe_margin']} | "
         f"Strassen-Winograd rank_F(<2,2,2>)={sw['M2_exact_rank_every_field']} | "
         f"Koszul M2>={kt['M2_rank_lower_bound_every_field']}, T3>={kt['T3_rank_lower_bound_every_field']} | "
-        f"Brockett-Dobkin m=3: {bl['brockett_dobkin_m3_vs_koszul']['bd']} > {bl['brockett_dobkin_m3_vs_koszul']['koszul_ceiling']} | "
+        f"T3i m=3: {bl['brockett_dobkin_m3_vs_koszul']['bd']} > {bl['brockett_dobkin_m3_vs_koszul']['koszul_ceiling']} | "
+        f"T3m Blaser 5/2 m^2 - 3m (every F, incl. F_2): m=6 -> {blaser['m6_blaser_beats_71']['blaser_lb']} > 71, "
+        f"m=10 -> {blaser['m10_blaser_beats_199']['blaser_lb']} > 199 | "
         f"Paley Z[sqrt(p)] SOS & Theta(P_p)=sqrt(p) verified for p={primes}"
     )
 

@@ -12,10 +12,11 @@ public import TriadFrontier.StrassenWinograd
 public import TriadFrontier.ShannonCapacity
 public import TriadFrontier.PaleyCapacity
 public import TriadFrontier.AlgebraicComplexity
+public import TriadFrontier.BlaserLowerBound
 public import TriadFrontier.NonVacuity
 
 /-!
-# Adversarial Negative Boundary Refutations (`TriadFrontier.AdversarialTests`, v5.2.0 — Closes `ERRATA L07`)
+# Adversarial Negative Boundary Refutations (`TriadFrontier.AdversarialTests`, v5.4.0 — Closes `ERRATA L07`)
 
 Machine-checked negative counterexamples and sharp universal-statement refutations proving our
 headline theorems cannot be weakened or bypassed at boundary values (Playbook v1.3 falsifiability standard):
@@ -29,6 +30,7 @@ headline theorems cannot be weakened or bypassed at boundary values (Playbook v1
 8. `adv_schwartz_zippel_f2_tight`: Nonzero degree-2 `x + x^2 ∈ F_2[x]` vanishes on ALL of `F_2` (`d = |S|` breaks non-vanishing; `T3k` sharp!).
 9. `adv_paley7_not_conference`: `7 ≡ 3 (mod 4)` admits NO conference parameter `4k + 1 = 7` and the quadratic-residue graph mod 7 is asymmetric (`T3l` sharp!).
 10. `adv_hasSpanDim_rejects_false_rank`: Standard basis `[e_0, e_1]` in `F_2^2` CANNOT satisfy `HasSpanDim (Fin 2) 2 _ 1` (`T1k` `HasSpanDim` non-trivial & sharp!).
+11. `adv_blaser_refutes_rank_71_at_m6`: NO field `F` (incl. `F_2`) admits a rank-71 bilinear algorithm for `6 × 6` matrix multiplication `⟨6,6,6⟩`, strictly refuting the `2m^2 - 1 = 71` ceiling (`T3m` `5/2·36 - 3·6 = 72 > 71`!).
 -/
 
 namespace TriadFrontier.AdversarialTests
@@ -41,6 +43,7 @@ open TriadFrontier.StrassenWinograd
 open TriadFrontier.ShannonCapacity
 open TriadFrontier.PaleyCapacity
 open TriadFrontier.AlgebraicComplexity
+open TriadFrontier.BlaserLowerBound
 open TriadFrontier.NonVacuity
 
 @[expose] public section
@@ -159,7 +162,16 @@ theorem adv_hasSpanDim_rejects_false_rank :
   have heq := HasSpanDim_unique h2 h1
   omega
 
-/-- Master conjunction of all 10 adversarial negative boundary refutations. -/
+/-- 11. Sharpness of `T3m`: NO field `F` (including `F_2`) admits a rank-71 bilinear algorithm
+    for `6 × 6` matrix multiplication `⟨6,6,6⟩`, strictly refuting the Brockett–Dobkin /
+    Alder–Strassen `2 * 6^2 - 1 = 71` ceiling (`5/2 · 36 - 3 · 6 = 72 > 71`). -/
+theorem adv_blaser_refutes_rank_71_at_m6 (F : Type) [SimpleField F] :
+    ¬ HasTensorRankAtMost 36 36 36 71 (fun a b c => intToR (R := F) (matMulTensor 6 a b c)) := by
+  intro hr
+  have h72 := blaser_matmul_rank_ge_five_halves F 6 71 (by decide) hr
+  omega
+
+/-- Master conjunction of all 11 adversarial negative boundary refutations. -/
 theorem adv_all_boundary_refutations :
     (mlkemCompress1 (1665 * 0 + 833) ≠ 0 ∧ mlkemCompress1 (1665 * 1 + 832) ≠ 1) ∧
     (¬ (∀ E : Nat, 1 ≤ E → (3 * E - 4) + E ≤ E * (E - 1))) ∧
@@ -174,11 +186,13 @@ theorem adv_all_boundary_refutations :
     (mpNonZero f2VanishingQuad ∧ mpDegLe 2 f2VanishingQuad ∧
       ∀ a : Fin 1 → Fin 2, mpEval f2VanishingQuad a = 0) ∧
     ((∀ k : Nat, 4 * k + 1 ≠ 7) ∧ paley7DirAdj 1 0 ≠ paley7DirAdj 0 1) ∧
-    (¬ HasSpanDim (F := Fin 2) 2 [sparseVec 2 [0], sparseVec 2 [1]] 1) :=
+    (¬ HasSpanDim (F := Fin 2) 2 [sparseVec 2 [0], sparseVec 2 [1]] 1) ∧
+    (∀ (F : Type) [SimpleField F],
+      ¬ HasTensorRankAtMost 36 36 36 71 (fun a b c => intToR (R := F) (matMulTensor 6 a b c))) :=
   ⟨adv_compress1_fails_at_832, adv_flag_privacy_fails_at_e3, adv_strassen_no_rank6,
    adv_c5_no_3_indep, adv_c7_no_rank3_haemers, adv_p13_no_4_indep,
    adv_koszul_ceiling_broken_at_m3, adv_schwartz_zippel_f2_tight, adv_paley7_not_conference,
-   adv_hasSpanDim_rejects_false_rank⟩
+   adv_hasSpanDim_rejects_false_rank, adv_blaser_refutes_rank_71_at_m6⟩
 
 end
 end TriadFrontier.AdversarialTests

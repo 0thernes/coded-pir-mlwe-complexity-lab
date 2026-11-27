@@ -20,7 +20,7 @@ make -C native clean all test
 # 3. Run Eshkol v1.3.6 forward-mode AD checks
 node eshkol/run_eshkol_ad.mjs
 
-# 4. Run full Python exact audit, pytest (25/25), lint, citations & dual timestamps
+# 4. Run full Python exact audit, pytest (26/26, 18/18 mutants), lint, citations & dual timestamps
 PYTHONPATH=python pytest tests/test_all.py -v
 ruff check python tests scripts examples
 mypy python/triad_verify scripts --ignore-missing-imports

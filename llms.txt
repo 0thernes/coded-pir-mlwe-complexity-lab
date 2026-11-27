@@ -1,40 +1,42 @@
 # coded-pir-mlwe-complexity-lab
 
-> Zero-Mathlib Lean 4.35.0 formal proofs (32 theorem bundles `T1a`–`T3l` & `T1k` + 10 adversarial boundary tests, 35 audited declarations + 1,656 `TriadFrontier.*` declarations swept by `AuditExhaustiveAxioms.lean` under `module`, 4,745 `con-leche`/`con-ron` verified decls across 6 independent kernels + live negative tamper gate), hardened C11 (88 tests + 1,024 fuzz) / Python (`0 ruff`, `0 mypy`, 25 tests, 16/16 mutants, 90-digit Kronecker coupled FIPS 203 DFR oracle) / Eshkol v1.3.6 AD multi-language verifiers, dual DigiCert RFC 3161 + 3-calendar Bitcoin OTS timestamps, a CSP/WCAG-AA interactive GitHub Pages Proof Blueprint, and an AMS-LaTeX preprint (`v5.2.0`, 8 figures, 36 live HTTP-200 + 0-retraction Crossref citations). Resolves no grand published open problem in Lean (`0 / 1,900` retired) and refutes no published claim; see `ERRATA.md` for the 2026-11-26 statement audit and complete `v5.1.0`–`v5.2.0` fixes (`A01`–`A12`, `L01`–`L07`, `S01`–`S04`).
+> Zero-Mathlib Lean 4.35.0 formal proofs (34 theorem bundles `T1a`–`T3m` + 11 adversarial boundary tests, 37 audited declarations + 2,306 `TriadFrontier.*` declarations swept by `AuditExhaustiveAxioms.lean` under `module`, 5,711 `con-leche`/`con-ron` verified decls across 6 independent kernels + live negative tamper gate), hardened C11 (90 tests + 1,024 fuzz) / Python (`0 ruff`, `0 mypy`, 26 tests, 18/18 mutants, 90-digit Kronecker coupled FIPS 203 DFR oracle) / Eshkol v1.3.6 AD multi-language verifiers, dual DigiCert RFC 3161 + 3-calendar Bitcoin OTS timestamps, a CSP/WCAG-AA interactive GitHub Pages Proof Blueprint, and an AMS-LaTeX preprint (`v5.4.0`, 8 figures, 37 live HTTP-200 + 0-retraction Crossref citations). Resolves no grand published open problem in Lean (`0 / 1,900` retired) and refutes no published claim; see `ERRATA.md` for the 2026-11-26 statement audit and complete `v5.1.0`–`v5.4.0` fixes (`A01`–`A12`, `L01`–`L07`, `S01`–`S04`).
 
 - Author: Alexander S. Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648)
 - Code License: Apache-2.0 | Docs & Paper License: CC-BY-4.0
 - Interactive Proof Blueprint: https://0thernes.github.io/coded-pir-mlwe-complexity-lab/
 
 ## Primary Documentation
-- [README.md](README.md): Project overview, plain-language Lean vs. outside-Lean table (`T1a`–`T3l` & `T1k`), verbatim 35-declaration Lean axiom audit, and quickstart.
-- [CLAIMS.md](CLAIMS.md): Claim-by-claim ledger (`C1`–`C32`), open frontiers (`O1`–`O7`), and falsification protocol.
+- [README.md](README.md): Project overview, plain-language Lean vs. outside-Lean table (`T1a`–`T3m`), verbatim 37-declaration Lean axiom audit, and quickstart.
+- [CLAIMS.md](CLAIMS.md): Claim-by-claim ledger (`C1`–`C34`), open frontiers (`O1`–`O7`), and falsification protocol.
 - [LIMITATIONS.md](LIMITATIONS.md): Explicit non-claims, formal vs. computational boundaries, and real-vs-metaphor breakdown.
-- [ERRATA.md](ERRATA.md): Versioned errata, 2026-11-26 statement audit, and `v5.1.0`–`v5.2.0` resolutions (`A01`–`A12`, `L01`–`L07`, `S01`–`S04`).
+- [ERRATA.md](ERRATA.md): Versioned errata, 2026-11-26 statement audit, and `v5.1.0`–`v5.4.0` resolutions (`A01`–`A12`, `L01`–`L07`, `S01`–`S04`).
 - [REPLICATION.md](REPLICATION.md): Clean-room replication commands and zero-cache verification log.
-- [HARDENING_LOG.md](HARDENING_LOG.md): 45 defects/issues found and resolved across audit cycles (`H01`–`H45`).
+- [HARDENING_LOG.md](HARDENING_LOG.md): 57 defects/issues found and resolved across audit cycles (`H01`–`H57`).
 - [AGENTS.md](AGENTS.md): Canonical instructions for AI coding agents.
 
 ## Technical Artifacts
-- [lean/Solution.lean](lean/Solution.lean): Master zero-Mathlib Lean 4.35.0 solution (`T1a`–`T3l` & `T1k`).
-- [lean/AuditExhaustiveAxioms.lean](lean/AuditExhaustiveAxioms.lean): Programmatic `Lean.collectAxioms` sweep across all 1,656 `TriadFrontier.*` declarations under Lean 4.35.0 `module`.
+- [lean/Solution.lean](lean/Solution.lean): Master zero-Mathlib Lean 4.35.0 solution (`T1a`–`T3m`).
+- [lean/AuditExhaustiveAxioms.lean](lean/AuditExhaustiveAxioms.lean): Programmatic `Lean.collectAxioms` sweep across all 2,306 `TriadFrontier.*` declarations under Lean 4.35.0 `module`.
 - [lean/TriadFrontier/LinearRankSoundness.lean](lean/TriadFrontier/LinearRankSoundness.lean): In-Lean vector-space `HasSpanDim` soundness & Steinitz uniqueness for `matRankModP` ($\mathbb{F}_2,\mathbb{F}_3$) & `gf2RankSparse` ($\mathbb{F}_2$) (`T1k`, closing `L02`).
 - [lean/TriadFrontier/PIRProtocol.lean](lean/TriadFrontier/PIRProtocol.lean): Field-universal 2-file, $N$-server, $K$-MDS flag-private PIR exact zero-error decoding & explicit two-sided colluder-transcript bijection $\Psi_I$ (`T1k`, closing `S01`/`A02`).
+- [lean/TriadFrontier/PIRF101Cert.lean](lean/TriadFrontier/PIRF101Cert.lean): Unconditional in-kernel constructive existence over `SimpleField (Fin 101)` of the explicit $(6,3,3)$ rate-$10/17$ zero-error 20/20 $T=3$-private PIR scheme (`T1l`, zero `native_decide`).
 - [lean/TriadFrontier/PIRLinearCerts.lean](lean/TriadFrontier/PIRLinearCerts.lean): 23 $\mathbb{F}_2/\mathbb{F}_3$ linear rays, 510 four-marginals, 6 five-object $\mathbb{F}_2$ realizations (`T1i`), & 6-object $\mathbb{F}_2^{64}$ realization (`T1j`; `HasSpanDim`-sound via `T1k`).
 - [lean/TriadFrontier/MLWETightness.lean](lean/TriadFrontier/MLWETightness.lean): `T2a`–`T2i`, incl. integer Bai DPI/tensorization inequalities & 14-bit `Dyadic-16384-A/B` moment certificates.
 - [lean/TriadFrontier/KoszulTensor.lean](lean/TriadFrontier/KoszulTensor.lean): Field-universal Koszul flattening tensor rank bounds (`T3e`, `T3g`).
 - [lean/TriadFrontier/StrassenWinograd.lean](lean/TriadFrontier/StrassenWinograd.lean): Characteristic-free formalization of known $\mathrm{rank}_F(\langle 2,2,2\rangle) = 7$ over every field (`T3h`).
-- [lean/TriadFrontier/BrockettDobkin.lean](lean/TriadFrontier/BrockettDobkin.lean): Field-universal substitution-method rectangular & quadratic $2m^2-m$ MatMul lower bound + Strassen lift (`T3i`; weaker than Brockett–Dobkin $2m^2-1$).
+- [lean/TriadFrontier/BrockettDobkin.lean](lean/TriadFrontier/BrockettDobkin.lean): Field-universal substitution-method rectangular & quadratic $2m^2-m$ MatMul lower bound + Strassen lift (`T3i`; superseded for $m \ge 5$ by `T3m`).
+- [lean/TriadFrontier/BlaserLowerBound.lean](lean/TriadFrontier/BlaserLowerBound.lean): Characteristic-free zero-Mathlib proof of Markus Bläser's (FOCS 1999) $5m^2 - 6m \le 2\,\mathrm{rank}_F(\langle m,m,m\rangle)$ over every `SimpleField F` incl. $\mathbb{F}_2$ (`T3m`, surpassing Brockett–Dobkin $2m^2-1$ for $m \ge 6$).
 - [lean/TriadFrontier/ShannonCapacity.lean](lean/TriadFrontier/ShannonCapacity.lean): Field-universal Haemers rank bound, zero-reals $\mathbb{Z}[\sqrt{5}]$ SOS integer form of Lovász $\Theta(C_5)=\sqrt{5}$, & exact $C_7$ min Haemers rank $= 4$ (`T3j`).
-- [lean/TriadFrontier/AlgebraicComplexity.lean](lean/TriadFrontier/AlgebraicComplexity.lean): Constructive Schwartz–Zippel lemma & two-sided Strassen bound $2\cdot 4^k - 2^k \le \mathrm{rank}_F(\langle 2^k,2^k,2^k\rangle) \le 7^k$ (`T3k`).
+- [lean/TriadFrontier/AlgebraicComplexity.lean](lean/TriadFrontier/AlgebraicComplexity.lean): Constructive Schwartz–Zippel lemma & two-sided Strassen bound (`T3k`, tightened in `T3m`).
 - [lean/TriadFrontier/PaleyCapacity.lean](lean/TriadFrontier/PaleyCapacity.lean): Conditional zero-reals $\mathbb{Z}[\sqrt{p}]$ conference-matrix SOS theorem (Lovász 1979; hypotheses proved in Lean for $P_5, P_{13}, P_{17}$, `T3l`).
-- [lean/TriadFrontier/AdversarialTests.lean](lean/TriadFrontier/AdversarialTests.lean): 10 kernel-checked boundary tests (`adv_all_boundary_refutations`).
-- [lean/VerifyAxioms.lean](lean/VerifyAxioms.lean): Strict `#print axioms` audit script (35 declarations).
+- [lean/TriadFrontier/AdversarialTests.lean](lean/TriadFrontier/AdversarialTests.lean): 11 kernel-checked boundary tests (`adv_all_boundary_refutations`, incl. `adv_blaser_refutes_rank_71_at_m6`).
+- [lean/VerifyAxioms.lean](lean/VerifyAxioms.lean): Strict `#print axioms` audit script (37 declarations).
 - [lean/formalization.yaml](lean/formalization.yaml): Machine-readable formalization registry metadata.
-- [docs/site/blueprint.html](docs/site/blueprint.html): CSP/WCAG-AA interactive 32-theorem Proof Blueprint DAG.
+- [docs/site/blueprint.html](docs/site/blueprint.html): CSP/WCAG-AA interactive 34-theorem Proof Blueprint DAG.
 - [docs/architecture.md](docs/architecture.md): System and mathematical dependency architecture.
 - [docs/statement-fidelity.md](docs/statement-fidelity.md): Line-by-line Lean-to-paper statement fidelity table.
 - [docs/LITERATURE_SEARCH.md](docs/LITERATURE_SEARCH.md): Logged prior-art search & Crossref 0-retraction audit.
 - [docs/MEGA_ATLAS_CROSSCHECK.md](docs/MEGA_ATLAS_CROSSCHECK.md): Honest Mega-Atlas crosswalk (`0 / 1,900` grand problems retired).
 - [docs/SUBMISSION_PACKET.md](docs/SUBMISSION_PACKET.md): Export-control, AI-disclosure & preservation packet.
-- [dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf](dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf): Frozen AMS-LaTeX preprint (`v5.3.0`).
+- [dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf](dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf): Frozen AMS-LaTeX preprint (`v5.4.0`).

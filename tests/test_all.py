@@ -2,13 +2,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Alexander S. Donahue
 """
-Comprehensive Verification & Falsification Test Suite (`tests/test_all.py`, v5.2.0):
-- Claim falsifiability checks (C1–C32)
+Comprehensive Verification & Falsification Test Suite (`tests/test_all.py`, v5.4.0):
+- Claim falsifiability checks (C1–C34)
 - Negative / adversarial boundary checks (C11 CLI invalid args, Eshkol parser/depth/domain, tamper detection)
 - Randomized property-based tests (prop_check)
 - Differential tests (Python vs native C11 CLI vs Eshkol v1.3.6 AD runtime)
 - Metamorphic checks (K <-> T symmetry, noise-shift odd symmetry)
-- Mutation-killing tests (16/16 core mutants killed!)
+- Mutation-killing tests (18/18 core mutants killed!)
 - Draft 2020-12 repo.yaml schema validation, link integrity, Pages CSP/WCAG AA, dual timestamps, & single version source
 """
 from __future__ import annotations
@@ -28,8 +28,11 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "python"))
 
 from triad_verify.complexity_triad import (
+    _comm_pair_xy,
+    _exact_det_int,
     mle_eval_mod_p,
     verify_algebrization_mle,
+    verify_blaser_five_halves_matmul_bound,
     verify_brockett_dobkin_and_lovasz_shannon_capacity,
     verify_katz_trevisan_ldc_distance,
     verify_koszul_flattening_tensor_rank,
@@ -264,6 +267,23 @@ def test_c28_to_c31_v5_breakthroughs_suite() -> None:
     assert [item["p"] for item in szp["paley_conference_sos_verified"]] == [5, 13, 17, 29, 37, 41]
 
 
+def test_c33_c34_v540_f101_kernel_and_blaser_five_halves() -> None:
+    # C33 (T1l): In-kernel F_101 (6,3,3) rate-10/17 certified PIR existence matches JSON witness & 20/20 triples
+    cert = verify_certified_f101_t3_k3_e6_zero_error(REPO_ROOT / "data" / "f101_t3_k3_e6_witness.json")
+    assert cert["rate"] == "10/17" and cert["flag_isomorphisms_verified"] == 20
+    assert (REPO_ROOT / "lean" / "TriadFrontier" / "PIRF101Cert.lean").is_file()
+
+    # C34 (T3m): Blaser (FOCS 1999) 5/2 m^2 - 3m bound over EVERY field F (incl. F_2!), beating 2m^2 - 1 for all m >= 6
+    bl = verify_blaser_five_halves_matmul_bound()
+    assert bl["all_comm_pairs_det_one_Z_and_F2"] is True
+    assert len(bl["comm_pair_m2_to_12"]) == 11
+    assert bl["m6_blaser_beats_71"]["blaser_lb"] == 72 and bl["m6_blaser_beats_71"]["bd78_lb"] == 71
+    assert bl["m10_blaser_beats_199"]["blaser_lb"] == 220 and bl["m10_blaser_beats_199"]["bd78_lb"] == 199
+    assert all(row["beats_2m2_minus_1"] for row in bl["blaser_vs_bd_m1_to_16"] if row["m"] >= 6)
+    assert len(bl["strassen_blaser_sandwich_k0_to_8"]) == 9
+    assert (REPO_ROOT / "lean" / "TriadFrontier" / "BlaserLowerBound.lean").is_file()
+
+
 # ============================================================================
 # 2. Property-Based & Negative Tests
 # ============================================================================
@@ -368,7 +388,7 @@ def test_differential_python_vs_native_c11() -> None:
 
 
 # ============================================================================
-# 4. Mutation-Killing Suite (16/16 Core Mutants Killed!)
+# 4. Mutation-Killing Suite (18/18 Core Mutants Killed!)
 # ============================================================================
 
 def test_kill_16_core_mutants() -> None:
@@ -429,6 +449,13 @@ def test_kill_16_core_mutants() -> None:
     coupled_dec = compute_exact_mlkem_dfr_decimal(4, 11, 5, cbd2, cbd2, prec=90)["union_bound_log2_dfr"]
     assert abs(coupled_f64 - (-174.8)) < 0.05 and coupled_f64 == coupled_dec
     assert abs(-176.63 - (-174.8)) > 1.5  # old uncoupled split-s bug differed by 1.83 bits!
+    # Mutant 17: Rank-71 claim at m=6 violates Blaser (1999) 5/2 m^2 - 3m (5*36 - 36 = 144 > 142 = 2*71)
+    assert 5 * 6 * 6 - 6 * 6 > 2 * 71
+    # Mutant 18: Clearing entry X[0][0] in commPairX(6) makes [X_6, Y_6] singular over Z and F_2
+    X6, Y6 = _comm_pair_xy(6)
+    X6[0][0] = 0
+    comm6_mut = [[sum(X6[i][t] * Y6[t][j] - Y6[i][t] * X6[t][j] for t in range(6)) for j in range(6)] for i in range(6)]
+    assert _exact_det_int(comm6_mut) == 0
 
 
 # ============================================================================

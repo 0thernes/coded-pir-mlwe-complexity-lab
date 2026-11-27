@@ -9,7 +9,7 @@ import Solution
 import PalomarSolution
 
 /-!
-# Exhaustive Programmatic Axiom Audit (`AuditExhaustiveAxioms.lean`, v5.2.0)
+# Exhaustive Programmatic Axiom Audit (`AuditExhaustiveAxioms.lean`, v5.4.0)
 
 Walks **EVERY** constant in the compiled `TriadFrontier.*` environment (including all
 private/internal helper lemmas, `NonVacuity`, `AdversarialTests`, `Solution`, and

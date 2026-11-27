@@ -13,6 +13,7 @@
 'TriadFrontier.Solution.t1k_linear_rank_soundness_and_pir_protocol' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]
+'TriadFrontier.Solution.t1l_f101_certified_pir_existence' depends on axioms: [propext, Classical.choice, Quot.sound]
 'TriadFrontier.Solution.t2a_determinant_ideal_secret_independence' depends on axioms: [propext, Quot.sound]
 'TriadFrontier.Solution.t2b_chen_step9_antiperiodic_dft_cancellation' depends on axioms: [propext, Quot.sound]
 'TriadFrontier.Solution.t2c_mlkem_cbd_renyi_cliff' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -52,6 +53,7 @@
 'TriadFrontier.Solution.t3l_infinite_paley_conference_shannon_capacity' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]
+'TriadFrontier.Solution.t3m_blaser_five_halves_matmul_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
 'TriadFrontier.Solution.prove_all_triad_theorems' depends on axioms: [propext, Classical.choice, Quot.sound]
 'TriadFrontier.NonVacuity.nonvac_all_hypotheses' depends on axioms: [propext, Classical.choice, Quot.sound]
 'TriadFrontier.AdversarialTests.adv_all_boundary_refutations' depends on axioms: [propext, Classical.choice, Quot.sound]

@@ -3,15 +3,15 @@ cff-version: 1.2.0
 title: "Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked Complexity-Barrier Bridges"
 message: "If you use these Lean 4 proofs, verification artifacts, or white paper, please cite this software and preprint."
 type: software
-version: 5.3.0
+version: 5.4.0
 date-released: 2026-11-27
 license: Apache-2.0
 repository-code: "https://github.com/0thernes/coded-pir-mlwe-complexity-lab"
 url: "https://0thernes.github.io/coded-pir-mlwe-complexity-lab/"
 identifiers:
   - type: swh
-    value: "swh:1:snp:6b7497ece0bdaa40476d97fb26bee75bf7d7747c"
-    description: "Software Heritage permanent archival snapshot of v5.2.0 (v5.3.0 snapshot queued upon release)"
+    value: "swh:1:snp:219e9ee707b73306a4b4f9636878c9989d4359d7"
+    description: "Software Heritage permanent archival snapshot of v5.3.0 (v5.4.0 snapshot queued upon release)"
 authors:
   - family-names: Donahue
     given-names: Alexander Stephen
@@ -36,6 +36,7 @@ keywords:
   - quantum-geometric-tensor
   - koszul-flattening
   - strassen-winograd
+  - blaser-lower-bound
   - brockett-dobkin
   - schwartz-zippel
   - paley-graphs

@@ -5,7 +5,7 @@ module
 public import Challenge
 
 /-!
-# Palomar Comparator Challenge Contract (`coded-pir-mlwe-complexity-lab` v5.2.0)
+# Palomar Comparator Challenge Contract (`coded-pir-mlwe-complexity-lab` v5.4.0)
 
 Statement contract for `lake comparator --config comparator.json --paranoid`.
 Excluded from `defaultTargets` in `lakefile.toml`; every theorem is proved with
@@ -27,6 +27,7 @@ public theorem t1h_infinite_nonshannon_cone_barrier_and_contraction : T1h_Infini
 public theorem t1i_total_4var_entropic_and_5obj_linear_barrier : T1i_Total4VarEntropicAnd5ObjLinearBarrier := by sorry
 public theorem t1j_total_6obj_f2_entropic_realizability_barrier : T1j_Total6ObjF2EntropicRealizabilityBarrier := by sorry
 public theorem t1k_linear_rank_soundness_and_pir_protocol : T1k_LinearRankSoundnessAndPIRProtocol := by sorry
+public theorem t1l_f101_certified_pir_existence : T1l_F101CertifiedPIRExistence := by sorry
 public theorem t2a_determinant_ideal_secret_independence : T2a_DeterminantIdealSecretIndependence := by sorry
 public theorem t2b_chen_step9_antiperiodic_dft_cancellation : T2b_ChenStep9AntiPeriodicDFTCancellation := by sorry
 public theorem t2c_mlkem_cbd_renyi_cliff : T2c_MLKEMCBDRenyiCliff := by sorry
@@ -48,6 +49,7 @@ public theorem t3i_brockett_dobkin_rectangular_and_quadratic_matmul_bound : T3i_
 public theorem t3j_shannon_capacity_lovasz_c5_and_haemers : T3j_ShannonCapacityLovaszC5AndHaemers := by sorry
 public theorem t3k_schwartz_zippel_and_strassen_sandwich : T3k_SchwartzZippelAndStrassenSandwich := by sorry
 public theorem t3l_infinite_paley_conference_shannon_capacity : T3l_InfinitePaleyConferenceShannonCapacity := by sorry
+public theorem t3m_blaser_five_halves_matmul_bound : T3m_BlaserFiveHalvesMatMulBound := by sorry
 public theorem prove_all_triad_theorems : AllTriadFrontierTheorems := by sorry
 
 end TriadFrontier.Palomar

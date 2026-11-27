@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; frame-ancestors 'none'; base-uri 'self';">
-<title>Interactive 32-Theorem Proof Blueprint DAG — Triad Frontier Lab v5.3.0</title>
+<title>Interactive 34-Theorem Proof Blueprint DAG — Triad Frontier Lab v5.4.0</title>
 <style>
   :root {
     --bg: #0b1120; --panel: #111827; --panel2: #1e293b; --border: #334155;
@@ -53,10 +53,10 @@
 <body>
 <a class="skip-link" href="#dag">Skip to Blueprint DAG</a>
 <header>
-  <h1>Interactive Lean 4.35.0 Proof Blueprint DAG — 32 Bundles (T1a–T3l &amp; T1k) + 10 Refutations (v5.3.0)</h1>
+  <h1>Interactive Lean 4.35.0 Proof Blueprint DAG — 34 Bundles (T1a–T3m) + 11 Refutations (v5.4.0)</h1>
   <div>
     <label for="bpSearch" style="position:absolute;left:-9999px;">Filter theorems</label>
-    <input id="bpSearch" class="search-input" type="search" placeholder="Filter T1a..T3l / T1k / keyword..." aria-label="Filter blueprint theorem nodes">
+    <input id="bpSearch" class="search-input" type="search" placeholder="Filter T1a..T3m / Bläser / F101..." aria-label="Filter blueprint theorem nodes">
     &nbsp;|&nbsp;
     <a href="index.html">&larr; Back to Triad Explorer</a> &nbsp;|&nbsp;
     <a href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab/tree/main/lean">Browse Lean Source</a>
@@ -65,14 +65,14 @@
 <div class="layout">
   <div class="canvas-wrap">
     <div class="legend">
-      <span><span class="dot" style="background:#38bdf8"></span>Pillar I: CS-053 PIR (T1a–T1k)</span>
+      <span><span class="dot" style="background:#38bdf8"></span>Pillar I: CS-053 PIR (T1a–T1l)</span>
       <span><span class="dot" style="background:#f472b6"></span>Pillar II: CS-026 MLWE / QC-042 / CM-048 (T2a–T2i)</span>
-      <span><span class="dot" style="background:#a78bfa"></span>Pillar III: Triad, Schwartz–Zippel &amp; Conference Capacity (T3a–T3l)</span>
-      <span><span class="dot" style="background:#34d399"></span>Master, NonVacuity &amp; Adversarial Audit (1,656 Axiom-Swept Decls)</span>
-      <span><span class="dot" style="background:#fbbf24"></span>Explicitly Open Frontiers (O1–O7)</span>
+      <span><span class="dot" style="background:#a78bfa"></span>Pillar III: Triad, Bläser 5/2 m²-3m &amp; Paley Capacity (T3a–T3m)</span>
+      <span><span class="dot" style="background:#34d399"></span>Master, NonVacuity &amp; Adversarial Audit (2,306 Axiom-Swept Decls)</span>
+      <span><span class="dot" style="background:#fbbf24"></span>Explicitly Open Frontiers (O1–O6)</span>
       <span><em>Click or focus + Enter/Space on any node to inspect Lean declaration, axioms, and cross-checks.</em></span>
     </div>
-    <svg id="dag" viewBox="0 0 980 1040" role="img" aria-label="Dependency graph of 32 machine-checked Lean 4 theorem bundles and 10 adversarial boundary refutations">
+    <svg id="dag" viewBox="0 0 980 1120" role="img" aria-label="Dependency graph of 34 machine-checked Lean 4 theorem bundles and 11 adversarial boundary refutations">
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b"/>
@@ -103,7 +103,8 @@ const NODES = [
   {id:"T1h", x:30, y:555, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1h · Matúš ∞-Cone & ρ^j", decl:"TriadFrontier.Solution.t1h_infinite_nonshannon_cone_barrier_and_contraction", file:"lean/TriadFrontier/PIRKoszul.lean", axioms:"[propext, Quot.sound]", desc:"Universal 7-parameter non-Shannon cone & infinite Matúš (2007) family M_s (∀s∈ℕ, equals ZY98 at s=1): h_uncond defeats ALL infinitely many Matúš inequalities! Plus all-M contraction ρ_KV^j < ρ_LFSR^j.", checks:"Lean 6 kernels · Python 14,850 Matúš singleton checks"},
   {id:"T1i", x:30, y:630, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1i · Total 4-Var I_4 & 5-F₂", decl:"TriadFrontier.Solution.t1i_total_4var_entropic_and_5obj_linear_barrier", file:"lean/TriadFrontier/PIRLinearCerts.lean", axioms:"[propext, Quot.sound]", desc:"Kernel-verified 23 F_2/F_3 linear rays decomposing all 24 canonical 4-marginals (all 510 four-marginals of h_uncond) at denom 3 + all 6 five-object retrieval marginals decomposed into explicit F_2-linear subspace arrangements!", checks:"Lean 6 kernels (7,650+186 identities) · Python polymatroid_barrier.py"},
   {id:"T1j", x:30, y:705, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1j · Exact 6-Obj F₂⁶⁴", decl:"TriadFrontier.Solution.t1j_total_6obj_f2_entropic_realizability_barrier", file:"lean/TriadFrontier/PIRLinearCerts.lean", axioms:"[propext, Quot.sound]", desc:"Entire 6-object retrieval marginal (W_1,W_2,A_1,A_2,A_3,A_4) of h_uncond (all 64 subsets!) realized EXACTLY by 6 subspaces in F_2^64 (4*rank scaling), backed by in-Lean HasSpanDim soundness (T1k). Inequalities in 5 or more variables involving individual storage symbols remain open.", checks:"Lean 6 kernels (sound via T1k) · C11 triad_cli ret6-f2 · Python"},
-  {id:"T1k", x:30, y:780, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1k · Rank & PIR Biject", decl:"TriadFrontier.Solution.t1k_linear_rank_soundness_and_pir_protocol", file:"lean/TriadFrontier/LinearRankSoundness.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Closes ERRATA L02 & S01/A02: proves standard vector-space HasSpanDim soundness & Steinitz uniqueness for matRankModP (F_2, F_3) and gf2RankSparse (F_2, with all 6-level PivotTrie invariants) + field-universal 2-file N-server K-MDS flag-private PIR exact zero-error decoding & two-sided colluder-transcript bijection Ψ_I (PIRProtocol.lean), instantiated by F_101 (6,3,3) rate-10/17 20/20 witness.", checks:"Lean 6 kernels · C11 triad_cli f101-t3k3 · Python live 10/10 decode + 20/20 bijection"},
+  {id:"T1k", x:30, y:780, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1k · Rank & PIR Biject", decl:"TriadFrontier.Solution.t1k_linear_rank_soundness_and_pir_protocol", file:"lean/TriadFrontier/LinearRankSoundness.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Closes ERRATA L02 & S01/A02: proves standard vector-space HasSpanDim soundness & Steinitz uniqueness for matRankModP (F_2, F_3) and gf2RankSparse (F_2, with all 6-level PivotTrie invariants) + field-universal 2-file N-server K-MDS flag-private PIR exact zero-error decoding & two-sided colluder-transcript bijection Ψ_I (PIRProtocol.lean).", checks:"Lean 6 kernels · C11 triad_cli f101-t3k3 · Python live 10/10 decode + 20/20 bijection"},
+  {id:"T1l", x:30, y:855, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1l · In-Kernel F₁₀₁ PIR", decl:"TriadFrontier.Solution.t1l_f101_certified_pir_existence", file:"lean/TriadFrontier/PIRF101Cert.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Unconditional IN-KERNEL constructive existence over SimpleField (Fin 101) of the (M=2, N=6, K=3, T=3, D=20, y=7, z=3) rate-10/17 > 4/7 zero-error PIR scheme: kernel-certifies DecInv*M_des=I_60, Cancel*M_pure=M_mixed, and ALL 20/20 GL_20(F_101) colluding-triple flag isomorphisms with zero native_decide and zero external oracles!", checks:"Lean 6 kernels · C11 triad_cli f101-t3k3 · Python live 20/20 bijection"},
 
   // Pillar II (middle column x=330..515)
   {id:"T2a", x:330, y:30, w:180, h:54, col:"#f472b6", fill:"#341029", title:"T2a · Diagonal Determinant q^m", decl:"TriadFrontier.Solution.t2a_determinant_ideal_secret_independence", file:"lean/TriadFrontier/MLWETightness.lean", axioms:"[propext, Quot.sound]", desc:"Over any commutative ring R, a diagonal with m entries q and the rest 1 has product q^m (the q-ary MLWE basis determinant). No matrix is defined in Lean and no published claim is refuted.", checks:"Lean 6 kernels · NonVacuity over Int · Python"},
@@ -129,24 +130,25 @@ const NODES = [
   {id:"T3j", x:605, y:705, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3j · Lovász Θ(C₅)=√5", decl:"TriadFrontier.Solution.t3j_shannon_capacity_lovasz_c5_and_haemers", file:"lean/TriadFrontier/ShannonCapacity.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Zero-reals Shannon capacity (CS-CMP-012): field-universal Haemers rank bound |S|<=r^t, exact Lovász Θ(C_5)=√5 via 3-term Z[√5] SOS of 6×6 umbrella Gram matrix 80 M_6 (k²<=5^t & α(C_5^{⊠2m})=5^m), & exact C_7 min Haemers rank = 4 ∀F!", checks:"Lean 6 kernels · C11 lovasz-c5 & c7-cap · Python"},
   {id:"T3k", x:605, y:780, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3k · S–Z & Two-Sided 2^k", decl:"TriadFrontier.Solution.t3k_schwartz_zippel_and_strassen_sandwich", file:"lean/TriadFrontier/AlgebraicComplexity.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Universal constructive Schwartz–Zippel lemma |Z(P)∩S^n|<=d|S|^{n-1} + two-sided power-of-2 Strassen–substitution bounds 2·4^k - 2^k <= rank_F(<2^k,2^k,2^k>) <= 7^k for EVERY k >= 0 & EVERY SimpleField F (incl. F_2!).", checks:"Lean 6 kernels · Python complexity_triad.py"},
   {id:"T3l", x:605, y:855, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3l · Conference Θ=√(4k+1)", decl:"TriadFrontier.Solution.t3l_infinite_paley_conference_shannon_capacity", file:"lean/TriadFrontier/PaleyCapacity.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Conditional zero-reals Z[√(4k+1)] conference-matrix SOS theorem (Lovász 1979): for any self-complementary conference graph on 4k+1 vertices, α(G^{⊠t})² <= (4k+1)^t & α(G^{⊠2m}) >= (4k+1)^m; Lean hypotheses checked for P_5, P_13, P_17 (C11/Python: P_5..P_41).", checks:"Lean 6 kernels · C11 triad_cli paley-cap (P_5..P_41) · Python"},
+  {id:"T3m", x:605, y:930, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3m · Bläser 5/2 m²-3m ∀F", decl:"TriadFrontier.Solution.t3m_blaser_five_halves_matmul_bound", file:"lean/TriadFrontier/BlaserLowerBound.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Full characteristic-free zero-Mathlib proof of Markus Bläser's (FOCS 1999) 5/2 m² - 3m matrix multiplication tensor rank lower bound (5m² - 6m <= 2*r) over EVERY SimpleField F (including F_2!) via a 3-stage rational-function tower F -> K1 -> K2 -> K3, explicit {0,1} unimodular commutator pairs det([X_m,Y_m])=1, Kronecker subset selection, and Strassen commutator rank! Strictly beats Brockett–Dobkin 2m²-1 for all m >= 6 (m=6 -> 72 > 71) and tightens 5*4^k - 6*2^k <= 2*rank_F(<2^k>) <= 2*7^k.", checks:"Lean 6 kernels · Python exact Bareiss det & dominance table"},
 
   // Master, NonVacuity & AdversarialTests (bottom row)
-  {id:"SOL", x:40, y:950, w:245, h:58, col:"#34d399", fill:"#063024", title:"Solution.lean · Master (32)", decl:"TriadFrontier.Solution.prove_all_triad_theorems", file:"lean/Solution.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Single conjunction of all 32 headline bundles T1a–T3l & T1k, checked by Palomar Comparator (lake comparator --paranoid) + 6 kernels (4,745 con-leche/con-ron verified decls + nanoda + 1,656 exhaustive axiom-swept TriadFrontier.* decls under module + live negative tamper gate).", checks:"lean · leanchecker-paranoid · lean4lean · nanoda · con-leche · con-ron · AuditExhaustiveAxioms"},
-  {id:"NV", x:315, y:950, w:215, h:58, col:"#34d399", fill:"#063024", title:"NonVacuity.lean · Witnesses", decl:"TriadFrontier.NonVacuity.nonvac_all_hypotheses", file:"lean/TriadFrontier/NonVacuity.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Non-degenerate inhabitants closing L06 (SimpleField Fin 2/3/5/11, non-degenerate concurrent & coplanar P^3 4-line witnesses in F_5^4, T1i/T1k/T2e-T2i concrete witnesses, MPoly Fin 2, P_5/P_13/P_17).", checks:"Lean 6 kernels · VerifyAxioms.lean"},
-  {id:"ADV", x:560, y:950, w:230, h:58, col:"#34d399", fill:"#063024", title:"AdversarialTests · 10 Kills", decl:"TriadFrontier.AdversarialTests.adv_all_boundary_refutations", file:"lean/TriadFrontier/AdversarialTests.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"10 kernel-checked negative/sharpness boundary refutations closing L07 (exact FIPS 203 Compress_1 fail at b=0 e=+833 & b=1 e=+832, universal refutations of E-threshold & 2m^2-m <= m^2+m, HasSpanDim false-rank rejection, no rank-6 M_2, no 3-indep C_5, no rank-3 Haemers C_7, no 4-indep P_13, F_2 x+x^2 Schwartz-Zippel saturation, p=7 not conference) + live CI kernel-rejection tamper gate.", checks:"Lean 6 kernels · VerifyAxioms.lean · CI tamper gate"},
+  {id:"SOL", x:40, y:1030, w:245, h:58, col:"#34d399", fill:"#063024", title:"Solution.lean · Master (34)", decl:"TriadFrontier.Solution.prove_all_triad_theorems", file:"lean/Solution.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Single conjunction of all 34 headline bundles T1a–T3m, checked by Palomar Comparator (lake comparator --paranoid) + 6 kernels (5,711 con-leche/con-ron verified decls + nanoda + 2,306 exhaustive axiom-swept TriadFrontier.* decls under module + live negative tamper gate).", checks:"lean · leanchecker-paranoid · lean4lean · nanoda · con-leche · con-ron · AuditExhaustiveAxioms"},
+  {id:"NV", x:315, y:1030, w:215, h:58, col:"#34d399", fill:"#063024", title:"NonVacuity.lean · Witnesses", decl:"TriadFrontier.NonVacuity.nonvac_all_hypotheses", file:"lean/TriadFrontier/NonVacuity.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Non-degenerate inhabitants closing L06 (SimpleField Fin 2/3/5/11, non-degenerate concurrent & coplanar P^3 4-line witnesses in F_5^4, T1i/T1k/T2e-T2i concrete witnesses, MPoly Fin 2, P_5/P_13/P_17).", checks:"Lean 6 kernels · VerifyAxioms.lean"},
+  {id:"ADV", x:560, y:1030, w:230, h:58, col:"#34d399", fill:"#063024", title:"AdversarialTests · 11 Kills", decl:"TriadFrontier.AdversarialTests.adv_all_boundary_refutations", file:"lean/TriadFrontier/AdversarialTests.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"11 kernel-checked negative/sharpness boundary refutations closing L07 (incl. universal refutation of rank-71 for <6,6,6> over EVERY field F incl. F_2 via T3m beating 2*6^2-1=71, exact FIPS 203 Compress_1 fail, universal E-threshold & Koszul ceiling refutations, HasSpanDim false-rank rejection, no rank-6 M_2, no 3-indep C_5, no rank-3 Haemers C_7, no 4-indep P_13, F_2 x+x^2 Schwartz-Zippel saturation, p=7 not conference) + live CI kernel-rejection tamper gate.", checks:"Lean 6 kernels · VerifyAxioms.lean · CI tamper gate"},
 
   // Explicitly Open Frontiers (far right)
   {id:"OPEN", x:818, y:310, w:145, h:255, col:"#fbbf24", fill:"#2c1e07", open:true, title:"O1–O6 · OPEN", decl:"(No Lean Proof Claimed)", file:"LIMITATIONS.md", axioms:"Tier-4 OPEN", desc:"Explicit epistemic boundary: O1 P≠NP & circuit lower bounds (CS-001/010); O2 ω=2 & VP≠VNP (CS-004/012); O3 non-linear C(2,4,2,2) ∈ [3/5, 8/13] (inequalities with individual storage symbols not excluded); O4 M>=3 non-LFSR PIR when E>=KT & general T>=4; O5 exact Θ(C_7) ∈ [√10, ϑ(C_7)]; O6 worst-case quantum MLWE hardness.", checks:"Honestly documented in LIMITATIONS.md, CLAIMS.md, ERRATA.md, and Section 6"}
 ];
 
 const EDGES = [
-  ["T1a","T1b",""], ["T1b","T1c",""], ["T1c","T1d",""], ["T1e","T1g",""], ["T1f","T1e",""], ["T1g","T1h",""], ["T1h","T1i",""], ["T1i","T1j",""], ["T1j","T1k",""], ["T1c","T1k",""],
+  ["T1a","T1b",""], ["T1b","T1c",""], ["T1c","T1d",""], ["T1e","T1g",""], ["T1f","T1e",""], ["T1g","T1h",""], ["T1h","T1i",""], ["T1i","T1j",""], ["T1j","T1k",""], ["T1c","T1k",""], ["T1k","T1l",""],
   ["T2b","T2f",""], ["T2c","T2e",""], ["T2d","T2e",""], ["T2e","T2g",""], ["T2g","T2h",""], ["T2h","T2i",""],
   ["T1a","T3e","bridge"], ["T2c","T3d","bridge"], ["T1c","T3c","bridge"], ["T3c","T3f",""],
-  ["T2a","T3b","bridge"], ["T3e","T3g",""], ["T3e","T3h",""], ["T3h","T3i",""], ["T3i","T3k",""], ["T3e","T3j","bridge"], ["T3j","T3l",""],
-  ["T1k","SOL",""], ["T2i","SOL",""], ["T3k","SOL",""], ["T3l","SOL",""],
+  ["T2a","T3b","bridge"], ["T3e","T3g",""], ["T3e","T3h",""], ["T3h","T3i",""], ["T3i","T3k",""], ["T3k","T3m",""], ["T3e","T3j","bridge"], ["T3j","T3l",""],
+  ["T1l","SOL",""], ["T2i","SOL",""], ["T3l","SOL",""], ["T3m","SOL",""],
   ["NV","SOL",""], ["ADV","SOL",""],
-  ["T3a","OPEN","open"], ["T3b","OPEN","open"], ["T3k","OPEN","open"], ["T3l","OPEN","open"]
+  ["T3a","OPEN","open"], ["T3b","OPEN","open"], ["T3m","OPEN","open"], ["T3l","OPEN","open"]
 ];
 
 const map = Object.fromEntries(NODES.map(n => [n.id, n]));
@@ -233,7 +235,7 @@ if (bpSearch) {
   });
 }
 
-selectNode("T3l");
+selectNode("T3m");
 </script>
 </body>
 </html>

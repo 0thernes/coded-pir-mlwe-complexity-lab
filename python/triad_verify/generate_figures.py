@@ -317,18 +317,18 @@ def fig4_chen_step9_and_triad(out_dir: Path) -> None:
     ax1.set_title(r"(a) Chen Step-9 & $m$-Twisted DFT Rule (T2b, T2f)")
     ax1.legend(loc="upper right", frameon=True, framealpha=0.94, fontsize=7.6)
 
-    # Panel B: Unified 5-Node Mega Atlas Architecture (32 Lean 4.35 Theorems T1a-T3l & T1k + 10 Refutations)
+    # Panel B: Unified 5-Node Mega Atlas Architecture (34 Lean 4.35 Theorems T1a-T3m + 11 Refutations)
     ax2.axis("off")
     ax2.set_xlim(0, 10.6)
     ax2.set_ylim(0, 8.6)
-    ax2.set_title("(b) Machine-Checked Frontier Bridges (32 Theorems T1a\u2013T3l & T1k)")
+    ax2.set_title("(b) Machine-Checked Frontier Bridges (34 Theorems T1a\u2013T3m)")
 
     nodes = {
-        "CS053": (2.25, 6.85, "CS-053: Coded/Byz. PIR\n(T1a\u2013T1k: Rank Soundness,\nPIR Bijection, $\\mathbb{F}_{101}$ 20/20)", "#dbeafe", "#1d4ed8"),
+        "CS053": (2.25, 6.85, "CS-053: Coded/Byz. PIR\n(T1a\u2013T1l: In-Kernel $\\mathbb{F}_{101}$\n(6,3,3) 10/17 20/20 + Rank)", "#dbeafe", "#1d4ed8"),
         "CS026": (8.35, 6.85, "CS-026 / QC-042 / CM-048\n(T2a\u2013T2i: Bai DPI/Tensor,\n90-Dig Coupled FIPS 203 DFR)", "#fce7f3", "#be185d"),
-        "CS004": (5.30, 4.35, "CS-004 ($\\omega$), CS-012 & CS-CMP-012\nT3e/T3g\u2013T3l: $2\\cdot 4^k-2^k\\leq R\\leq 7^k$,\nSchwartz\u2013Zippel, Cond. $\\Theta(P_p)=\\sqrt{p}$", "#ede9fe", "#6d28d9"),
+        "CS004": (5.30, 4.35, "CS-004 ($\\omega$), CS-012 & CS-CMP-012\nT3e/T3g\u2013T3m: Bl\u00e4ser $\\frac{5}{2}m^2-3m$ ($\\forall F$),\nSchwartz\u2013Zippel, Cond. $\\Theta(P_p)=\\sqrt{p}$", "#ede9fe", "#6d28d9"),
         "CS051": (2.25, 1.55, "CS-051: Locally Decodable\nCodes (T3c: $d_{\\min}\\geq 2B+1$;\nT3f: Katz\u2013Trevisan Smoothness)", "#dcfce7", "#15803d"),
-        "CS001": (8.35, 1.55, "CS-001 / CS-010: $\\mathrm{P}\\neq\\mathrm{NP}$\n(T3a MLE, T3b Nat. Proofs,\nT3f Shannon; 10 Adv. Refut.)", "#fef3c7", "#b45309"),
+        "CS001": (8.35, 1.55, "CS-001 / CS-010: $\\mathrm{P}\\neq\\mathrm{NP}$\n(T3a MLE, T3b Nat. Proofs,\nT3f Shannon; 11 Adv. Refut.)", "#fef3c7", "#b45309"),
     }
     for nx, ny, txt, fc, ec in nodes.values():
         ax2.text(
@@ -619,48 +619,44 @@ def fig7_bai_security_collapse_and_lovasz_bd(out_dir: Path) -> None:
     ax1.set_title("(a) End-to-End Bai et al. Overhead Collapse (T2h)")
     ax1.legend(loc="upper left", frameon=True, framealpha=0.95, fontsize=7.1)
 
-    ms = np.array([2, 3, 4, 5, 6])
+    ms = np.array([2, 3, 4, 5, 6, 7, 8])
     triv = ms ** 2
     koszul_ceil = ms ** 2 + ms
     bd = 2 * ms ** 2 - ms
-    ax2.fill_between(ms, koszul_ceil, bd, where=(ms >= 3), color="#fee2e2", alpha=0.45, label="Quadratic Gain Beyond Koszul ($m^2-2m$)")
-    ax2.plot(ms, triv, "o--", color="#64748b", lw=1.5, ms=4.8, label=r"Trivial Flattening ($m^2$)")
-    ax2.plot(ms, koszul_ceil, "^-.", color="#1d4ed8", lw=1.8, ms=5.5, label=r"Deg-$(m-1)$ Koszul Ceiling ($m^2+m$, T3g)")
-    ax2.plot(ms, bd, "D-", color="#b91c1c", lw=2.3, ms=5.8, label=r"Substitution LB ($2m^2-m\;\forall F$, T3i; BD78: $2m^2-1$)")
-    ax2.scatter([2], [7], color="#7c3aed", s=110, marker="*", zorder=7, label=r"Strassen–Winograd $\mathrm{rank}_F(\langle 2,2,2\rangle)=7$ (T3h)")
-    for m_val, kc_val, bd_val in zip(ms, koszul_ceil, bd):
-        if m_val >= 3:
-            ax2.text(m_val - 0.14, bd_val + 2.4, f"{bd_val}", fontsize=7.4, color="#991b1b", fontweight="bold", ha="center")
-            ax2.text(
-                m_val + 0.12,
-                kc_val + 2.6,
-                f"{kc_val}",
-                fontsize=7.0,
-                color="#1e40af",
-                ha="center",
-                bbox={"boxstyle": "round,pad=0.10", "facecolor": "white", "edgecolor": "none", "alpha": 0.85},
-            )
+    bd78 = 2 * ms ** 2 - 1
+    blaser = (5 * ms ** 2 - 6 * ms + 1) // 2
+    ax2.fill_between(ms, bd78, blaser, where=(ms >= 6), color="#d1fae5", alpha=0.65, label=r"Bläser Gain Beyond $2m^2-1$ ($m \geq 6$)")
+    ax2.plot(ms, triv, "o--", color="#64748b", lw=1.3, ms=4.2, label=r"Trivial Flattening ($m^2$)")
+    ax2.plot(ms, koszul_ceil, "^-.", color="#1d4ed8", lw=1.6, ms=4.8, label=r"Deg-$(m-1)$ Koszul Ceiling ($m^2+m$, T3g)")
+    ax2.plot(ms, bd, "s--", color="#d97706", lw=1.6, ms=4.6, label=r"Substitution LB ($2m^2-m\;\forall F$, T3i)")
+    ax2.plot(ms, bd78, ":", color="#b91c1c", lw=1.7, label=r"Brockett–Dobkin 1978 ($2m^2-1$)")
+    ax2.plot(ms, blaser, "D-", color="#047857", lw=2.4, ms=5.8, label=r"Ours: Bläser 1999 ($\lceil\frac{5}{2}m^2-3m\rceil\;\forall F$, T3m)")
+    ax2.scatter([2], [7], color="#7c3aed", s=105, marker="*", zorder=7, label=r"Strassen–Winograd $\mathrm{rank}_F(\langle 2,2,2\rangle)=7$ (T3h)")
+    for m_val, bl_val, b78_val in zip(ms, blaser, bd78):
+        if m_val in (6, 7, 8):
+            ax2.text(m_val - 0.14, bl_val + 4.5, f"{bl_val}", fontsize=7.2, color="#065f46", fontweight="bold", ha="center")
+            ax2.text(m_val + 0.18, b78_val - 6.8, f"{b78_val}", fontsize=6.6, color="#991b1b", ha="center")
     ax2.text(
         0.985,
         0.03,
-        "Theorem T3j (CS-CMP-012, $\\mathbb{Z}[\\sqrt{5}]$):\n"
-        "$\\Theta(C_5)=\\sqrt{5}$: $k^2\\leq 5^t$ & $\\alpha(C_5^{\\boxtimes 2m})=5^m$\n"
-        "$\\sqrt{10}\\leq \\Theta(C_7)\\leq \\vartheta(C_7)\\approx 3.318$\n"
-        "$r_{\\mathrm{Haemers}}^{\\min}(C_7, F)=4\\;\\forall F$ (incl. $\\mathbb{F}_2$)",
+        "Theorem T3m (Bläser 1999, $\\forall F$ incl. $\\mathbb{F}_2$):\n"
+        "$m=6$: $\\mathbf{72 > 71}$ (Refutation #11); $m=8$: $\\mathbf{136 > 127}$\n"
+        "Theorem T3j ($\\mathbb{Z}[\\sqrt{5}]$): $\\Theta(C_5)=\\sqrt{5}$,\n"
+        "$r_{\\mathrm{Haemers}}^{\\min}(C_7, F)=4\\;\\forall F$",
         transform=ax2.transAxes,
         ha="right",
         va="bottom",
-        fontsize=6.4,
-        bbox={"boxstyle": "round,pad=0.26", "facecolor": "#f5f3ff", "edgecolor": "#6d28d9", "alpha": 0.96},
+        fontsize=6.2,
+        bbox={"boxstyle": "round,pad=0.24", "facecolor": "#f5f3ff", "edgecolor": "#6d28d9", "alpha": 0.96},
     )
     ax2.set_xticks(ms)
-    ax2.set_xticklabels([rf"$\langle {m},{m},{m}\rangle$" for m in ms], fontsize=8.0)
-    ax2.set_xlim(1.7, 6.35)
-    ax2.set_ylim(0, 82.0)
+    ax2.set_xticklabels([rf"$\langle {m},{m},{m}\rangle$" for m in ms], fontsize=7.6)
+    ax2.set_xlim(1.7, 8.38)
+    ax2.set_ylim(0, 162.0)
     ax2.set_xlabel(r"Matrix Multiplication Tensor $\langle m, m, m \rangle$")
     ax2.set_ylabel(r"Tensor Rank Lower Bound ($\forall F$, incl. $\mathbb{F}_2$)")
-    ax2.set_title("(b) Substitution LB $2m^2-m$ & Lovász/Haemers (T3i, T3j)")
-    ax2.legend(loc="upper left", frameon=True, framealpha=0.95, fontsize=6.9)
+    ax2.set_title("(b) Bläser $\\frac{5}{2}m^2-3m$ Beyond $2m^2-1$ & Lovász (T3i, T3j, T3m)")
+    ax2.legend(loc="upper left", frameon=True, framealpha=0.95, fontsize=6.2)
 
     fig.tight_layout(w_pad=2.2)
     fig.savefig(out_dir / "fig7_bai_security_collapse_and_lovasz_bd.pdf", bbox_inches="tight")
@@ -816,11 +812,11 @@ def fig8_v5_gaussian_paradox_and_paley_family(out_dir: Path) -> None:
         "Conference Theorem (T3l, Zero Reals; $P_5,P_{13},P_{17}$ in Lean):\n"
         "$R^\\top R = 2p\\sqrt{p}\\,R$ in $\\mathbb{Z}[\\sqrt{p}]$ $\\Rightarrow s^2 \\leq (4k+1)^t$\n"
         "Self-complement $\\phi$: $\\alpha(G^{\\boxtimes 2m}) = (4k+1)^m$\n"
-        "T3k Two-Sided ($\\forall F, k$): $2\\cdot 4^k - 2^k \\leq R(\\langle 2^k\\rangle) \\leq 7^k$",
+        "T3m Bläser ($\\forall F, k$): $5\\cdot 4^k - 6\\cdot 2^k \\leq 2R(\\langle 2^k\\rangle) \\leq 2\\cdot 7^k$",
         transform=ax2.transAxes,
         ha="right",
         va="bottom",
-        fontsize=6.3,
+        fontsize=6.2,
         bbox={"boxstyle": "round,pad=0.28", "facecolor": "#f5f3ff", "edgecolor": "#6d28d9", "alpha": 0.96},
     )
     ax2.set_xticks(primes)
@@ -854,14 +850,14 @@ def generate_social_preview(svg_path: Path) -> None:
   </defs>
   <rect width="1280" height="640" fill="url(#bg)"/>
   <rect x="48" y="48" width="1184" height="544" rx="22" fill="#0b1220" fill-opacity="0.72" stroke="url(#accent)" stroke-width="2.5"/>
-  <text x="90" y="132" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#38bdf8" letter-spacing="2">CODED-PIR-MLWE-COMPLEXITY-LAB · v5.3.0</text>
+  <text x="90" y="132" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#38bdf8" letter-spacing="2">CODED-PIR-MLWE-COMPLEXITY-LAB · v5.4.0</text>
   <text x="90" y="196" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">Koszul-Veronese Byzantine PIR, MLWE Tightness,</text>
   <text x="90" y="248" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">and Machine-Checked Complexity Bridges</text>
   <rect x="90" y="276" width="260" height="4" rx="2" fill="url(#accent)"/>
   <g font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="19" fill="#e2e8f0">
     <rect x="90" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
-    <text x="112" y="350" font-weight="700" fill="#38bdf8">PILLAR I · CS-053 PIR (T1a–T1k)</text>
-    <text x="112" y="382" font-size="15.5">• F_101 (6,3,3) 10/17: 20/20 T=3 &amp; 0-err</text>
+    <text x="112" y="350" font-weight="700" fill="#38bdf8">PILLAR I · CS-053 PIR (T1a–T1l)</text>
+    <text x="112" y="382" font-size="15.5">• In-Kernel F_101 (6,3,3) 10/17 20/20 (T1l)</text>
     <text x="112" y="408" font-size="15.5">• Sound HasSpanDim + PIR Bijection (T1k)</text>
     <text x="112" y="434" font-size="15.5">• Single F_2^64 6-obj realization (64/64)</text>
     <text x="112" y="460" font-size="15.5">• Projective P³ linear collapse ∀F</text>
@@ -874,13 +870,13 @@ def generate_social_preview(svg_path: Path) -> None:
     <text x="490" y="460" font-size="15.5">• Formalized Rényi DPI, Tensor &amp; R_∞</text>
 
     <rect x="846" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#fbbf24" stroke-width="1.5"/>
-    <text x="868" y="350" font-weight="700" fill="#fbbf24">PILLAR III · TRIAD (T3a–T3l)</text>
-    <text x="868" y="382" font-size="15.5">• Conference Θ(G)=√(4k+1) (P5,P13,P17)</text>
-    <text x="868" y="408" font-size="15.5">• Schwartz-Zippel &amp; 2·4^k-2^k ≤ R ≤ 7^k</text>
-    <text x="868" y="434" font-size="15.5">• Exact Strassen-Winograd rank(M_2)=7 ∀F</text>
-    <text x="868" y="460" font-size="15.5">• 10 Adv. Refutations · P≠NP, ω=2 OPEN</text>
+    <text x="868" y="350" font-weight="700" fill="#fbbf24">PILLAR III · TRIAD (T3a–T3m)</text>
+    <text x="868" y="382" font-size="15.5">• Bläser 5/2 m²-3m ∀F, incl. F_2 (T3m)</text>
+    <text x="868" y="408" font-size="15.5">• Conference Θ(G)=√(4k+1) (P5,P13,P17)</text>
+    <text x="868" y="434" font-size="15.5">• Schwartz-Zippel &amp; Exact Strassen = 7</text>
+    <text x="868" y="460" font-size="15.5">• 11 Adv. Refutations · P≠NP, ω=2 OPEN</text>
   </g>
-  <text x="90" y="544" font-family="ui-monospace, Consolas, monospace" font-size="15.6" fill="#94a3b8">Zero-Mathlib Lean 4.35.0 (32 Theorems · 6 Kernels · 4745 decls · 1656 Axiom-Swept) · Alexander S. Donahue (ORCID 0009-0006-8168-9648)</text>
+  <text x="90" y="544" font-family="ui-monospace, Consolas, monospace" font-size="15.6" fill="#94a3b8">Zero-Mathlib Lean 4.35.0 (34 Theorems · 6 Kernels · 5711 decls · 2306 Axiom-Swept) · Alexander S. Donahue (ORCID 0009-0006-8168-9648)</text>
 </svg>
 """
     svg_path.write_text(svg, encoding="utf-8", newline="\n")

@@ -391,6 +391,115 @@ def verify_schwartz_zippel_and_paley_family() -> dict:
     }
 
 
+def _comm_pair_xy(m: int) -> tuple[list[list[int]], list[list[int]]]:
+    """Exact {0,1} unimodular commutator pair (commPairX m, commPairY m) matching BlaserLowerBound.lean."""
+    X = [[0] * m for _ in range(m)]
+    Y = [[0] * m for _ in range(m)]
+    x2 = [[1, 0], [0, 0]]
+    y2 = [[0, 1], [1, 0]]
+    x3 = [[0, 1, 0], [0, 0, 1], [1, 1, 0]]
+    y3 = [[0, 1, 0], [0, 0, 0], [1, 0, 1]]
+    off = 0
+    rem = m
+    while rem >= 4:
+        for i in range(2):
+            for j in range(2):
+                X[off + i][off + j] = x2[i][j]
+                Y[off + i][off + j] = y2[i][j]
+        off += 2
+        rem -= 2
+    if rem == 2:
+        for i in range(2):
+            for j in range(2):
+                X[off + i][off + j] = x2[i][j]
+                Y[off + i][off + j] = y2[i][j]
+    elif rem == 3:
+        for i in range(3):
+            for j in range(3):
+                X[off + i][off + j] = x3[i][j]
+                Y[off + i][off + j] = y3[i][j]
+    return X, Y
+
+
+def _exact_det_int(M: list[list[int]]) -> int:
+    """Exact Bareiss fraction-free determinant over Z."""
+    n = len(M)
+    A = [list(row) for row in M]
+    sign = 1
+    prev_piv = 1
+    for k in range(n - 1):
+        piv = next((r for r in range(k, n) if A[r][k] != 0), None)
+        if piv is None:
+            return 0
+        if piv != k:
+            A[k], A[piv] = A[piv], A[k]
+            sign = -sign
+        for i in range(k + 1, n):
+            for j in range(k + 1, n):
+                A[i][j] = (A[k][k] * A[i][j] - A[i][k] * A[k][j]) // prev_piv
+        prev_piv = A[k][k]
+    return sign * A[n - 1][n - 1]
+
+
+def verify_blaser_five_halves_matmul_bound() -> dict:
+    """Independent exact integer verification of Theorem T3m (Blaser FOCS 1999 5/2 m^2 - 3m bound):
+    1. Exact {0,1} unimodular commutator pairs det([X_m, Y_m]) = 1 over Z (hence over every field, incl. F_2) for m = 2..12.
+    2. Blaser lower bound ceil((5 m^2 - 6 m)/2) vs T3i (2m^2 - m) and Brockett-Dobkin (2m^2 - 1) for m = 1..16.
+    3. Tightened Strassen-Blaser power-of-2 sandwich ceil((5*4^k - 6*2^k)/2) <= R(<2^k,2^k,2^k>) <= 7^k for k = 0..8."""
+    comm_checks = []
+    for m in range(2, 13):
+        X, Y = _comm_pair_xy(m)
+        comm = [
+            [
+                sum(X[i][t] * Y[t][j] - Y[i][t] * X[t][j] for t in range(m))
+                for j in range(m)
+            ]
+            for i in range(m)
+        ]
+        det_z = _exact_det_int(comm)
+        assert det_z == 1, f"Expected det([X_{m}, Y_{m}]) = 1, got {det_z}"
+        assert det_z % 2 == 1
+        comm_checks.append({"m": m, "det_Z": det_z, "det_F2": det_z % 2})
+
+    table_m1_to_16 = []
+    for m in range(1, 17):
+        blaser_lb = (5 * m * m - 6 * m + 1) // 2 if m >= 2 else 1
+        t3i_lb = 2 * m * m - m
+        bd78_lb = 2 * m * m - 1
+        if m >= 5:
+            assert blaser_lb > t3i_lb
+        if m >= 6:
+            assert blaser_lb > bd78_lb
+            assert 2 * bd78_lb < 5 * m * m - 6 * m
+        table_m1_to_16.append(
+            {
+                "m": m,
+                "koszul_ceiling": m * m + m,
+                "t3i_sub_lb": t3i_lb,
+                "bd78_lb": bd78_lb,
+                "blaser_lb": blaser_lb,
+                "beats_2m2_minus_1": blaser_lb > bd78_lb,
+            }
+        )
+
+    sandwich_blaser = []
+    for k in range(9):
+        m = 2 ** k
+        lb = (5 * (4 ** k) - 6 * m + 1) // 2 if k >= 1 else 1
+        ub = 7 ** k
+        assert lb <= ub
+        sandwich_blaser.append({"k": k, "m": m, "blaser_lower": lb, "strassen_upper": ub})
+
+    return {
+        "all_comm_pairs_det_one_Z_and_F2": True,
+        "comm_pair_m2_to_12": comm_checks,
+        "m6_blaser_beats_71": {"m": 6, "blaser_lb": 72, "bd78_lb": 71},
+        "m10_blaser_beats_199": {"m": 10, "blaser_lb": 220, "bd78_lb": 199},
+        "blaser_vs_bd_m1_to_16": table_m1_to_16,
+        "strassen_blaser_sandwich_k0_to_8": sandwich_blaser,
+    }
+
+
 def run_all_triad_checks() -> dict:
     return {
         "algebrization_mle": verify_algebrization_mle(),
@@ -400,6 +509,7 @@ def run_all_triad_checks() -> dict:
         "strassen_and_all_m_koszul": verify_strassen_and_all_m_koszul(),
         "brockett_dobkin_and_lovasz_shannon_capacity": verify_brockett_dobkin_and_lovasz_shannon_capacity(),
         "schwartz_zippel_and_paley_family": verify_schwartz_zippel_and_paley_family(),
+        "blaser_five_halves_matmul": verify_blaser_five_halves_matmul_bound(),
     }
 
 

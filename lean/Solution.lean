@@ -6,7 +6,7 @@ public import Challenge
 public import TriadFrontier
 
 /-!
-# Verified Solutions to All 32 Formalized Theorems (`T1a`–`T3l`, `T1k`, v5.2.0)
+# Verified Solutions to All 34 Formalized Theorems (`T1a`–`T3m`, v5.4.0)
 
 Zero-Mathlib Lean 4.35.0 proofs depending strictly on a subset of
 `[propext, Classical.choice, Quot.sound]`, zero `sorry`, zero `native_decide`, zero custom axioms.
@@ -18,12 +18,14 @@ open TriadFrontier.Challenge
 open TriadFrontier.PIRKoszul
 open TriadFrontier.LinearRankSoundness
 open TriadFrontier.PIRProtocol
+open TriadFrontier.PIRF101Cert
 open TriadFrontier.MLWETightness
 open TriadFrontier.ComplexityTriad
 open TriadFrontier.KoszulTensor
 open TriadFrontier.StrassenWinograd
 open TriadFrontier.BrockettDobkin
 open TriadFrontier.AlgebraicComplexity
+open TriadFrontier.BlaserLowerBound
 open TriadFrontier.ShannonCapacity
 open TriadFrontier.PaleyCapacity
 
@@ -66,6 +68,9 @@ public theorem t1k_linear_rank_soundness_and_pir_protocol : T1k_LinearRankSoundn
    fun _ _ sc hy hz hD Cancel DecInv hC hDinv r hr W1 W2 θ k d hk hd =>
      pir_zero_error_decoding_exact sc hy hz hD Cancel DecInv hC hDinv r hr W1 W2 θ k d hk hd,
    fun _ _ sc inI w hw => pir_exact_t_privacy_bijection sc inI w hw⟩
+
+public theorem t1l_f101_certified_pir_existence : T1l_F101CertifiedPIRExistence :=
+  PIRF101Cert.t1l_f101_t3_k3_e6_certified_pir_existence
 
 public theorem t2a_determinant_ideal_secret_independence : T2a_DeterminantIdealSecretIndependence :=
   MLWETightness.t2a_determinant_ideal_secret_independence
@@ -130,6 +135,9 @@ public theorem t3k_schwartz_zippel_and_strassen_sandwich : T3k_SchwartzZippelAnd
 public theorem t3l_infinite_paley_conference_shannon_capacity : T3l_InfinitePaleyConferenceShannonCapacity :=
   PaleyCapacity.t3l_infinite_paley_conference_shannon_capacity
 
+public theorem t3m_blaser_five_halves_matmul_bound : T3m_BlaserFiveHalvesMatMulBound :=
+  BlaserLowerBound.t3m_blaser_five_halves_matmul_bound
+
 public theorem prove_all_triad_theorems : AllTriadFrontierTheorems :=
   ⟨t1a_koszul_veronese_rank_identity,
    t1b_universal_koszul_domination_over_lfsr,
@@ -142,6 +150,7 @@ public theorem prove_all_triad_theorems : AllTriadFrontierTheorems :=
    t1i_total_4var_entropic_and_5obj_linear_barrier,
    t1j_total_6obj_f2_entropic_realizability_barrier,
    t1k_linear_rank_soundness_and_pir_protocol,
+   t1l_f101_certified_pir_existence,
    t2a_determinant_ideal_secret_independence,
    t2b_chen_step9_antiperiodic_dft_cancellation,
    t2c_mlkem_cbd_renyi_cliff,
@@ -162,6 +171,7 @@ public theorem prove_all_triad_theorems : AllTriadFrontierTheorems :=
    t3i_brockett_dobkin_rectangular_and_quadratic_matmul_bound,
    t3j_shannon_capacity_lovasz_c5_and_haemers,
    t3k_schwartz_zippel_and_strassen_sandwich,
-   t3l_infinite_paley_conference_shannon_capacity⟩
+   t3l_infinite_paley_conference_shannon_capacity,
+   t3m_blaser_five_halves_matmul_bound⟩
 
 end TriadFrontier.Solution

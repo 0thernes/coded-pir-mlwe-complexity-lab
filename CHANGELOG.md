@@ -6,6 +6,19 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [5.4.0] - 2026-11-27
+
+### Added
+- **33rd & 34th Zero-Mathlib Lean 4.35.0 Flagship Theorems (`T1l` + `T3m`) + 11th Adversarial Refutation — 34 Headline Theorems / 37 Audited Declarations / 2,306 Exhaustive Axiom-Swept `TriadFrontier.*` Declarations / 5,711 `con-leche`/`con-ron` Verified Declarations Across All 6 Kernels (0 warnings, 0 `sorry`, 0 `native_decide`):**
+  - **`T1l` (`lean/TriadFrontier/PIRF101Cert.lean`, NEW — 100% In-Kernel `S01`/`A02` Closure):** Unconditional constructive existence inside Lean 4.35.0 over `SimpleField (Fin 101)` of an explicit `LinearFlagPIR (Fin 101) 6 3 20 7 3` scheme (`M=2, N=6, K=3, T=3`, rate $10/17 > 4/7$), kernel-certifying `DecInv * M_des = I_60`, `Cancel * M_pure = M_mixed` (exact zero-error decoding for both $\theta \in \{0,1\}$), and all $\binom{6}{3}=20$ invertible $\mathrm{GL}_{20}(\mathbb{F}_{101})$ colluder-transcript bijections $\Psi_I$ with zero `native_decide` and zero external oracles.
+  - **`T3m` (`lean/TriadFrontier/BlaserLowerBound.lean`, NEW — Superseding `ERRATA.md` `A10`):** Complete characteristic-free, zero-Mathlib proof of **Markus Bläser's (FOCS 1999) $\frac{5}{2}m^2 - 3m$ matrix multiplication tensor rank lower bound** ($5m^2 - 6m \le 2\,\mathrm{rank}_F(\langle m,m,m\rangle)$ for all $m \ge 1$) over **every** `SimpleField F` (including $\mathbb{F}_2$!) via a 3-stage rational-function field tower $F \hookrightarrow F(t_1)(t_2)(t_3)$, explicit $\{0,1\}$ unimodular commutator pairs $\det([X_m,Y_m])=1$, Kronecker base-$(m+1)$ subset selection, and Strassen's commutator rank lemma — strictly surpassing BOTH `T3i`'s $2m^2-m$ ($m \ge 5$) AND Brockett–Dobkin's $2m^2-1$ for every $m \ge 6$ (e.g. $m=6 \Rightarrow r \ge 72 > 71$, certified as 11th Adversarial Refutation `adv_blaser_refutes_rank_71_at_m6`) and tightening the power-of-$2$ sandwich to $5\cdot 4^k - 6\cdot 2^k \le 2\,\mathrm{rank}_F(\langle 2^k,2^k,2^k\rangle) \le 2\cdot 7^k$.
+- **Independent Python & Mutation Verification + Figures + Preprint + Blueprint (`v5.4.0`):**
+  - Added `verify_blaser_five_halves_matmul_bound()` in `python/triad_verify/complexity_triad.py` (Bareiss exact $\det([X_m,Y_m])=1$ over $\mathbb{Z}$ and $\mathbb{F}_2$ for $m=2..12$, dominance over $2m^2-1$ for $m=6..16$, and Strassen–Bläser sandwich $k=0..8$), wired into `scripts/make_manifest.py` `all_checks_ok`, `examples/quickstart_demo.py`, and `tests/test_all.py` (**26/26 pytest**, **18/18 killed mutants** via Mutants 17 & 18).
+  - Added Crossref-verified `Blaser1999` (`doi:10.1109/SFFCS.1999.814576`, FOCS 1999 pp. 45–50 — **37/37 live HTTP 200, 0 retractions**), updated `fig4`, `fig7` (plotting Bläser's curve overtaking $2m^2-1$ at $m=6,7,8$), `fig8`, `docs/media/social-preview.svg`, `paper/main.tex` (**0 warnings** in `paper/build/main.log`), `docs/site/index.html` & `blueprint.html` (34-theorem DAG), and `CITATION.cff` (permanent `v5.3.0` SWHID `swh:1:snp:219e9ee707b73306a4b4f9636878c9989d4359d7`).
+
+### Fixed
+- **H56–H57 (`issue`/`error`):** Resolved 19 rational-function setoid / `matMulTensor` `let`-binding unification issues in `BlaserLowerBound.lean` (0 warnings across all 6 Lean kernels) and fixed 5 TeX/hyperref warnings in `paper/main.tex` (`\texorpdfstring` on section/subsection headers, `tab:claims` arraystretch `0.76`, `tab:pir_bench` compact cell, `\allowbreak` wrapping) to restore **0 warnings of any kind** in `paper/build/main.log`.
+
 ## [5.3.0] - 2026-11-27
 
 ### Added

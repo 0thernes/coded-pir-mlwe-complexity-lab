@@ -5,11 +5,11 @@ module
 import Solution
 
 /-!
-# Strict Axiom Allowlist Audit (`TriadFrontier` v5.2.0)
+# Strict Axiom Allowlist Audit (`TriadFrontier` v5.4.0)
 
-Every exported theorem (`T1a`–`T3l`, `T1k`), the master conjunction `prove_all_triad_theorems`,
-the concrete non-vacuity certificate `nonvac_all_hypotheses`, and the 10 adversarial
-negative boundary refutations `adv_all_boundary_refutations` (35 audited declarations)
+Every exported theorem (`T1a`–`T3m`), the master conjunction `prove_all_triad_theorems`,
+the concrete non-vacuity certificate `nonvac_all_hypotheses`, and the 11 adversarial
+negative boundary refutations `adv_all_boundary_refutations` (37 audited declarations)
 must depend strictly on a subset of `[propext, Classical.choice, Quot.sound]`.
 -/
 
@@ -24,6 +24,7 @@ must depend strictly on a subset of `[propext, Classical.choice, Quot.sound]`.
 #print axioms TriadFrontier.Solution.t1i_total_4var_entropic_and_5obj_linear_barrier
 #print axioms TriadFrontier.Solution.t1j_total_6obj_f2_entropic_realizability_barrier
 #print axioms TriadFrontier.Solution.t1k_linear_rank_soundness_and_pir_protocol
+#print axioms TriadFrontier.Solution.t1l_f101_certified_pir_existence
 #print axioms TriadFrontier.Solution.t2a_determinant_ideal_secret_independence
 #print axioms TriadFrontier.Solution.t2b_chen_step9_antiperiodic_dft_cancellation
 #print axioms TriadFrontier.Solution.t2c_mlkem_cbd_renyi_cliff
@@ -45,6 +46,7 @@ must depend strictly on a subset of `[propext, Classical.choice, Quot.sound]`.
 #print axioms TriadFrontier.Solution.t3j_shannon_capacity_lovasz_c5_and_haemers
 #print axioms TriadFrontier.Solution.t3k_schwartz_zippel_and_strassen_sandwich
 #print axioms TriadFrontier.Solution.t3l_infinite_paley_conference_shannon_capacity
+#print axioms TriadFrontier.Solution.t3m_blaser_five_halves_matmul_bound
 #print axioms TriadFrontier.Solution.prove_all_triad_theorems
 #print axioms TriadFrontier.NonVacuity.nonvac_all_hypotheses
 #print axioms TriadFrontier.AdversarialTests.adv_all_boundary_refutations

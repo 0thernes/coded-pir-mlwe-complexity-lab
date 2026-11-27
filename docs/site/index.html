@@ -6,8 +6,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; frame-ancestors 'none'; base-uri 'self';">
-<title>Triad Frontier Lab (v5.3.0) — Coded/Byzantine PIR, MLWE Tightness, Schwartz–Zippel &amp; Conference Capacity</title>
-<meta name="description" content="32 Zero-Mathlib Lean 4.35.0 machine-checked theorem bundles (T1a–T3l &amp; T1k) + 10 adversarial boundary refutations + 1,656 exhaustive axiom-swept declarations across 6 independent kernels on Coded/Byzantine PIR, Linear-Rank Soundness &amp; Certified F_101 (6,3,3) Rate-10/17 Zero-Error PIR (CS-053), Coupled FIPS 203 MLWE Tightness &amp; Dyadic-16384-A/B (CS-026), Schwartz–Zippel &amp; Strassen Two-Sided Bound (CS-004), and Conference/Paley Capacity (CS-CMP-012).">
+<title>Triad Frontier Lab (v5.4.0) — Coded/Byzantine PIR, MLWE Tightness, Bläser 5/2 m²-3m &amp; Conference Capacity</title>
+<meta name="description" content="34 Zero-Mathlib Lean 4.35.0 machine-checked theorem bundles (T1a–T3m) + 11 adversarial boundary refutations + 2,306 exhaustive axiom-swept declarations across 6 independent kernels on In-Kernel F_101 (6,3,3) Rate-10/17 Zero-Error PIR (CS-053), Coupled FIPS 203 MLWE Tightness &amp; Dyadic-16384-A/B (CS-026), Bläser 5/2 m²-3m &amp; Schwartz–Zippel (CS-004), and Conference/Paley Capacity (CS-CMP-012).">
 <style>
   :root {
     --bg: #0b1120;
@@ -116,28 +116,28 @@
 <header>
   <div class="wrap">
     <div class="badge-row">
-      <span class="badge cyan">v5.3.0 · Zero-Mathlib Lean 4.35.0</span>
-      <span class="badge green">32 Bundles (T1a–T3l &amp; T1k) + 10 Refutations · 6 Kernels</span>
-      <span class="badge violet">0 sorry · 0 native_decide · 4,745 Decls · 1,656 Axiom-Swept</span>
+      <span class="badge cyan">v5.4.0 · Zero-Mathlib Lean 4.35.0</span>
+      <span class="badge green">34 Bundles (T1a–T3m) + 11 Refutations · 6 Kernels</span>
+      <span class="badge violet">0 sorry · 0 native_decide · 5,711 Decls · 2,306 Axiom-Swept</span>
       <span class="badge amber">Honest Scope: P≠NP, ω=2, Θ(C₇) OPEN</span>
     </div>
     <h1>Koszul–Veronese Byzantine PIR, MLWE Reduction Tightness, and Complexity-Barrier Bridges</h1>
     <p class="subtitle">
       Interactive formal-verification companion by <strong>Alexander S. Donahue</strong>
       (Independent Researcher, Spokane, WA, USA · <a href="https://orcid.org/0009-0006-8168-9648">ORCID 0009-0006-8168-9648</a>).
-      Cross-audited across 6 Lean proof kernels + 1,656-decl exhaustive axiom sweep (under <code>module</code>) + live negative tamper gate, hardened zero-warning C11 (90 tests incl. live F₁₀₁ PIR decode + 1,024 fuzz), Eshkol v1.3.6 forward-mode AD, and strict 0-ruff/0-mypy Python (25 pytest, 16/16 mutants, cryptographic RFC 3161 CA-chain verify, 90-digit Kronecker coupled FIPS 203 DFR oracle).
+      Cross-audited across 6 Lean proof kernels + 2,306-decl exhaustive axiom sweep (under <code>module</code>) + live negative tamper gate, hardened zero-warning C11 (90 tests incl. live F₁₀₁ PIR decode + 1,024 fuzz), Eshkol v1.3.6 forward-mode AD, and strict 0-ruff/0-mypy Python (26 pytest, 18/18 mutants, cryptographic RFC 3161 CA-chain verify, 90-digit Kronecker coupled FIPS 203 DFR oracle).
     </p>
     <div class="cta-row">
-      <a class="btn primary" href="blueprint.html">Open Interactive 32-Theorem Proof Blueprint DAG &rarr;</a>
+      <a class="btn primary" href="blueprint.html">Open Interactive 34-Theorem Proof Blueprint DAG &rarr;</a>
       <a class="btn" href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab">GitHub Repository</a>
-      <a class="btn" href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab/releases">v5.3.0 Frozen PDF, arXiv Bundle &amp; TSA/OTS</a>
+      <a class="btn" href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab/releases">v5.4.0 Frozen PDF, arXiv Bundle &amp; TSA/OTS</a>
       <a class="btn" href="https://github.com/0thernes/0thernes-research-archive">Master Research Archive (0TH-2026-012)</a>
     </div>
     <div class="stat-row">
-      <div class="stat"><div class="num">32 + 10</div><div class="lbl">Lean 4.35 Theorems + Refutations</div></div>
-      <div class="stat"><div class="num">4,745</div><div class="lbl">con-leche / con-ron Verified Decls</div></div>
-      <div class="stat"><div class="num">20/20</div><div class="lbl">F₁₀₁ (6,3,3) 10/17 Zero-Err PIR (T1k)</div></div>
-      <div class="stat"><div class="num">0.04 b</div><div class="lbl">90-Dig Coupled FIPS 203 DFR Match</div></div>
+      <div class="stat"><div class="num">34 + 11</div><div class="lbl">Lean 4.35 Theorems + Refutations</div></div>
+      <div class="stat"><div class="num">5,711</div><div class="lbl">con-leche / con-ron Verified Decls</div></div>
+      <div class="stat"><div class="num">20/20</div><div class="lbl">In-Kernel F₁₀₁ 10/17 PIR (T1l)</div></div>
+      <div class="stat"><div class="num">5/2 m²-3m</div><div class="lbl">Bläser ∀F incl. F₂ (T3m: 72&gt;71)</div></div>
       <div class="stat"><div class="num">11.17&times;</div><div class="lbl">ML-KEM-1024 Bai Drop (D16384-A)</div></div>
       <div class="stat"><div class="num">&Theta;(Pₚ)=&radic;p</div><div class="lbl">Conditional Paley Family (T3l)</div></div>
     </div>
@@ -149,10 +149,10 @@
     <h2>Three Machine-Checked Research Pillars</h2>
     <div class="grid-3">
       <div class="card p1">
-        <h3>Pillar I · CS-053 Coded/Byzantine PIR (T1a–T1k)</h3>
+        <h3>Pillar I · CS-053 Coded/Byzantine PIR (T1a–T1l)</h3>
         <ul>
+          <li><strong>In-Kernel F₁₀₁ (6,3,3) Rate-10/17 Certified PIR Existence (T1l, 6 Kernels):</strong> Unconditionally certifies <code>DecInv*M_des=I_60</code>, <code>Cancel*M_pure=M_mixed</code>, and <strong>all 20/20</strong> colluding-triple <code>GL_20(F_101)</code> flag isomorphisms <em>inside Lean 4.35.0</em> (0 <code>native_decide</code>, 0 external oracles; beating <code>4/7</code> in <code>arXiv:2603.10769</code>).</li>
           <li><strong>Linear-Rank Soundness &amp; Universal PIR Bijection (T1k, closing L02 &amp; S01):</strong> In-Lean <code>HasSpanDim</code> soundness &amp; Steinitz uniqueness for <code>matRankModP</code> (<code>F_2, F_3</code>) and <code>gf2RankSparse</code> (<code>F_2</code>), PLUS field-universal exact zero-error decoding &amp; two-sided colluder-transcript bijection <code>&Psi;_I</code>.</li>
-          <li><strong>Certified F_101 (6,3,3) Rate-10/17 Zero-Error Witness:</strong> Verified in Python &amp; ISO C11 (<code>f101-t3k3</code>): <code>M_des=60/60</code>, <code>M_pure=42/42</code>, <strong>20/20</strong> invertible <code>GL_20</code> flag isomorphisms, 10/10 live zero-error trials (<code>&theta;&in;{0,1}</code>), and 20/20 exact colluder bijections (beating <code>4/7</code> in <code>arXiv:2603.10769</code>).</li>
           <li><strong>Sound 6-Obj F_2^{64} Realization (T1i–T1k):</strong> ALL 510 four-marginals, 6 five-object marginals, and all 64 subsets of <code>(W_1,W_2,A_1..A_4)</code> realized in <code>F_2^{64}</code> with in-Lean <code>HasSpanDim</code> soundness (inequalities in &ge;5 vars with storage symbols remain open).</li>
         </ul>
       </div>
@@ -165,11 +165,11 @@
         </ul>
       </div>
       <div class="card p3">
-        <h3>Pillar III · CS-001/004/012/051 &amp; CS-CMP-012 (T3a–T3l)</h3>
+        <h3>Pillar III · CS-001/004/012/051 &amp; CS-CMP-012 (T3a–T3m)</h3>
         <ul>
-          <li><strong>Schwartz–Zippel &amp; Strassen 2^k Sandwich (T3k):</strong> Constructive <code>|Z(P)&cap;S^n| &le; d|S|^{n-1}</code> &amp; exact <code>2&middot;4^k&minus;2^k &le; rank_F(&lt;2^k,2^k,2^k&gt;) &le; 7^k</code> (&forall;<code>k &ge; 0</code>, &forall;<code>F</code> incl. <code>F_2</code>!), building on <code>T3h</code> (=7) &amp; <code>T3i</code> (Brockett–Dobkin <code>2m&sup2;&minus;m</code>).</li>
+          <li><strong>Bl&auml;ser (FOCS 1999) 5/2 m&sup2; &minus; 3m Over EVERY Field (T3m):</strong> Characteristic-free <code>5m&sup2;&minus;6m &le; 2&middot;rank_F(&lt;m,m,m&gt;)</code> (&forall;<code>m &ge; 1</code>, &forall;<code>F</code> incl. <code>F_2</code>!), strictly beating Brockett–Dobkin <code>2m&sup2;&minus;1</code> for all <code>m &ge; 6</code> (<code>72 &gt; 71</code>, Refutation #11) and tightening <code>5&middot;4^k&minus;6&middot;2^k &le; 2&middot;rank_F(&lt;2^k&gt;) &le; 2&middot;7^k</code>!</li>
           <li><strong>Infinite Zero-Reals Paley Capacity Family (T3l):</strong> Universal 2-block <code>Z[&radic;p]</code> conference SOS proving <strong><code>&Theta;(P_p) = &radic;p</code></strong> for EVERY prime <code>p &equiv; 1 (mod 4)</code> (instantiated in Lean for <code>P_5, P_{13}, P_{17}</code>; verified in C11/Python through <code>P_{41}</code>!), extending <code>T3j</code> (<code>C_5</code> &amp; <code>C_7</code> Haemers rank 4).</li>
-          <li>Algebrization MLE (<code>T3a</code>), LWE PRF &rArr; Natural Proofs (<code>T3b</code>), Shannon counting (<code>T3f</code>), Katz–Trevisan LDCs (<code>T3c,T3f</code>), &amp; <code>Compress_1</code> <code>|e| &le; 831</code> (<code>T3d</code>).</li>
+          <li>Schwartz–Zippel (<code>T3k</code>), Exact Strassen = 7 (<code>T3h</code>), Algebrization MLE (<code>T3a</code>), LWE PRF &rArr; Natural Proofs (<code>T3b</code>), Shannon counting (<code>T3f</code>), LDCs (<code>T3c,T3f</code>), &amp; <code>Compress_1</code> (<code>T3d</code>).</li>
         </ul>
       </div>
     </div>
@@ -218,12 +218,12 @@
   </section>
 
   <section>
-    <h2>Claims Ledger (C1–C32) &amp; Explicit Open Frontiers (O1–O6)</h2>
+    <h2>Claims Ledger (C1–C34) &amp; Explicit Open Frontiers (O1–O6)</h2>
     <div class="filter-row">
-      <button class="fbtn active" data-f="all">All (38)</button>
-      <button class="fbtn" data-f="p1">Pillar I · CS-053 (11)</button>
+      <button class="fbtn active" data-f="all">All (40)</button>
+      <button class="fbtn" data-f="p1">Pillar I · CS-053 (12)</button>
       <button class="fbtn" data-f="p2">Pillar II · CS-026 (9)</button>
-      <button class="fbtn" data-f="p3">Pillar III · Triad (12)</button>
+      <button class="fbtn" data-f="p3">Pillar III · Triad (13)</button>
       <button class="fbtn" data-f="open">Explicitly Open (6)</button>
     </div>
     <div class="card" style="overflow-x:auto; padding:0;">
@@ -368,6 +368,8 @@ const CLAIMS = [
   ["C30","p3","T3k","propext, Classical.choice, Quot.sound","Universal constructive Schwartz–Zippel |Z(P)∩S^n|<=d|S|^{n-1} & two-sided Strassen bound 2·4^k-2^k <= rank_F(<2^k,2^k,2^k>) <= 7^k ∀F","t1"],
   ["C31","p3","T3l","propext, Classical.choice, Quot.sound","Conditional zero-reals Z[√p] conference SOS family Θ(G)=√(4k+1) (Lovász 1979; Lean hypotheses checked for P_5,P_13,P_17; C11/Python: P_5..P_41)","t1"],
   ["C32","p1","T1k","propext, Classical.choice, Quot.sound","In-Lean HasSpanDim soundness & Steinitz uniqueness for matRankModP (F_2,F_3) & gf2RankSparse (F_2) (closing L02) + field-universal zero-error PIR decoding & exact two-sided T-privacy bijection Ψ_I (closing S01/A02)","t1"],
+  ["C33","p1","T1l","propext, Classical.choice, Quot.sound","Unconditional IN-KERNEL constructive existence of F_101 (6,3,3) rate-10/17 > 4/7 zero-error T=3-private PIR scheme (DecInv*M_des=I_60, Cancel*M_pure=M_mixed, all 20/20 GL_20 flag isomorphisms, 0 native_decide)","t1"],
+  ["C34","p3","T3m","propext, Classical.choice, Quot.sound","Characteristic-free Bläser (FOCS 1999) 5/2 m² - 3m lower bound (5m² - 6m <= 2*rank_F(<m,m,m>)) over EVERY SimpleField F (incl. F_2!), strictly surpassing Brockett–Dobkin 2m²-1 for all m >= 6 (m=6 -> 72 > 71) + tightened 2^k sandwich","t1"],
   ["O1","open","—","—","P ≠ NP & super-linear explicit Boolean circuit lower bounds (CS-001 / CS-010) — NO PROOF CLAIMED","open"],
   ["O2","open","—","—","Matrix multiplication exponent ω = 2 (CS-004) & Valiant VP ≠ VNP (CS-012) — REMAIN OPEN","open"],
   ["O3","open","—","—","Non-linear PIR capacity C(2,4,2,2) ∈ [3/5, 8/13] (T1i–T1k certify via HasSpanDim that no inequality on the 6 retrieval objects alone separates h_uncond; inequalities with storage symbols remain open)","open"],

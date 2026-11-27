@@ -184,6 +184,7 @@ def main() -> int:
         and mlwe["dyadic16384_gaussian_paradox"]["renyi2_dpi_verified"]
         and triad["strassen_and_all_m_koszul"]["strassen_7prod_exact_Z"]
         and triad["brockett_dobkin_and_lovasz_shannon_capacity"]["lovasz_c5_6x6_zsqrt5_sos_36_entries_exact"]
+        and triad["blaser_five_halves_matmul"]["all_comm_pairs_det_one_Z_and_F2"]
         and len(triad["schwartz_zippel_and_paley_family"]["paley_conference_sos_verified"]) == 6
     )
     receipt: dict[str, Any] = {
