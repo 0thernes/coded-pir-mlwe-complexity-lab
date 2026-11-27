@@ -6,6 +6,21 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [5.2.0] - 2026-11-27
+
+### Added
+- **32nd Zero-Mathlib Lean 4.35.0 Headline Theorem (`T1k`) — Closing `ERRATA.md` `L02` & `S01`/`A02` (35 audited decls, 1,656 `TriadFrontier.*` decls swept under `module`, 4,745 `con-leche`/`con-ron` verified decls across 6 kernels, 0 warnings, 0 `sorry`, 0 `native_decide`):**
+  - **`lean/TriadFrontier/LinearRankSoundness.lean` (`L02` CLOSED):** Defines standard vector-space `InSpan`, `LinIndep`, and `HasSpanDim` over any `SimpleField F`, proves Steinitz uniqueness (`HasSpanDim_unique`), proves full soundness `gf2RankSparse_sound` (with all 6-level `PivotTrie` lookup/insert invariants), `matRankModP_sound_f2`, and `matRankModP_sound_f3` (via abstract `ofMod` avoiding `Fin` diamonds), and directly certifies `t1j_ret6_true_f2_span_dim` across all 63 nonempty subsets of `T1j`.
+  - **`lean/TriadFrontier/PIRProtocol.lean` (`S01`/`A02` CLOSED):** Formalizes the general 2-file, $N$-server, $K$-MDS linear flag-private PIR protocol over any `SimpleField F` and proves exact zero-error decoding (`pir_zero_error_decoding_exact` for both $\theta \in \{0,1\}$) and an explicit two-sided colluder-transcript bijection $\Psi_I$ (`pir_exact_t_privacy_bijection`).
+- **Explicit Certified $\mathbb{F}_{101}$ Zero-Error $T=3$-Private $(6,3,3)$ Rate-$10/17$ PIR Witness (`data/f101_t3_k3_e6_witness.json`, `native/include/f101_t3_k3_e6_data.h`):** Satisfies all `T1k` hypotheses (`DecInv * M_des = I_60`, `Cancel * M_pure = M_mixed` rank `42`, all 20/20 invertible $\mathrm{GL}_{20}(\mathbb{F}_{101})$ flag isomorphisms + `(alpha, gamma, beta)` block equations), verified independently in ISO C11 (`triad_verify_f101_t3_k3_e6_zero_error` / `triad_cli f101-t3k3`, **88/88** unit tests + 1,024 fuzz) and Python (`verify_certified_f101_t3_k3_e6_zero_error`: 10/10 live randomized encode/decode trials for $\theta \in \{0,1\}$ and 20/20 bit-for-bit colluder-transcript bijections $\Psi_I$).
+- **90-Digit Kronecker Exact Interval Oracle (`compute_exact_mlkem_dfr_decimal`):** Certified lower/upper interval convolution (interval width $< 10^{-30}$ bits) cross-verifying the exact coupled FIPS 203 DFRs (`e^T r - s^T(e_1 + c_u) + e_2 + c_v`) and reproducing all three NIST FIPS 203 Table 1 values within `0.04` bits (`-138.77`, `-164.81`, `-174.76` vs. `-138.8`, `-164.8`, `-174.8`).
+- **Mutation Suite Expanded to 16/16 Killed Mutants (`tests/test_all.py`):** Added Mutant 15 (perturbing `f101_t3_k3_e6_witness.json` flag isomorphism `M_{0,1,2}`) and Mutant 16 (killing the old uncoupled split-$s$ ML-KEM DFR bug).
+
+### Fixed
+- **Exact Coupled FIPS 203 ML-KEM DFR Root Cause (`ERRATA.md` `S02` CLOSED):** Replaced the independent $s^\top e_1 + s^\top c_u$ split in `compute_exact_mlkem_dfr` with the true coupled term $s^\top(e_1 + c_u)$, resolving the previously unexplained 1.8-bit discrepancy against FIPS 203 Table 1 and documenting the exact monotonic Kurtosis–DFR–Rényi tradeoff (`CBD_2` $2^{-174.76} \to$ `Dyadic-16384-A` $2^{-171.80} \to D_{\sigma\approx 1}$ $2^{-171.12}$) plus $1\%$ Gaussian variance-compensation restoration ($\sigma = 0.990 \implies 2^{-177.25} < 2^{-174.8}$) across code, tests, figures (`fig4`, `fig6`, `fig7`, `fig8`), paper, and web portal.
+- **Non-Degenerate Witnesses & Universal Adversarial Refutations (`ERRATA.md` `L06`, `L07` CLOSED):** Replaced degenerate `T1f` witness in `NonVacuity.lean` with genuinely non-degenerate concurrent AND coplanar 4-line $\mathbb{P}^3$ witnesses in $(\mathbb{F}_5)^4$ + `T1i`/`T1k`/`T2e`–`T2i` witnesses; replaced the 2 closed `decide` arithmetic checks in `AdversarialTests.lean` with universal-quantifier refutations and added 10th adversarial test `adv_hasSpanDim_rejects_false_rank`.
+- **Lean 4.35.0 `module` Exhaustive Axiom Sweep (`H39`) & SPDX Completeness (`H40`):** Added `module` + `meta import` headers to `lean/AuditExhaustiveAxioms.lean` (`1,656` swept `TriadFrontier.*` declarations) and completed SPDX headers on `CITATION.cff`, `README.md`, `scripts/Audit-Repo.ps1`, and `native/include/f101_t3_k3_e6_data.h`.
+
 ## [5.1.0] - 2026-11-26
 
 ### Fixed

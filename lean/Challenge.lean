@@ -5,7 +5,7 @@ module
 public import TriadFrontier
 
 /-!
-# Formal Challenge Specification (`T1a`–`T3l`, v5.0.0)
+# Formal Challenge Specification (`T1a`–`T3l` + `T1k`, v5.2.0)
 
 Clean exported theorem specification contract for independent 6-kernel verification
 (`lean`, `leanchecker`, `leanchecker-paranoid`, `lean4lean`, `nanoda_bin`, `con-leche`,
@@ -19,6 +19,8 @@ open TriadFrontier.AlgebraCore
 open TriadFrontier.PIRCertificates
 open TriadFrontier.PIRLinearCerts
 open TriadFrontier.PIRKoszul
+open TriadFrontier.LinearRankSoundness
+open TriadFrontier.PIRProtocol
 open TriadFrontier.MLWETightness
 open TriadFrontier.ComplexityTriad
 open TriadFrontier.KoszulTensor
@@ -472,6 +474,41 @@ def T3l_InfinitePaleyConferenceShannonCapacity : Prop :=
    (∀ (m : Nat), ∃ f : Nat → Nat,
       IsIndepSet (17 ^ (2 * m)) (strongPowAdj 17 paley17Adj (2 * m)) (17 ^ m) f))
 
+def T1k_LinearRankSoundnessAndPIRProtocol : Prop :=
+  (∀ (F : Type) [SimpleField F] (d : Nat) (rows : List (Nat → F)) (k1 k2 : Nat),
+    HasSpanDim d rows k1 → HasSpanDim d rows k2 → k1 = k2) ∧
+  (∀ (d : Nat) (rows : List (List Nat)),
+    HasSpanDim (F := Fin 2) d (rows.map (sparseVec d)) (gf2RankSparse d rows)) ∧
+  (∀ (d : Nat) (rows : List (List Nat)),
+    (∀ r ∈ rows, r.length = d) →
+    HasSpanDim (F := Fin 2) d (rows.map denseVec2) (matRankModP 2 rows)) ∧
+  (∀ (d : Nat) (rows : List (List Nat)),
+    (∀ r ∈ rows, r.length = d) →
+    HasSpanDim (F := Fin 3) d (rows.map denseVec3) (matRankModP 3 rows)) ∧
+  (∀ m : Nat, 1 ≤ m → m ≤ 63 →
+    HasSpanDim (F := Fin 2) 64 ((ret6SubsetRows m).map (sparseVec 64)) (hUncondRet6 m / 4) ∧
+    4 * (hUncondRet6 m / 4) = hUncondRet6 m) ∧
+  (∀ (F : Type) [SimpleField F] (sc : PIRScheme F),
+    0 < sc.y → 0 < sc.z → 0 < sc.D →
+    ∀ (Cancel DecInv : Nat → Nat → F),
+      MatEq (sc.N * sc.z) (sc.K * sc.D) (matMulF (sc.N * sc.y) Cancel (pureIntMat sc)) (mixedIntMat sc) →
+      MatEq (sc.K * sc.D) (sc.K * sc.D) (matMulF (sc.N * (sc.y + sc.z)) DecInv (desiredMat sc)) matIdF →
+      ∀ (r : PIRRand F), ValidRand sc r →
+      ∀ (W1 W2 : Nat → Nat → F) (θ : Bool) (k d : Nat), k < sc.K → d < sc.D →
+        pirDecode sc Cancel DecInv θ r
+          (ansBlk1 sc θ r W1) (ansBlk2 sc θ r W2) (ansBlk3 sc θ r W1 W2) k d =
+        (if θ then W2 k d else W1 k d)) ∧
+  (∀ (F : Type) [SimpleField F] (sc : PIRScheme F) (inI : Nat → Bool) (w : FlagIsoWitness F),
+    ValidFlagIso sc inI w →
+    (∀ r, ValidRand sc r → ValidRand sc (psiFwd sc inI w r) ∧ ValidRand sc (psiInv sc inI w r)) ∧
+    (∀ r, RandEq sc (psiInv sc inI w (psiFwd sc inI w r)) r ∧
+          RandEq sc (psiFwd sc inI w (psiInv sc inI w r)) r) ∧
+    (∀ r n, n < sc.N → inI n = true →
+      MatEq sc.y sc.D (qBlk1 sc true (psiFwd sc inI w r) n) (qBlk1 sc false r n) ∧
+      MatEq sc.y sc.D (qBlk2 sc true (psiFwd sc inI w r) n) (qBlk2 sc false r n) ∧
+      MatEq sc.z sc.D (qBlk3File1 sc true (psiFwd sc inI w r) n) (qBlk3File1 sc false r n) ∧
+      MatEq sc.z sc.D (qBlk3File2 sc true (psiFwd sc inI w r) n) (qBlk3File2 sc false r n)))
+
 def AllTriadFrontierTheorems : Prop :=
   T1a_KoszulVeroneseRankIdentity ∧
   T1b_UniversalKoszulDominationOverLFSR ∧
@@ -483,6 +520,7 @@ def AllTriadFrontierTheorems : Prop :=
   T1h_InfiniteNonShannonConeAndContraction ∧
   T1i_Total4VarEntropicAnd5ObjLinearBarrier ∧
   T1j_Total6ObjF2EntropicRealizabilityBarrier ∧
+  T1k_LinearRankSoundnessAndPIRProtocol ∧
   T2a_DeterminantIdealSecretIndependence ∧
   T2b_ChenStep9AntiPeriodicDFTCancellation ∧
   T2c_MLKEMCBDRenyiCliff ∧

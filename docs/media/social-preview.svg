@@ -13,21 +13,21 @@
   </defs>
   <rect width="1280" height="640" fill="url(#bg)"/>
   <rect x="48" y="48" width="1184" height="544" rx="22" fill="#0b1220" fill-opacity="0.72" stroke="url(#accent)" stroke-width="2.5"/>
-  <text x="90" y="132" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#38bdf8" letter-spacing="2">CODED-PIR-MLWE-COMPLEXITY-LAB · v5.1.0</text>
+  <text x="90" y="132" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#38bdf8" letter-spacing="2">CODED-PIR-MLWE-COMPLEXITY-LAB · v5.2.0</text>
   <text x="90" y="196" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">Koszul-Veronese Byzantine PIR, MLWE Tightness,</text>
   <text x="90" y="248" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">and Machine-Checked Complexity Bridges</text>
   <rect x="90" y="276" width="260" height="4" rx="2" fill="url(#accent)"/>
   <g font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="19" fill="#e2e8f0">
     <rect x="90" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
-    <text x="112" y="350" font-weight="700" fill="#38bdf8">PILLAR I · CS-053 PIR (T1a–T1j)</text>
-    <text x="112" y="382" font-size="15.5">• 10/17 vs 4/7 for one design (numerical)</text>
-    <text x="112" y="408" font-size="15.5">• Single F_2^64 6-obj realization (64/64)</text>
-    <text x="112" y="434" font-size="15.5">• F_2 certificates (4 vars, 5-6 objects)</text>
+    <text x="112" y="350" font-weight="700" fill="#38bdf8">PILLAR I · CS-053 PIR (T1a–T1k)</text>
+    <text x="112" y="382" font-size="15.5">• F_101 (6,3,3) 10/17: 20/20 T=3 &amp; 0-err</text>
+    <text x="112" y="408" font-size="15.5">• Sound HasSpanDim + PIR Bijection (T1k)</text>
+    <text x="112" y="434" font-size="15.5">• Single F_2^64 6-obj realization (64/64)</text>
     <text x="112" y="460" font-size="15.5">• Projective P³ linear collapse ∀F</text>
 
     <rect x="468" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#f472b6" stroke-width="1.5"/>
     <text x="490" y="350" font-weight="700" fill="#f472b6">PILLAR II · CS-026 MLWE (T2a–T2i)</text>
-    <text x="490" y="382" font-size="15.5">• ML-KEM-1024 DFRs (float64 model)</text>
+    <text x="490" y="382" font-size="15.5">• 90-dig Coupled FIPS 203 DFR (±0.04 b)</text>
     <text x="490" y="408" font-size="15.5">• 14b Dyadic-16384-A: 6.01b (11.2× drop)</text>
     <text x="490" y="434" font-size="15.5">• 14b Dyadic-16384-B: 0.59b (41.9× sub-1b)</text>
     <text x="490" y="460" font-size="15.5">• Formalized Rényi DPI, Tensor &amp; R_∞</text>
@@ -37,7 +37,7 @@
     <text x="868" y="382" font-size="15.5">• Conference Θ(G)=√(4k+1) (P5,P13,P17)</text>
     <text x="868" y="408" font-size="15.5">• Schwartz-Zippel &amp; 2·4^k-2^k ≤ R ≤ 7^k</text>
     <text x="868" y="434" font-size="15.5">• Exact Strassen-Winograd rank(M_2)=7 ∀F</text>
-    <text x="868" y="460" font-size="15.5">• 9 Adv. Refutations · P≠NP, ω=2 OPEN</text>
+    <text x="868" y="460" font-size="15.5">• 10 Adv. Refutations · P≠NP, ω=2 OPEN</text>
   </g>
-  <text x="90" y="544" font-family="ui-monospace, Consolas, monospace" font-size="15.6" fill="#94a3b8">Zero-Mathlib Lean 4.35.0 (31 Theorems · 6 Kernels · 4337 decls · 1330 Axiom-Swept) · Alexander S. Donahue (ORCID 0009-0006-8168-9648)</text>
+  <text x="90" y="544" font-family="ui-monospace, Consolas, monospace" font-size="15.6" fill="#94a3b8">Zero-Mathlib Lean 4.35.0 (32 Theorems · 6 Kernels · 4745 decls · 1656 Axiom-Swept) · Alexander S. Donahue (ORCID 0009-0006-8168-9648)</text>
 </svg>

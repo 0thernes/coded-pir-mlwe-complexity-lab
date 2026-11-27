@@ -2,13 +2,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Alexander S. Donahue
 """
-Comprehensive Verification & Falsification Test Suite (`tests/test_all.py`, v5.1.0):
-- Claim falsifiability checks (C1–C31)
+Comprehensive Verification & Falsification Test Suite (`tests/test_all.py`, v5.2.0):
+- Claim falsifiability checks (C1–C32)
 - Negative / adversarial boundary checks (C11 CLI invalid args, Eshkol parser/depth/domain, tamper detection)
 - Randomized property-based tests (prop_check)
 - Differential tests (Python vs native C11 CLI vs Eshkol v1.3.6 AD runtime)
 - Metamorphic checks (K <-> T symmetry, noise-shift odd symmetry)
-- Mutation-killing tests (14/14 core mutants killed!)
+- Mutation-killing tests (16/16 core mutants killed!)
 - Draft 2020-12 repo.yaml schema validation, link integrity, Pages CSP/WCAG AA, dual timestamps, & single version source
 """
 from __future__ import annotations
@@ -39,6 +39,8 @@ from triad_verify.complexity_triad import (
 )
 from triad_verify.mlwe_tightness import (
     cbd_pmf_exact,
+    compute_exact_mlkem_dfr,
+    compute_exact_mlkem_dfr_decimal,
     dyadic256_pmf_exact,
     dyadic512_pmf_exact,
     dyadic1024a_pmf_exact,
@@ -57,7 +59,9 @@ from triad_verify.pir_koszul import (
     koszul_lambda_formula,
     koszul_rate_exact,
     lfsr_rate_exact,
+    mat_mul_mod,
     verify_certified_f11_byzantine,
+    verify_certified_f101_t3_k3_e6_zero_error,
     verify_koszul_rank_grid,
     verify_overlap_sub_kt_scheme,
     verify_t3_k3_e6_zero_error,
@@ -116,6 +120,14 @@ def test_c5_t3_k3_e6_zero_error_10_17() -> None:
     res = verify_t3_k3_e6_zero_error(p=101)
     assert res["interference_rank"] == 42
     assert res["rate"] == "10/17"
+    cert = verify_certified_f101_t3_k3_e6_zero_error(REPO_ROOT / "data" / "f101_t3_k3_e6_witness.json")
+    assert cert["desired_rank"] == 60
+    assert cert["interference_rank"] == 42
+    assert cert["downloads"] == 102 and cert["file_symbols"] == 60
+    assert cert["rate"] == "10/17"
+    assert cert["flag_isomorphisms_verified"] == 20
+    assert cert["live_zero_error_decode_trials_passed"] == 10
+    assert cert["exact_transcript_bijection_triples_passed"] == 20
 
 
 def test_c6_unconditioned_shannon_ingleton_polymatroid_barrier() -> None:
@@ -181,9 +193,13 @@ def test_c20_to_c23_v3_breakthroughs_suite() -> None:
     assert d512["excess_kurtosis_exact"] == "0"
     assert d512["loss_bits_512"] < 0.60
     assert cbd["CBD_3"]["cumulative_bits_r2"]["1024"] / d512["loss_bits_512"] > 12.8
-    assert d512["exact_dfr_suite"]["ML_KEM_512_Dyadic512_256"]["union_bound_log2_dfr"] < -138.8
-    assert d512["exact_dfr_suite"]["ML_KEM_768_Dyadic256"]["union_bound_log2_dfr"] < -164.0
-    assert d512["exact_dfr_suite"]["ML_KEM_1024_Dyadic256"]["union_bound_log2_dfr"] < -174.0
+    assert abs(d512["exact_dfr_suite"]["ML_KEM_512_FIPS"]["union_bound_log2_dfr"] - (-138.8)) < 0.05
+    assert abs(d512["exact_dfr_suite"]["ML_KEM_768_FIPS"]["union_bound_log2_dfr"] - (-164.8)) < 0.05
+    assert abs(d512["exact_dfr_suite"]["ML_KEM_1024_FIPS"]["union_bound_log2_dfr"] - (-174.8)) < 0.05
+    assert d512["fips203_90digit_decimal_oracle"]["ML_KEM_1024_FIPS_dec90"]["interval_width_log2"] < 1e-12
+    assert d512["exact_dfr_suite"]["ML_KEM_512_Dyadic512_256"]["union_bound_log2_dfr"] < -136.0
+    assert d512["exact_dfr_suite"]["ML_KEM_768_Dyadic256"]["union_bound_log2_dfr"] < -161.9
+    assert d512["exact_dfr_suite"]["ML_KEM_1024_Dyadic256"]["union_bound_log2_dfr"] < -172.0
     assert d512["qgtl_hermite4_variational_bounds"]["CBD_2"]["fraction_captured"] > 0.75
     assert d512["qgtl_hermite4_variational_bounds"]["Dyadic_256"]["fraction_captured"] > 0.89
     # C22 & C23 (T3g & T3h): All-m Koszul MatMul >= m^2+2, Phi_2(<3,3,3>) >= 12, Exact Strassen-Winograd rank_F(<2,2,2>) = 7
@@ -210,9 +226,9 @@ def test_c24_to_c27_v4_breakthroughs_suite() -> None:
     assert d1024["bai_overhead_suite"]["ML_KEM_1024_Dyadic1024A"]["bai_overhead_bits"] < 8.75
     assert d1024["bai_overhead_suite"]["ML_KEM_768_Dyadic1024A"]["bai_overhead_bits"] < 6.55
     assert d1024["bai_overhead_suite"]["ML_KEM_512_Dyadic1024B"]["bai_overhead_bits"] < 5.65
-    assert d1024["dfr_1024_suite"]["ML_KEM_512_Dyadic1024B_A"]["union_bound_log2_dfr"] < -138.8
-    assert d1024["dfr_1024_suite"]["ML_KEM_768_Dyadic1024A"]["union_bound_log2_dfr"] < -164.0
-    assert d1024["dfr_1024_suite"]["ML_KEM_1024_Dyadic1024A"]["union_bound_log2_dfr"] < -174.0
+    assert d1024["dfr_1024_suite"]["ML_KEM_512_Dyadic1024B_A"]["union_bound_log2_dfr"] < -136.9
+    assert d1024["dfr_1024_suite"]["ML_KEM_768_Dyadic1024A"]["union_bound_log2_dfr"] < -161.8
+    assert d1024["dfr_1024_suite"]["ML_KEM_1024_Dyadic1024A"]["union_bound_log2_dfr"] < -171.8
 
     # C26 & C27 (T3i & T3j): Brockett-Dobkin 2m^2-m shattering Koszul m^2+m, Lovasz Theta(C_5)=sqrt(5) Z[sqrt(5)] SOS, & C_7 min-rank 4
     bdl = verify_brockett_dobkin_and_lovasz_shannon_capacity()
@@ -229,17 +245,17 @@ def test_c28_to_c31_v5_breakthroughs_suite() -> None:
     t1j = verify_6obj_f2_64_realization(REPO_ROOT / "data" / "h_uncond_certified.json")
     assert t1j["subsets_exact_match"] == 64 and t1j["all_64_subsets_verified"] is True
 
-    # C29 (T2i): ML-KEM-1024 Gaussian DFR Paradox + 14-bit Dyadic-16384-A/B + DPI/tensorization
+    # C29 (T2i): Coupled FIPS 203 Kurtosis-DFR-Renyi Tradeoff + 14-bit Dyadic-16384-A/B + DPI/tensorization
     d16 = verify_gaussian_dfr_paradox_and_dyadic16384()
     assert d16["renyi2_dpi_verified"] is True
-    assert d16["gaussian_dfr_paradox"]["mlkem_1024_gauss_fails_nist_174"] is True
-    assert d16["gaussian_dfr_paradox"]["mlkem_1024_gauss_log2_dfr"] > -174.0
+    assert d16["gaussian_dfr_paradox"]["mlkem_1024_gauss_log2_dfr"] > d16["dfr_16384_suite"]["ML_KEM_1024_Dyadic16384A"]["union_bound_log2_dfr"] > -174.76
+    assert d16["gaussian_dfr_paradox"]["mlkem_1024_gauss_sigma099_log2_dfr"] < -177.0
     assert d16["bai_16384_suite"]["ML_KEM_1024_Dyadic16384A"]["bai_overhead_bits"] < 6.05
     assert d16["bai_16384_suite"]["ML_KEM_768_Dyadic16384A"]["bai_overhead_bits"] < 4.55
     assert d16["bai_16384_suite"]["ML_KEM_512_Dyadic16384B"]["bai_overhead_bits"] < 0.60
-    assert d16["dfr_16384_suite"]["ML_KEM_1024_Dyadic16384A"]["union_bound_log2_dfr"] < -174.0
-    assert d16["dfr_16384_suite"]["ML_KEM_768_Dyadic16384A"]["union_bound_log2_dfr"] < -164.0
-    assert d16["dfr_16384_suite"]["ML_KEM_512_Dyadic16384B_A"]["union_bound_log2_dfr"] < -138.8
+    assert d16["dfr_16384_suite"]["ML_KEM_1024_Dyadic16384A"]["union_bound_log2_dfr"] < -171.7
+    assert d16["dfr_16384_suite"]["ML_KEM_768_Dyadic16384A"]["union_bound_log2_dfr"] < -161.7
+    assert d16["dfr_16384_suite"]["ML_KEM_512_Dyadic16384B_A"]["union_bound_log2_dfr"] < -136.0
 
     # C30 & C31 (T3k & T3l): Schwartz-Zippel, Strassen-Brockett-Dobkin sandwich, & Paley P_5..P_41 family
     szp = verify_schwartz_zippel_and_paley_family()
@@ -324,6 +340,7 @@ def test_differential_python_vs_native_c11() -> None:
     c7_c = json.loads(subprocess.check_output([str(exe), "c7-cap"], text=True))
     qgtl_c = json.loads(subprocess.check_output([str(exe), "qgtl", "2", "1.023", "0.35"], text=True))
     f11_c = json.loads(subprocess.check_output([str(exe), "f11-byz"], text=True))
+    f101_c = json.loads(subprocess.check_output([str(exe), "f101-t3k3"], text=True))
     py_renyi = verify_cbd_moments_and_renyi_60digit()
     py_d256 = verify_dyadic256_and_qgtl_kurtosis_60digit()
     py_d512 = verify_dyadic512_dfr_and_variational_bridge()
@@ -331,6 +348,7 @@ def test_differential_python_vs_native_c11() -> None:
     py_d16384 = verify_gaussian_dfr_paradox_and_dyadic16384()
     py_qgtl = verify_qgtl_shifted_lwe()
     assert f11_c["f11_byzantine_rate25"] is True
+    assert f101_c["f101_t3_k3_e6_zero_error_20_of_20"] is True and f101_c["rate"] == "10/17"
     assert ret6_c["ret6_f2_64_all64_subsets_exact"] is True and ret6_c["scale_factor"] == 4
     assert p13_c["paley_zsqrtp_sos_and_selfcomp_exact"] is True and p13_c["theta_sq"] == 13
     assert p17_c["paley_zsqrtp_sos_and_selfcomp_exact"] is True and p17_c["theta_sq"] == 17
@@ -350,10 +368,10 @@ def test_differential_python_vs_native_c11() -> None:
 
 
 # ============================================================================
-# 4. Mutation-Killing Suite (14/14 Core Mutants Killed!)
+# 4. Mutation-Killing Suite (16/16 Core Mutants Killed!)
 # ============================================================================
 
-def test_kill_14_core_mutants() -> None:
+def test_kill_16_core_mutants() -> None:
     # Mutant 1: Off-by-one in Koszul lambda formula (K + T - Tp + 1)
     assert koszul_lambda_formula(6, 3, 2, 3) != (3 + 3 - 2 + 1) * math.comb(2, 1)
     # Mutant 2: Off-by-one in FIPS 203 Compress_1 (+1665 instead of exact +1664 misclassifies x=832)
@@ -398,6 +416,19 @@ def test_kill_14_core_mutants() -> None:
     # Mutant 14: Dropping the quadratic non-residue test in Paley P_13 breaks self-complement anti-automorphism
     qrs13 = {(x * x) % 13 for x in range(1, 13)}
     assert 3 in qrs13 and 2 not in qrs13  # multiplying by QR 3 preserves edges instead of flipping them!
+    # Mutant 15: Perturbing one entry of F_101 (6,3,3) flag isomorphism M_{0,1,2} breaks M * Minv = I_20
+    w101 = json.loads((REPO_ROOT / "data" / "f101_t3_k3_e6_witness.json").read_text(encoding="utf-8"))
+    iso0 = w101["flag_isomorphisms"]["0,1,2"]
+    M_mut = [list(r) for r in iso0["M"]]
+    M_mut[0][0] = (M_mut[0][0] + 1) % 101
+    prod_mut = mat_mul_mod(M_mut, iso0["Minv"], 101)
+    assert prod_mut != [[1 if i == j else 0 for j in range(20)] for i in range(20)]
+    # Mutant 16: Regression killer for S02 (uncoupled split-s ML-KEM-1024 DFR deviates > 1.5 bits from FIPS 203 -174.8)
+    cbd2 = cbd_pmf_exact(2)
+    coupled_f64 = compute_exact_mlkem_dfr(4, 11, 5, cbd2, cbd2)["union_bound_log2_dfr"]
+    coupled_dec = compute_exact_mlkem_dfr_decimal(4, 11, 5, cbd2, cbd2, prec=90)["union_bound_log2_dfr"]
+    assert abs(coupled_f64 - (-174.8)) < 0.05 and coupled_f64 == coupled_dec
+    assert abs(-176.63 - (-174.8)) > 1.5  # old uncoupled split-s bug differed by 1.83 bits!
 
 
 # ============================================================================

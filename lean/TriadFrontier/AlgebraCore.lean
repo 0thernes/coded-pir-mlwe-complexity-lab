@@ -298,5 +298,51 @@ def PairwiseNeq {α : Type} : List α → Prop
   | [] => True
   | x :: xs => (∀ y ∈ xs, x ≠ y) ∧ PairwiseNeq xs
 
+/-- Concrete characteristic-2 prime field `F_2 = Fin 2`. -/
+def f2Inv (a : Fin 2) : Fin 2 := a
+
+instance instSimpleFieldFin2 : SimpleField (Fin 2) where
+  add a b := ⟨(a.val + b.val) % 2, Nat.mod_lt _ (by decide)⟩
+  sub a b := ⟨(a.val + 2 - b.val) % 2, Nat.mod_lt _ (by decide)⟩
+  mul a b := ⟨(a.val * b.val) % 2, Nat.mod_lt _ (by decide)⟩
+  neg a := a
+  zero := ⟨0, by decide⟩
+  one := ⟨1, by decide⟩
+  inv := f2Inv
+  add_assoc := by decide
+  add_comm := by decide
+  zero_add := by decide
+  add_neg := by decide
+  sub_eq := by decide
+  mul_assoc := by decide
+  mul_comm := by decide
+  one_mul := by decide
+  left_distrib := by decide
+  zero_ne_one := by decide
+  mul_inv_cancel := by decide
+
+/-- Concrete characteristic-3 prime field `F_3 = Fin 3`. -/
+def f3Inv (a : Fin 3) : Fin 3 := a
+
+instance instSimpleFieldFin3 : SimpleField (Fin 3) where
+  add a b := ⟨(a.val + b.val) % 3, Nat.mod_lt _ (by decide)⟩
+  sub a b := ⟨(a.val + 3 - b.val) % 3, Nat.mod_lt _ (by decide)⟩
+  mul a b := ⟨(a.val * b.val) % 3, Nat.mod_lt _ (by decide)⟩
+  neg a := ⟨(3 - a.val) % 3, Nat.mod_lt _ (by decide)⟩
+  zero := ⟨0, by decide⟩
+  one := ⟨1, by decide⟩
+  inv := f3Inv
+  add_assoc := by decide
+  add_comm := by decide
+  zero_add := by decide
+  add_neg := by decide
+  sub_eq := by decide
+  mul_assoc := by decide
+  mul_comm := by decide
+  one_mul := by decide
+  left_distrib := by decide
+  zero_ne_one := by decide
+  mul_inv_cancel := by decide
+
 end
 end TriadFrontier.AlgebraCore

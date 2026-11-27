@@ -1,14 +1,15 @@
+module
 -- SPDX-License-Identifier: Apache-2.0
 -- Copyright (c) 2026 Alexander S. Donahue
 
-import Lean.Util.CollectAxioms
-import Lean.Elab.Command
+meta import Lean.Util.CollectAxioms
+meta import Lean.Elab.Command
 import TriadFrontier
 import Solution
 import PalomarSolution
 
 /-!
-# Exhaustive Programmatic Axiom Audit (`AuditExhaustiveAxioms.lean`, v5.1.0)
+# Exhaustive Programmatic Axiom Audit (`AuditExhaustiveAxioms.lean`, v5.2.0)
 
 Walks **EVERY** constant in the compiled `TriadFrontier.*` environment (including all
 private/internal helper lemmas, `NonVacuity`, `AdversarialTests`, `Solution`, and

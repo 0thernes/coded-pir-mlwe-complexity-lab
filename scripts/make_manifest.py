@@ -21,6 +21,7 @@ from triad_verify.pir_koszul import (
     koszul_rate_exact,
     lfsr_rate_exact,
     verify_certified_f11_byzantine,
+    verify_certified_f101_t3_k3_e6_zero_error,
     verify_koszul_rank_grid,
 )
 from triad_verify.polymatroid_barrier import (
@@ -58,6 +59,7 @@ def main() -> int:
     # 1. Data checksum manifest (Build Standard B39)
     data_files = [
         "f11_byz_witness.json",
+        "f101_t3_k3_e6_witness.json",
         "h_uncond_certified.json",
     ]
     data_hashes = write_manifest(ROOT / "data" / "MANIFEST.sha256", data_files, ROOT / "data")
@@ -65,6 +67,7 @@ def main() -> int:
     # 2. Exact computational audit summary
     grid = verify_koszul_rank_grid()
     f11 = verify_certified_f11_byzantine(ROOT / "data" / "f11_byz_witness.json")
+    f101_t3k3 = verify_certified_f101_t3_k3_e6_zero_error(ROOT / "data" / "f101_t3_k3_e6_witness.json")
     poly = verify_h_uncond(ROOT / "data" / "h_uncond_certified.json")
     t1i_lin = verify_4var_i4_and_5obj_f2_realizability(ROOT / "data" / "h_uncond_certified.json")
     t1j_f2 = verify_6obj_f2_64_realization(ROOT / "data" / "h_uncond_certified.json")
@@ -81,6 +84,7 @@ def main() -> int:
             "lfsr_6_3_3_rate": str(lfsr_rate_exact(6, 3, 3)),
             "koszul_rank_grid": grid,
             "f11_byzantine_rate25": f11,
+            "f101_t3_k3_e6_zero_error": f101_t3k3,
             "polymatroid_h_uncond": poly,
             "t1i_linear_realizability": t1i_lin,
             "t1j_6obj_f2_64_realization": t1j_f2,
@@ -119,6 +123,7 @@ def main() -> int:
             "repo.yaml",
             "repo-standard.schema.json",
             "data/f11_byz_witness.json",
+            "data/f101_t3_k3_e6_witness.json",
             "data/h_uncond_certified.json",
             "data/MANIFEST.sha256",
             "dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf",
@@ -130,6 +135,7 @@ def main() -> int:
             "lean/lake-manifest.json",
             "lean/lakefile.toml",
             "lean/lean-toolchain",
+            "native/include/f101_t3_k3_e6_data.h",
             "native/include/triad_core.h",
             "native/src/triad_core.c",
             "native/src/triad_cli.c",

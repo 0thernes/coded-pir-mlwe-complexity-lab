@@ -4,6 +4,7 @@ module
 
 public import TriadFrontier.AlgebraCore
 public import TriadFrontier.PIRKoszul
+public import TriadFrontier.LinearRankSoundness
 public import TriadFrontier.MLWETightness
 public import TriadFrontier.ComplexityTriad
 public import TriadFrontier.KoszulTensor
@@ -14,24 +15,26 @@ public import TriadFrontier.AlgebraicComplexity
 public import TriadFrontier.NonVacuity
 
 /-!
-# Adversarial Negative Boundary Refutations (`TriadFrontier.AdversarialTests`, v5.1.0)
+# Adversarial Negative Boundary Refutations (`TriadFrontier.AdversarialTests`, v5.2.0 — Closes `ERRATA L07`)
 
-Machine-checked negative counterexamples and sharp threshold refutations proving our headline
-theorems cannot be weakened or bypassed at boundary values (Playbook v1.3 falsifiability standard):
+Machine-checked negative counterexamples and sharp universal-statement refutations proving our
+headline theorems cannot be weakened or bypassed at boundary values (Playbook v1.3 falsifiability standard):
 1. `adv_compress1_fails_at_832`: Exact FIPS 203 `Compress_1` breaks immediately at `e = +833` for `b = 0` and `e = +832` for `b = 1` (`T3d` sharp!).
-2. `adv_flag_privacy_fails_at_e3`: Single-orbit `(K=2, T=2)` flag privacy fails at `E = 3` (`T1d` sharp!).
+2. `adv_flag_privacy_fails_at_e3`: Universal refutation `¬ (∀ E, 1 ≤ E → (3*E - 4) + E ≤ E * (E - 1))` (`T1d` sharp at `E = 3`!).
 3. `adv_strassen_no_rank6`: NO field `F` (incl. `F_2`) admits a rank-6 bilinear algorithm for `⟨2,2,2⟩` (`T3h`).
 4. `adv_c5_no_3_indep`: `C_5` has NO 3-element independent set (`3^2 = 9 > 5`; `T3j`).
 5. `adv_c7_no_rank3_haemers`: `C_7` admits NO rank-3 Haemers fitting matrix over ANY field `F` (`T3j`).
 6. `adv_p13_no_4_indep`: Paley graph `P_13` has NO 4-element independent set (`4^2 = 16 > 13`; `T3l`).
-7. `adv_koszul_ceiling_broken_at_m3`: Brockett–Dobkin `2m^2-m = 15` strictly beats Koszul ceiling `12` (`T3i`).
+7. `adv_koszul_ceiling_broken_at_m3`: Universal refutation `¬ (∀ m, 1 ≤ m → 2*m*m - m ≤ m*m + m)` (`T3i` beats Koszul ceiling at `m = 3`!).
 8. `adv_schwartz_zippel_f2_tight`: Nonzero degree-2 `x + x^2 ∈ F_2[x]` vanishes on ALL of `F_2` (`d = |S|` breaks non-vanishing; `T3k` sharp!).
 9. `adv_paley7_not_conference`: `7 ≡ 3 (mod 4)` admits NO conference parameter `4k + 1 = 7` and the quadratic-residue graph mod 7 is asymmetric (`T3l` sharp!).
+10. `adv_hasSpanDim_rejects_false_rank`: Standard basis `[e_0, e_1]` in `F_2^2` CANNOT satisfy `HasSpanDim (Fin 2) 2 _ 1` (`T1k` `HasSpanDim` non-trivial & sharp!).
 -/
 
 namespace TriadFrontier.AdversarialTests
 
 open TriadFrontier.AlgebraCore
+open TriadFrontier.LinearRankSoundness
 open TriadFrontier.ComplexityTriad
 open TriadFrontier.KoszulTensor
 open TriadFrontier.StrassenWinograd
@@ -47,10 +50,12 @@ theorem adv_compress1_fails_at_832 :
     mlkemCompress1 (1665 * 0 + 833) ≠ 0 ∧ mlkemCompress1 (1665 * 1 + 832) ≠ 1 := by
   decide
 
-/-- 2. Sharpness of `T1d`: `(K=2, T=2)` single-orbit flag privacy fails at `E = 3` (`(3*3-4)+3 = 8 > 6`). -/
+/-- 2. Sharpness of `T1d` (`L07` universal refutation): `(K=2, T=2)` single-orbit flag privacy does NOT hold for all `E ≥ 1` (refuted at `E = 3`). -/
 theorem adv_flag_privacy_fails_at_e3 :
-    ¬ ((3 * 3 - 4) + 3 ≤ 3 * (3 - 1)) := by
-  decide
+    ¬ (∀ E : Nat, 1 ≤ E → (3 * E - 4) + E ≤ E * (E - 1)) := by
+  intro hall
+  have h3 := hall 3 (by decide)
+  omega
 
 /-- 3. Sharpness of `T3h`: NO field `F` (including `F_2`) admits a 6-multiplication algorithm for `⟨2,2,2⟩`. -/
 theorem adv_strassen_no_rank6 (F : Type) [SimpleField F] :
@@ -101,9 +106,12 @@ theorem adv_p13_no_4_indep (f : Nat → Nat) :
   have hle := lovasz_conference_strong_pow_upper 3 paley13Adj paley13_isConference 1 4 f h1
   omega
 
-/-- 7. Sharpness of `T3i`: Brockett–Dobkin `2m^2-m` strictly breaks the Koszul ceiling `m^2+m` at `m = 3`. -/
-theorem adv_koszul_ceiling_broken_at_m3 : ¬ (2 * 3 * 3 - 3 ≤ 3 * 3 + 3) := by
-  decide
+/-- 7. Sharpness of `T3i` (`L07` universal refutation): Brockett–Dobkin `2m^2-m` does NOT stay below Koszul `m^2+m` for all `m ≥ 1` (refuted at `m = 3`). -/
+theorem adv_koszul_ceiling_broken_at_m3 :
+    ¬ (∀ m : Nat, 1 ≤ m → 2 * m * m - m ≤ m * m + m) := by
+  intro hall
+  have h3 := hall 3 (by decide)
+  omega
 
 /-- Nonzero degree-2 polynomial `P(x) = x + x^2` over `F_2` saturating Schwartz–Zippel at `d = |F_2| = 2`. -/
 def f2VanishingQuad : MPoly (Fin 2) 1 :=
@@ -141,10 +149,20 @@ theorem adv_paley7_not_conference :
     (∀ k : Nat, 4 * k + 1 ≠ 7) ∧ paley7DirAdj 1 0 ≠ paley7DirAdj 0 1 := by
   exact ⟨fun k => by omega, by decide⟩
 
-/-- Master conjunction of all 9 adversarial negative boundary refutations. -/
+/-- 10. Sharpness of `T1k` (`HasSpanDim`): the standard basis `[e_0, e_1]` in `F_2^2` CANNOT satisfy
+    `HasSpanDim (Fin 2) 2 _ 1` (refuted directly via `gf2RankSparse_sound` + `HasSpanDim_unique`!). -/
+theorem adv_hasSpanDim_rejects_false_rank :
+    ¬ HasSpanDim (F := Fin 2) 2 [sparseVec 2 [0], sparseVec 2 [1]] 1 := by
+  intro h1
+  have h2 : HasSpanDim (F := Fin 2) 2 [sparseVec 2 [0], sparseVec 2 [1]] 2 :=
+    gf2RankSparse_sound 2 [[0], [1]]
+  have heq := HasSpanDim_unique h2 h1
+  omega
+
+/-- Master conjunction of all 10 adversarial negative boundary refutations. -/
 theorem adv_all_boundary_refutations :
     (mlkemCompress1 (1665 * 0 + 833) ≠ 0 ∧ mlkemCompress1 (1665 * 1 + 832) ≠ 1) ∧
-    (¬ ((3 * 3 - 4) + 3 ≤ 3 * (3 - 1))) ∧
+    (¬ (∀ E : Nat, 1 ≤ E → (3 * E - 4) + E ≤ E * (E - 1))) ∧
     (∀ (F : Type) [SimpleField F],
       ¬ HasTensorRankAtMost 4 4 4 6 (fun a b c => intToR (R := F) (matMul2Tensor a b c))) ∧
     (∀ f, ¬ IsIndepSet 5 c5Adj 3 f) ∧
@@ -152,13 +170,15 @@ theorem adv_all_boundary_refutations :
       (∀ i j, i < 7 → j < 7 → sumR 3 (fun s => U i s * V s j) = M i j) →
       ¬ FitsGraph 7 c7Adj M) ∧
     (∀ f, ¬ IsIndepSet 13 paley13Adj 4 f) ∧
-    (¬ (2 * 3 * 3 - 3 ≤ 3 * 3 + 3)) ∧
+    (¬ (∀ m : Nat, 1 ≤ m → 2 * m * m - m ≤ m * m + m)) ∧
     (mpNonZero f2VanishingQuad ∧ mpDegLe 2 f2VanishingQuad ∧
       ∀ a : Fin 1 → Fin 2, mpEval f2VanishingQuad a = 0) ∧
-    ((∀ k : Nat, 4 * k + 1 ≠ 7) ∧ paley7DirAdj 1 0 ≠ paley7DirAdj 0 1) :=
+    ((∀ k : Nat, 4 * k + 1 ≠ 7) ∧ paley7DirAdj 1 0 ≠ paley7DirAdj 0 1) ∧
+    (¬ HasSpanDim (F := Fin 2) 2 [sparseVec 2 [0], sparseVec 2 [1]] 1) :=
   ⟨adv_compress1_fails_at_832, adv_flag_privacy_fails_at_e3, adv_strassen_no_rank6,
    adv_c5_no_3_indep, adv_c7_no_rank3_haemers, adv_p13_no_4_indep,
-   adv_koszul_ceiling_broken_at_m3, adv_schwartz_zippel_f2_tight, adv_paley7_not_conference⟩
+   adv_koszul_ceiling_broken_at_m3, adv_schwartz_zippel_f2_tight, adv_paley7_not_conference,
+   adv_hasSpanDim_rejects_false_rank⟩
 
 end
 end TriadFrontier.AdversarialTests

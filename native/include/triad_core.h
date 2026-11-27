@@ -46,9 +46,10 @@ typedef struct {
 int triad_mod_inv(int a, int p);
 int triad_rank_mod_p(const int *mat, int rows, int cols, int p);
 
-/* CS-053: Exact Koszul-Veronese Schur-product rank verification & Byzantine F_11 audit. */
+/* CS-053: Exact Koszul-Veronese Schur-product rank verification, Byzantine F_11 audit, & F_101 (6,3,3) T=3 witness. */
 int triad_verify_koszul_rank(int T, int Tp, int K, int p);
 bool triad_verify_f11_byzantine_rate25(void);
+bool triad_verify_f101_t3_k3_e6_zero_error(void);
 
 /* CS-026: Yilei Chen (2024/555) Step-9 anti-periodic DFT cancellation verifier. */
 triad_chen_res_t triad_verify_chen_step9(int D, int c);

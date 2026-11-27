@@ -18,10 +18,10 @@ all: $(BUILD_DIR)/triad_cli$(EXE) $(BUILD_DIR)/test_triad_core$(EXE)
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-$(BUILD_DIR)/triad_cli$(EXE): src/triad_core.c src/triad_cli.c include/triad_core.h | $(BUILD_DIR)
+$(BUILD_DIR)/triad_cli$(EXE): src/triad_core.c src/triad_cli.c include/triad_core.h include/f101_t3_k3_e6_data.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) src/triad_core.c src/triad_cli.c -o $@ $(LDFLAGS)
 
-$(BUILD_DIR)/test_triad_core$(EXE): src/triad_core.c tests/test_triad_core.c include/triad_core.h | $(BUILD_DIR)
+$(BUILD_DIR)/test_triad_core$(EXE): src/triad_core.c tests/test_triad_core.c include/triad_core.h include/f101_t3_k3_e6_data.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) src/triad_core.c tests/test_triad_core.c -o $@ $(LDFLAGS)
 
 test: all

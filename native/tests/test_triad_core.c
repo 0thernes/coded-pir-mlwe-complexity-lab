@@ -38,6 +38,10 @@ int main(void) {
     /* 2. Exact F_11 Byzantine rate-2/5 (N=6, K=2, T=2, B=1) differential check vs Lean T1c */
     CHECK(triad_verify_f11_byzantine_rate25(), "F_11 Byzantine rate-2/5 15-subset + 30-pair privacy");
 
+    /* 2b. v5.2.0 Exact F_101 zero-error T=3-private (N=6, K=3, T=3) rate-10/17 witness (ERRATA S01) */
+    CHECK(triad_verify_f101_t3_k3_e6_zero_error(),
+          "F_101 zero-error T=3-private (6,3,3) rate-10/17 witness (60/60 des, 42/42 int, 20/20 GL_20 flag isos)");
+
     /* 3. Chen Step-9 anti-periodic DFT cancellation for odd c, D */
     int Ds[5] = {3, 5, 7, 11, 13};
     for (int i = 0; i < 5; i++) {

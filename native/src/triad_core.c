@@ -2,6 +2,7 @@
  * Copyright (c) 2026 Alexander S. Donahue
  */
 #include "triad_core.h"
+#include "f101_t3_k3_e6_data.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -1126,6 +1127,176 @@ bool triad_verify_paley_conference_sos(int p) {
             int py = (g * y) % p;
             if (px == py) return false;
             if (A[x][y] == A[px][py]) return false;
+        }
+    }
+    return true;
+}
+
+/* Independent ISO C11 verification of the committed F_101 (seed=2028) zero-error, exact T=3-private
+ * (M=2, N=6, K=3, T=3) rate-10/17 PIR witness (`ERRATA S01` closure, matching Lean `T1k` & Python). */
+bool triad_verify_f101_t3_k3_e6_zero_error(void) {
+    const int p = 101;
+    const int alphas[6] = {1, 2, 3, 4, 5, 6};
+    int G[6][3];
+    for (int n = 0; n < 6; n++) {
+        G[n][0] = 1;
+        G[n][1] = alphas[n] % p;
+        G[n][2] = (alphas[n] * alphas[n]) % p;
+    }
+
+    /* Enumerate sorted 3-blades of F_101^6 (20 elements) */
+    int b3[20][3];
+    int b3_cnt = 0;
+    for (int i = 0; i < 6; i++)
+        for (int j = i + 1; j < 6; j++)
+            for (int k = j + 1; k < 6; k++) {
+                b3[b3_cnt][0] = i; b3[b3_cnt][1] = j; b3[b3_cnt][2] = k;
+                b3_cnt++;
+            }
+
+    /* Enumerate 2-subsets S of {1..5} (10 elements) */
+    int s2[10][2];
+    int s2_cnt = 0;
+    for (int i = 1; i < 6; i++)
+        for (int j = i + 1; j < 6; j++) {
+            s2[s2_cnt][0] = i; s2[s2_cnt][1] = j;
+            s2_cnt++;
+        }
+
+    int V[6][10][20], U[6][10][20];
+    memset(V, 0, sizeof(V));
+    memset(U, 0, sizeof(U));
+    for (int n = 0; n < 6; n++) {
+        int a = alphas[n];
+        int u[6];
+        u[0] = 1;
+        for (int d = 1; d < 6; d++) u[d] = (u[d - 1] * a) % p;
+        for (int si = 0; si < 10; si++) {
+            int x0 = s2[si][0], x1 = s2[si][1];
+            for (int d = 0; d < 6; d++) {
+                if (d == x0 || d == x1) continue;
+                int tup[3] = {d, x0, x1};
+                int inv_cnt = (d > x0 ? 1 : 0) + (d > x1 ? 1 : 0);
+                for (int r = 1; r < 3; r++) {
+                    int key = tup[r], q = r - 1;
+                    while (q >= 0 && tup[q] > key) { tup[q + 1] = tup[q]; q--; }
+                    tup[q + 1] = key;
+                }
+                for (int bi = 0; bi < 20; bi++) {
+                    if (b3[bi][0] == tup[0] && b3[bi][1] == tup[1] && b3[bi][2] == tup[2]) {
+                        int sgn = (inv_cnt & 1) ? -1 : 1;
+                        V[n][si][bi] = mod_norm(sgn * u[d], p);
+                        break;
+                    }
+                }
+            }
+        }
+        int a2 = (a * a) % p;
+        U[n][0][0] = 1;
+        for (int c = 0; c < 3; c++) {
+            int b = 1 + 3 * c;
+            U[n][1 + 2 * c][b] = 1;
+            U[n][1 + 2 * c][b + 2] = mod_norm(-a2, p);
+            U[n][2 + 2 * c][b + 1] = 1;
+            U[n][2 + 2 * c][b + 2] = a % p;
+        }
+        for (int c = 0; c < 3; c++) {
+            int b = 10 + 3 * c;
+            U[n][7 + c][b] = 1;
+            U[n][7 + c][b + 1] = a % p;
+            U[n][7 + c][b + 2] = a2;
+        }
+    }
+
+    int P[6][7][20], C[6][3][20], Q[6][7][20], D[6][3][20];
+    for (int n = 0; n < 6; n++) {
+        for (int r = 0; r < 10; r++) {
+            for (int c = 0; c < 20; c++) {
+                int sv = 0, su = 0;
+                for (int t = 0; t < 10; t++) {
+                    sv += (int)F101_T3K3_A_SELS[n][r][t] * V[n][t][c];
+                    su += (int)F101_T3K3_B_SELS[n][r][t] * U[n][t][c];
+                }
+                if (r < 7) {
+                    P[n][r][c] = mod_norm(sv, p);
+                    Q[n][r][c] = mod_norm(su, p);
+                } else {
+                    C[n][r - 7][c] = mod_norm(sv, p);
+                    D[n][r - 7][c] = mod_norm(su, p);
+                }
+            }
+        }
+    }
+
+    /* 1. Desired recovery rank = 60/60 (full invertible 60x60 over F_101) */
+    int M_des[60 * 60];
+    int M_pure[42 * 60];
+    int M_all_int[60 * 60];
+    for (int n = 0; n < 6; n++) {
+        for (int r = 0; r < 7; r++) {
+            for (int k = 0; k < 3; k++) {
+                for (int j = 0; j < 20; j++) {
+                    M_des[(n * 10 + r) * 60 + k * 20 + j] = (G[n][k] * P[n][r][j]) % p;
+                    M_pure[(n * 7 + r) * 60 + k * 20 + j] = (G[n][k] * Q[n][r][j]) % p;
+                    M_all_int[(n * 10 + r) * 60 + k * 20 + j] = (G[n][k] * Q[n][r][j]) % p;
+                }
+            }
+        }
+        for (int r = 0; r < 3; r++) {
+            for (int k = 0; k < 3; k++) {
+                for (int j = 0; j < 20; j++) {
+                    M_des[(n * 10 + 7 + r) * 60 + k * 20 + j] = (G[n][k] * C[n][r][j]) % p;
+                    M_all_int[(n * 10 + 7 + r) * 60 + k * 20 + j] = (G[n][k] * D[n][r][j]) % p;
+                }
+            }
+        }
+    }
+    if (triad_rank_mod_p(M_des, 60, 60, p) != 60) return false;
+    if (triad_rank_mod_p(M_pure, 42, 60, p) != 42) return false;
+    if (triad_rank_mod_p(M_all_int, 60, 60, p) != 42) return false;
+
+    /* 2. Exact T=3 privacy: ALL 20/20 colluding triples have invertible M_I in GL_20(F_101)
+     * mapping P_n -> Q_n (dim 7) and span(P_n, C_n) -> span(Q_n, D_n) (dim 10) for every n in I! */
+    for (int s = 0; s < 20; s++) {
+        int M_mat[20 * 20];
+        for (int i = 0; i < 20; i++)
+            for (int j = 0; j < 20; j++)
+                M_mat[i * 20 + j] = (int)F101_T3K3_M_ISOS[s][i][j];
+        if (triad_rank_mod_p(M_mat, 20, 20, p) != 20) return false;
+
+        for (int idx = 0; idx < 3; idx++) {
+            int n = (int)F101_T3K3_SUBSETS[s][idx];
+            int stk14[14 * 20];
+            int stk20[20 * 20];
+            int q7[7 * 20];
+            int qd10[10 * 20];
+            for (int r = 0; r < 7; r++) {
+                for (int j = 0; j < 20; j++) {
+                    int acc = 0;
+                    for (int t = 0; t < 20; t++) acc += P[n][r][t] * M_mat[t * 20 + j];
+                    int pm = acc % p;
+                    q7[r * 20 + j] = Q[n][r][j];
+                    qd10[r * 20 + j] = Q[n][r][j];
+                    stk14[r * 20 + j] = pm;
+                    stk14[(7 + r) * 20 + j] = Q[n][r][j];
+                    stk20[r * 20 + j] = pm;
+                    stk20[(10 + r) * 20 + j] = Q[n][r][j];
+                }
+            }
+            for (int r = 0; r < 3; r++) {
+                for (int j = 0; j < 20; j++) {
+                    int acc = 0;
+                    for (int t = 0; t < 20; t++) acc += C[n][r][t] * M_mat[t * 20 + j];
+                    int cm = acc % p;
+                    qd10[(7 + r) * 20 + j] = D[n][r][j];
+                    stk20[(7 + r) * 20 + j] = cm;
+                    stk20[(17 + r) * 20 + j] = D[n][r][j];
+                }
+            }
+            if (triad_rank_mod_p(q7, 7, 20, p) != 7) return false;
+            if (triad_rank_mod_p(stk14, 14, 20, p) != 7) return false;
+            if (triad_rank_mod_p(qd10, 10, 20, p) != 10) return false;
+            if (triad_rank_mod_p(stk20, 20, 20, p) != 10) return false;
         }
     }
     return true;

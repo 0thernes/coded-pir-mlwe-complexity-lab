@@ -12,6 +12,7 @@
     "TriadFrontier.Palomar.t1h_infinite_nonshannon_cone_barrier_and_contraction",
     "TriadFrontier.Palomar.t1i_total_4var_entropic_and_5obj_linear_barrier",
     "TriadFrontier.Palomar.t1j_total_6obj_f2_entropic_realizability_barrier",
+    "TriadFrontier.Palomar.t1k_linear_rank_soundness_and_pir_protocol",
     "TriadFrontier.Palomar.t2a_determinant_ideal_secret_independence",
     "TriadFrontier.Palomar.t2b_chen_step9_antiperiodic_dft_cancellation",
     "TriadFrontier.Palomar.t2c_mlkem_cbd_renyi_cliff",

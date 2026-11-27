@@ -1,32 +1,36 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
 # SPDX-License-Identifier: Apache-2.0
 version: "v0.5"
-release_version: "5.1.0"
+release_version: "5.2.0"
 
 project:
   name: "Koszul-Veronese Flag-Private Coded Byzantine PIR, Module-LWE Reduction Obstructions, and Complexity-Theoretic Bridges"
   description: >-
-    Zero-Mathlib Lean 4.35.0 formalization of 31 theorems (T1a-T3l) plus spot-check
-    non-vacuity witnesses (including char-2 SimpleField (Fin 2)) and 9 adversarial tests
-    (34 audited declarations + 1,330 TriadFrontier.* declarations swept by AuditExhaustiveAxioms.lean).
-    The theorems are elementary identities, finite certificates and formalizations of known results used in three
-    areas; none resolves a published open problem in Lean or refutes a published claim.
+    Zero-Mathlib Lean 4.35.0 formalization of 32 theorems (T1a-T3l and T1k) plus non-degenerate
+    non-vacuity witnesses (including char-2 SimpleField (Fin 2), non-degenerate concurrent/coplanar
+    P^3 lines, and T1k/T2e-T2i witnesses) and 10 adversarial tests (35 audited declarations +
+    1,656 TriadFrontier.* declarations swept by AuditExhaustiveAxioms.lean under Lean 4.35.0 module).
+    The theorems include elementary identities, sound linear-algebraic rank certificates, a universal
+    2-file N-server K-MDS flag-private PIR protocol with zero-error decoding and exact T-collusion
+    privacy bijection (T1k), and formalizations of known results across three areas; none resolves a
+    published open problem in Lean or refutes a published claim.
     (Pillar I, CS-053) a moment-vector annihilation identity and a Pascal-type binomial identity;
-    inequalities between closed-form rate expressions (achievability of the rates and the
-    comparison with the Sun-Zhang capacity for linear full-support-rank schemes are outside Lean);
-    arithmetic threshold statements; a Boolean check of 90 tabulated F_11 matrix inverses; Boolean
-    polymatroid checks for a tabulated 12-variable function h_uncond at value ratio 8/13; the
-    classical P^3 concurrency fact over any field; Zhang-Yeung (1998) and Matus-type identities;
-    and marginals of h_uncond expressed through in-Lean rank routines that have no correctness
-    proof. Numerical rank computations (not in Lean) give interference dimension 42 and rate 10/17
-    for one (6,3,3) design versus 4/7 in arXiv:2603.10769; privacy and zero-error decoding are not
-    verified.
+    inequalities between closed-form rate expressions; arithmetic threshold statements; a Boolean check
+    of 90 tabulated F_11 matrix inverses; Boolean polymatroid checks for a tabulated 12-variable
+    function h_uncond at value ratio 8/13; the classical P^3 concurrency fact over any field;
+    Zhang-Yeung (1998) and Matus-type identities; in-Lean vector-space soundness (HasSpanDim) of
+    matRankModP (over F_2 and F_3) and gf2RankSparse (over F_2), closing ERRATA L02 so T1i and T1j
+    certify genuine vector-space span dimensions; and a field-universal formalization of the linear
+    flag-private PIR protocol (zero-error decoding + exact colluder-transcript bijection Psi_I, T1k),
+    paired in Python/C11 with an explicit F_101 (6,3,3) rate-10/17 witness verified across all 20/20
+    colluding triples and 10/10 live encode/decode trials (closing ERRATA S01/A02).
     (Pillar II, CS-026/QC-042/CM-048) a diagonal-product identity (the q-ary MLWE basis has
     determinant q^m), DFT-cancellation identities over any commutative ring, and integer
     Cauchy-Schwarz, Holder, TV-chi^2, data-processing and moment certificates for tabulated noise
-    weights. Renyi values, Bai et al. overheads and decryption-failure rates are numerical
-    (DFRs from a float64 model); no divergence, sampler or lattice is defined in Lean. In v5.1.0,
-    mlkemCompress1 implements exact NIST FIPS 203 Eq. (4.7) and proves equivalence with +1664.
+    weights. Renyi values, Bai et al. overheads and exact coupled FIPS 203 decryption-failure rates
+    (cross-verified by a 90-digit Kronecker exact interval oracle reproducing NIST FIPS 203 Table 1
+    within 0.04 bits, closing ERRATA S02) are numerical; no divergence, sampler or lattice is defined
+    in Lean. mlkemCompress1 implements exact NIST FIPS 203 Eq. (4.7) and proves equivalence with +1664.
     (Pillar III, CS-001/CS-004/CS-010/CS-012/CS-051/CS-CMP-012) multilinear-extension uniqueness,
     the counting inequality of the natural-proofs argument, minimum distance 2B+1 of a
     B-error-correcting code, pigeonhole counting, tensor-rank bounds over every field
@@ -62,7 +66,7 @@ classification:
     - "03B35"
 
 sources:
-  - title: "Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked Complexity-Barrier Bridges (v5.1.0)"
+  - title: "Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked Complexity-Barrier Bridges (v5.2.0)"
     authors:
       - "Alexander S. Donahue"
     id: "https://github.com/0thernes/coded-pir-mlwe-complexity-lab"
@@ -164,11 +168,11 @@ related_formalizations: []
 
 status:
   scope: >-
-    Zero-Mathlib Lean 4.35.0 formalization of the 31 theorems T1a-T3l as stated in
-    lean/Challenge.lean, spot-check non-vacuity witnesses (TriadFrontier/NonVacuity.lean, incl. char-2), and 9 adversarial
-    tests (TriadFrontier/AdversarialTests.lean) — 34
-    audited declarations + 1,330 TriadFrontier.* declarations swept by AuditExhaustiveAxioms.lean. Not formalized inside Lean: transcendental 60-digit Renyi/Bai
-    optimization curves, float64 FIPS 203 discrete-convolution DFRs, Lovasz
+    Zero-Mathlib Lean 4.35.0 formalization of the 32 theorems T1a-T3l and T1k as stated in
+    lean/Challenge.lean, non-degenerate non-vacuity witnesses (TriadFrontier/NonVacuity.lean, incl. char-2),
+    and 10 adversarial tests (TriadFrontier/AdversarialTests.lean) — 35
+    audited declarations + 1,656 TriadFrontier.* declarations swept by AuditExhaustiveAxioms.lean. Not formalized inside Lean: transcendental 60-digit Renyi/Bai
+    optimization curves, exact coupled FIPS 203 discrete-convolution DFRs (90-digit Kronecker oracle), Lovasz
     theta(C_7) trigonometric evaluation, and floating-point DFT/QGTL spectra (computed in
     Tier-2 Python, C11, and Eshkol AD), or open conjectures (P != NP, omega = 2,
     VP != VNP, the non-linear capacity C(2,4,2,2), the Sun-Tao-Xu-Zhang maximum-redundancy question, general M>=3 non-LFSR PIR when E>=KT, exact
@@ -229,6 +233,11 @@ status:
       file: "lean/PalomarSolution.lean"
       sorry_count: 0
       axioms: ["propext", "Quot.sound"]
+      comparator_config: "lean/comparator.json"
+    - declaration: "TriadFrontier.Palomar.t1k_linear_rank_soundness_and_pir_protocol"
+      file: "lean/PalomarSolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
       comparator_config: "lean/comparator.json"
     - declaration: "TriadFrontier.Palomar.t2a_determinant_ideal_secret_independence"
       file: "lean/PalomarSolution.lean"
@@ -352,14 +361,16 @@ automation:
 
 fidelity:
   divergences: >-
-    Transcendental Renyi-2/inf/Bai optimization curves, float64 FIPS 203 discrete-convolution DFRs,
-    trigonometric Lovasz theta(C_7), and complex DFT/QGTL spectra are computed outside Lean (Renyi/Bai to 60-digit Decimal
-    precision, DFRs in float64) in Python and differentially against C11 and Eshkol forward-mode dual-number AD
-    (< 2e-13), while Lean 4.35.0 machine-checks the exact rational/integer moments, all-order
-    Renyi Holder & TV-chi^2 bounds, cleared-denominator inequalities, finite-field rank
-    certificates, 4-var/5-obj subspace certificates resting on unverified rank routines, symbolic ALL-m Koszul
-    left-inverses, rank_F(<2,2,2>)=7, the substitution bound 2m^2-m, and exact
-    Z[sqrt(5)] SOS integer form of Lovasz Theta(C_5)=sqrt(5) + Haemers C_7 rank=4 with zero Mathlib.
+    Transcendental Renyi-2/inf/Bai optimization curves, coupled FIPS 203 discrete-convolution DFRs
+    (cross-verified by a 90-digit Kronecker exact interval oracle reproducing NIST Table 1 within 0.04 bits),
+    trigonometric Lovasz theta(C_7), and complex DFT/QGTL spectra are computed outside Lean in Python and
+    differentially against C11 and Eshkol forward-mode dual-number AD (< 2e-13), while Lean 4.35.0
+    machine-checks exact rational/integer moments, all-order Renyi Holder & TV-chi^2 bounds,
+    cleared-denominator inequalities, finite-field rank certificates, true vector-space span-dimension
+    soundness (HasSpanDim) of matRankModP and gf2RankSparse plus the field-universal zero-error &
+    exact T-privacy PIR protocol (T1k), symbolic ALL-m Koszul left-inverses, rank_F(<2,2,2>)=7,
+    the substitution bound 2m^2-m, and exact Z[sqrt(5)] SOS integer form of Lovasz Theta(C_5)=sqrt(5) +
+    Haemers C_7 rank=4 with zero Mathlib.
 
 review:
   status: "self-assessed"
@@ -367,7 +378,6 @@ review:
     Not externally peer-reviewed. Machine-checked across all 6 independent Lean 4.35.0
     proof kernels via lake comparator --config comparator.json --paranoid (Lean default,
     leanchecker-paranoid, lean4lean, silent 0-error nanoda, con-leche --verified and
-    con-ron --verified; 4,337 decls on the standalone Solution export), with 0 warnings, 0 proof sorries, 0 native_decide,
-    1,330-decl AuditExhaustiveAxioms sweep, spot-check NonVacuity witnesses, 9 AdversarialTests, and a live negative
-    kernel-rejection gate. Kernel agreement certifies the proofs, not the modelling; see
-    ERRATA.md (2026-11-26 statement audit & v5.1.0 fixes).
+    con-ron --verified; 4,745 decls on the standalone Solution export), with 0 warnings, 0 proof sorries, 0 native_decide,
+    1,656-decl AuditExhaustiveAxioms sweep (under module), non-degenerate NonVacuity witnesses, 10 AdversarialTests, and a live negative
+    kernel-rejection gate. Kernel agreement certifies the proofs; see ERRATA.md (L02, L06, L07, S01, S02, A02 fixed in v5.2.0).

@@ -318,6 +318,287 @@ def verify_t3_k3_e6_zero_error(p: int = 101) -> dict:
     }
 
 
+def _rand_invertible_mod(n: int, p: int, rng: random.Random) -> tuple[list[list[int]], list[list[int]]]:
+    """Sample a uniformly invertible n x n matrix over F_p together with its exact modular inverse."""
+    while True:
+        M = [[rng.randrange(p) for _ in range(n)] for _ in range(n)]
+        aug = [M[i][:] + [1 if i == j else 0 for j in range(n)] for i in range(n)]
+        ok = True
+        for c in range(n):
+            piv = next((i for i in range(c, n) if aug[i][c] % p != 0), None)
+            if piv is None:
+                ok = False
+                break
+            aug[c], aug[piv] = aug[piv], aug[c]
+            inv = modinv(aug[c][c], p)
+            aug[c] = [(x * inv) % p for x in aug[c]]
+            for i in range(n):
+                if i != c and aug[i][c] % p != 0:
+                    f = aug[i][c] % p
+                    aug[i] = [(aug[i][j] - f * aug[c][j]) % p for j in range(2 * n)]
+        if ok:
+            Minv = [row[n:] for row in aug]
+            return M, Minv
+
+
+def _mat_vec_mod(A: list[list[int]], v: list[int], p: int) -> list[int]:
+    return [sum(A[i][j] * v[j] for j in range(len(v))) % p for i in range(len(A))]
+
+
+def _mat_add_mod(A: list[list[int]], B: list[list[int]], p: int) -> list[list[int]]:
+    return [[(A[i][j] + B[i][j]) % p for j in range(len(A[0]))] for i in range(len(A))]
+
+
+def _mat_sub_mod(A: list[list[int]], B: list[list[int]], p: int) -> list[list[int]]:
+    return [[(A[i][j] - B[i][j]) % p for j in range(len(A[0]))] for i in range(len(A))]
+
+
+def _mat_id(n: int) -> list[list[int]]:
+    return [[1 if i == j else 0 for j in range(n)] for i in range(n)]
+
+
+def verify_certified_f101_t3_k3_e6_zero_error(witness_path: Path, trials: int = 10) -> dict:
+    """End-to-end exact verification of the committed F_101 zero-error, exact T=3-private
+    (M=2, N=6, K=3, T=3, B=0, E=6) rate-10/17 PIR witness (`ERRATA S01` & `A02` closure):
+    1. Algebraic matrix verification matching Lean `T1k` (`PIRProtocol.lean`):
+       - `DecInv * M_des = I_60` (exact 60/60 desired recovery),
+       - `Cancel * M_pure = M_mixed` (exact 18x42 interference cancellation from 42 pure eqs),
+       - All C(6,3)=20 colluding triples have invertible `M_I in GL_20(F_101)` and explicit
+         `(alpha_n, gamma_n, beta_n)` satisfying `P_n M_I = alpha_n Q_n` and `C_n M_I = gamma_n D_n + beta_n Q_n`.
+    2. Live randomized end-to-end encode/query/answer/decode trials for BOTH theta=1 and theta=2
+       confirming 0 decoding errors and exact download count 102 for 60 symbols (rate 10/17 > 4/7).
+    3. Exact bit-for-bit colluder-transcript bijection verification (`Psi_I`) across ALL 20 triples.
+    """
+    w = json.loads(witness_path.read_text(encoding="utf-8"))
+    p = int(w["p"])
+    alphas = [int(a) for a in w["alphas"]]
+    A_sels = w["A_sels"]
+    B_sels = w["B_sels"]
+    Cancel = w["Cancel"]
+    DecInv = w["DecInv"]
+    flag_isos = w["flag_isomorphisms"]
+
+    assert p == 101 and alphas == [1, 2, 3, 4, 5, 6]
+    G = [[pow(a, k, p) for k in range(3)] for a in alphas]
+
+    # Rebuild V_n = u_n ^ Lambda^2(F_101^6) (10x20) and Koszul U_n (10x20)
+    basis3 = list(combinations(range(6), 3))
+    b3_idx = {t: i for i, t in enumerate(basis3)}
+    V_mats = []
+    U_mats = []
+    for a in alphas:
+        u = [pow(a, d, p) for d in range(6)]
+        v_rows = []
+        for S in combinations(range(1, 6), 2):
+            row = [0] * 20
+            for d in range(6):
+                if d in S:
+                    continue
+                t0, t1, t2 = sorted((d, S[0], S[1]))
+                inv_cnt = sum(1 for x in S if d > x)
+                sgn = -1 if (inv_cnt % 2) else 1
+                row[b3_idx[(t0, t1, t2)]] = (sgn * u[d]) % p
+            v_rows.append(row)
+        V_mats.append(v_rows)
+
+        a2 = (a * a) % p
+        u_rows = [[1] + [0] * 19]
+        for c in range(3):
+            b = 1 + 3 * c
+            ra = [0] * 20; ra[b] = 1; ra[b + 2] = (-a2) % p
+            rb = [0] * 20; rb[b + 1] = 1; rb[b + 2] = a
+            u_rows.extend([ra, rb])
+        for c in range(3):
+            b = 10 + 3 * c
+            rc = [0] * 20; rc[b] = 1; rc[b + 1] = a; rc[b + 2] = a2
+            u_rows.append(rc)
+        U_mats.append(u_rows)
+
+    P_mats = [mat_mul_mod(A_sels[n][:7], V_mats[n], p) for n in range(6)]
+    C_mats = [mat_mul_mod(A_sels[n][7:], V_mats[n], p) for n in range(6)]
+    Q_mats = [mat_mul_mod(B_sels[n][:7], U_mats[n], p) for n in range(6)]
+    D_mats = [mat_mul_mod(B_sels[n][7:], U_mats[n], p) for n in range(6)]
+
+    # 1. Exact algebraic matrix identities matching Lean T1k (PIRProtocol.lean)
+    M_des = [
+        [(row[j] * G[n][k]) % p for k in range(3) for j in range(20)]
+        for n in range(6)
+        for row in (P_mats[n] + C_mats[n])
+    ]
+    M_pure = [
+        [(row[j] * G[n][k]) % p for k in range(3) for j in range(20)]
+        for n in range(6)
+        for row in Q_mats[n]
+    ]
+    M_mixed = [
+        [(row[j] * G[n][k]) % p for k in range(3) for j in range(20)]
+        for n in range(6)
+        for row in D_mats[n]
+    ]
+    assert mat_mul_mod(DecInv, M_des, p) == _mat_id(60), "DecInv * M_des != I_60"
+    assert mat_mul_mod(Cancel, M_pure, p) == M_mixed, "Cancel * M_pure != M_mixed"
+
+    # 2. Verify ALL C(6,3)=20 colluding triples have invertible GL_20 flag isomorphisms
+    triples = list(combinations(range(6), 3))
+    assert len(flag_isos) == 20
+    id20, id7, id3 = _mat_id(20), _mat_id(7), _mat_id(3)
+    for I in triples:
+        key = ",".join(str(x) for x in I)
+        iso = flag_isos[key]
+        M_mat, Minv = iso["M"], iso["Minv"]
+        assert mat_mul_mod(M_mat, Minv, p) == id20 and mat_mul_mod(Minv, M_mat, p) == id20
+        for n in I:
+            blk = iso["blocks"][str(n)]
+            al, al_inv = blk["alpha"], blk["alpha_inv"]
+            ga, ga_inv = blk["gamma"], blk["gamma_inv"]
+            be = blk["beta"]
+            assert mat_mul_mod(al, al_inv, p) == id7 and mat_mul_mod(al_inv, al, p) == id7
+            assert mat_mul_mod(ga, ga_inv, p) == id3 and mat_mul_mod(ga_inv, ga, p) == id3
+            assert mat_mul_mod(P_mats[n], M_mat, p) == mat_mul_mod(al, Q_mats[n], p)
+            assert mat_mul_mod(C_mats[n], M_mat, p) == _mat_add_mod(
+                mat_mul_mod(ga, D_mats[n], p), mat_mul_mod(be, Q_mats[n], p), p
+            )
+
+    # 3. Live randomized end-to-end encode/query/answer/decode trials (BOTH theta=0 and theta=1)
+    rng = random.Random(20261127)
+
+    def sample_rand() -> dict:
+        S1, S1inv = _rand_invertible_mod(20, p, rng)
+        S2, S2inv = _rand_invertible_mod(20, p, rng)
+        R1_p = [_rand_invertible_mod(7, p, rng) for _ in range(6)]
+        R2_p = [_rand_invertible_mod(7, p, rng) for _ in range(6)]
+        H1_p = [_rand_invertible_mod(3, p, rng) for _ in range(6)]
+        H2_p = [_rand_invertible_mod(3, p, rng) for _ in range(6)]
+        L1 = [[[rng.randrange(p) for _ in range(7)] for _ in range(3)] for _ in range(6)]
+        L2 = [[[rng.randrange(p) for _ in range(7)] for _ in range(3)] for _ in range(6)]
+        return {
+            "S1": S1, "S1inv": S1inv, "S2": S2, "S2inv": S2inv,
+            "R1": [x[0] for x in R1_p], "R1inv": [x[1] for x in R1_p],
+            "R2": [x[0] for x in R2_p], "R2inv": [x[1] for x in R2_p],
+            "H1": [x[0] for x in H1_p], "H1inv": [x[1] for x in H1_p],
+            "H2": [x[0] for x in H2_p], "H2inv": [x[1] for x in H2_p],
+            "L1": L1, "L2": L2,
+        }
+
+    def build_queries(theta: int, r: dict) -> list[dict]:
+        qs = []
+        for n in range(6):
+            B1 = Q_mats[n] if theta == 1 else P_mats[n]
+            B2 = P_mats[n] if theta == 1 else Q_mats[n]
+            C1 = D_mats[n] if theta == 1 else C_mats[n]
+            C2 = C_mats[n] if theta == 1 else D_mats[n]
+            qb1 = mat_mul_mod(mat_mul_mod(r["R1"][n], B1, p), r["S1"], p)
+            qb2 = mat_mul_mod(mat_mul_mod(r["R2"][n], B2, p), r["S2"], p)
+            qb3_1 = mat_mul_mod(_mat_add_mod(mat_mul_mod(r["H1"][n], C1, p), mat_mul_mod(r["L1"][n], B1, p), p), r["S1"], p)
+            qb3_2 = mat_mul_mod(_mat_add_mod(mat_mul_mod(r["H2"][n], C2, p), mat_mul_mod(r["L2"][n], B2, p), p), r["S2"], p)
+            qs.append({"q1": qb1, "q2": qb2, "q3_1": qb3_1, "q3_2": qb3_2})
+        return qs
+
+    decode_trials_ok = 0
+    for t_idx in range(trials):
+        theta = t_idx % 2
+        W1 = [[rng.randrange(p) for _ in range(20)] for _ in range(3)]
+        W2 = [[rng.randrange(p) for _ in range(20)] for _ in range(3)]
+        # MDS-encoded server storage Y_{n,m} = sum_k G[n][k] * W_{m,k} in F_101^20
+        Y1 = [[sum(G[n][k] * W1[k][d] for k in range(3)) % p for d in range(20)] for n in range(6)]
+        Y2 = [[sum(G[n][k] * W2[k][d] for k in range(3)) % p for d in range(20)] for n in range(6)]
+        r = sample_rand()
+        qs = build_queries(theta, r)
+        # Server responses (7 + 7 + 3 = 17 symbols per server => 102 total downloads)
+        A1 = [_mat_vec_mod(qs[n]["q1"], Y1[n], p) for n in range(6)]
+        A2 = [_mat_vec_mod(qs[n]["q2"], Y2[n], p) for n in range(6)]
+        A3 = [
+            [(a + b) % p for a, b in zip(_mat_vec_mod(qs[n]["q3_1"], Y1[n], p), _mat_vec_mod(qs[n]["q3_2"], Y2[n], p))]
+            for n in range(6)
+        ]
+        total_dl = sum(len(A1[n]) + len(A2[n]) + len(A3[n]) for n in range(6))
+        assert total_dl == 102
+
+        # Exact linear decoder matching Lean `pirDecode`
+        u_dec: list[list[int]] = [_mat_vec_mod(r["R1inv"][n], A1[n], p) for n in range(6)]
+        v_dec: list[list[int]] = [_mat_vec_mod(r["R2inv"][n], A2[n], p) for n in range(6)]
+        int_flat = [x for n in range(6) for x in (u_dec[n] if theta == 1 else v_dec[n])]
+        mixed_int = _mat_vec_mod(Cancel, int_flat, p)
+        des_flat: list[int] = []
+        for n in range(6):
+            l1u = _mat_vec_mod(r["L1"][n], u_dec[n], p)
+            l2v = _mat_vec_mod(r["L2"][n], v_dec[n], p)
+            im_n = mixed_int[3 * n : 3 * n + 3]
+            h_im = _mat_vec_mod(r["H1"][n] if theta == 1 else r["H2"][n], im_n, p)
+            stripped = [(A3[n][i] - l1u[i] - l2v[i] - h_im[i]) % p for i in range(3)]
+            w_n = _mat_vec_mod(r["H2inv"][n] if theta == 1 else r["H1inv"][n], stripped, p)
+            des_flat.extend(v_dec[n] if theta == 1 else u_dec[n])
+            des_flat.extend(w_n)
+        scr_flat = _mat_vec_mod(DecInv, des_flat, p)
+        Sinv = r["S2inv"] if theta == 1 else r["S1inv"]
+        W_rec = [_mat_vec_mod(Sinv, scr_flat[20 * k : 20 * (k + 1)], p) for k in range(3)]
+        W_exp = W2 if theta == 1 else W1
+        assert W_rec == W_exp, f"Decoding error on trial {t_idx} (theta={theta})"
+        decode_trials_ok += 1
+
+    # 4. Exact bit-for-bit colluder-transcript bijection verification (`Psi_I`) across ALL 20 triples!
+    bijection_triples_ok = 0
+    r_base = sample_rand()
+    q_th0 = build_queries(0, r_base)
+    for I in triples:
+        key = ",".join(str(x) for x in I)
+        iso = flag_isos[key]
+        M_mat, Minv = iso["M"], iso["Minv"]
+        r_map = {
+            "S1": mat_mul_mod(Minv, r_base["S1"], p),
+            "S1inv": mat_mul_mod(r_base["S1inv"], M_mat, p),
+            "S2": mat_mul_mod(M_mat, r_base["S2"], p),
+            "S2inv": mat_mul_mod(r_base["S2inv"], Minv, p),
+            "R1": list(r_base["R1"]), "R1inv": list(r_base["R1inv"]),
+            "R2": list(r_base["R2"]), "R2inv": list(r_base["R2inv"]),
+            "H1": list(r_base["H1"]), "H1inv": list(r_base["H1inv"]),
+            "H2": list(r_base["H2"]), "H2inv": list(r_base["H2inv"]),
+            "L1": list(r_base["L1"]), "L2": list(r_base["L2"]),
+        }
+        for n in I:
+            blk = iso["blocks"][str(n)]
+            al, al_inv = blk["alpha"], blk["alpha_inv"]
+            ga, ga_inv = blk["gamma"], blk["gamma_inv"]
+            be = blk["beta"]
+            r_map["R1"][n] = mat_mul_mod(r_base["R1"][n], al, p)
+            r_map["R1inv"][n] = mat_mul_mod(al_inv, r_base["R1inv"][n], p)
+            r_map["R2"][n] = mat_mul_mod(r_base["R2"][n], al_inv, p)
+            r_map["R2inv"][n] = mat_mul_mod(al, r_base["R2inv"][n], p)
+            r_map["H1"][n] = mat_mul_mod(r_base["H1"][n], ga, p)
+            r_map["H1inv"][n] = mat_mul_mod(ga_inv, r_base["H1inv"][n], p)
+            r_map["H2"][n] = mat_mul_mod(r_base["H2"][n], ga_inv, p)
+            r_map["H2inv"][n] = mat_mul_mod(ga, r_base["H2inv"][n], p)
+            r_map["L1"][n] = _mat_add_mod(
+                mat_mul_mod(r_base["H1"][n], be, p),
+                mat_mul_mod(r_base["L1"][n], al, p),
+                p,
+            )
+            r_map["L2"][n] = mat_mul_mod(
+                _mat_sub_mod(r_base["L2"][n], mat_mul_mod(mat_mul_mod(r_base["H2"][n], ga_inv, p), be, p), p),
+                al_inv,
+                p,
+            )
+        q_th1 = build_queries(1, r_map)
+        for n in I:
+            assert q_th1[n] == q_th0[n], f"Colluder transcript mismatch on triple {I}, server {n}"
+        bijection_triples_ok += 1
+
+    return {
+        "params": "(M=2, N=6, K=3, T=3, B=0, U=0, E=6)",
+        "field": f"F_{p}",
+        "seed": w["seed"],
+        "desired_rank": 60,
+        "interference_rank": 42,
+        "downloads": 102,
+        "file_symbols": 60,
+        "rate": "10/17",
+        "flag_isomorphisms_verified": 20,
+        "live_zero_error_decode_trials_passed": decode_trials_ok,
+        "exact_transcript_bijection_triples_passed": bijection_triples_ok,
+        "beats_arxiv_2603_10769": "10/17 = 0.588235 > 4/7 = 0.571429 (exact zero-error, exact I(theta; Q_I)=0!)",
+    }
+
+
 def run_all_pir_checks(repo_root: Path) -> dict:
     grid = verify_koszul_rank_grid()
     f11 = verify_certified_f11_byzantine(repo_root / "data" / "f11_byz_witness.json")
@@ -327,11 +608,13 @@ def run_all_pir_checks(repo_root: Path) -> dict:
         verify_overlap_sub_kt_scheme(7, 3, 1, p=101),  # E=5 < KT=6 rate 50/119
     ]
     t3k3 = verify_t3_k3_e6_zero_error()
+    t3k3_cert = verify_certified_f101_t3_k3_e6_zero_error(repo_root / "data" / "f101_t3_k3_e6_witness.json")
     return {
         "koszul_rank_grid": grid,
         "f11_byzantine_rate25": f11,
         "sub_kt_and_unrestricted": sub_kt,
         "t3_k3_e6_zero_error": t3k3,
+        "t3_k3_e6_certified_f101": t3k3_cert,
     }
 
 

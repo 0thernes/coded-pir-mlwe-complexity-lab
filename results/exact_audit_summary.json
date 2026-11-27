@@ -1,6 +1,6 @@
 {
   "schema": "triad-exact-audit/v1",
-  "version": "5.1.0",
+  "version": "5.2.0",
   "author": "Alexander S. Donahue",
   "orcid": "0009-0006-8168-9648",
   "pillar_1_cs053": {
@@ -67,6 +67,20 @@
       "lfsr_rate": "8/21",
       "subsets_verified": 15,
       "ordered_pairs_flag_private": 30
+    },
+    "f101_t3_k3_e6_zero_error": {
+      "params": "(M=2, N=6, K=3, T=3, B=0, U=0, E=6)",
+      "field": "F_101",
+      "seed": 2028,
+      "desired_rank": 60,
+      "interference_rank": 42,
+      "downloads": 102,
+      "file_symbols": 60,
+      "rate": "10/17",
+      "flag_isomorphisms_verified": 20,
+      "live_zero_error_decode_trials_passed": 10,
+      "exact_transcript_bijection_triples_passed": 20,
+      "beats_arxiv_2603_10769": "10/17 = 0.588235 > 4/7 = 0.571429 (exact zero-error, exact I(theta; Q_I)=0!)"
     },
     "polymatroid_h_uncond": {
       "scale": 128,
@@ -174,34 +188,63 @@
       "loss_bits_512": 0.592077,
       "exact_dfr_suite": {
         "ML_KEM_512_FIPS": {
-          "method": "ieee754_float64_nonnegative_direct_convolution",
-          "pr_single_coeff_ge_832": 9.322515058208319e-46,
-          "union_bound_log2_dfr": -141.59
+          "method": "coupled_s_e1_plus_cu_float64_direct_convolution",
+          "pr_single_coeff_ge_832": 6.551796161570213e-45,
+          "union_bound_log2_dfr": -138.77,
+          "exact_b_weighted_log2_dfr": -139.04
         },
         "ML_KEM_512_Dyadic512_256": {
-          "method": "ieee754_float64_nonnegative_direct_convolution",
-          "pr_single_coeff_ge_832": 4.6805567778362346e-45,
-          "union_bound_log2_dfr": -139.26
+          "method": "coupled_s_e1_plus_cu_float64_direct_convolution",
+          "pr_single_coeff_ge_832": 4.0946335860947835e-44,
+          "union_bound_log2_dfr": -136.13,
+          "exact_b_weighted_log2_dfr": -136.38
         },
         "ML_KEM_768_FIPS": {
-          "method": "ieee754_float64_nonnegative_direct_convolution",
-          "pr_single_coeff_ge_832": 8.80886400080871e-54,
-          "union_bound_log2_dfr": -168.25
+          "method": "coupled_s_e1_plus_cu_float64_direct_convolution",
+          "pr_single_coeff_ge_832": 9.516999375636612e-53,
+          "union_bound_log2_dfr": -164.81,
+          "exact_b_weighted_log2_dfr": -165.12
         },
         "ML_KEM_768_Dyadic256": {
-          "method": "ieee754_float64_nonnegative_direct_convolution",
-          "pr_single_coeff_ge_832": 3.8384171775269607e-53,
-          "union_bound_log2_dfr": -166.12
+          "method": "coupled_s_e1_plus_cu_float64_direct_convolution",
+          "pr_single_coeff_ge_832": 6.5220940523302554e-52,
+          "union_bound_log2_dfr": -162.03,
+          "exact_b_weighted_log2_dfr": -162.34
         },
         "ML_KEM_1024_FIPS": {
-          "method": "ieee754_float64_nonnegative_direct_convolution",
-          "pr_single_coeff_ge_832": 2.644328727492627e-56,
-          "union_bound_log2_dfr": -176.63
+          "method": "coupled_s_e1_plus_cu_float64_direct_convolution",
+          "pr_single_coeff_ge_832": 9.62634264024927e-56,
+          "union_bound_log2_dfr": -174.76,
+          "exact_b_weighted_log2_dfr": -175.07
         },
         "ML_KEM_1024_Dyadic256": {
-          "method": "ieee754_float64_nonnegative_direct_convolution",
-          "pr_single_coeff_ge_832": 1.357709934313547e-55,
-          "union_bound_log2_dfr": -174.26
+          "method": "coupled_s_e1_plus_cu_float64_direct_convolution",
+          "pr_single_coeff_ge_832": 6.234154829256013e-55,
+          "union_bound_log2_dfr": -172.07,
+          "exact_b_weighted_log2_dfr": -172.37
+        }
+      },
+      "fips203_90digit_decimal_oracle": {
+        "ML_KEM_512_FIPS_dec90": {
+          "method": "coupled_s_e1_plus_cu_certified_90digit_kronecker_interval",
+          "union_bound_log2_dfr": -138.77,
+          "union_bound_log2_dfr_full": -138.774873797143,
+          "exact_b_weighted_log2_dfr": -139.04,
+          "interval_width_log2": 1.5120363626888175e-41
+        },
+        "ML_KEM_768_FIPS_dec90": {
+          "method": "coupled_s_e1_plus_cu_certified_90digit_kronecker_interval",
+          "union_bound_log2_dfr": -164.81,
+          "union_bound_log2_dfr_full": -164.811682252572,
+          "exact_b_weighted_log2_dfr": -165.12,
+          "interval_width_log2": 8.699829129747238e-34
+        },
+        "ML_KEM_1024_FIPS_dec90": {
+          "method": "coupled_s_e1_plus_cu_certified_90digit_kronecker_interval",
+          "union_bound_log2_dfr": -174.76,
+          "union_bound_log2_dfr_full": -174.760985538139,
+          "exact_b_weighted_log2_dfr": -175.07,
+          "interval_width_log2": 9.806709934125613e-31
         }
       },
       "qgtl_hermite4_variational_bounds": {
@@ -298,19 +341,22 @@
       },
       "dfr_1024_suite": {
         "ML_KEM_512_Dyadic1024B_A": {
-          "method": "ieee754_float64_nonnegative_direct_convolution",
-          "pr_single_coeff_ge_832": 2.772401194475171e-45,
-          "union_bound_log2_dfr": -140.02
+          "method": "coupled_s_e1_plus_cu_float64_direct_convolution",
+          "pr_single_coeff_ge_832": 2.2399255032104465e-44,
+          "union_bound_log2_dfr": -137.0,
+          "exact_b_weighted_log2_dfr": -137.26
         },
         "ML_KEM_768_Dyadic1024A": {
-          "method": "ieee754_float64_nonnegative_direct_convolution",
-          "pr_single_coeff_ge_832": 4.1812410730048e-53,
-          "union_bound_log2_dfr": -166.0
+          "method": "coupled_s_e1_plus_cu_float64_direct_convolution",
+          "pr_single_coeff_ge_832": 7.233384173206089e-52,
+          "union_bound_log2_dfr": -161.89,
+          "exact_b_weighted_log2_dfr": -162.19
         },
         "ML_KEM_1024_Dyadic1024A": {
-          "method": "ieee754_float64_nonnegative_direct_convolution",
-          "pr_single_coeff_ge_832": 1.4941297700105368e-55,
-          "union_bound_log2_dfr": -174.13
+          "method": "coupled_s_e1_plus_cu_float64_direct_convolution",
+          "pr_single_coeff_ge_832": 6.92855056007845e-55,
+          "union_bound_log2_dfr": -171.91,
+          "exact_b_weighted_log2_dfr": -172.22
         }
       },
       "all_order_renyi_k2_to_16_and_tv_chi2_verified": true
@@ -357,28 +403,34 @@
       },
       "dfr_16384_suite": {
         "ML_KEM_512_Dyadic16384B_A": {
-          "method": "ieee754_float64_nonnegative_direct_convolution",
-          "pr_single_coeff_ge_832": 4.519422412131248e-45,
-          "union_bound_log2_dfr": -139.31
+          "method": "coupled_s_e1_plus_cu_float64_direct_convolution",
+          "pr_single_coeff_ge_832": 3.9249453189096426e-44,
+          "union_bound_log2_dfr": -136.19,
+          "exact_b_weighted_log2_dfr": -136.44
         },
         "ML_KEM_768_Dyadic16384A": {
-          "method": "ieee754_float64_nonnegative_direct_convolution",
-          "pr_single_coeff_ge_832": 4.440790277358037e-53,
-          "union_bound_log2_dfr": -165.91
+          "method": "coupled_s_e1_plus_cu_float64_direct_convolution",
+          "pr_single_coeff_ge_832": 7.806236767825343e-52,
+          "union_bound_log2_dfr": -161.78,
+          "exact_b_weighted_log2_dfr": -162.08
         },
         "ML_KEM_1024_Dyadic16384A": {
-          "method": "ieee754_float64_nonnegative_direct_convolution",
-          "pr_single_coeff_ge_832": 1.5982924120679216e-55,
-          "union_bound_log2_dfr": -174.03
+          "method": "coupled_s_e1_plus_cu_float64_direct_convolution",
+          "pr_single_coeff_ge_832": 7.471557271038859e-55,
+          "union_bound_log2_dfr": -171.8,
+          "exact_b_weighted_log2_dfr": -172.11
         }
       },
       "gaussian_dfr_paradox": {
         "sigma_var1": 1.0000001056,
-        "mlkem_1024_gauss_log2_dfr": -173.42,
+        "mlkem_1024_gauss_log2_dfr": -171.12,
+        "mlkem_1024_gauss_b_weighted_log2_dfr": -171.42,
         "mlkem_1024_gauss_fails_nist_174": true,
-        "mlkem_768_gauss_log2_dfr": -165.37,
+        "mlkem_1024_gauss_sigma099_log2_dfr": -177.25,
+        "mlkem_1024_gauss_sigma099_b_weighted_log2_dfr": -177.57,
+        "mlkem_768_gauss_log2_dfr": -161.08,
         "sigma_var32": 1.2247448714,
-        "mlkem_512_gauss_log2_dfr": -139.12
+        "mlkem_512_gauss_log2_dfr": -135.99
       },
       "renyi2_dpi_verified": true
     },

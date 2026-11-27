@@ -1,11 +1,11 @@
-# TriadFrontier v5.1.0 Six-Kernel Local Audit Log (Lean 4.35.0, Zero-Mathlib, 31 Theorems T1a-T3l + 9 Adversarial Refutations, 34 Audited Decls)
+# TriadFrontier v5.2.0 Six-Kernel Local Audit Log (Lean 4.35.0, Zero-Mathlib, 32 Theorems T1a-T3l & T1k + 10 Adversarial Refutations, 35 Audited Decls)
 lake build --wfail: EXIT 0 (0 warnings)
-exhaustive-axiom-audit: EXHAUSTIVE_AXIOM_AUDIT_PASS: 1330 TriadFrontier.* declarations audited; 0 forbidden axioms; strict subset of [propext, Classical.choice, Quot.sound].
+exhaustive-axiom-audit: EXHAUSTIVE_AXIOM_AUDIT_PASS: 1656 TriadFrontier.* declarations audited; 0 forbidden axioms; strict subset of [propext, Classical.choice, Quot.sound].
 leanchecker Solution: EXIT 0
 leanchecker PalomarSolution: EXIT 0
 leanchecker-paranoid Solution: EXIT 0
 leanchecker-paranoid PalomarSolution: EXIT 0
-con-leche --verified: con-leche: accepted 4337 declarations (--verified)
-con-ron --verified: con-ron: accepted 4337 declarations (--verified)
+con-leche --verified: con-leche: accepted 4745 declarations (--verified)
+con-ron --verified: con-ron: accepted 4745 declarations (--verified)
 nanoda_bin: EXIT 0 (silent clean acceptance, 0 errors)
 negative-tamper-gate: EXIT 1 (expected non-zero; kernel rejected false mlkemCompress1 (1665 + 832) = 1)

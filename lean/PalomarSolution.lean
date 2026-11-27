@@ -6,10 +6,10 @@ public import Challenge
 public import Solution
 
 /-!
-# Palomar Comparator Verified Solution (`coded-pir-mlwe-complexity-lab` v5.0.0)
+# Palomar Comparator Verified Solution (`coded-pir-mlwe-complexity-lab` v5.2.0)
 
-Zero-`sorry`, zero-`native_decide`, zero-Mathlib implementation of all 31 headline
-theorems (`T1a`–`T3l`) and master conjunction verified across all six independent
+Zero-`sorry`, zero-`native_decide`, zero-Mathlib implementation of all 32 headline
+theorems (`T1a`–`T3l`, `T1k`) and master conjunction verified across all six independent
 Lean 4.35.0 proof kernels.
 -/
 
@@ -37,6 +37,8 @@ public theorem t1i_total_4var_entropic_and_5obj_linear_barrier : T1i_Total4VarEn
   TriadFrontier.Solution.t1i_total_4var_entropic_and_5obj_linear_barrier
 public theorem t1j_total_6obj_f2_entropic_realizability_barrier : T1j_Total6ObjF2EntropicRealizabilityBarrier :=
   TriadFrontier.Solution.t1j_total_6obj_f2_entropic_realizability_barrier
+public theorem t1k_linear_rank_soundness_and_pir_protocol : T1k_LinearRankSoundnessAndPIRProtocol :=
+  TriadFrontier.Solution.t1k_linear_rank_soundness_and_pir_protocol
 public theorem t2a_determinant_ideal_secret_independence : T2a_DeterminantIdealSecretIndependence :=
   TriadFrontier.Solution.t2a_determinant_ideal_secret_independence
 public theorem t2b_chen_step9_antiperiodic_dft_cancellation : T2b_ChenStep9AntiPeriodicDFTCancellation :=

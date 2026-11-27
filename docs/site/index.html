@@ -6,8 +6,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; frame-ancestors 'none'; base-uri 'self';">
-<title>Triad Frontier Lab (v5.1.0) — Coded/Byzantine PIR, MLWE Tightness, Schwartz–Zippel &amp; Conference Capacity</title>
-<meta name="description" content="31 Zero-Mathlib Lean 4.35.0 machine-checked theorem bundles (T1a–T3l) + 9 adversarial boundary refutations + 1,330 exhaustive axiom-swept declarations across 6 independent kernels on Coded/Byzantine PIR (CS-053), MLWE Tightness &amp; Dyadic-16384-A/B (CS-026), Schwartz–Zippel &amp; Strassen Two-Sided Bound (CS-004), and Conference/Paley Capacity (CS-CMP-012).">
+<title>Triad Frontier Lab (v5.2.0) — Coded/Byzantine PIR, MLWE Tightness, Schwartz–Zippel &amp; Conference Capacity</title>
+<meta name="description" content="32 Zero-Mathlib Lean 4.35.0 machine-checked theorem bundles (T1a–T3l &amp; T1k) + 10 adversarial boundary refutations + 1,656 exhaustive axiom-swept declarations across 6 independent kernels on Coded/Byzantine PIR, Linear-Rank Soundness &amp; Certified F_101 (6,3,3) Rate-10/17 Zero-Error PIR (CS-053), Coupled FIPS 203 MLWE Tightness &amp; Dyadic-16384-A/B (CS-026), Schwartz–Zippel &amp; Strassen Two-Sided Bound (CS-004), and Conference/Paley Capacity (CS-CMP-012).">
 <style>
   :root {
     --bg: #0b1120;
@@ -116,28 +116,28 @@
 <header>
   <div class="wrap">
     <div class="badge-row">
-      <span class="badge cyan">v5.1.0 · Zero-Mathlib Lean 4.35.0</span>
-      <span class="badge green">31 Bundles (T1a–T3l) + 9 Refutations · 6 Kernels</span>
-      <span class="badge violet">0 sorry · 0 native_decide · 4,337 Decls · 1,330 Axiom-Swept</span>
+      <span class="badge cyan">v5.2.0 · Zero-Mathlib Lean 4.35.0</span>
+      <span class="badge green">32 Bundles (T1a–T3l &amp; T1k) + 10 Refutations · 6 Kernels</span>
+      <span class="badge violet">0 sorry · 0 native_decide · 4,745 Decls · 1,656 Axiom-Swept</span>
       <span class="badge amber">Honest Scope: P≠NP, ω=2, Θ(C₇) OPEN</span>
     </div>
     <h1>Koszul–Veronese Byzantine PIR, MLWE Reduction Tightness, and Complexity-Barrier Bridges</h1>
     <p class="subtitle">
       Interactive formal-verification companion by <strong>Alexander S. Donahue</strong>
       (Independent Researcher, Spokane, WA, USA · <a href="https://orcid.org/0009-0006-8168-9648">ORCID 0009-0006-8168-9648</a>).
-      Cross-audited across 6 Lean proof kernels + 1,330-decl exhaustive axiom sweep + live negative tamper gate, hardened zero-warning C11 (87 tests + 1,024 fuzz), Eshkol v1.3.6 forward-mode AD, and strict 0-ruff/0-mypy Python (25 pytest).
+      Cross-audited across 6 Lean proof kernels + 1,656-decl exhaustive axiom sweep (under <code>module</code>) + live negative tamper gate, hardened zero-warning C11 (88 tests + 1,024 fuzz), Eshkol v1.3.6 forward-mode AD, and strict 0-ruff/0-mypy Python (25 pytest, 16/16 mutants, 90-digit Kronecker coupled FIPS 203 DFR oracle).
     </p>
     <div class="cta-row">
-      <a class="btn primary" href="blueprint.html">Open Interactive 31-Theorem Proof Blueprint DAG &rarr;</a>
+      <a class="btn primary" href="blueprint.html">Open Interactive 32-Theorem Proof Blueprint DAG &rarr;</a>
       <a class="btn" href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab">GitHub Repository</a>
-      <a class="btn" href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab/releases">v5.1.0 Frozen PDF, arXiv Bundle &amp; TSA/OTS</a>
+      <a class="btn" href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab/releases">v5.2.0 Frozen PDF, arXiv Bundle &amp; TSA/OTS</a>
       <a class="btn" href="https://github.com/0thernes/0thernes-research-archive">Master Research Archive (0TH-2026-012)</a>
     </div>
     <div class="stat-row">
-      <div class="stat"><div class="num">31 + 9</div><div class="lbl">Lean 4.35 Theorems + Refutations</div></div>
-      <div class="stat"><div class="num">4,337</div><div class="lbl">con-leche / con-ron Verified Decls</div></div>
-      <div class="stat"><div class="num">F₂⁶⁴</div><div class="lbl">Exact 6-Obj PIR Subspaces (T1j)</div></div>
-      <div class="stat"><div class="num">0.59 b</div><div class="lbl">ML-KEM-512 Bai (41.9&times; Drop, T2i)</div></div>
+      <div class="stat"><div class="num">32 + 10</div><div class="lbl">Lean 4.35 Theorems + Refutations</div></div>
+      <div class="stat"><div class="num">4,745</div><div class="lbl">con-leche / con-ron Verified Decls</div></div>
+      <div class="stat"><div class="num">20/20</div><div class="lbl">F₁₀₁ (6,3,3) 10/17 Zero-Err PIR (T1k)</div></div>
+      <div class="stat"><div class="num">0.04 b</div><div class="lbl">90-Dig Coupled FIPS 203 DFR Match</div></div>
       <div class="stat"><div class="num">11.17&times;</div><div class="lbl">ML-KEM-1024 Bai Drop (D16384-A)</div></div>
       <div class="stat"><div class="num">&Theta;(Pₚ)=&radic;p</div><div class="lbl">Conditional Paley Family (T3l)</div></div>
     </div>
@@ -149,19 +149,19 @@
     <h2>Three Machine-Checked Research Pillars</h2>
     <div class="grid-3">
       <div class="card p1">
-        <h3>Pillar I · CS-053 Coded/Byzantine PIR (T1a–T1j)</h3>
+        <h3>Pillar I · CS-053 Coded/Byzantine PIR (T1a–T1k)</h3>
         <ul>
-          <li>Moment-vector annihilation and a Pascal-type binomial identity (<code>T1a</code>); rate <code>10/17</code> against <code>4/7</code> for one <code>(6,3,3)</code> design is numerical, with privacy and zero-error decoding not verified &amp; dominating Sun–Zhang LFSR across all <code>M &ge; 2</code> (<code>T1a–T1h</code>).</li>
-          <li><strong>Total 4-Var I_4 &amp; 5-Obj F_2 Barrier (T1i):</strong> ALL 510 four-marginals of <code>h_uncond</code> decompose into 23 <code>F_2/F_3</code> rays &amp; ALL 6 five-object retrieval marginals are <code>F_2</code>-linear.</li>
-          <li><strong>Total 6-Obj F_2^{64} Realization (T1j):</strong> The ENTIRE 6-object retrieval marginal <code>(W_1,W_2,A_1..A_4)</code> (all 64 subsets!) is realized EXACTLY in <code>F_2^{64}</code> (rank routine assumed correct); inequalities in 5 or more variables involving individual storage symbols are not excluded.</li>
+          <li><strong>Linear-Rank Soundness &amp; Universal PIR Bijection (T1k, closing L02 &amp; S01):</strong> In-Lean <code>HasSpanDim</code> soundness &amp; Steinitz uniqueness for <code>matRankModP</code> (<code>F_2, F_3</code>) and <code>gf2RankSparse</code> (<code>F_2</code>), PLUS field-universal exact zero-error decoding &amp; two-sided colluder-transcript bijection <code>&Psi;_I</code>.</li>
+          <li><strong>Certified F_101 (6,3,3) Rate-10/17 Zero-Error Witness:</strong> Verified in Python &amp; ISO C11 (<code>f101-t3k3</code>): <code>M_des=60/60</code>, <code>M_pure=42/42</code>, <strong>20/20</strong> invertible <code>GL_20</code> flag isomorphisms, 10/10 live zero-error trials (<code>&theta;&in;{0,1}</code>), and 20/20 exact colluder bijections (beating <code>4/7</code> in <code>arXiv:2603.10769</code>).</li>
+          <li><strong>Sound 6-Obj F_2^{64} Realization (T1i–T1k):</strong> ALL 510 four-marginals, 6 five-object marginals, and all 64 subsets of <code>(W_1,W_2,A_1..A_4)</code> realized in <code>F_2^{64}</code> with in-Lean <code>HasSpanDim</code> soundness (inequalities in &ge;5 vars with storage symbols remain open).</li>
         </ul>
       </div>
       <div class="card p2">
         <h3>Pillar II · CS-026 / QC-042 / CM-048 MLWE (T2a–T2i)</h3>
         <ul>
-          <li><strong>Formal Bai et al. (2018) Engine &amp; float64-model DFRs (T2i):</strong> Machine-checked DPI for <code>R_2/R_&infin;</code> &amp; product tensorization; float64 model gives a DFR of about <code>2^{-173.4}</code> for a unit-variance discrete Gaussian; FIPS 203 has no <code>2^{-174}</code> threshold.</li>
-          <li><strong>14-Bit Constant-Time Dyadic-16384-A/B:</strong> <code>Dyadic-16384-A</code> collapses ML-KEM-1024 Bai overhead <strong><code>11.17&times;</code></strong> (<code>67.14 &rarr; 6.013</code> b, float64-model DFR <code>2^{-174.03}</code>), while <code>Dyadic-16384-B</code> collapses ML-KEM-512 Bai <strong><code>41.9&times;</code></strong> to <strong>sub-1-bit <code>0.5916</code> b</strong> (<code>R_2</code> loss <code>324.7&times;</code> to <code>0.0235</code> b, float64-model DFR <code>2^{-139.31}</code>).</li>
-          <li>Diagonal product <code>q^m</code> (<code>T2a</code>; no published claim is refuted), <code>m</code>-twisted DFT rule (<code>T2f</code>), all-order H&ouml;lder/TV–<code>&chi;&sup2;</code> (<code>T2h</code>), &amp; QGTL variational law (<code>T2d,T2e,T2g</code>).</li>
+          <li><strong>Exact Coupled FIPS 203 DFRs &amp; 90-Digit Oracle (S02 Fixed):</strong> Coupled convolution <code>e^T r - s^T(e_1 + c_u) + e_2 + c_v</code> verified by a 90-digit Kronecker interval oracle (width <code>&lt; 10^{-30}</code> b) reproduces NIST FIPS 203 Table 1 within <code>0.04</code> b (<code>2^{-138.77}</code>, <code>2^{-164.81}</code>, <code>2^{-174.76}</code>).</li>
+          <li><strong>Coupled Kurtosis–DFR–R&eacute;nyi Tradeoff &amp; 14-Bit Dyadic-16384-A/B:</strong> <code>Dyadic-16384-A</code> cuts ML-KEM-1024 Bai overhead <strong><code>11.17&times;</code></strong> (<code>67.14 &rarr; 6.013</code> b, coupled DFR <code>2^{-171.80}</code>), <code>Dyadic-16384-B</code> cuts ML-KEM-512 Bai <strong><code>41.9&times;</code></strong> to <strong>sub-1-bit <code>0.5916</code> b</strong> (<code>2^{-136.19}</code>), and 1% Gaussian shrinkage (<code>&sigma;=0.990</code>) restores ML-KEM-1024 DFR to <strong><code>2^{-177.25} &lt; 2^{-174.8}</code></strong>.</li>
+          <li>Diagonal product <code>q^m</code> (<code>T2a</code>; no published claim refuted), <code>m</code>-twisted DFT rule (<code>T2f</code>), all-order H&ouml;lder/TV–<code>&chi;&sup2;</code>/DPI/tensorization (<code>T2h,T2i</code>), &amp; QGTL variational law (<code>T2d,T2e,T2g</code>).</li>
         </ul>
       </div>
       <div class="card p3">
@@ -196,8 +196,8 @@
       </div>
 
       <div class="card">
-        <h3>2. ML-KEM R&eacute;nyi-2, Bai Overhead, Exact DFR &amp; QGTL Explorer (T2c–T2i)</h3>
-        <label>Noise Distribution (8/9/10/14-bit tables and FIPS 203 CBD; DFRs from a float64 model):</label>
+        <h3>2. ML-KEM R&eacute;nyi-2, Bai Overhead, Exact Coupled DFR &amp; QGTL Explorer (T2c–T2i)</h3>
+        <label>Noise Distribution (8/9/10/14-bit tables and FIPS 203 CBD; exact coupled FIPS 203 DFRs):</label>
         <select id="distSel">
           <option value="dyadic16384a" selected>Dyadic-16384-A (Ours, 14-bit CT, ML-KEM-1024, Var=1, 11.17x Bai)</option>
           <option value="dyadic16384b">Dyadic-16384-B (Ours, 14-bit CT, ML-KEM-512, Var=3/2, 0.59b Sub-1-Bit Bai!)</option>
@@ -218,10 +218,10 @@
   </section>
 
   <section>
-    <h2>Claims Ledger (C1–C31) &amp; Explicit Open Frontiers (O1–O6)</h2>
+    <h2>Claims Ledger (C1–C32) &amp; Explicit Open Frontiers (O1–O6)</h2>
     <div class="filter-row">
-      <button class="fbtn active" data-f="all">All (37)</button>
-      <button class="fbtn" data-f="p1">Pillar I · CS-053 (10)</button>
+      <button class="fbtn active" data-f="all">All (38)</button>
+      <button class="fbtn" data-f="p1">Pillar I · CS-053 (11)</button>
       <button class="fbtn" data-f="p2">Pillar II · CS-026 (9)</button>
       <button class="fbtn" data-f="p3">Pillar III · Triad (12)</button>
       <button class="fbtn" data-f="open">Explicitly Open (6)</button>
@@ -288,14 +288,14 @@ function updatePIR() {
 updatePIR();
 
 const DISTS = {
-  dyadic16384a: { name: "Dyadic-16384-A", pmf: [[-3,67/16384],[-2,904/16384],[-1,3973/16384],[0,6496/16384],[1,3973/16384],[2,904/16384],[3,67/16384]], detg: "1959/4096 (0.47827)", optSig: 1.000, mCoords: 2048, mLbl: "ML-KEM-1024 (m=2048)", bai: "6.013 bits (11.17× drop!)", dfr: "2^-174.03 (float64 model)" },
-  dyadic16384b: { name: "Dyadic-16384-B", pmf: [[-5,1/16384],[-4,25/16384],[-3,267/16384],[-2,1409/16384],[-1,3824/16384],[0,5332/16384],[1,3824/16384],[2,1409/16384],[3,267/16384],[4,25/16384],[5,1/16384]], detg: "3049/6144 (0.49626)", optSig: 1.225, mCoords: 1024, mLbl: "ML-KEM-512 (m=1024)", bai: "0.5916 bits (41.9× SUB-1-BIT!)", dfr: "2^-139.31 (float64 model)" },
-  dyadic1024a: { name: "Dyadic-1024-A", pmf: [[-3,4/1024],[-2,57/1024],[-1,248/1024],[0,406/1024],[1,248/1024],[2,57/1024],[3,4/1024]], detg: "243/512 (0.47461)", optSig: 1.001, mCoords: 2048, mLbl: "ML-KEM-1024 (m=2048)", bai: "7.31 bits (9.19× drop)", dfr: "2^-174.13 (float64 model)" },
-  dyadic1024b: { name: "Dyadic-1024-B", pmf: [[-4,1/1024],[-3,17/1024],[-2,90/1024],[-1,239/1024],[0,330/1024],[1,239/1024],[2,90/1024],[3,17/1024],[4,1/1024]], detg: "15/32 (at σ=√(3/2))", optSig: 1.227, mCoords: 1024, mLbl: "ML-KEM-512 (m=1024)", bai: "5.13 bits (4.83× drop)", dfr: "2^-140.02 (float64 model)" },
-  dyadic256: { name: "Dyadic-256", pmf: [[-3,1/256],[-2,14/256],[-1,63/256],[0,100/256],[1,63/256],[2,14/256],[3,1/256]], detg: "15/32 (0.46875)", optSig: 1.001, mCoords: 2048, mLbl: "ML-KEM-1024 (m=2048)", bai: "23.14 bits (2.90× drop)", dfr: "2^-174.26 (float64 model)" },
-  dyadic512: { name: "Dyadic-512", pmf: [[-4,1/512],[-3,8/512],[-2,44/512],[-1,120/512],[0,166/512],[1,120/512],[2,44/512],[3,8/512],[4,1/512]], detg: "1/2 (EXACT Gaussian limit!)", optSig: 1.226, mCoords: 1024, mLbl: "ML-KEM-512 (m=1024)", bai: "12.08 bits (2.05× drop)", dfr: "2^-139.26 (float64 model)" },
-  cbd2: { name: "CBD_2", pmf: [[-2,1/16],[-1,4/16],[0,6/16],[1,4/16],[2,1/16]], detg: "3/8 (0.37500)", optSig: 1.023, mCoords: 2048, mLbl: "ML-KEM-1024 (m=2048)", bai: "67.14 bits (baseline)", dfr: "2^-176.63 (float64 model; FIPS 203 Table 1 gives 2^-174.8)" },
-  cbd3: { name: "CBD_3", pmf: [[-3,1/64],[-2,6/64],[-1,15/64],[0,20/64],[1,15/64],[2,6/64],[3,1/64]], detg: "5/12 (at σ=√(3/2))", optSig: 1.237, mCoords: 1024, mLbl: "ML-KEM-512 (m=1024)", bai: "24.77 bits (baseline)", dfr: "2^-141.59 (float64 model)" }
+  dyadic16384a: { name: "Dyadic-16384-A", pmf: [[-3,67/16384],[-2,904/16384],[-1,3973/16384],[0,6496/16384],[1,3973/16384],[2,904/16384],[3,67/16384]], detg: "1959/4096 (0.47827)", optSig: 1.000, mCoords: 2048, mLbl: "ML-KEM-1024 (m=2048)", bai: "6.013 bits (11.17× drop!)", dfr: "2^-171.80 (b-wtd 2^-172.11; exact coupled)" },
+  dyadic16384b: { name: "Dyadic-16384-B", pmf: [[-5,1/16384],[-4,25/16384],[-3,267/16384],[-2,1409/16384],[-1,3824/16384],[0,5332/16384],[1,3824/16384],[2,1409/16384],[3,267/16384],[4,25/16384],[5,1/16384]], detg: "3049/6144 (0.49626)", optSig: 1.225, mCoords: 1024, mLbl: "ML-KEM-512 (m=1024)", bai: "0.5916 bits (41.9× SUB-1-BIT!)", dfr: "2^-136.19 (b-wtd 2^-136.44; exact coupled)" },
+  dyadic1024a: { name: "Dyadic-1024-A", pmf: [[-3,4/1024],[-2,57/1024],[-1,248/1024],[0,406/1024],[1,248/1024],[2,57/1024],[3,4/1024]], detg: "243/512 (0.47461)", optSig: 1.001, mCoords: 2048, mLbl: "ML-KEM-1024 (m=2048)", bai: "7.31 bits (9.19× drop)", dfr: "2^-171.91 (b-wtd 2^-172.22; exact coupled)" },
+  dyadic1024b: { name: "Dyadic-1024-B", pmf: [[-4,1/1024],[-3,17/1024],[-2,90/1024],[-1,239/1024],[0,330/1024],[1,239/1024],[2,90/1024],[3,17/1024],[4,1/1024]], detg: "15/32 (at σ=√(3/2))", optSig: 1.227, mCoords: 1024, mLbl: "ML-KEM-512 (m=1024)", bai: "5.13 bits (4.83× drop)", dfr: "2^-137.00 (b-wtd 2^-137.26; exact coupled)" },
+  dyadic256: { name: "Dyadic-256", pmf: [[-3,1/256],[-2,14/256],[-1,63/256],[0,100/256],[1,63/256],[2,14/256],[3,1/256]], detg: "15/32 (0.46875)", optSig: 1.001, mCoords: 2048, mLbl: "ML-KEM-1024 (m=2048)", bai: "23.14 bits (2.90× drop)", dfr: "2^-172.07 (b-wtd 2^-172.37; exact coupled)" },
+  dyadic512: { name: "Dyadic-512", pmf: [[-4,1/512],[-3,8/512],[-2,44/512],[-1,120/512],[0,166/512],[1,120/512],[2,44/512],[3,8/512],[4,1/512]], detg: "1/2 (EXACT Gaussian limit!)", optSig: 1.226, mCoords: 1024, mLbl: "ML-KEM-512 (m=1024)", bai: "12.08 bits (2.05× drop)", dfr: "2^-136.13 (b-wtd 2^-136.38; exact coupled)" },
+  cbd2: { name: "CBD_2", pmf: [[-2,1/16],[-1,4/16],[0,6/16],[1,4/16],[2,1/16]], detg: "3/8 (0.37500)", optSig: 1.023, mCoords: 2048, mLbl: "ML-KEM-1024 (m=2048)", bai: "67.14 bits (baseline)", dfr: "2^-174.76 (b-wtd 2^-175.07; NIST Table 1: 2^-174.8, 90-dig verified!)" },
+  cbd3: { name: "CBD_3", pmf: [[-3,1/64],[-2,6/64],[-1,15/64],[0,20/64],[1,15/64],[2,6/64],[3,1/64]], detg: "5/12 (at σ=√(3/2))", optSig: 1.237, mCoords: 1024, mLbl: "ML-KEM-512 (m=1024)", bai: "24.77 bits (baseline)", dfr: "2^-138.77 (b-wtd 2^-139.04; NIST Table 1: 2^-138.8, 90-dig verified!)" }
 };
 function updateMLWE() {
   const d = DISTS[distSel.value];
@@ -326,7 +326,7 @@ function updateMLWE() {
   mlweOut.innerHTML = [
     `R₂(${d.name} ‖ D_${sig.toFixed(3)}) = <span class="hl-cyan">${r2.toFixed(7)}</span> · R_∞ = ${rinf.toFixed(6)}`,
     `${d.mLbl} R₂ loss: <span class="${bitsLoss < 5 ? 'hl-green' : 'hl-amber'}">${bitsLoss.toFixed(3)} bits</span> · Bai Δ_Bai: <span class="hl-cyan">${d.bai}</span>`,
-    `DFR (float64 model): <span class="hl-green">${d.dfr}</span> · Symmetric det(g): <span class="hl-cyan">${d.detg}</span>`,
+    `Coupled FIPS 203 DFR: <span class="hl-green">${d.dfr}</span> · Symmetric det(g): <span class="hl-cyan">${d.detg}</span>`,
     `QGTL Berry Ω_{θσ}(e₀=${e0.toFixed(2)}) = <span class="${Math.abs(om) < 1e-12 ? 'hl-green' : 'hl-amber'}">${om.toFixed(6)}</span>`,
     `Provost–Vallée PSD 4det(g) - Ω² = <span class="hl-green">${psd.toFixed(6)} &ge; 0</span>`
   ].join("<br>");
@@ -336,7 +336,7 @@ distSel.addEventListener("change", () => { sSig.value = DISTS[distSel.value].opt
 updateMLWE();
 
 const CLAIMS = [
-  ["C1","p1","T1a","propext, Classical.choice, Quot.sound","Moment-vector annihilation and a Pascal-type binomial identity; the rate 10/17 for one (6,3,3) design is numerical, privacy and decoding not verified","t1"],
+  ["C1","p1","T1a","propext, Classical.choice, Quot.sound","Moment-vector annihilation & Pascal identity (Lean); certified F_101 (6,3,3) rate 10/17 > 4/7 (20/20 T=3 & 0-error via T1k, C11/Python)","t1"],
   ["C2","p1","T1b","propext, Quot.sound","Universal K↔T symmetric R^Koszul strictly dominates Sun–Zhang LFSR by (K-1)(T-1)E² > 0 (single & multi-file)","t1"],
   ["C3","p1","T1c","propext, Quot.sound","Byzantine double-counting reduction, exact E=K+1 unrestricted cap., & kernel-certified F_11 rate-2/5 witness","t1"],
   ["C4","p1","T1d","propext, Quot.sound","Single-orbit flag-privacy thresholds (E>=4 for K=T=2; E>=6 for K=2,T=3) & Ew <= Kδσ feasibility","t1"],
@@ -363,13 +363,14 @@ const CLAIMS = [
   ["C25","p2","T2h","propext, Quot.sound","All-order Rényi-(m+1) Hölder floor, TV-χ² bridge (4TV²<=R₂-1), & 10-bit Dyadic-1024-A/B (9.19× Bai collapse; DFRs from the float64 model)","t1"],
   ["C26","p3","T3i","propext, Classical.choice, Quot.sound","Field-universal substitution-method bound rank_F(<m,m,m>) >= 2m²-m (weaker than Brockett–Dobkin 2m²-1) & Strassen lift rank_F(<m,2,p>) >= mp+3","t1"],
   ["C27","p3","T3j","propext, Classical.choice, Quot.sound","Field-universal Haemers |S|<=r^t, exact Z[√5] SOS integer form of Lovász Θ(C_5)=√5 (k²<=5^t & α=5^m), & exact C_7 min Haemers rank=4 ∀F","t1"],
-  ["C28","p1","T1j","propext, Quot.sound","Exact 6-subspace F_2^64 realization (all 64 subsets!) of full 6-object retrieval marginal (W_1,W_2,A_1..A_4) of h_uncond (rank routine assumed correct)","t1"],
-  ["C29","p2","T2i","propext, Quot.sound","Formal Bai et al. (2018) Rényi DPI/tensorization engine, float64-model DFR about 2^-173.4 (FIPS 203 sets no 2^-174 threshold), & 14-bit Dyadic-16384-A/B (6.013 b / 0.5916 b sub-1-bit Bai)","t1"],
+  ["C28","p1","T1j","propext, Quot.sound","Exact 6-subspace F_2^64 realization (all 64 subsets!) of full 6-object retrieval marginal (W_1,W_2,A_1..A_4) of h_uncond (in-Lean HasSpanDim sound via T1k)","t1"],
+  ["C29","p2","T2i","propext, Quot.sound","Formal Bai et al. (2018) Rényi DPI/tensorization engine, exact coupled FIPS 203 DFRs (90-digit oracle matches Table 1 ±0.04 b; σ=0.990 gives 2^-177.25), & 14-bit Dyadic-16384-A/B (6.013 b / 0.5916 b sub-1-bit Bai)","t1"],
   ["C30","p3","T3k","propext, Classical.choice, Quot.sound","Universal constructive Schwartz–Zippel |Z(P)∩S^n|<=d|S|^{n-1} & two-sided Strassen bound 2·4^k-2^k <= rank_F(<2^k,2^k,2^k>) <= 7^k ∀F","t1"],
   ["C31","p3","T3l","propext, Classical.choice, Quot.sound","Conditional zero-reals Z[√p] conference SOS family Θ(G)=√(4k+1) (Lovász 1979; Lean hypotheses checked for P_5,P_13,P_17; C11/Python: P_5..P_41)","t1"],
+  ["C32","p1","T1k","propext, Classical.choice, Quot.sound","In-Lean HasSpanDim soundness & Steinitz uniqueness for matRankModP (F_2,F_3) & gf2RankSparse (F_2) (closing L02) + field-universal zero-error PIR decoding & exact two-sided T-privacy bijection Ψ_I (closing S01/A02)","t1"],
   ["O1","open","—","—","P ≠ NP & super-linear explicit Boolean circuit lower bounds (CS-001 / CS-010) — NO PROOF CLAIMED","open"],
   ["O2","open","—","—","Matrix multiplication exponent ω = 2 (CS-004) & Valiant VP ≠ VNP (CS-012) — REMAIN OPEN","open"],
-  ["O3","open","—","—","Non-linear PIR capacity C(2,4,2,2) ∈ [3/5, 8/13] (T1i/T1j exclude inequalities on any 4 single variables, any 5 retrieval objects or the 6 retrieval objects; inequalities with individual storage symbols are not excluded)","open"],
+  ["O3","open","—","—","Non-linear PIR capacity C(2,4,2,2) ∈ [3/5, 8/13] (T1i–T1k certify via HasSpanDim that no inequality on the 6 retrieval objects alone separates h_uncond; inequalities with storage symbols remain open)","open"],
   ["O4","open","—","—","General M >= 3 non-LFSR PIR capacity above Sun–Zhang when E >= KT & arbitrary T >= 4 zero-error schemes","open"],
   ["O5","open","—","—","Exact zero-error Shannon capacity Θ(C_7) ∈ [√10, ϑ(C_7) ≈ 3.317667] (CS-CMP-012) — REMAINS OPEN","open"],
   ["O6","open","—","—","Worst-case quantum MLWE lower bounds (CS-026 / QC-042) — hardness remains a cryptographic assumption","open"]

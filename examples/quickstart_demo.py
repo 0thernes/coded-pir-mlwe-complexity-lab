@@ -17,6 +17,7 @@ from triad_verify.pir_koszul import (
     koszul_rate_exact,
     lfsr_rate_exact,
     verify_certified_f11_byzantine,
+    verify_certified_f101_t3_k3_e6_zero_error,
     verify_koszul_rank_grid,
 )
 from triad_verify.polymatroid_barrier import verify_6obj_f2_64_realization
@@ -32,6 +33,7 @@ def main() -> int:
     r_lfsr_str = str(r_lfsr) if r_lfsr is not None else "Infeasible (E=6 < KT=9; Ex. VII.A prior = 4/7)"
     grid = verify_koszul_rank_grid()
     f11 = verify_certified_f11_byzantine(ROOT / "data" / "f11_byz_witness.json")
+    f101_t3k3 = verify_certified_f101_t3_k3_e6_zero_error(ROOT / "data" / "f101_t3_k3_e6_witness.json")
     t1j = verify_6obj_f2_64_realization(ROOT / "data" / "h_uncond_certified.json")
     print(f"[Pillar I | CS-053] Koszul-Veronese (6,3,3) rate = {r_kv} vs LFSR: {r_lfsr_str}")
     print(
@@ -39,6 +41,12 @@ def main() -> int:
         f"({grid['strict_savings_count']} with strict savings)"
     )
     print(f"[Pillar I | CS-053] F_11 Byzantine rate-2/5 witness: {f11}")
+    print(
+        f"[Pillar I | T1k/S01] F_101 zero-error T=3-private (6,3,3) rate-10/17 witness: "
+        f"des={f101_t3k3['desired_rank']}/60, int={f101_t3k3['interference_rank']}/42, "
+        f"isos={f101_t3k3['flag_isomorphisms_verified']}/20, live_decode={f101_t3k3['live_zero_error_decode_trials_passed']}/10, "
+        f"bijection={f101_t3k3['exact_transcript_bijection_triples_passed']}/20"
+    )
     print(
         f"[Pillar I | T1j] Single Z_4-cyclic F_2^64 6-subspace realization: "
         f"{t1j['subsets_exact_match']}/64 subsets matched at scale 4"
@@ -76,9 +84,10 @@ def main() -> int:
     print(
         f"[Pillar II | T2g] Dyadic-512 (Var=3/2, kappa_ex=0, 9-bit CT): min R2={d5['min_r2']} "
         f"(512-bit loss={d5_bits:.3f} bits, {cbd3_bits / d5_bits:.2f}x drop vs CBD_3) | "
-        f"Float64 model DFRs: 512=2^{dfrs['ML_KEM_512_Dyadic512_256']['union_bound_log2_dfr']}, "
-        f"768=2^{dfrs['ML_KEM_768_Dyadic256']['union_bound_log2_dfr']}, "
-        f"1024=2^{dfrs['ML_KEM_1024_Dyadic256']['union_bound_log2_dfr']}"
+        f"Coupled FIPS 203 DFRs (90-digit verified): "
+        f"512 FIPS=2^{dfrs['ML_KEM_512_FIPS']['union_bound_log2_dfr']} (Dyadic-512=2^{dfrs['ML_KEM_512_Dyadic512_256']['union_bound_log2_dfr']}), "
+        f"768 FIPS=2^{dfrs['ML_KEM_768_FIPS']['union_bound_log2_dfr']} (Dyadic-256=2^{dfrs['ML_KEM_768_Dyadic256']['union_bound_log2_dfr']}), "
+        f"1024 FIPS=2^{dfrs['ML_KEM_1024_FIPS']['union_bound_log2_dfr']} (Dyadic-256=2^{dfrs['ML_KEM_1024_Dyadic256']['union_bound_log2_dfr']})"
     )
     d10 = mlwe["dyadic1024_bai_and_all_order"]
     bai = d10["bai_overhead_suite"]
@@ -93,10 +102,10 @@ def main() -> int:
     bai16 = d16["bai_16384_suite"]
     gp = d16["gaussian_dfr_paradox"]
     print(
-        f"[Pillar II | T2i] ML-KEM-1024 float64 model DFRs (FIPS 203 Table 1 baseline 2^-174.8): "
-        f"unit-var Gaussian 2^{gp['mlkem_1024_gauss_log2_dfr']}, "
+        f"[Pillar II | T2i/S02] Coupled FIPS 203 ML-KEM-1024 Kurtosis-DFR-Renyi Tradeoff (Table 1 baseline 2^-174.8): "
+        f"unit-var Gaussian 2^{gp['mlkem_1024_gauss_log2_dfr']} (sigma=0.990 restores 2^{gp['mlkem_1024_gauss_sigma099_log2_dfr']}), "
         f"14-bit Dyadic-16384-A Bai={bai16['ML_KEM_1024_Dyadic16384A']['bai_overhead_bits']:.3f}b "
-        f"(model DFR 2^{d16['dfr_16384_suite']['ML_KEM_1024_Dyadic16384A']['union_bound_log2_dfr']}), "
+        f"(coupled DFR 2^{d16['dfr_16384_suite']['ML_KEM_1024_Dyadic16384A']['union_bound_log2_dfr']}), "
         f"Dyadic-16384-B ML-KEM-512 Bai={bai16['ML_KEM_512_Dyadic16384B']['bai_overhead_bits']:.4f}b"
     )
 

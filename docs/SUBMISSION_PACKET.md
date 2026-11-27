@@ -32,7 +32,7 @@ Consistent across every archival and publication venue:
 
 - [x] `lean/lean-toolchain` pinned to `leanprover/lean4:v4.35.0` (exact commit-pinned `lake-manifest.json`).
 - [x] `lean/PalomarChallenge.lean` (excluded from `defaultTargets`) & `lean/PalomarSolution.lean` match `lean/comparator.json` verbatim.
-- [x] `lake build --wfail` (0 warnings), `VerifyAxioms.lean` (34 decls), `AuditExhaustiveAxioms.lean` (`1,330` `TriadFrontier.*` decls), 6-kernel replay (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda_bin`, `con-leche --verified`, `con-ron --verified`), plus live negative kernel-rejection tamper gate.
+- [x] `lake build --wfail` (0 warnings), `VerifyAxioms.lean` (35 decls), `AuditExhaustiveAxioms.lean` (`1,656` `TriadFrontier.*` decls under `module`), 6-kernel replay (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda_bin`, `con-leche --verified` 4,745 decls, `con-ron --verified` 4,745 decls), plus live negative kernel-rejection tamper gate.
 - [x] Clean-room `dist/arxiv_submission.tar.gz` compiles from scratch via `tectonic -X compile main.tex` with 0 Overfull / 0 Float-too-large / 0 Undefined warnings.
 - [x] Dual cryptographic timestamps (`data/MANIFEST.sha256.tsr` RFC 3161 + `data/MANIFEST.sha256.ots` 3-calendar Bitcoin OpenTimestamps) verified in CI (`scripts/stamp_timestamps.py --verify`) + GitHub SLSA Sigstore build provenance (`actions/attest-build-provenance@v2`).
 - [x] Registered as immutable entry **`0TH-2026-012`** in `0thernes-research-archive` with pinned submodule commit, frozen PDF copy, SHA-256 checksums, and Software Heritage snapshot trigger.

@@ -36,7 +36,7 @@ static bool parse_double_range(const char *s, double lo, double hi, double *out)
 
 int main(int argc, char **argv) {
     if (argc < 2) {
-        fprintf(stderr, "Usage: triad_cli <koszul|f11-byz|ret6-f2|chen|qgtl|renyi|dyadic256|dyadic512|dyadic1024a|dyadic1024b|dyadic16384a|dyadic16384b|twisted|koszul-tensor|strassen|koszul-allm|lovasz-c5|c7-cap|paley-cap>\n");
+        fprintf(stderr, "Usage: triad_cli <koszul|f11-byz|f101-t3k3|ret6-f2|chen|qgtl|renyi|dyadic256|dyadic512|dyadic1024a|dyadic1024b|dyadic16384a|dyadic16384b|twisted|koszul-tensor|strassen|koszul-allm|lovasz-c5|c7-cap|paley-cap>\n");
         return 2;
     }
     if (strcmp(argv[1], "koszul") == 0) {
@@ -64,6 +64,11 @@ int main(int argc, char **argv) {
     if (strcmp(argv[1], "f11-byz") == 0) {
         bool ok = triad_verify_f11_byzantine_rate25();
         printf("{\"f11_byzantine_rate25\":%s}\n", ok ? "true" : "false");
+        return ok ? 0 : 1;
+    }
+    if (strcmp(argv[1], "f101-t3k3") == 0) {
+        bool ok = triad_verify_f101_t3_k3_e6_zero_error();
+        printf("{\"f101_t3_k3_e6_zero_error_20_of_20\":%s,\"rate\":\"10/17\"}\n", ok ? "true" : "false");
         return ok ? 0 : 1;
     }
     if (strcmp(argv[1], "chen") == 0) {

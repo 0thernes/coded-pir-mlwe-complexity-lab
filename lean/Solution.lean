@@ -6,7 +6,7 @@ public import Challenge
 public import TriadFrontier
 
 /-!
-# Verified Solutions to All 31 Formalized Theorems (`T1a`–`T3l`, v5.0.0)
+# Verified Solutions to All 32 Formalized Theorems (`T1a`–`T3l`, `T1k`, v5.2.0)
 
 Zero-Mathlib Lean 4.35.0 proofs depending strictly on a subset of
 `[propext, Classical.choice, Quot.sound]`, zero `sorry`, zero `native_decide`, zero custom axioms.
@@ -16,6 +16,8 @@ namespace TriadFrontier.Solution
 
 open TriadFrontier.Challenge
 open TriadFrontier.PIRKoszul
+open TriadFrontier.LinearRankSoundness
+open TriadFrontier.PIRProtocol
 open TriadFrontier.MLWETightness
 open TriadFrontier.ComplexityTriad
 open TriadFrontier.KoszulTensor
@@ -54,6 +56,16 @@ public theorem t1i_total_4var_entropic_and_5obj_linear_barrier : T1i_Total4VarEn
 
 public theorem t1j_total_6obj_f2_entropic_realizability_barrier : T1j_Total6ObjF2EntropicRealizabilityBarrier :=
   PIRKoszul.t1j_total_6obj_f2_entropic_realizability_barrier
+
+public theorem t1k_linear_rank_soundness_and_pir_protocol : T1k_LinearRankSoundnessAndPIRProtocol :=
+  ⟨fun _ _ _ _ _ _ h1 h2 => HasSpanDim_unique h1 h2,
+   gf2RankSparse_sound,
+   matRankModP_sound_f2,
+   matRankModP_sound_f3,
+   t1j_ret6_true_f2_span_dim,
+   fun _ _ sc hy hz hD Cancel DecInv hC hDinv r hr W1 W2 θ k d hk hd =>
+     pir_zero_error_decoding_exact sc hy hz hD Cancel DecInv hC hDinv r hr W1 W2 θ k d hk hd,
+   fun _ _ sc inI w hw => pir_exact_t_privacy_bijection sc inI w hw⟩
 
 public theorem t2a_determinant_ideal_secret_independence : T2a_DeterminantIdealSecretIndependence :=
   MLWETightness.t2a_determinant_ideal_secret_independence
@@ -129,6 +141,7 @@ public theorem prove_all_triad_theorems : AllTriadFrontierTheorems :=
    t1h_infinite_nonshannon_cone_barrier_and_contraction,
    t1i_total_4var_entropic_and_5obj_linear_barrier,
    t1j_total_6obj_f2_entropic_realizability_barrier,
+   t1k_linear_rank_soundness_and_pir_protocol,
    t2a_determinant_ideal_secret_independence,
    t2b_chen_step9_antiperiodic_dft_cancellation,
    t2c_mlkem_cbd_renyi_cliff,

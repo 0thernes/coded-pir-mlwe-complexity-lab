@@ -10,6 +10,9 @@
 'TriadFrontier.Solution.t1h_infinite_nonshannon_cone_barrier_and_contraction' depends on axioms: [propext, Quot.sound]
 'TriadFrontier.Solution.t1i_total_4var_entropic_and_5obj_linear_barrier' depends on axioms: [propext, Quot.sound]
 'TriadFrontier.Solution.t1j_total_6obj_f2_entropic_realizability_barrier' depends on axioms: [propext, Quot.sound]
+'TriadFrontier.Solution.t1k_linear_rank_soundness_and_pir_protocol' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
 'TriadFrontier.Solution.t2a_determinant_ideal_secret_independence' depends on axioms: [propext, Quot.sound]
 'TriadFrontier.Solution.t2b_chen_step9_antiperiodic_dft_cancellation' depends on axioms: [propext, Quot.sound]
 'TriadFrontier.Solution.t2c_mlkem_cbd_renyi_cliff' depends on axioms: [propext, Classical.choice, Quot.sound]

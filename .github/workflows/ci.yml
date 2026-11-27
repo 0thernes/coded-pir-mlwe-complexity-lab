@@ -32,6 +32,7 @@ jobs:
           make -C native clean all test
           ./native/build/triad_cli koszul 3 2 3
           ./native/build/triad_cli f11-byz
+          ./native/build/triad_cli f101-t3k3
           ./native/build/triad_cli ret6-f2
           ./native/build/triad_cli renyi 2
           ./native/build/triad_cli dyadic256

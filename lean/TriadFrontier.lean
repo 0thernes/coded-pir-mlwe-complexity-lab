@@ -6,6 +6,8 @@ public import TriadFrontier.AlgebraCore
 public import TriadFrontier.PIRCertificates
 public import TriadFrontier.PIRLinearCerts
 public import TriadFrontier.PIRKoszul
+public import TriadFrontier.LinearRankSoundness
+public import TriadFrontier.PIRProtocol
 public import TriadFrontier.MLWETightness
 public import TriadFrontier.ComplexityTriad
 public import TriadFrontier.KoszulTensor

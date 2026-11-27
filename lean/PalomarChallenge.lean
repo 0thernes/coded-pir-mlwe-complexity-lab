@@ -5,7 +5,7 @@ module
 public import Challenge
 
 /-!
-# Palomar Comparator Challenge Contract (`coded-pir-mlwe-complexity-lab` v5.0.0)
+# Palomar Comparator Challenge Contract (`coded-pir-mlwe-complexity-lab` v5.2.0)
 
 Statement contract for `lake comparator --config comparator.json --paranoid`.
 Excluded from `defaultTargets` in `lakefile.toml`; every theorem is proved with
@@ -26,6 +26,7 @@ public theorem t1g_zhang_yeung_reduction_and_mfile_koszul : T1g_ZhangYeungReduct
 public theorem t1h_infinite_nonshannon_cone_barrier_and_contraction : T1h_InfiniteNonShannonConeAndContraction := by sorry
 public theorem t1i_total_4var_entropic_and_5obj_linear_barrier : T1i_Total4VarEntropicAnd5ObjLinearBarrier := by sorry
 public theorem t1j_total_6obj_f2_entropic_realizability_barrier : T1j_Total6ObjF2EntropicRealizabilityBarrier := by sorry
+public theorem t1k_linear_rank_soundness_and_pir_protocol : T1k_LinearRankSoundnessAndPIRProtocol := by sorry
 public theorem t2a_determinant_ideal_secret_independence : T2a_DeterminantIdealSecretIndependence := by sorry
 public theorem t2b_chen_step9_antiperiodic_dft_cancellation : T2b_ChenStep9AntiPeriodicDFTCancellation := by sorry
 public theorem t2c_mlkem_cbd_renyi_cliff : T2c_MLKEMCBDRenyiCliff := by sorry

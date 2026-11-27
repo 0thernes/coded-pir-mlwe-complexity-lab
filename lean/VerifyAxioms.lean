@@ -5,11 +5,11 @@ module
 import Solution
 
 /-!
-# Strict Axiom Allowlist Audit (`TriadFrontier` v5.0.0)
+# Strict Axiom Allowlist Audit (`TriadFrontier` v5.2.0)
 
-Every exported theorem (`T1a`–`T3l`), the master conjunction `prove_all_triad_theorems`,
-the concrete non-vacuity certificate `nonvac_all_hypotheses`, and the 7 adversarial
-negative boundary refutations `adv_all_boundary_refutations` (34 audited declarations)
+Every exported theorem (`T1a`–`T3l`, `T1k`), the master conjunction `prove_all_triad_theorems`,
+the concrete non-vacuity certificate `nonvac_all_hypotheses`, and the 10 adversarial
+negative boundary refutations `adv_all_boundary_refutations` (35 audited declarations)
 must depend strictly on a subset of `[propext, Classical.choice, Quot.sound]`.
 -/
 
@@ -23,6 +23,7 @@ must depend strictly on a subset of `[propext, Classical.choice, Quot.sound]`.
 #print axioms TriadFrontier.Solution.t1h_infinite_nonshannon_cone_barrier_and_contraction
 #print axioms TriadFrontier.Solution.t1i_total_4var_entropic_and_5obj_linear_barrier
 #print axioms TriadFrontier.Solution.t1j_total_6obj_f2_entropic_realizability_barrier
+#print axioms TriadFrontier.Solution.t1k_linear_rank_soundness_and_pir_protocol
 #print axioms TriadFrontier.Solution.t2a_determinant_ideal_secret_independence
 #print axioms TriadFrontier.Solution.t2b_chen_step9_antiperiodic_dft_cancellation
 #print axioms TriadFrontier.Solution.t2c_mlkem_cbd_renyi_cliff
