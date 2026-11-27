@@ -13,16 +13,14 @@ public import TriadFrontier.PaleyCapacity
 public import TriadFrontier.AlgebraicComplexity
 
 /-!
-# Concrete Non-Vacuity Witnesses (`TriadFrontier` v5.0.0)
+# Concrete Non-Vacuity Witnesses (`TriadFrontier` v5.1.0)
 
-Explicitly inhabits EVERY hypothesis bundle across all 31 theorems (`T1a`–`T3l`),
-including concrete `SimpleField (Fin 5)` and `SimpleField (Fin 11)` instances,
-concrete commutative ring `Int` with unit `u = -1`, concrete anti-periodic function
-on `D = 3`, concrete `m = 4` twisted root over `Fin 5` (`2^4 = 1, 1+2+4+3 = 0`),
-concrete symmetric PMFs `CBD_2`, `Dyadic-256`, `Dyadic-1024-A/B`, concrete 2-variable
-Boolean function, concrete LDC repetition code (`N = 3, B = 1`), concrete `C_5`/`C_7`
-strong-product independent sets, and concrete rank-8 decomposition of `M_2`,
-ensuring ZERO theorems can be vacuously true!
+Concrete spot-check witnesses inhabiting key algebraic typeclasses and selected theorem hypotheses:
+`SimpleField (Fin 2)` (characteristic 2), `SimpleField (Fin 5)`, `SimpleField (Fin 11)`,
+`CommRing Int` with unit `u = -1`, an anti-periodic function on `D = 3`, an `m = 4` twisted
+root over `Fin 5` (`2^4 = 1, 1+2+4+3 = 0`), tabulated integer weight vectors, a 2-variable
+Boolean function, a 3-repetition `B = 1` code, a nonzero `MPoly (Fin 2) 1` polynomial (`T3k`),
+and concrete `C_5`/`P_13`/`P_17` conference and self-complement witnesses (`T3j`/`T3l`).
 -/
 
 namespace TriadFrontier.NonVacuity
@@ -38,6 +36,29 @@ open TriadFrontier.PaleyCapacity
 open TriadFrontier.AlgebraicComplexity
 
 @[expose] public section
+
+/-- Concrete characteristic-2 prime field `F_2 = Fin 2` (certifies `T1f`, `T3a`, `T3e`, `T3g`–`T3k` in `char 2`!). -/
+def f2Inv (a : Fin 2) : Fin 2 := a
+
+instance instSimpleFieldFin2 : SimpleField (Fin 2) where
+  add a b := ⟨(a.val + b.val) % 2, Nat.mod_lt _ (by decide)⟩
+  sub a b := ⟨(a.val + 2 - b.val) % 2, Nat.mod_lt _ (by decide)⟩
+  mul a b := ⟨(a.val * b.val) % 2, Nat.mod_lt _ (by decide)⟩
+  neg a := a
+  zero := ⟨0, by decide⟩
+  one := ⟨1, by decide⟩
+  inv := f2Inv
+  add_assoc := by decide
+  add_comm := by decide
+  zero_add := by decide
+  add_neg := by decide
+  sub_eq := by decide
+  mul_assoc := by decide
+  mul_comm := by decide
+  one_mul := by decide
+  left_distrib := by decide
+  zero_ne_one := by decide
+  mul_inv_cancel := by decide
 
 /-- Concrete prime field `F_5 = Fin 5`. -/
 def f5Inv (a : Fin 5) : Fin 5 :=
@@ -114,13 +135,19 @@ def rep3Dec : List Bool → Bool
   | [a, b, c] => (a && b) || (a && c) || (b && c)
   | _ => false
 
-/-- Master non-vacuity certificate inhabiting every hypothesis bundle across `T1a`–`T3d`. -/
+/-- Concrete linear polynomial `P(x) = x` over `F_2` witnessing `T3k` Schwartz–Zippel hypotheses. -/
+def sampleLinearF2 : MPoly (Fin 2) 1 :=
+  MPoly.cons (MPoly.const 0) (MPoly.cons (MPoly.const 1) MPoly.zero)
+
+/-- Master non-vacuity certificate inhabiting every hypothesis bundle across all 31 theorems (`T1a`–`T3l`),
+    including characteristic-2 `SimpleField (Fin 2)`, `T3k` `MPoly`, and `T3l` conference/self-complement witnesses. -/
 theorem nonvac_all_hypotheses :
     -- T1a/T1b/T1c/T1d: SimpleField (Fin 11) inhabited + concrete Byzantine parameters (N=6,K=2,T=2,B=1,E=4)
     ((0 : Fin 11) ≠ 1 ∧ 1 ≤ 3 ∧ 1 ≤ 2 ∧ 2 ≤ 3 ∧ 2 ≤ 3 ∧
      0 < 15 ∧ 6 * 60 = 15 * 4 * 6 ∧ 15 * 12 * 1 ≤ 60 * 3) ∧
-    -- T1f: Concrete four concurrent 2-subspaces in (Fin 5)^4 (all sharing e_0)
-    (let e0 : Vec4 (Fin 5) := fun i => if i.val = 0 then 1 else 0
+    -- T1f & char-2: Concrete characteristic-2 SimpleField (Fin 2) + four concurrent 2-subspaces in (Fin 5)^4
+    (((1 : Fin 2) + 1 = 0 ∧ (0 : Fin 2) ≠ 1) ∧
+     let e0 : Vec4 (Fin 5) := fun i => if i.val = 0 then 1 else 0
      Nonzero4 e0 ∧ InSpan2 e0 e0 e0) ∧
     -- T2a/T2b: Concrete CommRing Int unit (-1)*(-1)=1 & anti-periodic witness on D=3
     (((-1 : Int) * (-1) = 1) ∧
@@ -130,8 +157,9 @@ theorem nonvac_all_hypotheses :
     (rPow (⟨2, by decide⟩ : Fin 5) 2 = -(1 : Fin 5) ∧
      rPow (⟨2, by decide⟩ : Fin 5) 2 ≠ (1 : Fin 5) ∧
      (∀ k : Int, cbd2Weight (-k) = cbd2Weight k)) ∧
-    -- T3a/T3b/T3c/T3d/T3e/T3f: Concrete 2-var Boolean XOR over F_5, PRF params, rep3 LDC, MLWE margin,
-    -- concrete Dyadic-256 nonneg weights, 4-twisted root in F_5, and concrete C < M & LDC smoothness!
+    -- T3a..T3l: Concrete 2-var Boolean XOR over F_5, PRF params, rep3 LDC, MLWE margin,
+    -- concrete Dyadic-256/512/1024/16384 weights, 4-twisted root in F_5, T3k MPoly witness,
+    -- and T3l conference/self-complement witnesses!
     ((∀ b : Fin 2 → Bool, mle (fun bs : Fin 2 → Bool => if xor (bs 0) (bs 1) then (1 : Fin 5) else 0)
         (fun i => boolToF (b i)) = (if xor (b 0) (b 1) then 1 else 0)) ∧
      (0 < 16 ∧ 0 < 4 ∧ 0 < 2 ∧ 0 < 10 ∧ 8 * 2 ≥ 16 * 1 ∧ 1 * 2 ≤ 1 * 10) ∧
@@ -139,11 +167,13 @@ theorem nonvac_all_hypotheses :
      (∀ (m : Bool) (r : List Bool), r.length = 3 → hammingDist (rep3Enc m) r ≤ 1 → rep3Dec r = m) ∧
      ((-831 : Int) ≤ 420 ∧ (420 : Int) ≤ 831 ∧ 0 < 16 ∧ 831 / 16 < 52) ∧
      (sumR 4 (fun q => rPow (⟨2, by decide⟩ : Fin 5) (q * (1 + 2))) = 0 ∧
-      dyadic256Weight 0 = 100 ∧ dyadic1024AWeight 0 = 406 ∧ dyadic1024BWeight 0 = 330 ∧
+      dyadic256Weight 0 = 100 ∧ dyadic512Weight 0 = 166 ∧ dyadic1024AWeight 0 = 406 ∧ dyadic1024BWeight 0 = 330 ∧
       dyadic16384AWeight 0 = 6496 ∧ dyadic16384BWeight 0 = 5332 ∧
-      c5Adj 0 1 = true ∧ c7Adj 0 1 = true ∧ paley13Adj 0 1 = true ∧ paley17Adj 0 1 = true ∧ 4 < 16)) := by
+      c5Adj 0 1 = true ∧ c7Adj 0 1 = true ∧ paley13Adj 0 1 = true ∧ paley17Adj 0 1 = true ∧ 4 < 16) ∧
+     (ListNodup [(0 : Fin 2), 1] ∧ mpNonZero sampleLinearF2 ∧ mpDegLe 1 sampleLinearF2 ∧
+      IsConferenceGraph 1 c5Adj ∧ IsSelfCompMap 13 paley13Adj (fun x => (2 * x) % 13))) := by
   refine ⟨by decide, ?_, ?_, ?_, ?_⟩
-  · refine ⟨⟨⟨0, by decide⟩, by decide⟩, ⟨1, 0, fun _ => by rw [CommRing.one_mul, zero_mul, add_zero]⟩⟩
+  · refine ⟨by decide, ⟨⟨0, by decide⟩, by decide⟩, ⟨1, 0, fun _ => by rw [CommRing.one_mul, zero_mul, add_zero]⟩⟩
   · refine ⟨by decide, ?_, by decide⟩
     intro x hx
     have hcases : x = 0 ∨ x = 1 ∨ x = 2 := by omega
@@ -159,12 +189,20 @@ theorem nonvac_all_hypotheses :
       match n with
       | 0 | 1 | 2 => decide
       | _ + 3 => rfl
-  · refine ⟨fun b => mle_agrees_on_bool _ b, by decide, fun m => by cases m <;> rfl, ?_, by decide, by decide⟩
-    intro m r hr hd
-    match r with
-    | [a, b, c] =>
-      cases m <;> cases a <;> cases b <;> cases c <;> simp [rep3Enc, rep3Dec, hammingDist] at hd ⊢
-    | [] | [_] | [_, _] | _ :: _ :: _ :: _ :: _ => simp at hr
+  · refine ⟨fun b => mle_agrees_on_bool _ b, by decide, fun m => by cases m <;> rfl, ?_, by decide, by decide, ?_⟩
+    · intro m r hr hd
+      match r with
+      | [a, b, c] =>
+        cases m <;> cases a <;> cases b <;> cases c <;> simp [rep3Enc, rep3Dec, hammingDist] at hd ⊢
+      | [] | [_] | [_, _] | _ :: _ :: _ :: _ :: _ => simp at hr
+    · refine ⟨?_, ?_, ?_, paley5_isConference, paley13_selfComp⟩
+      · refine ⟨?_, ⟨fun _ h => (by cases h), trivial⟩⟩
+        intro y hy
+        simp only [List.mem_cons, List.not_mem_nil, or_false] at hy
+        rw [hy]; decide
+      · exact Or.inr (Or.inl (by decide : (1 : Fin 2) ≠ 0))
+      · refine ⟨trivial, ⟨trivial, ?_⟩⟩
+        intro h; exact h
 
 end
 end TriadFrontier.NonVacuity

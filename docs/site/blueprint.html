@@ -5,7 +5,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Interactive 31-Theorem Proof Blueprint DAG — Triad Frontier Lab v5.0.0</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; frame-ancestors 'none'; base-uri 'self';">
+<title>Interactive 31-Theorem Proof Blueprint DAG — Triad Frontier Lab v5.1.0</title>
 <style>
   :root {
     --bg: #0b1120; --panel: #111827; --panel2: #1e293b; --border: #334155;
@@ -16,6 +17,10 @@
   }
   * { box-sizing: border-box; }
   body { margin: 0; font-family: var(--sans); background: var(--bg); color: var(--text); }
+  a:focus-visible, button:focus-visible, input:focus-visible, .node:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+  .skip-link { position: absolute; left: -9999px; top: 0; background: #0284c7; color: #fff; padding: 0.45rem 0.85rem; z-index: 1000; font-weight: 600; }
+  .skip-link:focus { left: 0.5rem; top: 0.5rem; border-radius: 6px; }
+  .search-input { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 0.84rem; min-width: 210px; }
   header { padding: 1rem 1.4rem; background: #0f172a; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; }
   header h1 { margin: 0; font-size: 1.15rem; font-family: Georgia, serif; }
   header a { color: var(--cyan); text-decoration: none; font-size: 0.88rem; }
@@ -46,9 +51,13 @@
 </style>
 </head>
 <body>
+<a class="skip-link" href="#dag">Skip to Blueprint DAG</a>
 <header>
-  <h1>Interactive Lean 4.35.0 Proof Blueprint DAG — 31 Theorems (T1a–T3l) + 7 Boundary Refutations</h1>
+  <h1>Interactive Lean 4.35.0 Proof Blueprint DAG — 31 Bundles (T1a–T3l) + 9 Refutations (v5.1.0)</h1>
   <div>
+    <label for="bpSearch" style="position:absolute;left:-9999px;">Filter theorems</label>
+    <input id="bpSearch" class="search-input" type="search" placeholder="Filter T1a..T3l / keyword..." aria-label="Filter blueprint theorem nodes">
+    &nbsp;|&nbsp;
     <a href="index.html">&larr; Back to Triad Explorer</a> &nbsp;|&nbsp;
     <a href="https://github.com/0thernes/coded-pir-mlwe-complexity-lab/tree/main/lean">Browse Lean Source</a>
   </div>
@@ -58,12 +67,12 @@
     <div class="legend">
       <span><span class="dot" style="background:#38bdf8"></span>Pillar I: CS-053 PIR (T1a–T1j)</span>
       <span><span class="dot" style="background:#f472b6"></span>Pillar II: CS-026 MLWE / QC-042 / CM-048 (T2a–T2i)</span>
-      <span><span class="dot" style="background:#a78bfa"></span>Pillar III: Triad, Schwartz–Zippel &amp; Infinite Paley Capacity (T3a–T3l)</span>
-      <span><span class="dot" style="background:#34d399"></span>Master, NonVacuity &amp; Adversarial Audit</span>
-      <span><span class="dot" style="background:#fbbf24"></span>Explicitly Open Frontiers (O1–O6)</span>
-      <span><em>Click any node to inspect Lean declaration, axioms, and cross-checks.</em></span>
+      <span><span class="dot" style="background:#a78bfa"></span>Pillar III: Triad, Schwartz–Zippel &amp; Conference Capacity (T3a–T3l)</span>
+      <span><span class="dot" style="background:#34d399"></span>Master, NonVacuity &amp; Adversarial Audit (1,330 Axiom-Swept Decls)</span>
+      <span><span class="dot" style="background:#fbbf24"></span>Explicitly Open Frontiers (O1–O7)</span>
+      <span><em>Click or focus + Enter/Space on any node to inspect Lean declaration, axioms, and cross-checks.</em></span>
     </div>
-    <svg id="dag" viewBox="0 0 980 1040" role="img" aria-label="Dependency graph of 31 machine-checked Lean 4 theorems and 7 adversarial boundary refutations">
+    <svg id="dag" viewBox="0 0 980 1040" role="img" aria-label="Dependency graph of 31 machine-checked Lean 4 theorem bundles and 9 adversarial boundary refutations">
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b"/>
@@ -73,7 +82,7 @@
       <g id="nodes"></g>
     </svg>
   </div>
-  <aside class="drawer" id="drawer">
+  <aside class="drawer" id="drawer" aria-live="polite">
     <h2 id="dTitle">Select a Theorem Node</h2>
     <div class="meta" id="dSub">Click any box in the Blueprint DAG on the left.</div>
     <div id="dBody"></div>
@@ -88,8 +97,8 @@ const NODES = [
   {id:"T1b", x:30, y:105, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1b · Universal Domination", decl:"TriadFrontier.Solution.t1b_universal_koszul_domination_over_lfsr", file:"lean/TriadFrontier/PIRKoszul.lean", axioms:"[propext, Quot.sound]", desc:"Universal K↔T symmetric two-file & P-out-of-M Koszul rate strictly dominates Sun–Zhang (2610.37412) LFSR by +(K-1)(T-1)E² > 0.", checks:"Lean 6 kernels · Eshkol AD · Python · C11"},
   {id:"T1c", x:30, y:180, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1c · Byzantine & F_11 Cert", decl:"TriadFrontier.Solution.t1c_byzantine_robust_capacity_and_f11_certificate", file:"lean/TriadFrontier/PIRKoszul.lean", axioms:"[propext, Quot.sound]", desc:"Byzantine double-counting reduction, exact E=K+1 unrestricted cap., and kernel-certified F_11 rate-2/5 zero-error witness across all 15 4-subsets & 30 pairs.", checks:"Lean 6 kernels · Python · C11 triad_cli f11-byz"},
   {id:"T1d", x:30, y:255, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1d · Flag Privacy Thresholds", decl:"TriadFrontier.Solution.t1d_flag_privacy_and_feasibility_dimensions", file:"lean/TriadFrontier/PIRKoszul.lean", axioms:"[propext, Quot.sound]", desc:"Single-orbit flag-privacy thresholds (E>=4 for K=T=2; E>=6 for K=2,T=3), Ew <= Kδσ feasibility, and T=3 zero-error dimensions.", checks:"Lean 6 kernels · Python F_101/F_1009"},
-  {id:"T1e", x:30, y:330, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1e · h_uncond 8/13 Barrier", decl:"TriadFrontier.Solution.t1e_unconditioned_shannon_ingleton_barrier", file:"lean/TriadFrontier/PolymatroidBarrier.lean", axioms:"[propext]", desc:"330-orbit pure-integer 12-var polymatroid h_uncond (scale 128) verifying 67,584 elemental submodularity (plus 12 monotonicity) + 99 PIR equalities + 1,485 singleton & 3.81M retrieval Ingletons at 8/13 > 3/5.", checks:"Lean 6 kernels ([propext] alone!) · Python full 3.81M audit"},
-  {id:"T1f", x:30, y:405, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1f · Projective P³ Collapse", decl:"TriadFrontier.Solution.t1f_projective_p3_linear_impossibility", file:"lean/TriadFrontier/ProjectiveP3.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Over any field F, four pairwise-intersecting 2-subspaces of F⁴ are either concurrent (common line) or coplanar (dim sum <= 3), explaining C_lin(2,4,2,2)=3/5.", checks:"Lean 6 kernels · NonVacuity over Fin 5"},
+  {id:"T1e", x:30, y:330, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1e · h_uncond 8/13 Barrier", decl:"TriadFrontier.Solution.t1e_unconditioned_shannon_ingleton_barrier", file:"lean/TriadFrontier/PIRCertificates.lean", axioms:"[propext]", desc:"330-orbit pure-integer 12-var polymatroid h_uncond (scale 128) verifying 67,584 elemental submodularity (plus 12 monotonicity) + 99 PIR equalities + 1,485 singleton & 3.81M retrieval Ingletons at 8/13 > 3/5.", checks:"Lean 6 kernels ([propext] alone!) · Python full 3.81M audit"},
+  {id:"T1f", x:30, y:405, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1f · Projective P³ Collapse", decl:"TriadFrontier.Solution.t1f_projective_p3_linear_impossibility", file:"lean/TriadFrontier/PIRKoszul.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Over any field F, four pairwise-intersecting 2-subspaces of F⁴ are either concurrent (common line) or coplanar (dim sum <= 3), explaining C_lin(2,4,2,2)=3/5.", checks:"Lean 6 kernels · NonVacuity over Fin 5"},
   {id:"T1g", x:30, y:480, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1g · ZY98 & M≥3 Koszul", decl:"TriadFrontier.Solution.t1g_zhang_yeung_reduction_and_mfile_koszul", file:"lean/TriadFrontier/PIRKoszul.lean", axioms:"[propext, Quot.sound]", desc:"Exact algebraic identity ZY98(A,B;C,D) = Ing(C,D;A,B) + I(A;C|D) + I(A;D|C) + I(C;D|A) proving h_uncond defeats Zhang–Yeung (1998) too; symmetric M>=3 Koszul breaks E>=KT.", checks:"Lean 6 kernels · Python 200k 4-tuple check"},
   {id:"T1h", x:30, y:555, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1h · Matúš ∞-Cone & ρ^j", decl:"TriadFrontier.Solution.t1h_infinite_nonshannon_cone_barrier_and_contraction", file:"lean/TriadFrontier/PIRKoszul.lean", axioms:"[propext, Quot.sound]", desc:"Universal 7-parameter non-Shannon cone & infinite Matúš (2007) family M_s (∀s∈ℕ, equals ZY98 at s=1): h_uncond defeats ALL infinitely many Matúš inequalities! Plus all-M contraction ρ_KV^j < ρ_LFSR^j.", checks:"Lean 6 kernels · Python 14,850 Matúš singleton checks"},
   {id:"T1i", x:30, y:630, w:170, h:54, col:"#38bdf8", fill:"#0c253a", title:"T1i · Total 4-Var I_4 & 5-F₂", decl:"TriadFrontier.Solution.t1i_total_4var_entropic_and_5obj_linear_barrier", file:"lean/TriadFrontier/PIRLinearCerts.lean", axioms:"[propext, Quot.sound]", desc:"Kernel-verified 23 F_2/F_3 linear rays decomposing all 24 canonical 4-marginals (all 510 four-marginals of h_uncond) at denom 3 + all 6 five-object retrieval marginals decomposed into explicit F_2-linear subspace arrangements!", checks:"Lean 6 kernels (7,650+186 identities) · Python polymatroid_barrier.py"},
@@ -110,7 +119,7 @@ const NODES = [
   {id:"T3a", x:605, y:30, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3a · Algebrization MLE", decl:"TriadFrontier.Solution.t3a_algebrization_multilinear_extension_uniqueness", file:"lean/TriadFrontier/ComplexityTriad.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Constructive existence and global uniqueness of multilinear extension f̃: F^n -> F over any field F (algebraic core of Aaronson–Wigderson Algebrization).", checks:"Lean 6 kernels · Python F_11/F_101"},
   {id:"T3b", x:605, y:105, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3b · LWE → Natural Proofs", decl:"TriadFrontier.Solution.t3b_lwe_to_natural_proofs_obstruction", file:"lean/TriadFrontier/ComplexityTriad.lean", axioms:"[propext, Quot.sound]", desc:"Cleared-denominator formalization of Razborov–Rudich Natural Proofs obstruction from LWE/LWR pseudorandom functions.", checks:"Lean 6 kernels · NonVacuity"},
   {id:"T3c", x:605, y:180, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3c · PIR ↔ LDC Distance", decl:"TriadFrontier.Solution.t3c_katz_trevisan_byzantine_pir_ldc_distance", file:"lean/TriadFrontier/ComplexityTriad.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Katz–Trevisan Byzantine PIR / LDC equivalence forcing minimum Hamming distance d_min >= 2B + 1.", checks:"Lean 6 kernels · NonVacuity (3-rep LDC)"},
-  {id:"T3d", x:605, y:255, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3d · Compress_1 |e| ≤ 831", decl:"TriadFrontier.Solution.t3d_mlwe_single_server_pir_noise_ceiling", file:"lean/TriadFrontier/ComplexityTriad.lean", axioms:"[propext, Quot.sound]", desc:"Margin |e|<=831 for the Lean model mlkemCompress1, which differs from FIPS 203 Compress_1 at x = 832 & linear additive single-server MLWE-PIR noise depth ceiling M <= floor(831/b_step).", checks:"Lean 6 kernels · C11 fuzz · Python"},
+  {id:"T3d", x:605, y:255, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3d · Exact Compress_1", decl:"TriadFrontier.Solution.t3d_mlwe_single_server_pir_noise_ceiling", file:"lean/TriadFrontier/ComplexityTriad.lean", axioms:"[propext, Quot.sound]", desc:"Exact NIST FIPS 203 Eq. (4.7) Compress_1(x) = floor((4(x mod 3329)+3329)/6658) mod 2 = floor((2(x mod 3329)+1664)/3329) mod 2: |e|<=832 for b=0 (fails +833), -832<=e<=831 for b=1 (fails +832), & depth ceiling M <= floor(831/b_step) (L01 fixed in v5.1.0).", checks:"Lean 6 kernels · C11 87/87 + 1,024 fuzz · Python"},
   {id:"T3e", x:605, y:330, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3e · Koszul Tensor Rank", decl:"TriadFrontier.Solution.t3e_koszul_flattening_tensor_rank_bridge", file:"lean/TriadFrontier/KoszulTensor.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Unifies PIR wedge u∧· with Landsberg–Ottaviani Koszul flattenings: 18-nnz {-1,0,+1} left-inverse L_2 certifies rank_F(<2,2,2>) >= 6 and rank_F(T_3) >= 5 over EVERY field F (incl. char 2!).", checks:"Lean 6 kernels · C11 triad_cli koszul-tensor · Python F_2/F_3/F_101"},
   {id:"T3f", x:605, y:405, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3f · Shannon & LDC Smooth", decl:"TriadFrontier.Solution.t3f_shannon_counting_and_ldc_smoothness", file:"lean/TriadFrontier/ComplexityTriad.lean", axioms:"[propext, Quot.sound]", desc:"Shannon (1949) finite circuit-counting non-surjectivity (C < M ⇒ ∃ f not computed) + Katz–Trevisan q-query LDC smoothness bound.", checks:"Lean 6 kernels · Python"},
   {id:"T3g", x:605, y:480, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3g · All-m Koszul ≥ m²+2", decl:"TriadFrontier.Solution.t3g_all_m_koszul_matmul_lower_bound", file:"lean/TriadFrontier/KoszulTensor.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Symbolic 1-nnz/row monomial left-inverse L_m · Φ₁(<m,m,m>) = I_{m^4} over Z proving rank_F(<m,m,m>) >= m²+2 for ALL m >= 2 & EVERY field F (incl. char 2!), plus degree-(m-1) ceiling m²+m.", checks:"Lean 6 kernels · C11 triad_cli koszul-allm · Python Φ₂(<3,3,3>)=324"},
@@ -121,9 +130,9 @@ const NODES = [
   {id:"T3l", x:605, y:855, w:185, h:54, col:"#a78bfa", fill:"#1f163b", title:"T3l · Paley Θ(Pₚ)=√p", decl:"TriadFrontier.Solution.t3l_infinite_paley_conference_shannon_capacity", file:"lean/TriadFrontier/PaleyCapacity.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Infinite family of exact zero-reals Shannon capacities: universal 2-block Z[√p] conference-matrix SOS theorem proving Θ(P_p)=√p (k²<=p^t & α(P_p^{⊠2m})=p^m) for EVERY prime p≡1(4), concretely instantiated for P_5, P_13, P_17!", checks:"Lean 6 kernels · C11 triad_cli paley-cap (P_5..P_41) · Python"},
 
   // Master, NonVacuity & AdversarialTests (bottom row)
-  {id:"SOL", x:40, y:950, w:245, h:58, col:"#34d399", fill:"#063024", title:"Solution.lean · Master (31)", decl:"TriadFrontier.Solution.prove_all_triad_theorems", file:"lean/Solution.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Single conjunction of all 31 headline theorems T1a–T3l, checked by Palomar Comparator (lake comparator --paranoid) + 6 kernels (4,300 con-leche/con-ron verified decls + nanoda + live negative tamper gate).", checks:"lean · leanchecker-paranoid · lean4lean · nanoda · con-leche · con-ron"},
-  {id:"NV", x:315, y:950, w:215, h:58, col:"#34d399", fill:"#063024", title:"NonVacuity.lean · Witnesses", decl:"TriadFrontier.NonVacuity.nonvac_all_hypotheses", file:"lean/TriadFrontier/NonVacuity.lean", axioms:"[propext, Quot.sound]", desc:"Concrete non-vacuity inhabitants proving every theorem's typeclass & hypothesis is non-empty (SimpleField Fin 5/11, CommRing Int, D=3 anti-periodic, 2-var XOR, 3-rep LDC).", checks:"Lean 6 kernels · VerifyAxioms.lean"},
-  {id:"ADV", x:560, y:950, w:230, h:58, col:"#34d399", fill:"#063024", title:"AdversarialTests · 7 Kills", decl:"TriadFrontier.AdversarialTests.adv_all_boundary_refutations", file:"lean/TriadFrontier/AdversarialTests.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"7 kernel-checked negative/sharpness boundary refutations (Lean-model mlkemCompress1 at e=832, which differs from FIPS 203, E=3 flag-privacy fail, rank<7 kill, C_7 rank<=3 kill, etc.) + live CI kernel-rejection tamper gate.", checks:"Lean 6 kernels · VerifyAxioms.lean · CI tamper gate"},
+  {id:"SOL", x:40, y:950, w:245, h:58, col:"#34d399", fill:"#063024", title:"Solution.lean · Master (31)", decl:"TriadFrontier.Solution.prove_all_triad_theorems", file:"lean/Solution.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Single conjunction of all 31 headline bundles T1a–T3l, checked by Palomar Comparator (lake comparator --paranoid) + 6 kernels (4,337 con-leche/con-ron verified decls + nanoda + 1,330 exhaustive axiom-swept TriadFrontier.* decls + live negative tamper gate).", checks:"lean · leanchecker-paranoid · lean4lean · nanoda · con-leche · con-ron · AuditExhaustiveAxioms"},
+  {id:"NV", x:315, y:950, w:215, h:58, col:"#34d399", fill:"#063024", title:"NonVacuity.lean · Witnesses", decl:"TriadFrontier.NonVacuity.nonvac_all_hypotheses", file:"lean/TriadFrontier/NonVacuity.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"Concrete non-vacuity inhabitants for selected algebraic typeclasses & hypotheses (SimpleField Fin 2/5/11, CommRing Int, D=3 anti-periodic, 2-var XOR, 3-rep LDC, MPoly Fin 2, P_5/P_13/P_17).", checks:"Lean 6 kernels · VerifyAxioms.lean"},
+  {id:"ADV", x:560, y:950, w:230, h:58, col:"#34d399", fill:"#063024", title:"AdversarialTests · 9 Kills", decl:"TriadFrontier.AdversarialTests.adv_all_boundary_refutations", file:"lean/TriadFrontier/AdversarialTests.lean", axioms:"[propext, Classical.choice, Quot.sound]", desc:"9 kernel-checked negative/sharpness boundary refutations (exact FIPS 203 Compress_1 fail at b=0 e=+833 & b=1 e=+832, E=3 arithmetic fail, no rank-6 M_2, no 3-indep C_5, no rank-3 Haemers C_7, no 4-indep P_13, 2m^2-m > m^2+m at m=3, F_2 x+x^2 Schwartz-Zippel saturation, p=7 not conference) + live CI kernel-rejection tamper gate.", checks:"Lean 6 kernels · VerifyAxioms.lean · CI tamper gate"},
 
   // Explicitly Open Frontiers (far right)
   {id:"OPEN", x:818, y:310, w:145, h:255, col:"#fbbf24", fill:"#2c1e07", open:true, title:"O1–O6 · OPEN", decl:"(No Lean Proof Claimed)", file:"LIMITATIONS.md", axioms:"Tier-4 OPEN", desc:"Explicit epistemic boundary: O1 P≠NP & circuit lower bounds (CS-001/010); O2 ω=2 & VP≠VNP (CS-004/012); O3 non-linear C(2,4,2,2) ∈ [3/5, 8/13] (inequalities with individual storage symbols not excluded); O4 M>=3 non-LFSR PIR when E>=KT; O5 exact Θ(C_7) ∈ [√10, ϑ(C_7)]; O6 worst-case quantum MLWE hardness.", checks:"Honestly documented in LIMITATIONS.md, CLAIMS.md, ERRATA.md, and Section 6"}
@@ -179,6 +188,9 @@ function selectNode(id) {
 NODES.forEach(n => {
   const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
   g.setAttribute("class", "node");
+  g.setAttribute("tabindex", "0");
+  g.setAttribute("role", "button");
+  g.setAttribute("aria-label", `${n.title} — ${n.axioms}`);
   g.dataset.id = n.id;
   const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
   r.setAttribute("x", n.x); r.setAttribute("y", n.y);
@@ -199,8 +211,26 @@ NODES.forEach(n => {
   g.appendChild(t2);
 
   g.addEventListener("click", () => selectNode(n.id));
+  g.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      selectNode(n.id);
+    }
+  });
   nodesG.appendChild(g);
 });
+
+const bpSearch = document.getElementById("bpSearch");
+if (bpSearch) {
+  bpSearch.addEventListener("input", () => {
+    const q = bpSearch.value.trim().toLowerCase();
+    document.querySelectorAll(".node").forEach(el => {
+      const n = map[el.dataset.id];
+      const hay = `${n.id} ${n.title} ${n.decl} ${n.file} ${n.desc}`.toLowerCase();
+      el.style.opacity = (!q || hay.includes(q)) ? "1" : "0.18";
+    });
+  });
+}
 
 selectNode("T3l");
 </script>

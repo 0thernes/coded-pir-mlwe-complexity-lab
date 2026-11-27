@@ -7,14 +7,14 @@
 [![CI](https://github.com/0thernes/coded-pir-mlwe-complexity-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/0thernes/coded-pir-mlwe-complexity-lab/actions/workflows/ci.yml)
 [![Pages](https://img.shields.io/badge/Interactive-Proof%20Blueprint-0284c7.svg)](https://0thernes.github.io/coded-pir-mlwe-complexity-lab/)
 
-Zero-Mathlib **Lean 4.35.0** proofs (31 theorems `T1a`–`T3l` plus 7 adversarial tests, 34 audited declarations, replayed by 6 proof kernels in CI; 4,300 declarations checked by `con-leche`/`con-ron` on the standalone `Solution` export), cross-checks in C11 (79/79 tests), Python 3.12 and Eshkol v1.3.6 dual-number AD, an interactive Proof Blueprint, and an AMS-LaTeX preprint (`v5.0.0`).
+Zero-Mathlib **Lean 4.35.0** proofs (31 theorems `T1a`–`T3l` plus 9 adversarial tests, 34 audited declarations + programmatic 1,330-declaration `Lean.collectAxioms` sweep, replayed by 6 proof kernels in CI; 4,337 declarations checked by `con-leche`/`con-ron` on the standalone `Solution` export), cross-checks in hardened C11 (87/87 tests + 1,024 fuzz), strict 0-`ruff`/0-`mypy` Python 3.12 (25/25 pytest) and Eshkol v1.3.6 dual-number AD, dual RFC 3161 + 3-calendar Bitcoin OpenTimestamps receipts, a CSP/WCAG-AA interactive Proof Blueprint, and an AMS-LaTeX preprint (`v5.1.0`).
 
-**What this repository is.** A suite of elementary algebraic identities, finite certificates and formalisations of classical results, used as building blocks in three areas: coded and Byzantine private information retrieval (`CS-053`), noise analysis for Module-LWE and FIPS 203 ML-KEM (`CS-026`/`QC-042`/`CM-048`), and tensor rank, Schwartz–Zippel and zero-error graph capacity (`CS-001`/`CS-004`/`CS-010`/`CS-012`/`CS-051`/`CS-CMP-012`). It resolves no published open problem in Lean and refutes no published claim. Scheme rates, divergence values and decryption-failure rates are numerical results outside Lean. The classical formalisations (rank of the 2×2 matrix-multiplication tensor is 7 over every field, Schwartz–Zippel, the integer form of $\Theta(C_5)=\sqrt{5}$) are known results. An independent statement audit (2026-11-26) is recorded in [ERRATA.md](ERRATA.md) and in the [archive audit log](https://github.com/0thernes/0thernes-research-archive/blob/main/docs/reviews/2026-11-26-statement-audit.md).
+**What this repository is.** A suite of elementary algebraic identities, finite certificates and formalisations of classical results, used as building blocks in three areas: coded and Byzantine private information retrieval (`CS-053`), noise analysis for Module-LWE and FIPS 203 ML-KEM (`CS-026`/`QC-042`/`CM-048`), and tensor rank, Schwartz–Zippel and zero-error graph capacity (`CS-001`/`CS-004`/`CS-010`/`CS-012`/`CS-051`/`CS-CMP-012`). It resolves no published open problem in Lean and refutes no published claim. Scheme rates, divergence values and decryption-failure rates are numerical results outside Lean. The classical formalisations (rank of the 2×2 matrix-multiplication tensor is 7 over every field, Schwartz–Zippel, the integer form of $\Theta(C_5)=\sqrt{5}$) are known results. An independent statement audit (2026-11-26) is recorded in [ERRATA.md](ERRATA.md) and in the [archive audit log](https://github.com/0thernes/0thernes-research-archive/blob/main/docs/reviews/2026-11-26-statement-audit.md); `v5.1.0` directly closes paper errata `A01`–`A12`, Lean `L01` (exact FIPS 203 Eq. (4.7) `Compress_1`) & `L03`–`L06`, and script/CI items `S02`–`S04`.
 
 ![Project Social Preview](docs/media/social-preview.svg)
 
 **Author:** Alexander S. Donahue (Independent Researcher, Spokane, WA, USA; ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648))  
-**Status:** active (`repostatus.org/#active`) · Research preprint `v5.0.0` (not externally peer-reviewed; AI-assisted under human direction; see [LIMITATIONS.md](LIMITATIONS.md) & [ERRATA.md](ERRATA.md))  
+**Status:** active (`repostatus.org/#active`) · Research preprint `v5.1.0` (not externally peer-reviewed; AI-assisted under human direction; see [LIMITATIONS.md](LIMITATIONS.md) & [ERRATA.md](ERRATA.md))  
 **Interactive Proof Blueprint:** [`https://0thernes.github.io/coded-pir-mlwe-complexity-lab/`](https://0thernes.github.io/coded-pir-mlwe-complexity-lab/) ([DAG Blueprint](https://0thernes.github.io/coded-pir-mlwe-complexity-lab/blueprint.html))  
 **White Paper PDF:** [`dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf`](dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf) · **arXiv Source Tarball:** [`dist/arxiv_submission.tar.gz`](dist/arxiv_submission.tar.gz)
 
@@ -22,7 +22,7 @@ Zero-Mathlib **Lean 4.35.0** proofs (31 theorems `T1a`–`T3l` plus 7 adversaria
 
 ## Results (`T1a`–`T3l`): What Lean Proves and What It Does Not
 
-Every theorem below is proved in zero-Mathlib Lean 4.35.0 with no `sorry`, no `native_decide` and no custom axioms. The second column states the Lean content in plain terms. The third column lists what is outside Lean: numerical computations (Python, C11, Eshkol), readings given only in prose or in identifier names, and prior work. Kernel agreement across six checkers certifies the proofs; it does not certify that the Lean definitions model the PIR, lattice or cryptographic objects their names refer to. `lean/TriadFrontier/NonVacuity.lean` gives spot-check witnesses for selected hypotheses, not for every hypothesis bundle. Of the 7 adversarial tests in `lean/TriadFrontier/AdversarialTests.lean`, two are closed arithmetic facts and one encodes a `Compress_1` value that disagrees with FIPS 203 (see [ERRATA.md](ERRATA.md)).
+Every theorem below is proved in zero-Mathlib Lean 4.35.0 with no `sorry`, no `native_decide` and no custom axioms. The second column states the Lean content in plain terms. The third column lists what is outside Lean: numerical computations (Python, C11, Eshkol), readings given only in prose or in identifier names, and prior work. Kernel agreement across six checkers certifies the proofs; it does not certify that the Lean definitions model the PIR, lattice or cryptographic objects their names refer to. `lean/TriadFrontier/NonVacuity.lean` gives spot-check witnesses for selected hypotheses (including characteristic-2 `SimpleField (Fin 2)` in `v5.1.0`), not for every hypothesis bundle. Of the 9 adversarial tests in `lean/TriadFrontier/AdversarialTests.lean`, two are closed arithmetic facts; the `Compress_1` boundary test was fixed in `v5.1.0` (`L01`) to match literal FIPS 203 Eq. (4.7) (see [ERRATA.md](ERRATA.md)).
 
 | ID | What the Lean statement says | Outside Lean, readings and prior work | Lean entry point |
 |---|---|---|---|
@@ -48,7 +48,7 @@ Every theorem below is proved in zero-Mathlib Lean 4.35.0 with no `sorry`, no `n
 | **T3a** | Over any field, for $f:\{0,1\}^n\to F$, the recursively defined multilinear extension is multilinear, agrees with $f$ on Boolean points, and every multilinear $g$ agreeing with $f$ there equals it everywhere. | A standard fact. "Algebrization" is context; no oracle or complexity class is defined. | `TriadFrontier.Solution.t3a_algebrization_multilinear_extension_uniqueness` |
 | **T3b** | For naturals with $A_{\mathrm{prf}}=0$, $A_{\mathrm{rand}}\cdot den\ge U\cdot num$ and $\varepsilon_{num}\cdot den\le num\cdot\varepsilon_{den}$: $K A_{\mathrm{rand}}\,den\ge K U\,num$ and not $(K A_{\mathrm{rand}}\,\varepsilon_{den}<K U\,\varepsilon_{num})$. This is the counting inequality of the natural-proofs argument (Razborov–Rudich). | No pseudorandom function, LWE instance, circuit class or natural property is defined in Lean. | `TriadFrontier.Solution.t3b_lwe_to_natural_proofs_obstruction` |
 | **T3c** | If all codewords have length $N$ and a decoder returns $m$ for every word within Hamming distance $B$ of $\mathrm{Enc}(m)$, then distinct messages have codewords at distance $\ge 2B+1$. | A $B$-error-correcting code has minimum distance $\ge 2B+1$. No locality, queries or PIR are defined; the Katz–Trevisan and Byzantine-PIR names are context. | `TriadFrontier.Solution.t3c_katz_trevisan_byzantine_pir_ldc_distance` |
-| **T3d** | For $x\mapsto\lfloor(2(x \bmod 3329)+1665)/3329\rfloor \bmod 2$: the value at $1665b+e$ is $b$ for $b\in\{0,1\}$, $\lvert e\rvert\le831$; the value at 832 is 1 and at 2497 is 0; and $\lfloor 831/b_{\mathrm{step}}\rfloor<M$ implies $832\le M\,b_{\mathrm{step}}$. | This function differs from FIPS 203 $\mathrm{Compress}_1$ (eq. 4.7, rounding over the rationals) at exactly one point, $x=832$, where the standard gives 0. The $\lvert e\rvert\le831$ guarantee also holds for the standard. For the standard the exact margins are $\lvert e\rvert\le832$ for $b=0$ and $-832\le e\le831$ for $b=1$, so failure at $e=+832$ holds for $b=1$ only. See ERRATA. | `TriadFrontier.Solution.t3d_mlwe_single_server_pir_noise_ceiling` |
+| **T3d** | For exact NIST FIPS 203 eq. (4.7) `mlkemCompress1` $x\mapsto\lfloor(4(x \bmod 3329)+3329)/6658\rfloor \bmod 2$ (fixed in `v5.1.0`, proved equivalent to $\lfloor(2(x \bmod 3329)+1664)/3329\rfloor \bmod 2$ for all $x \in \mathbb{Z}$): value $0$ on $\lvert e\rvert\le832$, value $1$ on $1665+e$ for $-832\le e\le831$, sharp failures at $833$ ($b=0$) and $1665+832$ ($b=1$), and depth ceiling $\lfloor 831/b_{\mathrm{step}}\rfloor<M\Rightarrow832\le M\,b_{\mathrm{step}}$. | Matches literal NIST FIPS 203 $\mathrm{Compress}_1$ (eq. 4.7) on every $x \in [0, 3329)$ (closing ERRATA `L01`/`A08`/`S03`, which flagged the `v5.0.0` `+1665` discrepancy at $x=832$). | `TriadFrontier.Solution.t3d_mlwe_single_server_pir_noise_ceiling` |
 | **T3e** | Over any field: every rank-$r$ decomposition of the $2\times2$ matrix-multiplication tensor has $r\ge6$; every rank-$r$ decomposition of a fixed $3\times3\times3$ 0/1 tensor has $r\ge5$. | Known; the first bound is superseded by `T3h`. The link to PIR is an interpretation. | `TriadFrontier.Solution.t3e_koszul_flattening_tensor_rank_bridge` |
 | **T3f** | If $C<M$, every map $\mathrm{Fin}\,C\to\mathrm{Fin}\,M$ misses a value; if $\sum_i \mathrm{cnt}(i)\le qS$ and heavy indices have $\mathrm{cnt}\ge\tau$, then $\#\text{heavy}\cdot\tau\le qS$. | Pigeonhole and Markov-type counting; no circuits or codes are defined. | `TriadFrontier.Solution.t3f_shannon_counting_and_ldc_smoothness` |
 | **T3g** | Over any field and $m\ge2$, every rank-$r$ decomposition of $\langle m,m,m\rangle$ has $r\ge m^2+2$; and $(m^2-m+1)(m^2+m-1)<m^4$. | Weaker than `T3i` and than published bounds. | `TriadFrontier.Solution.t3g_all_m_koszul_matmul_lower_bound` |
@@ -71,7 +71,7 @@ Every theorem below is proved in zero-Mathlib Lean 4.35.0 with no `sorry`, no `n
 
 ## 5-Second Lean 4.35.0 Axiom Audit (Verbatim)
 
-Exact verbatim output of `cd lean && lake env lean VerifyAxioms.lean` (checked for zero drift in CI by `scripts/check_readme_axioms.py` against [`results/lean_axioms.txt`](results/lean_axioms.txt) — 34 audited declarations, 4,300 `con-leche`/`con-ron` verified declarations, silent 0-error `nanoda_bin`, plus a live negative kernel-rejection gate):
+Exact verbatim output of `cd lean && lake env lean VerifyAxioms.lean` (checked for zero drift in CI by `scripts/check_readme_axioms.py` against [`results/lean_axioms.txt`](results/lean_axioms.txt) — 34 audited declarations + 1,330 `TriadFrontier.*` declarations swept by `AuditExhaustiveAxioms.lean`, 4,337 `con-leche`/`con-ron` verified declarations, silent 0-error `nanoda_bin`, plus a live negative kernel-rejection gate):
 
 ```text
 'TriadFrontier.Solution.t1a_koszul_veronese_rank_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -126,7 +126,7 @@ Exact verbatim output of `cd lean && lake env lean VerifyAxioms.lean` (checked f
  Classical.choice,
  Quot.sound]
 'TriadFrontier.Solution.prove_all_triad_theorems' depends on axioms: [propext, Classical.choice, Quot.sound]
-'TriadFrontier.NonVacuity.nonvac_all_hypotheses' depends on axioms: [propext, Quot.sound]
+'TriadFrontier.NonVacuity.nonvac_all_hypotheses' depends on axioms: [propext, Classical.choice, Quot.sound]
 'TriadFrontier.AdversarialTests.adv_all_boundary_refutations' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
@@ -142,22 +142,23 @@ Clone and run the four layers (Lean 4.35.0, C11, Eshkol dual-number AD, and Pyth
 git clone https://github.com/0thernes/coded-pir-mlwe-complexity-lab.git
 cd coded-pir-mlwe-complexity-lab
 
-# 1. Zero-Mathlib Lean 4.35.0 proofs + axiom & kernel audit (31 theorems + 7 adversarial tests)
-(cd lean && lake build && lake env lean VerifyAxioms.lean && lake env leanchecker Solution && lake env leanchecker-paranoid Solution)
+# 1. Zero-Mathlib Lean 4.35.0 proofs + axiom & kernel audit (31 theorems + 9 adversarial tests + 1,330-decl sweep)
+(cd lean && lake build --wfail && lake env lean VerifyAxioms.lean && lake env lean AuditExhaustiveAxioms.lean && lake env leanchecker Solution && lake env leanchecker-paranoid Solution)
 
-# 2. Native C11 core (-std=c11 -Wall -Wextra -Wpedantic -Werror, 79/79 tests + 512+ fuzz)
+# 2. Native C11 core (-std=c11 -Wall -Wextra -Wpedantic -Werror, 87/87 tests + 1,024 fuzz)
 make -C native clean test
 
-# 3. Eshkol v1.3.6 forward-mode dual-number AD modules (3/3, incl. Dyadic-256/512/1024/16384-A/B)
+# 3. Eshkol v1.3.6 forward-mode dual-number AD modules (3/3 + 7 negative guards, incl. Dyadic-256/512/1024/16384-A/B)
 node eshkol/run_eshkol_ad.mjs
 
-# 4. Python verification suite, differential/mutation tests, lint, axiom drift & citations
-pip install numpy scipy matplotlib pytest ruff mypy
+# 4. Python verification suite (25/25 pytest), differential/mutation tests, lint, axiom drift, timestamps & citations
+pip install numpy scipy matplotlib pytest ruff mypy pyyaml jsonschema
 PYTHONPATH=python pytest tests/test_all.py -v
 ruff check python tests scripts examples
 mypy python/triad_verify scripts --ignore-missing-imports
 python scripts/check_readme_axioms.py
-python scripts/check_citations.py
+python scripts/stamp_timestamps.py --verify
+python scripts/check_citations.py --online
 ```
 
 Or run everything via `just reproduce`, `./scripts/run_all.sh`, or `pwsh -File scripts/run_all.ps1`.
@@ -222,13 +223,13 @@ Boundaries, notes on Tsotchke-inspired components, errata and falsification test
 
 ## Repository Map
 
-- `lean/` — Zero-Mathlib Lean 4.35.0 proof library (`TriadFrontier/*` incl. `PIRLinearCerts.lean`, `KoszulTensor.lean`, `StrassenWinograd.lean`, `BrockettDobkin.lean`, `ShannonCapacity.lean`, `AlgebraicComplexity.lean`, `PaleyCapacity.lean`, `AdversarialTests.lean`), Palomar comparator contract (`PalomarChallenge.lean`, `PalomarSolution.lean`, `comparator.json`), `VerifyAxioms.lean` (34 decls), and `formalization.yaml`.
-- `native/` — Zero-warning C11 library (incl. branchless `Dyadic-256`/`512`/`1024`/`16384-A/B` samplers, not verified constant-time at the binary level; $\mathbb{F}_2^{64}$ 6-obj realization, $m$-twisted DFT, Koszul flattening, Strassen 7-product, all-$m$ monomial, and exact $\mathbb{Z}[\sqrt{p}]$ Paley/conference SOS certs for $P_5..P_{41}$), CLI, 79-test unit + 512-iteration fuzz suite, and ASan/UBSan Makefile target.
-- `eshkol/` — Runnable Eshkol v1.3.6 forward-mode dual-number AD modules (`.esk`) and Node.js runner.
-- `python/triad_verify/` — Finite-field rank verifier, 12-variable polymatroid and 4-/5-/6-object $\mathbb{F}_2$ realisability checks, 60-digit `Decimal` Rényi and Bai computations for `Dyadic-256`/`512`/`1024`/`16384-A/B`, a float64 FIPS 203 DFR convolution model, Koszul/Strassen/Brockett–Dobkin/Schwartz–Zippel/Paley verifier, and 8-figure vector PDF generator (strict 0 `ruff` / 0 `mypy`).
-- `paper/` & `dist/` — AMS-LaTeX preprint (`main.tex`, `refs.bib`, 8 vector PDF figures, 36 live HTTP-200 citations), frozen PDF, clean-room verified `arxiv_submission.tar.gz`, and RFC 3161 TSA timestamp (`data/MANIFEST.sha256.tsr`).
-- `docs/site/` — Self-contained interactive GitHub Pages 31-theorem Proof Blueprint DAG & live PIR/MLWE/Bai/DFR/QGTL explorer.
-- `docs/` — Architecture, ADRs, statement fidelity, 10-pass review, adversarial red-team review, threat model, operations, FAQ, glossary, and run log.
+- `lean/` — Zero-Mathlib Lean 4.35.0 proof library (`TriadFrontier/*` incl. `PIRLinearCerts.lean`, `KoszulTensor.lean`, `StrassenWinograd.lean`, `BrockettDobkin.lean`, `ShannonCapacity.lean`, `AlgebraicComplexity.lean`, `PaleyCapacity.lean`, `AdversarialTests.lean`), Palomar comparator contract (`PalomarChallenge.lean`, `PalomarSolution.lean`, `comparator.json`), `VerifyAxioms.lean` (34 decls), `AuditExhaustiveAxioms.lean` (1,330 `TriadFrontier.*` decls), and `formalization.yaml`.
+- `native/` — Hardened zero-warning C11 library (incl. branchless `Dyadic-256`/`512`/`1024`/`16384-A/B` samplers, not verified constant-time at the binary level; $\mathbb{F}_2^{64}$ 6-obj realization, $m$-twisted DFT, Koszul flattening, Strassen 7-product, all-$m$ monomial, exact FIPS 203 `Compress_1`, and exact $\mathbb{Z}[\sqrt{p}]$ Paley/conference SOS certs for $P_5..P_{41}$), `strtol`/`strtod`-validated CLI, 87-test unit + 1,024-iteration fuzz suite, and ASan/UBSan Makefile target.
+- `eshkol/` — Runnable Eshkol v1.3.6 forward-mode dual-number AD modules (`.esk`) and hardened Node.js runner (depth/NaN/malformed-syntax guards).
+- `python/triad_verify/` — Finite-field rank verifier, 12-variable polymatroid and 4-/5-/6-object $\mathbb{F}_2$ realisability checks, 60-digit `Decimal` Rényi and Bai computations for `Dyadic-256`/`512`/`1024`/`16384-A/B`, a float64 FIPS 203 DFR convolution model, Koszul/Strassen/Brockett–Dobkin/Schwartz–Zippel/Paley verifier, and 8-figure vector PDF generator (strict 0 `ruff` / 0 `mypy`, 25/25 `pytest`).
+- `paper/` & `dist/` — AMS-LaTeX preprint (`main.tex`, `refs.bib`, 8 vector PDF figures, 36 live HTTP-200 + 0-retraction Crossref citations), frozen PDF, clean-room verified `arxiv_submission.tar.gz`, DigiCert RFC 3161 TSA timestamp (`data/MANIFEST.sha256.tsr`), and 3-calendar Bitcoin OpenTimestamps receipt (`data/MANIFEST.sha256.ots`).
+- `docs/site/` — Self-contained CSP/WCAG-AA interactive GitHub Pages 31-theorem Proof Blueprint DAG & live PIR/MLWE/Bai/DFR/QGTL explorer.
+- `docs/` — Architecture, ADRs, statement fidelity, 10-pass review, adversarial red-team review, threat model, operations, literature search, Mega-Atlas crosswalk, submission compliance packet, FAQ, glossary, and run log.
 
 ---
 

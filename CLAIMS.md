@@ -1,11 +1,11 @@
 <!-- SPDX-License-Identifier: CC-BY-4.0 -->
 # Claims Ledger & Falsification Protocol (`CLAIMS.md`)
 
-Every claim in `coded-pir-mlwe-complexity-lab` (`v5.0.0`) has an ID, a verification tier, artifact paths, and a falsifying condition. This ledger was corrected on 2026-11-26 to match an independent statement audit; see [ERRATA.md](ERRATA.md) and the [archive audit log](https://github.com/0thernes/0thernes-research-archive/blob/main/docs/reviews/2026-11-26-statement-audit.md).
+Every claim in `coded-pir-mlwe-complexity-lab` (`v5.1.0`) has an ID, a verification tier, artifact paths, and a falsifying condition. This ledger was corrected on 2026-11-26 to match an independent statement audit (with paper errata `A01`–`A12`, exact FIPS 203 `Compress_1` `L01`, Lean docstrings `L03`–`L06`, and script/CI items `S02`–`S04` fixed directly in `v5.1.0`); see [ERRATA.md](ERRATA.md) and the [archive audit log](https://github.com/0thernes/0thernes-research-archive/blob/main/docs/reviews/2026-11-26-statement-audit.md).
 
 ## Verification Tiers
 
-- **Tier 1 (Lean proof):** Zero-Mathlib Lean 4.35.0 proof using only axioms from `[propext, Classical.choice, Quot.sound]`, no `sorry`, no `native_decide`, replayed in CI by six kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche --verified`, `con-ron --verified`; 4,300 declarations on the standalone `Solution` export). Tier 1 certifies the proof of the Lean statement as written. It does not certify that the Lean definitions model the PIR, lattice or cryptographic objects their names refer to; the challenge propositions use definitions from the solution's own library.
+- **Tier 1 (Lean proof):** Zero-Mathlib Lean 4.35.0 proof using only axioms from `[propext, Classical.choice, Quot.sound]`, no `sorry`, no `native_decide`, audited by both `VerifyAxioms.lean` (34 declarations) and `AuditExhaustiveAxioms.lean` (`1,330` `TriadFrontier.*` declarations), and replayed in CI by six kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche --verified`, `con-ron --verified`; 4,337 declarations on the standalone `Solution` export). Tier 1 certifies the proof of the Lean statement as written. It does not certify that the Lean definitions model the PIR, lattice or cryptographic objects their names refer to; the challenge propositions use definitions from the solution's own library.
 - **Tier 2 (Computation):** Deterministic integer, rational, finite-field or 60-digit `Decimal` computation in Python, cross-checked in C11 and Eshkol v1.3.6 dual-number AD. Decryption-failure rates are computed in a float64 numpy convolution model and are not exact. Tier 2 results are not machine-checked.
 - **Reading:** An interpretation given in prose or in identifier names (for example "PIR scheme", "Berry curvature", "natural proof") that the Lean statement does not contain.
 - **Open:** Problems not claimed solved.
@@ -30,7 +30,7 @@ Every claim in `coded-pir-mlwe-complexity-lab` (`v5.0.0`) has an ID, a verificat
 | **C14** | `T3a` | Tier 1: existence and uniqueness of the multilinear extension over any field (standard). | Tier 1 + Tier 2 | `lean/TriadFrontier/ComplexityTriad.lean` (`t3a`), `python/triad_verify/complexity_triad.py` | Two distinct multilinear polynomials agreeing on $\{0,1\}^n$ |
 | **C15** | `T3b` | Tier 1: a natural-number counting inequality with $A_{\mathrm{prf}}=0$ as a hypothesis (the counting step of the natural-proofs argument). Reading: PRF families blocking natural proofs; no PRF, LWE instance, circuit or natural property is defined in Lean. | Tier 1 (arithmetic) | `lean/TriadFrontier/ComplexityTriad.lean` (`t3b`) | Naturals satisfying the hypotheses and violating the conclusion |
 | **C16** | `T3c` | Tier 1: a $B$-error-correcting code has minimum distance $\ge 2B+1$. Reading: Katz–Trevisan / Byzantine PIR; no locality or queries are defined. | Tier 1 + Tier 2 | `lean/TriadFrontier/ComplexityTriad.lean` (`t3c`), `python/triad_verify/complexity_triad.py` | Two distinct messages at distance $\le 2B$ decoded uniquely under $B$ errors |
-| **C17** | `T3d` | Tier 1: for the function $\lfloor(2(x \bmod 3329)+1665)/3329\rfloor \bmod 2$, the value at $1665b+e$ is $b$ for $b\in\{0,1\}$, $\lvert e\rvert\le831$; value 1 at 832 and 0 at 2497; and a depth bound $M \le \lfloor 831 / b_{\mathrm{step}} \rfloor$. This function differs from FIPS 203 $\mathrm{Compress}_1$ at $x=832$ (standard value 0). For the standard the margins are $\lvert e\rvert\le832$ for $b=0$ and $-832\le e\le831$ for $b=1$. | Tier 1 + Tier 2 | `lean/TriadFrontier/ComplexityTriad.lean` (`t3d`), `native/src/triad_core.c`, `python/triad_verify/complexity_triad.py` | Any $\lvert e\rvert \le 831$ decoding wrongly under FIPS 203 $\mathrm{Compress}_1(1665b + e)$ |
+| **C17** | `T3d` | Tier 1 (`v5.1.0`, `L01` FIXED): for exact NIST FIPS 203 Eq. (4.7) `mlkemCompress1` $= \lfloor(4(x \bmod 3329)+3329)/6658\rfloor \bmod 2$ (proved equivalent to $\lfloor(2(x \bmod 3329)+1664)/3329\rfloor \bmod 2$ for all $x \in \mathbb{Z}$), the value is $0$ for $\lvert e\rvert \le 832$, $1$ at $1665+e$ for $-832 \le e \le 831$, fails sharply at $833$ ($b=0$) and $1665+832$ ($b=1$), and satisfies the depth bound $M \le \lfloor 831 / b_{\mathrm{step}} \rfloor$. | Tier 1 + Tier 2 | `lean/TriadFrontier/ComplexityTriad.lean` (`t3d`), `native/src/triad_core.c`, `python/triad_verify/complexity_triad.py` | Any $x \in [0, 3329)$ where `mlkemCompress1` disagrees with exact rational FIPS 203 Eq. (4.7), or any $\lvert e\rvert \le 831$ decoding wrongly |
 | **C18** | `T3e` | Tier 1: over any field, $\mathrm{rank}(\langle 2,2,2\rangle) \ge 6$ and $\mathrm{rank}(T_3) \ge 5$ via integer left-inverses (known; superseded by `T3h`). | Tier 1 + Tier 2 | `lean/TriadFrontier/KoszulTensor.lean` (`t3e`), `native/src/triad_core.c`, `python/triad_verify/complexity_triad.py` | A rank-5 decomposition of $\langle 2,2,2\rangle$ or rank-4 decomposition of $T_3$ over some field |
 | **C19** | `T3f` | Tier 1: pigeonhole non-surjectivity ($C < M$) and a Markov-type averaging bound. Reading: Shannon circuit counting and LDC smoothness; no circuits or codes are defined. | Tier 1 + Tier 2 | `lean/TriadFrontier/ComplexityTriad.lean` (`t3f`), `tests/test_all.py` | A surjection $\mathrm{Fin}\, C \to \mathrm{Fin}\, M$ with $C < M$ |
 | **C20** | `T1h` | Tier 1: a non-negative combination of Ingleton and conditional-information terms is non-negative when each term is; `matusFamilyQ s` equals Zhang–Yeung at $s=1$ and is such a combination; a strict inequality between $j$-th powers. That `matusFamilyQ` is the Matúš (2007) family is by definition in this repository. Tier 2: 14,850 singleton instances on `h_uncond` for $s\in\{1..5\}$. | Tier 1 + Tier 2 | `lean/TriadFrontier/PIRKoszul.lean` (`t1h`), `python/triad_verify/polymatroid_barrier.py`, `tests/test_all.py` | A violation among the checked instances |
@@ -63,26 +63,28 @@ Every claim in `coded-pir-mlwe-complexity-lab` (`v5.0.0`) has an ID, a verificat
 From a clean clone (these commands test the proofs and computations; they do not test whether the Lean definitions model the named PIR or cryptographic objects):
 
 ```bash
-# 1. Lean proofs, axioms and kernel replay (31 theorems + 7 adversarial tests)
+# 1. Lean proofs, exhaustive axioms and kernel replay (31 theorems + 9 adversarial tests + 1,330-decl sweep)
 cd lean
-lake build
+lake build --wfail
 lake env lean VerifyAxioms.lean
+lake env lean AuditExhaustiveAxioms.lean
 lake env leanchecker Solution
 lake env leanchecker-paranoid Solution
 lake comparator --config comparator.json --paranoid   # Ubuntu/Linux with bubblewrap
 
-# 2. C11 arithmetic, samplers, ret6-f2, Paley checks and fuzzing
+# 2. C11 arithmetic, samplers, ret6-f2, Paley checks and fuzzing (87 unit + 1,024 fuzz)
 cd ..
 make -C native clean test
 make -C native sanitizers   # Ubuntu/Linux ASan + UBSan
 
-# 3. Differential agreement across Python, Eshkol AD and C11, and the mutation suite
+# 3. Differential agreement across Python, Eshkol AD and C11, timestamps, and 25-test suite
 node eshkol/run_eshkol_ad.mjs
 PYTHONPATH=python pytest tests/test_all.py -v
 ruff check python tests scripts examples
 mypy python/triad_verify scripts --ignore-missing-imports
 python scripts/check_readme_axioms.py
+python scripts/stamp_timestamps.py --verify
 python scripts/check_citations.py --online
 ```
 
-A failing kernel check, an unpermitted axiom, a matrix rank deficit, a polymatroid violation, a differential mismatch $> 10^{-11}$, or an unkilled core mutant refutes the corresponding entry above. Known defects in the tests themselves (for example the `Compress_1` mutant and tamper gate) are listed in [ERRATA.md](ERRATA.md).
+A failing kernel check, an unpermitted axiom, a matrix rank deficit, a polymatroid violation, a differential mismatch $> 10^{-11}$, a tampered timestamp, or an unkilled core mutant refutes the corresponding entry above. Open scope items (e.g. `L02`, `L07`–`L09`, `S01`) and fixed errata (`A01`–`A12`, `L01`, `L03`–`L06`, `S02`–`S04`) are tracked in [ERRATA.md](ERRATA.md).

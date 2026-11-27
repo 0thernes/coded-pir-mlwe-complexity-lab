@@ -67,15 +67,21 @@ int main(void) {
     CHECK(loss_512 > 7.6 && loss_512 < 7.7, "ML-KEM-512 Renyi-2 loss ~ 7.63 bits");
     CHECK(loss_1024 / loss_512 > 4.9, "5x ML-KEM Renyi-2 tightness cliff confirmed");
 
-    /* 6. FIPS 203 Compress_1 sharp boundary (-831..831 pass, +832 fail) */
+    /* 6. Exact NIST FIPS 203 Compress_1 Eq. (4.7) boundary (b=0: |e|<=832; b=1: -832<=e<=831) */
     bool ok_margin = true;
-    for (int e = -831; e <= 831; e++) {
+    for (int xm = 0; xm < 3329; xm++) {
+        int c_eq = ((2 * xm + 1664) / 3329) % 2;
+        if (triad_mlkem_compress1(xm) != c_eq) ok_margin = false;
+    }
+    for (int e = -832; e <= 832; e++) {
         if (triad_mlkem_compress1(e) != 0) ok_margin = false;
+    }
+    for (int e = -832; e <= 831; e++) {
         if (triad_mlkem_compress1(1665 + e) != 1) ok_margin = false;
     }
-    CHECK(ok_margin, "Compress_1 exact on all |e| <= 831");
-    CHECK(triad_mlkem_compress1(832) == 1 && triad_mlkem_compress1(1665 + 832) == 0,
-          "Compress_1 fails sharply at +832 for both b=0 and b=1");
+    CHECK(ok_margin, "Exact FIPS 203 Compress_1 matches (2x+1664)/3329 on all 3329 residues & exact margins");
+    CHECK(triad_mlkem_compress1(832) == 0 && triad_mlkem_compress1(833) == 1 && triad_mlkem_compress1(1665 + 832) == 0,
+          "Exact FIPS 203 Compress_1 sharp failure: b=0 fails at +833 (passes +832), b=1 fails at +832");
 
     /* 7. Deterministic fuzz smoke (500 pseudo-random QGTL & PSD invariants, ASan/UBSan clean) */
     uint32_t seed = 0x20261125u;
@@ -243,6 +249,24 @@ int main(void) {
     }
     CHECK(!triad_verify_paley_conference_sos(7),
           "Negative control: p=7 (3 mod 4) rejected by Paley conference verifier");
+
+    /* 16. v5.1.0 Defensive Bounds & Stack-Overflow Guards (Negative Tests) */
+    CHECK(triad_verify_koszul_rank(3, 2, 9, 101) == -1,
+          "Koszul rank rejects K=9 > 8 (prevents g[8] stack overflow)");
+    CHECK(triad_verify_koszul_rank(3, 2, 3, 1) == -1,
+          "Koszul rank rejects non-prime modulus p=1");
+    CHECK(!triad_verify_chen_step9(0, 3).passed && !triad_verify_chen_step9(-5, 3).passed,
+          "Chen Step-9 rejects D <= 0 safely");
+    CHECK(isnan(triad_qgtl_shifted_lwe(8, 1.0, 0.0).max_err),
+          "QGTL rejects eta=8 > 7 (prevents w[16] stack overflow)");
+    CHECK(isnan(triad_qgtl_shifted_lwe(2, 0.0, 0.0).max_err) && isnan(triad_qgtl_shifted_lwe(2, -1.0, 0.0).max_err),
+          "QGTL rejects sigma <= 0 safely");
+    CHECK(isnan(triad_mlkem_renyi_opt(0).min_r2) && isnan(triad_mlkem_renyi_opt(8).min_r2),
+          "ML-KEM Renyi optimizer rejects eta outside 1..7");
+    CHECK(!triad_verify_twisted_dft(100000, 100000, 1, NULL),
+          "Twisted DFT rejects signed-overflow m*D safely");
+    CHECK(triad_rank_mod_p(NULL, 4, 4, 11) == 0,
+          "Matrix rank handles NULL input safely");
 
     printf("Native C11 TriadFrontier tests: %d passed, %d failed\n", g_pass, g_fail);
     return g_fail == 0 ? 0 : 1;

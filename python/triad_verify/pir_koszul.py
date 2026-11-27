@@ -27,6 +27,10 @@ from pathlib import Path
 
 
 def modinv(a: int, p: int) -> int:
+    if p < 2:
+        raise ValueError(f"Prime modulus p must be >= 2, got {p}")
+    if a % p == 0:
+        raise ZeroDivisionError(f"{a} is not invertible modulo {p}")
     return pow(a % p, p - 2, p)
 
 

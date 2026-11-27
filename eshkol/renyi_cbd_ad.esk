@@ -15,7 +15,9 @@
                  (exp (* -49.0 inv2s2))
                  (exp (* -64.0 inv2s2))
                  (exp (* -81.0 inv2s2))
-                 (exp (* -100.0 inv2s2)))))))
+                 (exp (* -100.0 inv2s2))
+                 (exp (* -121.0 inv2s2))
+                 (exp (* -144.0 inv2s2)))))))
 
 (define (renyi2-cbd2 sigma)
   (let ((z (dgauss-z sigma))

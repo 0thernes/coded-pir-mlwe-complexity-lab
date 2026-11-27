@@ -1,14 +1,15 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
 # SPDX-License-Identifier: Apache-2.0
 version: "v0.5"
-release_version: "5.0.0"
+release_version: "5.1.0"
 
 project:
   name: "Koszul-Veronese Flag-Private Coded Byzantine PIR, Module-LWE Reduction Obstructions, and Complexity-Theoretic Bridges"
   description: >-
     Zero-Mathlib Lean 4.35.0 formalization of 31 theorems (T1a-T3l) plus spot-check
-    non-vacuity witnesses and 7 adversarial tests (34 audited declarations). The theorems are
-    elementary identities, finite certificates and formalizations of known results used in three
+    non-vacuity witnesses (including char-2 SimpleField (Fin 2)) and 9 adversarial tests
+    (34 audited declarations + 1,330 TriadFrontier.* declarations swept by AuditExhaustiveAxioms.lean).
+    The theorems are elementary identities, finite certificates and formalizations of known results used in three
     areas; none resolves a published open problem in Lean or refutes a published claim.
     (Pillar I, CS-053) a moment-vector annihilation identity and a Pascal-type binomial identity;
     inequalities between closed-form rate expressions (achievability of the rates and the
@@ -24,8 +25,8 @@ project:
     determinant q^m), DFT-cancellation identities over any commutative ring, and integer
     Cauchy-Schwarz, Holder, TV-chi^2, data-processing and moment certificates for tabulated noise
     weights. Renyi values, Bai et al. overheads and decryption-failure rates are numerical
-    (DFRs from a float64 model); no divergence, sampler or lattice is defined in Lean. The Lean
-    model of FIPS 203 Compress_1 differs from the standard at x = 832.
+    (DFRs from a float64 model); no divergence, sampler or lattice is defined in Lean. In v5.1.0,
+    mlkemCompress1 implements exact NIST FIPS 203 Eq. (4.7) and proves equivalence with +1664.
     (Pillar III, CS-001/CS-004/CS-010/CS-012/CS-051/CS-CMP-012) multilinear-extension uniqueness,
     the counting inequality of the natural-proofs argument, minimum distance 2B+1 of a
     B-error-correcting code, pigeonhole counting, tensor-rank bounds over every field
@@ -61,7 +62,7 @@ classification:
     - "03B35"
 
 sources:
-  - title: "Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked Complexity-Barrier Bridges (v5.0.0)"
+  - title: "Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked Complexity-Barrier Bridges (v5.1.0)"
     authors:
       - "Alexander S. Donahue"
     id: "https://github.com/0thernes/coded-pir-mlwe-complexity-lab"
@@ -92,7 +93,7 @@ sources:
     id: "https://doi.org/10.6028/NIST.FIPS.203"
     type: "standard"
     relationship: "background"
-    note: "Defines ML-KEM modulus q=3329, CBD_2/CBD_3 noise and Compress_1 (eq. 4.7). The Lean mlkemCompress1 used in T3d differs from Compress_1 at x = 832. Table 1 lists DFR 2^-174.8 for ML-KEM-1024; no 2^-174 threshold is stated."
+    note: "Defines ML-KEM modulus q=3329, CBD_2/CBD_3 noise and Compress_1 (eq. 4.7). In v5.1.0, mlkemCompress1 in T3d implements literal Eq. (4.7) (closing ERRATA L01). Table 1 lists DFR 2^-174.8 for ML-KEM-1024; no 2^-174 threshold is stated."
   - title: "Quantum Algorithms for Lattice Problems"
     authors:
       - "Yilei Chen"
@@ -164,9 +165,9 @@ related_formalizations: []
 status:
   scope: >-
     Zero-Mathlib Lean 4.35.0 formalization of the 31 theorems T1a-T3l as stated in
-    lean/Challenge.lean, spot-check non-vacuity witnesses (TriadFrontier/NonVacuity.lean), and 7 adversarial
+    lean/Challenge.lean, spot-check non-vacuity witnesses (TriadFrontier/NonVacuity.lean, incl. char-2), and 9 adversarial
     tests (TriadFrontier/AdversarialTests.lean) — 34
-    audited declarations total. Not formalized inside Lean: transcendental 60-digit Renyi/Bai
+    audited declarations + 1,330 TriadFrontier.* declarations swept by AuditExhaustiveAxioms.lean. Not formalized inside Lean: transcendental 60-digit Renyi/Bai
     optimization curves, float64 FIPS 203 discrete-convolution DFRs, Lovasz
     theta(C_7) trigonometric evaluation, and floating-point DFT/QGTL spectra (computed in
     Tier-2 Python, C11, and Eshkol AD), or open conjectures (P != NP, omega = 2,
@@ -366,7 +367,7 @@ review:
     Not externally peer-reviewed. Machine-checked across all 6 independent Lean 4.35.0
     proof kernels via lake comparator --config comparator.json --paranoid (Lean default,
     leanchecker-paranoid, lean4lean, silent 0-error nanoda, con-leche --verified and
-    con-ron --verified; 4,300 decls on the standalone Solution export), with 0 warnings, 0 proof sorries, 0 native_decide,
-    spot-check NonVacuity witnesses, 7 AdversarialTests, and a live negative
+    con-ron --verified; 4,337 decls on the standalone Solution export), with 0 warnings, 0 proof sorries, 0 native_decide,
+    1,330-decl AuditExhaustiveAxioms sweep, spot-check NonVacuity witnesses, 9 AdversarialTests, and a live negative
     kernel-rejection gate. Kernel agreement certifies the proofs, not the modelling; see
-    ERRATA.md (2026-11-26 statement audit) for known discrepancies.
+    ERRATA.md (2026-11-26 statement audit & v5.1.0 fixes).

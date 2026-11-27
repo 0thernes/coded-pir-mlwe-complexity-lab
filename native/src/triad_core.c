@@ -33,7 +33,8 @@ int triad_mod_inv(int a, int p) {
 }
 
 int triad_rank_mod_p(const int *mat, int rows, int cols, int p) {
-    if (rows <= 0 || cols <= 0 || p <= 1) return 0;
+    if (!mat || rows <= 0 || cols <= 0 || p <= 1) return 0;
+    if ((long long)rows * (long long)cols > 1048576LL) return -1;
     int *A = (int *)malloc((size_t)rows * (size_t)cols * sizeof(int));
     if (!A) return -1;
     for (int i = 0; i < rows * cols; i++) {
@@ -87,7 +88,7 @@ static int binom_small(int n, int k) {
 
 /* Compute exact rank of Koszul-Veronese block (T, T', K) evaluated on (K+T-T') servers mod p. */
 int triad_verify_koszul_rank(int T, int Tp, int K, int p) {
-    if (T < 1 || Tp < 1 || Tp > T || K < 1 || T > 6) return -1;
+    if (T < 1 || Tp < 1 || Tp > T || K < 1 || K > 8 || T > 6 || p < 2) return -1;
     int dim_ext = binom_small(T, Tp);
     int rows_per_srv = binom_small(T - 1, Tp - 1);
     int n_srv = K + T - Tp;
@@ -291,6 +292,8 @@ triad_chen_res_t triad_verify_chen_step9(int D, int c) {
     res.c = c;
     res.max_even_mag = 0.0;
     res.max_odd_mag = 0.0;
+    res.passed = false;
+    if (D < 1 || D > 2048) return res;
     int N = 2 * D;
     for (int freq = 0; freq < N; freq++) {
         double re = 0.0, im = 0.0;
@@ -314,6 +317,11 @@ triad_chen_res_t triad_verify_chen_step9(int D, int c) {
 
 triad_qgtl_res_t triad_qgtl_shifted_lwe(int eta, double sigma, double e0) {
     triad_qgtl_res_t out;
+    memset(&out, 0, sizeof(out));
+    if (eta < 1 || eta > 7 || !(sigma > 0.0) || !isfinite(sigma) || !isfinite(e0)) {
+        out.max_err = NAN;
+        return out;
+    }
     int support = 2 * eta + 1;
     double w[16], x[16], dlogp[16];
     double Z = 0.0;
@@ -396,7 +404,14 @@ static void eval_renyi(int eta, double sigma, double *out_r2, double *out_rinf) 
 
 triad_renyi_res_t triad_mlkem_renyi_opt(int eta) {
     triad_renyi_res_t res;
+    memset(&res, 0, sizeof(res));
     res.eta = eta;
+    if (eta < 1 || eta > 7) {
+        res.min_r2 = NAN;
+        res.min_rinf = NAN;
+        res.bits_per_coord_r2 = NAN;
+        return res;
+    }
     res.min_r2 = 1e9;
     res.min_rinf = 1e9;
     res.sigma_opt_r2 = 1.0;
@@ -427,8 +442,9 @@ triad_renyi_res_t triad_mlkem_renyi_opt(int eta) {
 }
 
 int triad_mlkem_compress1(int x) {
+    /* Exact NIST FIPS 203 Eq. (4.7): floor((2/3329)*x + 1/2) mod 2 = floor((4*xm + 3329)/6658) mod 2 */
     int xm = ((x % 3329) + 3329) % 3329;
-    return ((2 * xm + 1665) / 3329) % 2;
+    return ((4 * xm + 3329) / 6658) % 2;
 }
 
 /* Constant-time 1-byte sampler for Dyadic-256: w = (1,14,63,100,63,14,1)/256 on {-3..3}.
@@ -574,7 +590,7 @@ triad_renyi_res_t triad_mlkem_dyadic512_opt(void) {
 }
 
 bool triad_verify_twisted_dft(int m, int D, int r, double *out_max_forb) {
-    if (m < 2 || D < 1 || m * D > 256) return false;
+    if (m < 2 || D < 1 || (long long)m * (long long)D > 256LL) return false;
     int N = m * D;
     double fre[256], fim[256];
     for (int x = 0; x < N; x++) {

@@ -169,9 +169,11 @@ def T3c_KatzTrevisanByzantinePIRToLDC : Prop :=
     (∀ m1 m2, m1 ≠ m2 → 2 * B + 1 ≤ hammingDist (Enc m1) (Enc m2))
 
 def T3d_MLWESingleServerPIRNoiseCeiling : Prop :=
-  (∀ (b e : Int), (b = 0 ∨ b = 1) → -831 ≤ e → e ≤ 831 →
-    mlkemCompress1 (1665 * b + e) = b) ∧
-  (mlkemCompress1 832 = 1 ∧ mlkemCompress1 (1665 + 832) = 0) ∧
+  (∀ (x : Int),
+    mlkemCompress1 x = ((2 * ((x % 3329 + 3329) % 3329) + 1664) / 3329) % 2) ∧
+  (∀ (e : Int), -832 ≤ e → e ≤ 832 → mlkemCompress1 e = 0) ∧
+  (∀ (e : Int), -832 ≤ e → e ≤ 831 → mlkemCompress1 (1665 + e) = 1) ∧
+  (mlkemCompress1 833 = 1 ∧ mlkemCompress1 (1665 + 832) = 0) ∧
   (∀ (bStep M : Nat), 0 < bStep → 831 / bStep < M → 832 ≤ M * bStep)
 
 def T1g_ZhangYeungReductionAndMFileKoszul : Prop :=

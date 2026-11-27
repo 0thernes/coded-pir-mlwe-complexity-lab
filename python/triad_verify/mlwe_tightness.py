@@ -356,6 +356,7 @@ def compute_exact_mlkem_dfr(k: int, d_u: int, d_v: int,
             p_fail += float(prob)
     dfr = 256.0 * p_fail
     return {
+        "method": "ieee754_float64_nonnegative_direct_convolution",
         "pr_single_coeff_ge_832": p_fail,
         "union_bound_log2_dfr": round(math.log2(dfr), 2) if dfr > 0 else float("-inf"),
     }
@@ -514,7 +515,12 @@ def compute_bai_overhead_bits(pmf: dict[int, Fraction], m_coords: int, lam_bits:
                 ov = eval_ov(alpha, s)
                 if ov < ov_best:
                     ov_best, a0, s0 = ov, alpha, s
-    return {"bai_overhead_bits": round(ov_best, 4), "alpha_opt": round(a0, 3), "sigma_opt": round(s0, 5)}
+    return {
+        "method": "float64_grid_search_logsumexp",
+        "bai_overhead_bits": round(ov_best, 4),
+        "alpha_opt": round(a0, 3),
+        "sigma_opt": round(s0, 5),
+    }
 
 
 def verify_all_order_renyi_bai_and_dyadic1024() -> dict:

@@ -6,8 +6,22 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [5.1.0] - 2026-11-26
+
+### Fixed
+- **Statement-Audit Resolutions (`ERRATA.md` `A01`–`A12`, `L01`, `L03`–`L06`, `S02`–`S04`, `H35`–`H37`):**
+  - **Exact NIST FIPS 203 Eq. (4.7) `Compress_1` (`L01` / `A08` / `S03`):** Redefined `mlkemCompress1` to exact $\lfloor(4(x \bmod 3329)+3329)/6658\rfloor \bmod 2$ across Lean (`ComplexityTriad.lean`, `Challenge.lean`, `AdversarialTests.lean`), C11 (`triad_core.c`), and Python (`complexity_triad.py`); kernel-proved equivalence with $\lfloor(2(x \bmod 3329)+1664)/3329\rfloor \bmod 2$ for all $x \in \mathbb{Z}$, exact margins $|e| \le 832$ ($b=0$) and $-832 \le e \le 831$ ($b=1$), and sharp failures at $b=0, e=+833$ and $b=1, e=+832$; aligned Mutant 2 (`tests/test_all.py`) to kill `+1665` and aligned the live CI negative tamper gate to reject false `mlkemCompress1 (1665 + 832) = 1`.
+  - **Paper, Figures, BibTeX & Lean Docstrings (`A01`–`A12`, `L03`–`L06`, `S02`):** Applied all 12 independent statement-audit corrections directly into `paper/main.tex`, `paper/refs.bib` (`Luo2026` Part I full title; Wu & Vidick credited on `Chen2024`), `paper/figures/*.pdf`, `examples/quickstart_demo.py`, and Lean docstrings — removing all withdrawn claims ("Gaussian DFR Paradox", DFR "PASS/FAIL", Luo refutation, $\ge 7$-variable confinement, `270,336` elemental count, unverified zero-error $(6,3,3)$, and unconditional "for every $k$" Paley wording) while clearly labelling DFRs as `float64` discrete-convolution model evaluations and `T3i` as a $2m^2-m$ substitution bound weaker than Brockett–Dobkin $2m^2-1$.
+  - **CI `bash -e` `! grep` Bug (`S04`):** Replaced both `! grep -E ...` lines in `.github/workflows/ci.yml` (axiom forbidden-token check and Tectonic warning check) with `if grep -E ...; then exit 1; fi`.
+- **3-Cycle Defensive Hardening (`H22`–`H34`, `H38`):** Fixed 2 broken Lean file links in `docs/site/blueprint.html`, added strict bounds checks & `strtol`/`strtod` CLI parsing in `native/` (87/87 unit + 1,024 fuzz tests), hardened `eshkol/run_eshkol_ad.mjs` against silent `NaN`, malformed syntax, and unbounded recursion, normalized LF endings in `MANIFEST.sha256`, and verified zero-cache clean-clone replication.
+
+### Added
+- **Programmatic Exhaustive Axiom Sweep (`lean/AuditExhaustiveAxioms.lean`):** Sweeps all **1,330** `TriadFrontier.*` declarations via `Lean.collectAxioms` (0 forbidden axioms; strict subset of `[propext, Classical.choice, Quot.sound]`; **4,337** `con-leche`/`con-ron` verified declarations across all 6 kernels).
+- **Characteristic-2 Non-Vacuity & Expanded Adversarial Suite:** Added `SimpleField (Fin 2)` witnesses in `NonVacuity.lean` and 2 new boundary refutations in `AdversarialTests.lean` (`adv_schwartz_zippel_f2_saturation`, `adv_paley_p7_not_conference` — 9/9 total).
+- **Governance, Dual Timestamps & Accessibility:** Added Draft 2020-12 `repo-standard.schema.json`, Crossref retraction screening in `scripts/check_citations.py --online` (36/36 HTTP 200, 30/30 Crossref 0 retractions), dual DigiCert RFC 3161 `.tsr` + 3-calendar Bitcoin OpenTimestamps `.ots` (`scripts/stamp_timestamps.py`), strict CSP + WCAG 2.1 AA keyboard navigation in `docs/site/`, Playbook v1.3 dossiers (`docs/LITERATURE_SEARCH.md`, `docs/MEGA_ATLAS_CROSSCHECK.md`, `docs/SUBMISSION_PACKET.md`, `UPGRADING.md`, `CONTRIBUTING.md`, `justfile`), and expanded `tests/test_all.py` to **25/25 tests** (`0 ruff`, `0 mypy`, 100.0% `Audit-Repo.ps1`).
+
 ### Changed
-- **2026-11-26 correction note:** README, CLAIMS, LIMITATIONS, the Markdown docs, the Pages site (`docs/site/`) and the social preview image were corrected to match an independent statement audit (see [ERRATA.md](ERRATA.md)). The entries below record what was claimed at the time. Withdrawn: the refutation of Luo (`T2a` is a diagonal-product identity), the zero-error rate $10/17$ over $\mathbb{F}_7$ and an exact Koszul rank (`T1a`; the rate is numerical for one design, privacy and decoding not verified), the "Gaussian DFR Paradox" and DFR pass/fail verdicts (float64 model; FIPS 203 sets no $2^{-174}$ threshold), the sharp $+832$ `Compress_1` failure (the Lean model differs from FIPS 203 at $x=832$), the $\ge 7$-variable storage-coupled confinement (`T1j`), and the count 270,336 (67,584 elemental submodularity inequalities plus 12 monotonicity).
+- **2026-11-26 historical correction note (preserved from post-`v5.0.0` audit `400a8b3`..`87b1afb`):** The `v1.0.0`–`v5.0.0` entries below record what was originally claimed at the time of those releases; withdrawn items are tracked permanently in [ERRATA.md](ERRATA.md) and resolved directly in `v5.1.0` above.
 
 ## [5.0.0] - 2026-11-26
 

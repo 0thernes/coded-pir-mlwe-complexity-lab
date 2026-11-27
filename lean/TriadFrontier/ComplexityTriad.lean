@@ -384,27 +384,40 @@ theorem t3c_katz_trevisan_byzantine_pir_ldc_distance :
 -- T3d: CS-026 ↔ CS-053 Bridge (MLWE Single-Server PIR Noise Ceiling)
 -- ============================================================================
 
-/-- FIPS 203 `Compress_1` rounding decoder for modulus `q = 3329`: `(2*x + 1665) / 3329 % 2`. -/
+/-- Exact NIST FIPS 203 Eq. (4.7) `Compress_1` rounding decoder for modulus `q = 3329`:
+`⌊(2 / 3329) * x + 1/2⌋ mod 2 = ⌊(4 * (x mod 3329) + 3329) / 6658⌋ mod 2`,
+identically equal to `⌊(2 * (x mod 3329) + 1664) / 3329⌋ mod 2` on all of `Int`. -/
 def mlkemCompress1 (x : Int) : Int :=
-  ((2 * ((x % 3329 + 3329) % 3329) + 1665) / 3329) % 2
+  ((4 * ((x % 3329 + 3329) % 3329) + 3329) / 6658) % 2
 
-/-- **Theorem T3d (MLWE Single-Server PIR Noise Accumulation Ceiling):**
-1. Sharp FIPS 203 decryption boundary: `Compress_1(1665 * b + e) = b` for ALL `b ∈ {0, 1}`
-   and ALL `|e| ≤ 831`, and FAILS strictly at `e = +832` (`Compress_1(832) = 1 ≠ 0` and
-   `Compress_1(1665 + 832) = 0 ≠ 1`).
-2. Linear single-server MLWE-PIR accumulation depth ceiling: if each database row adds
-   worst-case noise magnitude `b_step > 0`, any scheme with depth `M > 831 / b_step` exceeds
-   the deterministic decryption boundary (`M * b_step ≥ 832`), contrasting computational
-   noise-limited single-server PIR against zero-noise multi-server Koszul-Veronese PIR! -/
+/-- **Theorem T3d (Exact FIPS 203 `Compress_1` Margin & Additive Depth Ceiling):**
+1. Exact rational-rounding equivalence: `mlkemCompress1 x = ((2 * (x mod 3329) + 1664) / 3329) % 2`
+   for every `x : Int`.
+2. Exact asymmetric FIPS 203 decryption margins:
+   - for `b = 0`: `mlkemCompress1 e = 0` for all `-832 ≤ e ≤ 832`, failing sharply at `e = +833`;
+   - for `b = 1`: `mlkemCompress1 (1665 + e) = 1` for all `-832 ≤ e ≤ 831`, failing sharply at `e = +832`.
+   Hence the worst-case symmetric margin across `b ∈ {0, 1}` is exact `|e| ≤ 831`.
+3. Additive depth ceiling: for any positive step `bStep > 0`, `831 / bStep < M → 832 ≤ M * bStep`. -/
 theorem t3d_mlwe_single_server_pir_noise_ceiling :
-    (∀ (b e : Int), (b = 0 ∨ b = 1) → -831 ≤ e → e ≤ 831 →
-      mlkemCompress1 (1665 * b + e) = b) ∧
-    (mlkemCompress1 832 = 1 ∧ mlkemCompress1 (1665 + 832) = 0) ∧
+    (∀ (x : Int),
+      mlkemCompress1 x = ((2 * ((x % 3329 + 3329) % 3329) + 1664) / 3329) % 2) ∧
+    (∀ (e : Int), -832 ≤ e → e ≤ 832 → mlkemCompress1 e = 0) ∧
+    (∀ (e : Int), -832 ≤ e → e ≤ 831 → mlkemCompress1 (1665 + e) = 1) ∧
+    (mlkemCompress1 833 = 1 ∧ mlkemCompress1 (1665 + 832) = 0) ∧
     (∀ (bStep M : Nat), 0 < bStep → 831 / bStep < M → 832 ≤ M * bStep) := by
-  refine ⟨?_, by decide, ?_⟩
-  · intro b e hb hlo hhi
+  refine ⟨?_, ?_, ?_, by decide, ?_⟩
+  · intro x
     unfold mlkemCompress1
-    rcases hb with rfl | rfl <;> omega
+    have hdiv :
+        (4 * ((x % 3329 + 3329) % 3329) + 3329) / 6658 =
+        (2 * ((x % 3329 + 3329) % 3329) + 1664) / 3329 := by omega
+    rw [hdiv]
+  · intro e hlo hhi
+    unfold mlkemCompress1
+    omega
+  · intro e hlo hhi
+    unfold mlkemCompress1
+    omega
   · intro bStep M hpos hgt
     have h1 : 831 / bStep + 1 ≤ M := hgt
     have h2 : 831 < (831 / bStep + 1) * bStep := by

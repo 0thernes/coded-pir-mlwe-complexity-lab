@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Alexander S. Donahue
-"""Generate data/MANIFEST.sha256, root MANIFEST.sha256, exact_audit_summary.json, and rosette_receipt.json."""
+"""Generate data/MANIFEST.sha256, complete root MANIFEST.sha256, exact_audit_summary.json, and rosette_receipt.json."""
 
 from __future__ import annotations
 
@@ -41,7 +41,7 @@ def sha256_file(path: Path) -> str:
 def write_manifest(manifest_path: Path, rel_paths: list[str], base_dir: Path) -> dict[str, str]:
     lines: list[str] = []
     hashes: dict[str, str] = {}
-    for rel in sorted(rel_paths):
+    for rel in sorted(set(rel_paths)):
         full = base_dir / rel
         if not full.is_file():
             raise FileNotFoundError(f"Expected manifest target missing: {full}")
@@ -92,41 +92,57 @@ def main() -> int:
         json.dumps(audit_summary, indent=2) + "\n", encoding="utf-8", newline="\n"
     )
 
-    # 3. Root release & proof manifest (Build Standard B37)
-    root_targets = [
-        "VERSION",
-        "ERRATA.md",
-        "data/f11_byz_witness.json",
-        "data/h_uncond_certified.json",
-        "data/MANIFEST.sha256",
-        "dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf",
-        "dist/arxiv_submission.tar.gz",
-        "docs/site/index.html",
-        "docs/site/blueprint.html",
-        "lean/Challenge.lean",
-        "lean/Solution.lean",
-        "lean/PalomarChallenge.lean",
-        "lean/PalomarSolution.lean",
-        "lean/VerifyAxioms.lean",
-        "lean/TriadFrontier/PIRLinearCerts.lean",
-        "lean/TriadFrontier/KoszulTensor.lean",
-        "lean/TriadFrontier/StrassenWinograd.lean",
-        "lean/TriadFrontier/BrockettDobkin.lean",
-        "lean/TriadFrontier/ShannonCapacity.lean",
-        "lean/TriadFrontier/AlgebraicComplexity.lean",
-        "lean/TriadFrontier/PaleyCapacity.lean",
-        "lean/TriadFrontier/AdversarialTests.lean",
-        "lean/comparator.json",
-        "lean/formalization.yaml",
-        "paper/main.tex",
-        "paper/refs.bib",
-        "paper/figures/fig5_dyadic256_and_koszul_tensor.pdf",
-        "paper/figures/fig6_mlkem_dfr_variational_and_allm_koszul.pdf",
-        "paper/figures/fig7_bai_security_collapse_and_lovasz_bd.pdf",
-        "paper/figures/fig8_v5_gaussian_paradox_and_paley_family.pdf",
-        "results/lean_axioms.txt",
-        "results/exact_audit_summary.json",
-    ]
+    # 3. Complete root release, proof, native, Eshkol, Python, paper & figure manifest (Build Standard B37)
+    lean_files = sorted(
+        p.relative_to(ROOT).as_posix()
+        for p in (ROOT / "lean").rglob("*.lean")
+        if ".lake" not in p.parts
+    )
+    figure_files = sorted(
+        p.relative_to(ROOT).as_posix()
+        for p in (ROOT / "paper" / "figures").glob("fig*.pdf")
+    )
+    py_core_files = sorted(
+        p.relative_to(ROOT).as_posix()
+        for p in (ROOT / "python" / "triad_verify").glob("*.py")
+    )
+    eshkol_files = sorted(
+        p.relative_to(ROOT).as_posix()
+        for p in (ROOT / "eshkol").iterdir()
+        if p.is_file() and p.suffix in {".esk", ".mjs"}
+    )
+    root_targets = (
+        [
+            "VERSION",
+            "CITATION.cff",
+            "ERRATA.md",
+            "repo.yaml",
+            "repo-standard.schema.json",
+            "data/f11_byz_witness.json",
+            "data/h_uncond_certified.json",
+            "data/MANIFEST.sha256",
+            "dist/Donahue_2026_coded_pir_mlwe_complexity_frontier.pdf",
+            "dist/arxiv_submission.tar.gz",
+            "docs/site/index.html",
+            "docs/site/blueprint.html",
+            "lean/comparator.json",
+            "lean/formalization.yaml",
+            "lean/lake-manifest.json",
+            "lean/lakefile.toml",
+            "lean/lean-toolchain",
+            "native/include/triad_core.h",
+            "native/src/triad_core.c",
+            "native/src/triad_cli.c",
+            "paper/main.tex",
+            "paper/refs.bib",
+            "results/lean_axioms.txt",
+            "results/exact_audit_summary.json",
+        ]
+        + lean_files
+        + figure_files
+        + py_core_files
+        + eshkol_files
+    )
     if (ROOT / "results" / "six_kernel_audit.txt").is_file():
         root_targets.append("results/six_kernel_audit.txt")
     root_hashes = write_manifest(ROOT / "MANIFEST.sha256", root_targets, ROOT)
@@ -138,6 +154,7 @@ def main() -> int:
         "lean_axioms": root_hashes["results/lean_axioms.txt"],
         "exact_audit_summary": root_hashes["results/exact_audit_summary.json"],
         "manifest_sha256": sha256_file(ROOT / "MANIFEST.sha256"),
+        "manifest_entries": str(len(root_hashes)),
     }
     receipt: dict[str, Any] = {
         "schema": "rosette-wire-receipt/v1-cleanroom",
@@ -155,9 +172,13 @@ def main() -> int:
         json.dumps(receipt, indent=2) + "\n", encoding="utf-8", newline="\n"
     )
 
-    print("Generated data/MANIFEST.sha256, MANIFEST.sha256, results/exact_audit_summary.json, results/rosette_receipt.json")
-    print(f"PDF SHA-256:     {artifact_hashes['pdf']}")
-    print(f"Tarball SHA-256: {artifact_hashes['arxiv_tarball']}")
+    print(
+        f"Generated data/MANIFEST.sha256 ({len(data_hashes)} files), "
+        f"MANIFEST.sha256 ({len(root_hashes)} files), exact_audit_summary.json, rosette_receipt.json"
+    )
+    print(f"MANIFEST SHA-256: {artifact_hashes['manifest_sha256']}")
+    print(f"PDF SHA-256:      {artifact_hashes['pdf']}")
+    print(f"Tarball SHA-256:  {artifact_hashes['arxiv_tarball']}")
     return 0 if receipt["all_checks_ok"] else 1
 
 

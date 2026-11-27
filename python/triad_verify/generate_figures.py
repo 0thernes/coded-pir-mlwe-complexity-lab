@@ -317,7 +317,7 @@ def fig4_chen_step9_and_triad(out_dir: Path) -> None:
     ax1.set_title(r"(a) Chen Step-9 & $m$-Twisted DFT Rule (T2b, T2f)")
     ax1.legend(loc="upper right", frameon=True, framealpha=0.94, fontsize=7.6)
 
-    # Panel B: Unified 5-Node Mega Atlas Architecture (31 Lean 4.35 Theorems T1a-T3l + 7 Refutations)
+    # Panel B: Unified 5-Node Mega Atlas Architecture (31 Lean 4.35 Theorems T1a-T3l + 9 Refutations)
     ax2.axis("off")
     ax2.set_xlim(0, 10.6)
     ax2.set_ylim(0, 8.6)
@@ -325,10 +325,10 @@ def fig4_chen_step9_and_triad(out_dir: Path) -> None:
 
     nodes = {
         "CS053": (2.25, 6.85, "CS-053: Coded/Byz. PIR\n(T1a\u2013T1j: Koszul, Flag-Priv,\nSingle $\\mathbb{F}_2^{64}$ 6-Obj Realiz.)", "#dbeafe", "#1d4ed8"),
-        "CS026": (8.35, 6.85, "CS-026 / QC-042 / CM-048\n(T2a\u2013T2i: Bai DPI/Tensor,\nDyadic-16384 & Gauss Paradox)", "#fce7f3", "#be185d"),
-        "CS004": (5.30, 4.35, "CS-004 ($\\omega$), CS-012 & CS-CMP-012\nT3e/T3g\u2013T3l: $2\\cdot 4^k-2^k\\leq R\\leq 7^k$,\nSchwartz\u2013Zippel, $\\Theta(P_p)=\\sqrt{p}\\;\\forall p$", "#ede9fe", "#6d28d9"),
+        "CS026": (8.35, 6.85, "CS-026 / QC-042 / CM-048\n(T2a\u2013T2i: Bai DPI/Tensor,\nDyadic-16384 & Float64 DFR)", "#fce7f3", "#be185d"),
+        "CS004": (5.30, 4.35, "CS-004 ($\\omega$), CS-012 & CS-CMP-012\nT3e/T3g\u2013T3l: $2\\cdot 4^k-2^k\\leq R\\leq 7^k$,\nSchwartz\u2013Zippel, Cond. $\\Theta(P_p)=\\sqrt{p}$", "#ede9fe", "#6d28d9"),
         "CS051": (2.25, 1.55, "CS-051: Locally Decodable\nCodes (T3c: $d_{\\min}\\geq 2B+1$;\nT3f: Katz\u2013Trevisan Smoothness)", "#dcfce7", "#15803d"),
-        "CS001": (8.35, 1.55, "CS-001 / CS-010: $\\mathrm{P}\\neq\\mathrm{NP}$\n(T3a MLE, T3b Nat. Proofs,\nT3f Shannon; 7 Adv. Refut.)", "#fef3c7", "#b45309"),
+        "CS001": (8.35, 1.55, "CS-001 / CS-010: $\\mathrm{P}\\neq\\mathrm{NP}$\n(T3a MLE, T3b Nat. Proofs,\nT3f Shannon; 9 Adv. Refut.)", "#fef3c7", "#b45309"),
     }
     for nx, ny, txt, fc, ec in nodes.values():
         ax2.text(
@@ -474,9 +474,9 @@ def fig6_mlkem_dfr_variational_and_allm_koszul(out_dir: Path) -> None:
         min_r2_loss(dyadic256_pmf_exact(), 2048, 0.95, 1.15),
     ]
     sets = [
-        "ML-KEM-512\n($m=1024, \\mathrm{Var}=3/2$)\nDFR $2^{-139.3} < 2^{-138.8}$",
-        "ML-KEM-768\n($m=1536, \\mathrm{Var}=1$)\nDFR $2^{-166.1} < 2^{-164}$",
-        "ML-KEM-1024\n($m=2048, \\mathrm{Var}=1$)\nDFR $2^{-174.3} < 2^{-174}$",
+        "ML-KEM-512\n($m=1024, \\mathrm{Var}=3/2$)\nModel DFR $2^{-139.3}$",
+        "ML-KEM-768\n($m=1536, \\mathrm{Var}=1$)\nModel DFR $2^{-166.1}$",
+        "ML-KEM-1024\n($m=2048, \\mathrm{Var}=1$)\nModel DFR $2^{-174.3}$",
     ]
     ratios = [f / o for f, o in zip(fips_losses, ours_losses)]
     x = np.arange(len(sets))
@@ -503,7 +503,7 @@ def fig6_mlkem_dfr_variational_and_allm_koszul(out_dir: Path) -> None:
     ax1.set_xticklabels(sets, fontsize=7.4)
     ax1.set_ylim(0, 47.0)
     ax1.set_ylabel("Cumulative Keygen Rényi-2 Loss $m\\log_2 R_2^*$ (bits)")
-    ax1.set_title("(a) Complete FIPS 203 Dyadic Suite & Exact DFRs (T2g)")
+    ax1.set_title("(a) FIPS 203 Dyadic Suite & Float64 Model DFRs (T2g)")
     ax1.legend(loc="upper left", frameon=True, framealpha=0.95, fontsize=7.5)
 
     ms = np.array([2, 3, 4, 5])
@@ -587,7 +587,7 @@ def fig7_bai_security_collapse_and_lovasz_bd(out_dir: Path) -> None:
     sets = [
         "ML-KEM-512\n($\\lambda=128, m=1024$)\nDFR $2^{-140.0} < 2^{-138.8}$",
         "ML-KEM-768\n($\\lambda=192, m=1536$)\nDFR $2^{-166.0} < 2^{-164}$",
-        "ML-KEM-1024\n($\\lambda=256, m=2048$)\nDFR $2^{-174.1} < 2^{-174}$",
+        "ML-KEM-1024\n($\\lambda=256, m=2048$)\nModel DFR $2^{-174.1}$",
     ]
     x = np.arange(len(sets))
     w = 0.26
@@ -626,7 +626,7 @@ def fig7_bai_security_collapse_and_lovasz_bd(out_dir: Path) -> None:
     ax2.fill_between(ms, koszul_ceil, bd, where=(ms >= 3), color="#fee2e2", alpha=0.45, label="Quadratic Gain Beyond Koszul ($m^2-2m$)")
     ax2.plot(ms, triv, "o--", color="#64748b", lw=1.5, ms=4.8, label=r"Trivial Flattening ($m^2$)")
     ax2.plot(ms, koszul_ceil, "^-.", color="#1d4ed8", lw=1.8, ms=5.5, label=r"Deg-$(m-1)$ Koszul Ceiling ($m^2+m$, T3g)")
-    ax2.plot(ms, bd, "D-", color="#b91c1c", lw=2.3, ms=5.8, label=r"Ours: Brockett–Dobkin ($2m^2-m\;\forall F$, T3i)")
+    ax2.plot(ms, bd, "D-", color="#b91c1c", lw=2.3, ms=5.8, label=r"Substitution LB ($2m^2-m\;\forall F$, T3i; BD78: $2m^2-1$)")
     ax2.scatter([2], [7], color="#7c3aed", s=110, marker="*", zorder=7, label=r"Strassen–Winograd $\mathrm{rank}_F(\langle 2,2,2\rangle)=7$ (T3h)")
     for m_val, kc_val, bd_val in zip(ms, koszul_ceil, bd):
         if m_val >= 3:
@@ -659,7 +659,7 @@ def fig7_bai_security_collapse_and_lovasz_bd(out_dir: Path) -> None:
     ax2.set_ylim(0, 82.0)
     ax2.set_xlabel(r"Matrix Multiplication Tensor $\langle m, m, m \rangle$")
     ax2.set_ylabel(r"Tensor Rank Lower Bound ($\forall F$, incl. $\mathbb{F}_2$)")
-    ax2.set_title("(b) Brockett–Dobkin $2m^2-m$ & Lovász/Haemers (T3i, T3j)")
+    ax2.set_title("(b) Substitution LB $2m^2-m$ & Lovász/Haemers (T3i, T3j)")
     ax2.legend(loc="upper left", frameon=True, framealpha=0.95, fontsize=6.9)
 
     fig.tight_layout(w_pad=2.2)
@@ -668,8 +668,8 @@ def fig7_bai_security_collapse_and_lovasz_bd(out_dir: Path) -> None:
 
 
 def fig8_v5_gaussian_paradox_and_paley_family(out_dir: Path) -> None:
-    """v5.0.0 Flagship Figure 8: ML-KEM-1024 Discrete Gaussian DFR Paradox & 14-Bit Pareto Wall (T2i)
-    + Infinite Paley/Conference Zero-Reals Z[sqrt(p)] Shannon Capacity Family & Strassen-BD Sandwich (T3k, T3l)."""
+    """v5.1.0 Figure 8: ML-KEM-1024 Float64 Discrete-Convolution DFR vs. 14-Bit Bai Overhead (T2i)
+    + Conditional Paley/Conference Zero-Reals Z[sqrt(p)] Shannon Capacity & Two-Sided Strassen Bounds (T3k, T3l)."""
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.4, 4.35), dpi=300, gridspec_kw={"width_ratios": [1.05, 1.05]})
 
     # Panel A: ML-KEM-1024 Pareto Wall (DFR vs Bai Security Overhead, all exact Var = 1)
@@ -702,9 +702,9 @@ def fig8_v5_gaussian_paradox_and_paley_family(out_dir: Path) -> None:
             fontweight="bold" if col == "#047857" else "normal",
             bbox={"boxstyle": "round,pad=0.20", "facecolor": "white", "edgecolor": col, "alpha": 0.94},
         )
-    ax1.plot(xs_l, ys_l, "--", color="#047857", lw=1.4, alpha=0.8, zorder=5, label="Legal $\\mathrm{Var}=1$ Pareto Front (PASS)")
+    ax1.plot(xs_l, ys_l, "--", color="#047857", lw=1.4, alpha=0.8, zorder=5, label=r"$\mathrm{Var}=1$ Dyadic Tradeoff (float64 model)")
 
-    # Exact unit-variance Discrete Gaussian point (FAILS NIST ML-KEM-1024!)
+    # Exact unit-variance Discrete Gaussian point (float64 model comparison)
     s_lo, s_hi = 0.99, 1.01
     for _ in range(80):
         sm = 0.5 * (s_lo + s_hi)
@@ -718,11 +718,10 @@ def fig8_v5_gaussian_paradox_and_paley_family(out_dir: Path) -> None:
     dg1 = {x: Fraction(math.exp(-(x * x) / (2.0 * sg1 * sg1)) / Zg1).limit_denominator(10**12) for x in range(-14, 15)}
     gauss_dfr_x = -compute_exact_mlkem_dfr(4, 11, 5, dg1, dg1)["union_bound_log2_dfr"]
 
-    ax1.axvspan(172.9, 174.0, color="#fee2e2", alpha=0.72, label="NIST ML-KEM-1024 Fail ($> 2^{-174}$)")
-    ax1.axvline(174.0, color="#b91c1c", linestyle="--", lw=1.5)
-    ax1.scatter([gauss_dfr_x], [0.0], color="#b91c1c", marker="X", s=110, zorder=8, label=r"True Gaussian $D_{\sigma=1}$ (FAILS!)")
+    ax1.axvline(174.8, color="#475569", linestyle=":", lw=1.3, label="FIPS 203 Table 1 baseline ($2^{-174.8}$)")
+    ax1.scatter([gauss_dfr_x], [0.0], color="#b91c1c", marker="X", s=110, zorder=8, label=r"Unit-Var Gaussian $D_{\sigma\approx 1}$ (model)")
     ax1.annotate(
-        f"True $D_{{\\sigma=1}}$ Paradox:\nBai = 0 b, $2^{{-{gauss_dfr_x:.2f}}}$ FAIL!",
+        f"Unit-Var $D_{{\\sigma\\approx 1}}$:\nBai = 0 b, model $2^{{-{gauss_dfr_x:.2f}}}$",
         xy=(gauss_dfr_x, 0.0),
         xytext=(173.02, 22.0),
         arrowprops={"arrowstyle": "->", "color": "#b91c1c", "lw": 1.2},
@@ -737,9 +736,9 @@ def fig8_v5_gaussian_paradox_and_paley_family(out_dir: Path) -> None:
     ax1.text(
         0.02,
         0.74,
-        "ML-KEM-512 ($\\mathrm{Var}=3/2$, Gauss PASSES):\n"
-        f"Dyadic-16384-B: $\\mathbf{{{bai_512_b:.4f}}}$ b (41.9$\\times$ drop!)\n"
-        f"Sub-1-bit Bai, DFR $2^{{-{dfr_512_b:.2f}}} < 2^{{-138.8}}$",
+        "ML-KEM-512 ($\\mathrm{Var}=3/2$, float64 model):\n"
+        f"Dyadic-16384-B: $\\mathbf{{{bai_512_b:.4f}}}$ b (41.9$\\times$ vs CBD$_3$)\n"
+        f"Model DFR $2^{{-{dfr_512_b:.2f}}}$ (CBD$_3$ model: $2^{{-141.6}}$)",
         transform=ax1.transAxes,
         va="top",
         fontsize=6.6,
@@ -747,12 +746,12 @@ def fig8_v5_gaussian_paradox_and_paley_family(out_dir: Path) -> None:
     )
     ax1.set_xlim(172.92, 177.05)
     ax1.set_ylim(-5.0, 77.0)
-    ax1.set_xlabel(r"ML-KEM-1024 Exact Margin $-\log_2(\mathrm{DFR})$ (NIST Target $\geq 174$)")
+    ax1.set_xlabel(r"ML-KEM-1024 Float64 Model $-\log_2(\mathrm{DFR})$ (CBD$_2$ model: $176.6$; FIPS 203: $174.8$)")
     ax1.set_ylabel(r"ML-KEM-1024 Bai Overhead $\Delta_{\mathrm{Bai}}(256)$ (bits)")
-    ax1.set_title("(a) ML-KEM-1024 Gaussian DFR Paradox & 14-Bit Pareto (T2i)")
-    ax1.legend(loc="upper left", frameon=True, framealpha=0.95, fontsize=6.7)
+    ax1.set_title("(a) ML-KEM-1024 Float64 Model DFR vs. Bai Overhead (T2i)")
+    ax1.legend(loc="upper left", frameon=True, framealpha=0.95, fontsize=6.5)
 
-    # Panel B: Infinite Paley/Conference Family Theta(P_p) = sqrt(p) (T3l) + Strassen-BD Sandwich (T3k)
+    # Panel B: Conference/Paley Family Theta(P_p) = sqrt(p) (T3l; Lovasz 1979) + Two-Sided Bound (T3k)
     primes = np.array([5, 13, 17, 29, 37, 41])
     thetas = np.sqrt(primes)
     # Exact clique/independence numbers alpha(P_p) for p = 5,13,17,29,37,41 (computed live!)
@@ -785,7 +784,7 @@ def fig8_v5_gaussian_paradox_and_paley_family(out_dir: Path) -> None:
         alphas.append(best_ind)
 
     p_smooth = np.linspace(4.5, 42.5, 200)
-    ax2.plot(p_smooth, np.sqrt(p_smooth), "-", color="#6d28d9", lw=2.0, alpha=0.85, label=r"Ours: $\Theta(P_p) = \sqrt{p}$ ($\mathbb{Z}[\sqrt{p}]$ SOS, T3l)")
+    ax2.plot(p_smooth, np.sqrt(p_smooth), "-", color="#6d28d9", lw=2.0, alpha=0.85, label=r"$\Theta(P_p) = \sqrt{p}$ (Lovász 1979; $\mathbb{Z}[\sqrt{p}]$ SOS, T3l)")
     ax2.scatter(primes, thetas, color="#6d28d9", marker="*", s=135, zorder=7, edgecolor="#1e1b4b", lw=0.5)
     ax2.plot(primes, alphas, "o--", color="#64748b", lw=1.6, ms=5.5, label=r"Single-Copy Independence $\alpha(P_p)$")
     ax2.fill_between(primes, alphas, thetas, color="#ede9fe", alpha=0.55, label=r"Super-Multiplicative Gain $\sqrt{p} - \alpha(P_p)$")
@@ -799,14 +798,14 @@ def fig8_v5_gaussian_paradox_and_paley_family(out_dir: Path) -> None:
     ax2.text(
         0.985,
         0.03,
-        "Infinite Conference Theorem (T3l, Zero Reals):\n"
+        "Conference Theorem (T3l, Zero Reals; $P_5,P_{13},P_{17}$ in Lean):\n"
         "$R^\\top R = 2p\\sqrt{p}\\,R$ in $\\mathbb{Z}[\\sqrt{p}]$ $\\Rightarrow s^2 \\leq (4k+1)^t$\n"
         "Self-complement $\\phi$: $\\alpha(G^{\\boxtimes 2m}) = (4k+1)^m$\n"
-        "T3k Sandwich ($\\forall F, k$): $2\\cdot 4^k - 2^k \\leq R(\\langle 2^k\\rangle) \\leq 7^k$",
+        "T3k Two-Sided ($\\forall F, k$): $2\\cdot 4^k - 2^k \\leq R(\\langle 2^k\\rangle) \\leq 7^k$",
         transform=ax2.transAxes,
         ha="right",
         va="bottom",
-        fontsize=6.4,
+        fontsize=6.3,
         bbox={"boxstyle": "round,pad=0.28", "facecolor": "#f5f3ff", "edgecolor": "#6d28d9", "alpha": 0.96},
     )
     ax2.set_xticks(primes)
@@ -814,9 +813,9 @@ def fig8_v5_gaussian_paradox_and_paley_family(out_dir: Path) -> None:
     ax2.set_xlim(3.0, 43.5)
     ax2.set_ylim(0.8, 8.2)
     ax2.set_xlabel(r"Paley / Self-Complementary Conference Graph $P_p$ ($p = 4k + 1$)")
-    ax2.set_ylabel(r"Exact Shannon Capacity $\Theta(P_p)$ vs. $\alpha(P_p)$")
-    ax2.set_title(r"(b) Infinite Paley $\Theta(P_p)=\sqrt{p}$ & Strassen–BD Sandwich (T3k, T3l)")
-    ax2.legend(loc="upper left", frameon=True, framealpha=0.95, fontsize=6.9)
+    ax2.set_ylabel(r"Shannon Capacity $\Theta(P_p)$ vs. $\alpha(P_p)$")
+    ax2.set_title(r"(b) Conference/Paley $\Theta(P_p)=\sqrt{p}$ & Two-Sided Bound (T3k, T3l)")
+    ax2.legend(loc="upper left", frameon=True, framealpha=0.95, fontsize=6.7)
 
     fig.tight_layout(w_pad=2.2)
     fig.savefig(out_dir / "fig8_v5_gaussian_paradox_and_paley_family.pdf", bbox_inches="tight")
@@ -839,33 +838,33 @@ def generate_social_preview(svg_path: Path) -> None:
   </defs>
   <rect width="1280" height="640" fill="url(#bg)"/>
   <rect x="48" y="48" width="1184" height="544" rx="22" fill="#0b1220" fill-opacity="0.72" stroke="url(#accent)" stroke-width="2.5"/>
-  <text x="90" y="132" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#38bdf8" letter-spacing="2">CODED-PIR-MLWE-COMPLEXITY-LAB · v5.0.0</text>
+  <text x="90" y="132" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#38bdf8" letter-spacing="2">CODED-PIR-MLWE-COMPLEXITY-LAB · v5.1.0</text>
   <text x="90" y="196" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">Koszul-Veronese Byzantine PIR, MLWE Tightness,</text>
   <text x="90" y="248" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">and Machine-Checked Complexity Bridges</text>
   <rect x="90" y="276" width="260" height="4" rx="2" fill="url(#accent)"/>
   <g font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="19" fill="#e2e8f0">
     <rect x="90" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
     <text x="112" y="350" font-weight="700" fill="#38bdf8">PILLAR I · CS-053 PIR (T1a–T1j)</text>
-    <text x="112" y="382" font-size="15.5">• Exact Koszul rank: 10/17 &gt; 4/7 (F_7)</text>
+    <text x="112" y="382" font-size="15.5">• 10/17 vs 4/7 for one design (numerical)</text>
     <text x="112" y="408" font-size="15.5">• Single F_2^64 6-obj realization (64/64)</text>
-    <text x="112" y="434" font-size="15.5">• Barrier pushed to ≥7-var storage cone</text>
+    <text x="112" y="434" font-size="15.5">• F_2 certificates (4 vars, 5-6 objects)</text>
     <text x="112" y="460" font-size="15.5">• Projective P³ linear collapse ∀F</text>
 
     <rect x="468" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#f472b6" stroke-width="1.5"/>
     <text x="490" y="350" font-weight="700" fill="#f472b6">PILLAR II · CS-026 MLWE (T2a–T2i)</text>
-    <text x="490" y="382" font-size="15.5">• ML-KEM-1024 Gaussian DFR Paradox</text>
+    <text x="490" y="382" font-size="15.5">• ML-KEM-1024 DFRs (float64 model)</text>
     <text x="490" y="408" font-size="15.5">• 14b Dyadic-16384-A: 6.01b (11.2× drop)</text>
     <text x="490" y="434" font-size="15.5">• 14b Dyadic-16384-B: 0.59b (41.9× sub-1b)</text>
     <text x="490" y="460" font-size="15.5">• Formalized Rényi DPI, Tensor &amp; R_∞</text>
 
     <rect x="846" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#fbbf24" stroke-width="1.5"/>
     <text x="868" y="350" font-weight="700" fill="#fbbf24">PILLAR III · TRIAD (T3a–T3l)</text>
-    <text x="868" y="382" font-size="15.5">• Infinite Paley Θ(P_p)=√p (Z[√p] SOS)</text>
+    <text x="868" y="382" font-size="15.5">• Conference Θ(G)=√(4k+1) (P5,P13,P17)</text>
     <text x="868" y="408" font-size="15.5">• Schwartz-Zippel &amp; 2·4^k-2^k ≤ R ≤ 7^k</text>
     <text x="868" y="434" font-size="15.5">• Exact Strassen-Winograd rank(M_2)=7 ∀F</text>
-    <text x="868" y="460" font-size="15.5">• 7 Adv. Refutations · P≠NP, ω=2 OPEN</text>
+    <text x="868" y="460" font-size="15.5">• 9 Adv. Refutations · P≠NP, ω=2 OPEN</text>
   </g>
-  <text x="90" y="544" font-family="ui-monospace, Consolas, monospace" font-size="16.2" fill="#94a3b8">Zero-Mathlib Lean 4.35.0 (31 Theorems · 6 Kernels · 4300 decls) · C11 · Eshkol AD · Alexander S. Donahue (ORCID 0009-0006-8168-9648)</text>
+  <text x="90" y="544" font-family="ui-monospace, Consolas, monospace" font-size="15.6" fill="#94a3b8">Zero-Mathlib Lean 4.35.0 (31 Theorems · 6 Kernels · 4337 decls · 1330 Axiom-Swept) · Alexander S. Donahue (ORCID 0009-0006-8168-9648)</text>
 </svg>
 """
     svg_path.write_text(svg, encoding="utf-8", newline="\n")

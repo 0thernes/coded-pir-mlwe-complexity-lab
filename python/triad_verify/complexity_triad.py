@@ -59,14 +59,27 @@ def verify_katz_trevisan_ldc_distance() -> dict:
 
 def verify_mlwe_compress1_ceiling() -> dict:
     def comp1(x: int) -> int:
-        return ((2 * (x % 3329) + 1665) // 3329) % 2
+        # Exact NIST FIPS 203 Eq. (4.7): floor((2/3329)*x + 1/2) mod 2
+        return ((4 * (x % 3329) + 3329) // 6658) % 2
 
-    for e in range(-831, 832):
+    for xm in range(3329):
+        assert comp1(xm) == ((2 * xm + 1664) // 3329) % 2
+    for e in range(-832, 833):
         assert comp1(e) == 0
+    for e in range(-832, 832):
         assert comp1(1665 + e) == 1
-    assert comp1(832) == 1
+    assert comp1(832) == 0
+    assert comp1(833) == 1
     assert comp1(1665 + 832) == 0
-    return {"q": 3329, "exact_safe_margin": 831, "first_failure": 832, "depth_at_step16": 831 // 16}
+    return {
+        "q": 3329,
+        "exact_safe_margin": 831,
+        "b0_exact_margin": 832,
+        "b1_first_failure": 832,
+        "b0_first_failure": 833,
+        "first_failure": 832,
+        "depth_at_step16": 831 // 16,
+    }
 
 
 def verify_koszul_flattening_tensor_rank() -> dict:

@@ -5,21 +5,21 @@ module
 public import TriadFrontier.AlgebraCore
 
 /-!
-# Pillar II (`CS-026`): MLWE Reduction Tightness, Structural Obstructions & QGTL Geometry
+# Pillar II (`CS-026`): MLWE Diagonal, DFT, Rényi, and Weight-Table Identities (`T2a`–`T2i`)
 
-Machine-checked zero-Mathlib Lean 4.35.0 proofs of four headline theorems:
-- `T2a_DeterminantIdealSecretIndependence`: Over ANY commutative ring `R`, the `q`-ary
-  MLWE module lattice basis and Kannan-embedded basis have determinant `q^m` identically
-  independent of `(A, s, e, b)`, refuting determinant-ideal module-SVP attacks (Luo 2026).
+Machine-checked zero-Mathlib Lean 4.35.0 proofs of nine algebraic/integer theorem bundles:
+- `T2a_DeterminantIdealSecretIndependence`: Over ANY commutative ring `R`, a diagonal with `m`
+  entries `q` and remaining entries `1` has product `q^m` and satisfies `uInv * (u * q^m) = q^m`
+  for any unit `u` (elementary identity recording that a `q`-ary MLWE basis has determinant `q^m`;
+  no matrix, determinant, or published refutation is formalized here).
 - `T2b_ChenStep9AntiPeriodicDFTCancellation`: Over ANY commutative ring with `2D`-th root
   `ω^D = -1`, every anti-periodic sequence `f(x + D) = -f(x)` has identically vanishing even
-  DFT coefficients `f̂(2k) = 0`, formally proving the root cause of Chen (2024/555) Step 9.
-- `T2c_MLKEMCenteredBinomialRenyiCliff`: Exact FIPS 203 `CBD_2` vs `CBD_3` variance/kurtosis,
-  2-power cyclotomic trace-orthogonality, and exact integer-certified 5x Rényi-2 security-loss
-  cliff from ML-KEM-512 (`η=3`) to ML-KEM-768/1024 (`η=2`).
-- `T2d_QGTLShiftedLWEBerryCurvature`: Exact cleared-denominator QGTL identity for shifted-LWE
-  Fourier quantum states showing `g_{θσ} = 0`, `Ω_{θσ} ∝ Cov(X, (X - e_0)^2)`, exact vanishing
-  for symmetric error (`e_0 = 0`), and strict nonzero Berry curvature witness under bias (`e_0 ≠ 0`).
+  DFT coefficients `f̂(2k) = 0` (ring-universal DFT identity proposed as an algebraic explanation
+  of the Step-9 periodicity failure first found by Hongxun Wu and, independently, Thomas Vidick
+  in the April 2024 update note to Chen, IACR ePrint 2024/555).
+- `T2c`–`T2i`: Exact integer moments of `CBD_2`, `CBD_3`, and 8/9/10/14-bit dyadic weight tables,
+  universal `m`-twisted DFT factorization (`T2f`), Cauchy–Schwarz / Hölder / Pearson `χ²` / TV–`χ²` /
+  data-processing / product-multiplicativity integer inequalities, and covariance identities.
 -/
 
 namespace TriadFrontier.MLWETightness
@@ -29,21 +29,19 @@ open TriadFrontier.AlgebraCore
 @[expose] public section
 
 -- ============================================================================
--- T2a: Determinant-Ideal Secret Independence (Refuting Luo 2026 Parts I-IV)
+-- T2a: Diagonal Product q^m and Unit-Factor Invariance
 -- ============================================================================
 
-/-- Lower-triangular block determinant evaluator (product of diagonal entries,
-valid identically for every lower-triangular matrix over any commutative ring `R`). -/
+/-- Product of `n` diagonal entries over any commutative ring `R`. -/
 def lowerTriDet {R : Type} [CommRing R] : Nat → (Nat → R) → R
   | 0, _ => 1
   | n + 1, diag => lowerTriDet n diag * diag n
 
-/-- Diagonal of the `(m + k) × (m + k)` q-ary MLWE module lattice basis `[[q I_m, 0], [A, I_k]]`. -/
+/-- Indicator diagonal with `q` in indices `< m` and `1` elsewhere. -/
 def mlweBasisDiag {R : Type} [CommRing R] (m : Nat) (q : R) (i : Nat) : R :=
   if i < m then q else 1
 
-/-- Diagonal of the `(m + k + 1) × (m + k + 1)` Kannan-embedded MLWE basis
-`[[q I_m, 0, 0], [A, I_k, 0], [b, 0, 1]]` parameterized arbitrarily by `(A, s, e, b)`. -/
+/-- Same indicator diagonal used for the `(m + k + 1)`-entry product. -/
 def kannanBasisDiag {R : Type} [CommRing R] (m : Nat) (q : R) (i : Nat) : R :=
   if i < m then q else 1
 

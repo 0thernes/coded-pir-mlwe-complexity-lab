@@ -15,8 +15,8 @@ This repository (`coded-pir-mlwe-complexity-lab`) is a formal verification and s
 ## Essential Commands
 
 ```bash
-# Verify Lean 4.35.0 proofs + strict axiom & kernel replay
-(cd lean && lake build && lake env lean VerifyAxioms.lean && lake env leanchecker Solution && lake env leanchecker-paranoid Solution)
+# Verify Lean 4.35.0 proofs + strict axiom & kernel replay (incl. 1,330-decl sweep)
+(cd lean && lake build --wfail && lake env lean VerifyAxioms.lean && lake env lean AuditExhaustiveAxioms.lean && lake env leanchecker Solution && lake env leanchecker-paranoid Solution)
 
 # Build and test native C11 core (-std=c11 -Wall -Wextra -Wpedantic -Werror)
 make -C native clean test
@@ -24,14 +24,15 @@ make -C native clean test
 # Run Eshkol v1.3.6 dual-number AD modules
 node eshkol/run_eshkol_ad.mjs
 
-# Run full pytest suite (claims, differential, property, negative, mutation, version consistency) & strict lint/type gates
+# Run full pytest suite (25/25: claims, differential, property, negative, mutation, schema, links, timestamps) & strict lint/type gates
 PYTHONPATH=python pytest tests/test_all.py -v
 ruff check python tests scripts examples
 mypy python/triad_verify scripts --ignore-missing-imports
 
-# Audit README axiom parity & live citations
+# Audit README axiom parity, dual timestamps & live citations (incl. Crossref retraction check)
 python scripts/check_readme_axioms.py
-python scripts/check_citations.py
+python scripts/stamp_timestamps.py --verify
+python scripts/check_citations.py --online
 
 # Compile AMS-LaTeX white paper (must emit 0 overfull hboxes)
 (cd paper && tectonic -X compile main.tex --outdir build --keep-logs --keep-intermediates)
@@ -39,9 +40,9 @@ python scripts/check_citations.py
 
 ## Key Architectural Paths
 
-- `lean/TriadFrontier/` — Zero-Mathlib Lean 4.35.0 proof modules (`AlgebraCore`, `PIRCertificates`, `PIRLinearCerts`, `PIRKoszul`, `MLWETightness`, `KoszulTensor`, `StrassenWinograd`, `BrockettDobkin`, `ShannonCapacity`, `AlgebraicComplexity`, `PaleyCapacity`, `ComplexityTriad`, `NonVacuity`, `AdversarialTests`; 31 theorems `T1a`–`T3l` + 7 boundary refutations, 34 audited declarations).
-- `native/` — C11 implementation, CLI (`dyadic16384a/b`, `ret6-f2`, `paley-cap`, etc.), and 79-test + 512-case fuzz harness.
-- `eshkol/` — Forward-mode dual-number AD modules (`.esk`) and Node.js runner (`Dyadic-256` through `Dyadic-16384-A/B`).
-- `python/triad_verify/` — Exact finite-field rank, 12-variable polymatroid + $I_4$/5-obj/6-obj $\mathbb{F}_2^{64}$ linear realizability, 60-digit ML-KEM `Dyadic-256..16384-A/B` & Bai et al. (2018) optimizer + float64-model FIPS 203 DFR convolution (not exact; no pass/fail threshold), Koszul/Strassen/Brockett–Dobkin/Schwartz–Zippel/Lovász/Paley checks, and 8-figure vector PDF generation (`0 ruff`, `0 mypy`).
-- `paper/main.tex` & `paper/refs.bib` — AMS-LaTeX manuscript (`v5.0.0`, 8 figures, 36 live HTTP-200 citations).
-- `docs/` & `ERRATA.md` — Architecture, ADRs, threat model, statement fidelity, 10-pass review, adversarial red-team review, errata ledger, and interactive GitHub Pages Blueprint (`docs/site/`).
+- `lean/TriadFrontier/` — Zero-Mathlib Lean 4.35.0 proof modules (`AlgebraCore`, `PIRCertificates`, `PIRLinearCerts`, `PIRKoszul`, `MLWETightness`, `KoszulTensor`, `StrassenWinograd`, `BrockettDobkin`, `ShannonCapacity`, `AlgebraicComplexity`, `PaleyCapacity`, `ComplexityTriad`, `NonVacuity`, `AdversarialTests`; 31 theorems `T1a`–`T3l` + 9 boundary refutations, 34 audited declarations + 1,330 `TriadFrontier.*` swept by `AuditExhaustiveAxioms.lean`).
+- `native/` — Hardened C11 implementation, `strtol`/`strtod`-validated CLI (`dyadic16384a/b`, `ret6-f2`, `paley-cap`, etc.), and 87-test + 1,024-case fuzz harness.
+- `eshkol/` — Forward-mode dual-number AD modules (`.esk`) and hardened Node.js runner (`Dyadic-256` through `Dyadic-16384-A/B`, plus 7 negative guards).
+- `python/triad_verify/` — Exact finite-field rank, 12-variable polymatroid + $I_4$/5-obj/6-obj $\mathbb{F}_2^{64}$ linear realizability, 60-digit ML-KEM `Dyadic-256..16384-A/B` & Bai et al. (2018) optimizer + float64-model FIPS 203 DFR convolution (not exact; no pass/fail threshold), Koszul/Strassen/Brockett–Dobkin/Schwartz–Zippel/Lovász/Paley checks, and 8-figure vector PDF generation (`0 ruff`, `0 mypy`, 25/25 `pytest`).
+- `paper/main.tex` & `paper/refs.bib` — AMS-LaTeX manuscript (`v5.1.0`, 8 figures, 36 live HTTP-200 + 0-retraction Crossref citations).
+- `docs/` & `ERRATA.md` — Architecture, ADRs, threat model, statement fidelity, 10-pass review, adversarial red-team review, literature search, Mega-Atlas crosswalk, submission packet, errata ledger, and CSP/WCAG-AA interactive GitHub Pages Blueprint (`docs/site/`).

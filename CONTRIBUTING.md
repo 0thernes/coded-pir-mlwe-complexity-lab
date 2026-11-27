@@ -11,18 +11,21 @@ This repository follows Build Standard v1.2.0:
 ## Local Setup & Verification
 
 ```bash
-# 1. Verify zero-Mathlib Lean 4.35.0 proofs and strict axiom allowlist
-cd lean && lake build && lake env lean VerifyAxioms.lean
+# 1. Verify zero-Mathlib Lean 4.35.0 proofs, --wfail, strict & exhaustive axiom audits
+cd lean && lake build --wfail && lake env lean VerifyAxioms.lean && lake env lean AuditExhaustiveAxioms.lean
 
-# 2. Build and test native C11 core (-Wall -Wextra -Wpedantic -Werror)
-make -C native test
+# 2. Build and test native C11 core (-Wall -Wextra -Wpedantic -Werror, 87/87 unit tests)
+make -C native clean all test
 
 # 3. Run Eshkol v1.3.6 forward-mode AD checks
 node eshkol/run_eshkol_ad.mjs
 
-# 4. Run full Python exact audit, pytest (14/14), and citation check
+# 4. Run full Python exact audit, pytest (25/25), lint, citations & dual timestamps
 PYTHONPATH=python pytest tests/test_all.py -v
+ruff check python tests scripts examples
+mypy python/triad_verify scripts --ignore-missing-imports
 python scripts/check_citations.py
+python scripts/stamp_timestamps.py --verify
 ```
 
 ## Standards for Formal Contributions

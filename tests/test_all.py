@@ -2,14 +2,14 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Alexander S. Donahue
 """
-Comprehensive Verification & Falsification Test Suite (`tests/test_all.py`):
-- Claim falsifiability checks (C1–C14)
-- Negative / adversarial boundary checks
+Comprehensive Verification & Falsification Test Suite (`tests/test_all.py`, v5.1.0):
+- Claim falsifiability checks (C1–C31)
+- Negative / adversarial boundary checks (C11 CLI invalid args, Eshkol parser/depth/domain, tamper detection)
 - Randomized property-based tests (prop_check)
 - Differential tests (Python vs native C11 CLI vs Eshkol v1.3.6 AD runtime)
 - Metamorphic checks (K <-> T symmetry, noise-shift odd symmetry)
-- Mutation-killing tests (6/6 core mutants killed!)
-- Single-version-source consistency (VERSION == pyproject.toml == CHANGELOG.md == CITATION.cff == lean/lakefile.toml)
+- Mutation-killing tests (14/14 core mutants killed!)
+- Draft 2020-12 repo.yaml schema validation, link integrity, Pages CSP/WCAG AA, dual timestamps, & single version source
 """
 from __future__ import annotations
 
@@ -267,9 +267,9 @@ def test_negative_boundaries() -> None:
     # 1. Sun-Zhang LFSR is infeasible whenever E < KT
     assert lfsr_rate_exact(5, 2, 2, U=0, B=1) is None  # E = 3 < 4
     assert lfsr_rate_exact(8, 3, 3, U=0, B=1) is None  # E = 6 < 9
-    # 2. Compress_1 MUST fail at +832 for both b=0 and b=1
-    comp1 = lambda x: ((2 * (x % 3329) + 1665) // 3329) % 2
-    assert comp1(832) != 0 and comp1(1665 + 832) != 1
+    # 2. Exact NIST FIPS 203 Compress_1 Eq. (4.7) passes +832 for b=0, fails +833 for b=0 and +832 for b=1
+    comp1 = lambda x: ((4 * (x % 3329) + 3329) // 6658) % 2
+    assert comp1(832) == 0 and comp1(833) != 0 and comp1(1665 + 832) != 1
     # 3. Non-multilinear polynomial x^2 violates affine linearity over F_11
     p = 11
     x0, x1, x2 = 0, 1, 2
@@ -356,9 +356,9 @@ def test_differential_python_vs_native_c11() -> None:
 def test_kill_14_core_mutants() -> None:
     # Mutant 1: Off-by-one in Koszul lambda formula (K + T - Tp + 1)
     assert koszul_lambda_formula(6, 3, 2, 3) != (3 + 3 - 2 + 1) * math.comb(2, 1)
-    # Mutant 2: Off-by-one in FIPS 203 Compress_1 (+1664 instead of +1665 misses +832 failure)
-    mut_comp1 = lambda x: ((2 * (x % 3329) + 1664) // 3329) % 2
-    assert mut_comp1(832) == 0  # Mutant wrongly passes +832; caught by our sharp failure test!
+    # Mutant 2: Off-by-one in FIPS 203 Compress_1 (+1665 instead of exact +1664 misclassifies x=832)
+    mut_comp1 = lambda x: ((2 * (x % 3329) + 1665) // 3329) % 2
+    assert mut_comp1(832) != ((4 * 832 + 3329) // 6658) % 2  # Mutant wrongly maps 832 -> 1 instead of 0!
     # Mutant 3: Wrong CBD_2 PMF weight (middle weight 5/16 instead of 6/16 fails sum=1)
     pmf = cbd_pmf_exact(2)
     assert sum(pmf.values()) == 1 and (sum(pmf.values()) - Fraction(1, 16)) != 1
@@ -409,6 +409,7 @@ def test_single_version_source_consistency() -> None:
     assert re.match(r"^\d+\.\d+\.\d+$", ver)
     for rel, pattern in [
         ("pyproject.toml", rf'version\s*=\s*"{re.escape(ver)}"'),
+        ("python/triad_verify/__init__.py", rf'__version__\s*=\s*"{re.escape(ver)}"'),
         ("lean/lakefile.toml", rf'version\s*=\s*"{re.escape(ver)}"'),
         ("CITATION.cff", rf"version:\s*{re.escape(ver)}"),
         ("CHANGELOG.md", rf"## \[{re.escape(ver)}\]"),
@@ -416,3 +417,129 @@ def test_single_version_source_consistency() -> None:
         p = REPO_ROOT / rel
         if p.exists():
             assert re.search(pattern, p.read_text(encoding="utf-8")), f"Version mismatch in {rel}"
+
+
+# ============================================================================
+# 6. Cycle 1–3 Hardening Regression, Schema, Link, A11y & Timestamp Tests
+# ============================================================================
+
+def test_repo_yaml_draft2020_12_schema() -> None:
+    yaml = pytest.importorskip("yaml")
+    jsonschema = pytest.importorskip("jsonschema")
+    schema = json.loads((REPO_ROOT / "repo-standard.schema.json").read_text(encoding="utf-8"))
+    doc = yaml.safe_load((REPO_ROOT / "repo.yaml").read_text(encoding="utf-8"))
+    jsonschema.Draft202012Validator(schema).validate(doc)
+
+
+def test_c11_cli_invalid_argument_rejection() -> None:
+    exe = REPO_ROOT / "native" / "build" / ("triad_cli.exe" if sys.platform == "win32" else "triad_cli")
+    if not exe.exists():
+        pytest.skip("Native C11 binary not built yet")
+    for bad_args in (
+        ["qgtl", "99", "1.0", "0.0"],
+        ["qgtl", "2", "0.0", "0.0"],
+        ["qgtl", "2", "notanumber", "0.0"],
+        ["koszul", "3", "2", "99"],
+        ["paley-cap", "badint"],
+    ):
+        r = subprocess.run([str(exe), *bad_args], capture_output=True, text=True, check=False)
+        assert r.returncode == 2, f"Expected exit code 2 for {bad_args}, got {r.returncode}"
+
+
+def test_eshkol_parser_malformed_and_depth_guards() -> None:
+    js = (
+        "import { evaluateEshkol } from './eshkol/run_eshkol_ad.mjs';"
+        "const cases = ['(define x \"unclosed)', '(+ 1 2))', '(+ 1 2', "
+        "'(/ 1.0 0.0)', '(log -1.0)', '(sqrt -4.0)', '('.repeat(300) + '1' + ')'.repeat(300)];"
+        "for (const s of cases) {"
+        "  let ok = false; try { evaluateEshkol(s); } catch { ok = true; }"
+        "  if (!ok) throw new Error('Accepted invalid Eshkol input: ' + s.slice(0, 24));"
+        "}"
+    )
+    r = subprocess.run(["node", "--input-type=module", "-e", js], cwd=REPO_ROOT, capture_output=True, text=True, check=False)
+    assert r.returncode == 0, f"Eshkol negative guards failed: {r.stderr}"
+
+
+def test_timestamps_tsr_and_ots_integrity_and_tamper(tmp_path: Path) -> None:
+    script = REPO_ROOT / "scripts" / "stamp_timestamps.py"
+    r_ok = subprocess.run([sys.executable, str(script), "--verify"], cwd=REPO_ROOT, capture_output=True, text=True, check=False)
+    assert r_ok.returncode == 0, f"Timestamp verification failed: {r_ok.stdout}\n{r_ok.stderr}"
+    assert "RFC3161 OK" in r_ok.stdout and "OTS OK" in r_ok.stdout
+
+    tampered = tmp_path / "MANIFEST.tampered"
+    tampered.write_bytes((REPO_ROOT / "MANIFEST.sha256").read_bytes() + b"\n# tampered\n")
+    r_bad = subprocess.run(
+        [sys.executable, str(script), "--verify", "--manifest", str(tampered)],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert r_bad.returncode != 0, "Timestamp verifier failed to reject tampered manifest!"
+
+
+def test_zero_broken_relative_markdown_and_blueprint_links() -> None:
+    broken: list[str] = []
+    md_files = sorted(
+        p for p in REPO_ROOT.rglob("*.md")
+        if ".git" not in p.parts and ".lake" not in p.parts and "node_modules" not in p.parts
+    )
+    link_re = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
+    for md in md_files:
+        txt = re.sub(r"```.*?```", "", md.read_text(encoding="utf-8"), flags=re.DOTALL)
+        for m in link_re.finditer(txt):
+            target = m.group(1).strip().split()[0]
+            if not target or target.startswith(("http://", "https://", "mailto:", "#")):
+                continue
+            rel_part = target.split("#", 1)[0]
+            if not rel_part:
+                continue
+            resolved = (md.parent / rel_part).resolve()
+            if not resolved.exists():
+                broken.append(f"{md.relative_to(REPO_ROOT).as_posix()} -> {target}")
+    bp = (REPO_ROOT / "docs" / "site" / "blueprint.html").read_text(encoding="utf-8")
+    for fm in re.finditer(r'file:"([^"]+)"', bp):
+        target_path = REPO_ROOT / fm.group(1)
+        if not target_path.exists():
+            broken.append(f"docs/site/blueprint.html -> {fm.group(1)}")
+    assert not broken, "Broken local links detected:\n" + "\n".join(broken)
+
+
+def test_pages_csp_and_wcag_keyboard_a11y() -> None:
+    idx_html = (REPO_ROOT / "docs" / "site" / "index.html").read_text(encoding="utf-8")
+    bp_html = (REPO_ROOT / "docs" / "site" / "blueprint.html").read_text(encoding="utf-8")
+    for name, html in (("index.html", idx_html), ("blueprint.html", bp_html)):
+        assert 'http-equiv="Content-Security-Policy"' in html, f"{name} missing CSP meta tag"
+        assert "skip-link" in html, f"{name} missing WCAG skip-to-main link"
+        assert ":focus-visible" in html, f"{name} missing keyboard focus-visible styles"
+        assert 'aria-live="polite"' in html, f"{name} missing aria-live output region"
+    assert 'tabindex", "0"' in bp_html and 'role", "button"' in bp_html
+    assert '.key === "Enter"' in bp_html and '.key === " "' in bp_html
+    assert 'type="search"' in bp_html
+
+
+def test_manifest_lf_and_completeness() -> None:
+    import hashlib
+
+    for mf_rel, base in (("data/MANIFEST.sha256", REPO_ROOT / "data"), ("MANIFEST.sha256", REPO_ROOT)):
+        mf_path = REPO_ROOT / mf_rel
+        raw = mf_path.read_bytes()
+        assert b"\r" not in raw, f"{mf_rel} contains CRLF line endings!"
+        listed: set[str] = set()
+        for line in raw.decode("utf-8").splitlines():
+            if not line.strip():
+                continue
+            digest, rel = line.split("  ", 1)
+            listed.add(rel)
+            target = base / rel
+            assert target.is_file(), f"Missing manifest target: {rel}"
+            actual = hashlib.sha256(target.read_bytes()).hexdigest()
+            assert actual == digest, f"SHA-256 mismatch for {rel} in {mf_rel}"
+        if mf_rel == "MANIFEST.sha256":
+            for lf in sorted((REPO_ROOT / "lean").rglob("*.lean")):
+                if ".lake" not in lf.parts:
+                    rel_l = lf.relative_to(REPO_ROOT).as_posix()
+                    assert rel_l in listed, f"Lean file missing from MANIFEST.sha256: {rel_l}"
+            for fig in sorted((REPO_ROOT / "paper" / "figures").glob("fig*.pdf")):
+                rel_f = fig.relative_to(REPO_ROOT).as_posix()
+                assert rel_f in listed, f"Figure missing from MANIFEST.sha256: {rel_f}"

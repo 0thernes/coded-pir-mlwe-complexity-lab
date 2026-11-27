@@ -1,28 +1,29 @@
 <!-- SPDX-License-Identifier: CC-BY-4.0 -->
 # System & Mathematical Architecture (`docs/architecture.md`)
 
-`coded-pir-mlwe-complexity-lab` (`v5.0.0`) is structured as a four-layer verification stack: **31 Lean 4.35.0 proofs (`T1a`–`T3l`) + 7 adversarial tests (`AdversarialTests.lean`, 34 audited declarations)** of identities, inequalities and finite certificates, cross-checked by C11, Eshkol dual-number AD and Python computations (which also produce the numerical results that are not in Lean: rates, Rényi values, Bai overheads and float64 DFRs), and upward into the AMS-LaTeX preprint and interactive GitHub Pages Proof Blueprint.
+`coded-pir-mlwe-complexity-lab` (`v5.1.0`) is structured as a four-layer verification stack: **31 Lean 4.35.0 proofs (`T1a`–`T3l`) + 9 adversarial tests (`AdversarialTests.lean`, 34 audited declarations + 1,330 `TriadFrontier.*` declarations swept by `AuditExhaustiveAxioms.lean`)** of identities, inequalities and finite certificates, cross-checked by hardened C11, Eshkol dual-number AD and Python computations (which also produce the numerical results that are not in Lean: rates, Rényi values, Bai overheads and float64 DFRs), and upward into the AMS-LaTeX preprint and CSP/WCAG-AA interactive GitHub Pages Proof Blueprint.
 
 ```text
                         +----------------------------------------------+
-                        |  paper/main.tex (AMS-LaTeX Preprint v5.0.0)  |
+                        |  paper/main.tex (AMS-LaTeX Preprint v5.1.0)  |
                         |  + 8 Vector PDF Figures + refs.bib (36 HTTP) |
-                        |  + docs/site/ Interactive Proof Blueprint    |
+                        |  + docs/site/ CSP/WCAG-AA Proof Blueprint    |
                         +----------------------+-----------------------+
                                                |
              +---------------------------------+---------------------------------+
              |                                 |                                 |
 +------------v-------------+     +-------------v--------------+     +------------v-------------+
 | Tier 1: Lean 4.35.0      |     | Tier 2: Multi-Language     |     | Tier 3: Governance &     |
-| Zero-Mathlib TCB (31+7)  |     | Computational Cross-Audit  |     | Provenance Layer         |
-|  - AlgebraCore.lean      |     |  - native/ (C11 79 tests)  |     |  - CLAIMS.md (C1-C31)    |
+| Zero-Mathlib TCB (31+9)  |     | Computational Cross-Audit  |     | Provenance Layer         |
+|  - AlgebraCore.lean      |     |  - native/ (C11 87 tests)  |     |  - CLAIMS.md (C1-C31)    |
 |  - PIRCertificates/Lin.  |     |  - eshkol/ (Dual-Num AD)   |     |  - LIMITATIONS/ERRATA.md |
 |  - PIRKoszul.lean (T1a-j)|     |  - python/triad_verify/    |     |  - HARDENING_LOG.md      |
-|  - MLWETightness (T2a-i) |     |    (strict 0 ruff, 0 mypy) |     |  - MANIFEST.sha256 + TSR |
+|  - MLWETightness (T2a-i) |     |    (strict 0 ruff, 0 mypy) |     |  - MANIFEST + TSR + OTS  |
 |  - Koszul/Strass/Brockett|     |  - tests/test_all.py       |     |  - rosette_receipt.json  |
-|  - Shannon/Paley (T3j,l) |     |    (18 tests, 14/14 muts)  |     |  - SLSA + Rekor + CI Gate|
+|  - Shannon/Paley (T3j,l) |     |    (25 tests, 14/14 muts)  |     |  - SLSA + Rekor + CI Gate|
 |  - AlgComplexity (T3k)   |     +----------------------------+     +--------------------------+
 |  - NonVacuity & AdvTests |
+|  - AuditExhaustiveAxioms |
 +--------------------------+
 ```
 
@@ -45,5 +46,5 @@
    - `TriadFrontier/ComplexityTriad.lean` proves `T3a`–`T3d` and `T3f`.
 4. **Palomar 6-Kernel Verification & Negative Tamper Gate Boundary:**
    - `lean/Challenge.lean` defines all 31 theorem propositions (`T1a`–`T3l`) and their conjunction.
-   - `lean/Solution.lean` exports the verified proofs; `lean/TriadFrontier/AdversarialTests.lean` proves 7 adversarial tests (two are closed arithmetic facts; see `ERRATA.md`); `lean/VerifyAxioms.lean` runs `#print axioms` on all **34 audited declarations** (31 theorems + master conjunction + `nonvac_all_hypotheses` + `adv_all_boundary_refutations`).
-   - `lean/PalomarChallenge.lean` (excluded from `defaultTargets`) and `lean/PalomarSolution.lean` form the exact contract judged by `lake comparator --config comparator.json --paranoid` (4,300 `con-leche`/`con-ron` verified declarations on the standalone `Solution` export, `nanoda_bin` clean acceptance, plus a negative tamper gate checking that the kernel rejects `mlkemCompress1 832 = 0`; note that 0 is the true FIPS 203 value at 832, see `ERRATA.md` L01 and S03).
+   - `lean/Solution.lean` exports the verified proofs; `lean/TriadFrontier/AdversarialTests.lean` proves 9 adversarial tests (two legacy tests are closed arithmetic facts; see `ERRATA.md`); `lean/VerifyAxioms.lean` runs `#print axioms` on all **34 audited declarations** (31 theorems + master conjunction + `nonvac_all_hypotheses` + `adv_all_boundary_refutations`), and `lean/AuditExhaustiveAxioms.lean` sweeps all **1,330** `TriadFrontier.*` declarations programmatically via `Lean.collectAxioms`.
+   - `lean/PalomarChallenge.lean` (excluded from `defaultTargets`) and `lean/PalomarSolution.lean` form the exact contract judged by `lake comparator --config comparator.json --paranoid` (4,337 `con-leche`/`con-ron` verified declarations on the standalone `Solution` export, `nanoda_bin` clean acceptance, plus a live negative tamper gate checking that the kernel rejects the genuinely false equation `mlkemCompress1 (1665 + 832) = 1` under exact FIPS 203 Eq. (4.7); `L01`/`S03` fixed in `v5.1.0`).

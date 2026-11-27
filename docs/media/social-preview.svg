@@ -13,7 +13,7 @@
   </defs>
   <rect width="1280" height="640" fill="url(#bg)"/>
   <rect x="48" y="48" width="1184" height="544" rx="22" fill="#0b1220" fill-opacity="0.72" stroke="url(#accent)" stroke-width="2.5"/>
-  <text x="90" y="132" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#38bdf8" letter-spacing="2">CODED-PIR-MLWE-COMPLEXITY-LAB · v5.0.0</text>
+  <text x="90" y="132" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#38bdf8" letter-spacing="2">CODED-PIR-MLWE-COMPLEXITY-LAB · v5.1.0</text>
   <text x="90" y="196" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">Koszul-Veronese Byzantine PIR, MLWE Tightness,</text>
   <text x="90" y="248" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#f8fafc">and Machine-Checked Complexity Bridges</text>
   <rect x="90" y="276" width="260" height="4" rx="2" fill="url(#accent)"/>
@@ -34,10 +34,10 @@
 
     <rect x="846" y="314" width="340" height="176" rx="14" fill="#1e293b" stroke="#fbbf24" stroke-width="1.5"/>
     <text x="868" y="350" font-weight="700" fill="#fbbf24">PILLAR III · TRIAD (T3a–T3l)</text>
-    <text x="868" y="382" font-size="15.5">• Infinite Paley Θ(P_p)=√p (Z[√p] SOS)</text>
+    <text x="868" y="382" font-size="15.5">• Conference Θ(G)=√(4k+1) (P5,P13,P17)</text>
     <text x="868" y="408" font-size="15.5">• Schwartz-Zippel &amp; 2·4^k-2^k ≤ R ≤ 7^k</text>
     <text x="868" y="434" font-size="15.5">• Exact Strassen-Winograd rank(M_2)=7 ∀F</text>
-    <text x="868" y="460" font-size="15.5">• 7 Adv. Refutations · P≠NP, ω=2 OPEN</text>
+    <text x="868" y="460" font-size="15.5">• 9 Adv. Refutations · P≠NP, ω=2 OPEN</text>
   </g>
-  <text x="90" y="544" font-family="ui-monospace, Consolas, monospace" font-size="16.2" fill="#94a3b8">Zero-Mathlib Lean 4.35.0 (31 Theorems · 6 Kernels · 4300 decls) · C11 · Eshkol AD · Alexander S. Donahue (ORCID 0009-0006-8168-9648)</text>
+  <text x="90" y="544" font-family="ui-monospace, Consolas, monospace" font-size="15.6" fill="#94a3b8">Zero-Mathlib Lean 4.35.0 (31 Theorems · 6 Kernels · 4337 decls · 1330 Axiom-Swept) · Alexander S. Donahue (ORCID 0009-0006-8168-9648)</text>
 </svg>

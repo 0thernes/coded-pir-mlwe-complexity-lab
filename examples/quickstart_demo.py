@@ -23,7 +23,8 @@ from triad_verify.polymatroid_barrier import verify_6obj_f2_64_realization
 
 
 def main() -> int:
-    print("=== coded-pir-mlwe-complexity-lab v5.0.0 Quickstart Demo ===")
+    ver = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+    print(f"=== coded-pir-mlwe-complexity-lab v{ver} Quickstart Demo ===")
 
     # Pillar I: CS-053
     r_kv = koszul_rate_exact(6, 3, 3)
@@ -54,7 +55,7 @@ def main() -> int:
     )
     print(
         f"[Pillar II | CS-026] Chen Step-9 all even modes vanish: {mlwe['chen_step9']['all_even_modes_vanish']} | "
-        f"Luo det ideal across 10 secrets: {mlwe['luo_det_ideal']['observed_abs_dets_across_10_secrets']}"
+        f"q-ary basis det across 10 secrets: {mlwe['luo_det_ideal']['observed_abs_dets_across_10_secrets']}"
     )
     qgtl = mlwe["qgtl_berry_curvature"]
     print(
@@ -75,7 +76,7 @@ def main() -> int:
     print(
         f"[Pillar II | T2g] Dyadic-512 (Var=3/2, kappa_ex=0, 9-bit CT): min R2={d5['min_r2']} "
         f"(512-bit loss={d5_bits:.3f} bits, {cbd3_bits / d5_bits:.2f}x drop vs CBD_3) | "
-        f"Exact DFRs: 512=2^{dfrs['ML_KEM_512_Dyadic512_256']['union_bound_log2_dfr']}, "
+        f"Float64 model DFRs: 512=2^{dfrs['ML_KEM_512_Dyadic512_256']['union_bound_log2_dfr']}, "
         f"768=2^{dfrs['ML_KEM_768_Dyadic256']['union_bound_log2_dfr']}, "
         f"1024=2^{dfrs['ML_KEM_1024_Dyadic256']['union_bound_log2_dfr']}"
     )
@@ -92,10 +93,11 @@ def main() -> int:
     bai16 = d16["bai_16384_suite"]
     gp = d16["gaussian_dfr_paradox"]
     print(
-        f"[Pillar II | T2i] ML-KEM-1024 Gaussian DFR Paradox: D_sigma=1 FAILS at 2^{gp['mlkem_1024_gauss_log2_dfr']} (> 2^-174), "
-        f"while 14-bit Dyadic-16384-A achieves Bai={bai16['ML_KEM_1024_Dyadic16384A']['bai_overhead_bits']:.3f}b "
-        f"(DFR 2^{d16['dfr_16384_suite']['ML_KEM_1024_Dyadic16384A']['union_bound_log2_dfr']}) & "
-        f"Dyadic-16384-B hits sub-1-bit ML-KEM-512 Bai={bai16['ML_KEM_512_Dyadic16384B']['bai_overhead_bits']:.4f}b!"
+        f"[Pillar II | T2i] ML-KEM-1024 float64 model DFRs (FIPS 203 Table 1 baseline 2^-174.8): "
+        f"unit-var Gaussian 2^{gp['mlkem_1024_gauss_log2_dfr']}, "
+        f"14-bit Dyadic-16384-A Bai={bai16['ML_KEM_1024_Dyadic16384A']['bai_overhead_bits']:.3f}b "
+        f"(model DFR 2^{d16['dfr_16384_suite']['ML_KEM_1024_Dyadic16384A']['union_bound_log2_dfr']}), "
+        f"Dyadic-16384-B ML-KEM-512 Bai={bai16['ML_KEM_512_Dyadic16384B']['bai_overhead_bits']:.4f}b"
     )
 
     # Pillar III: CS-001 / CS-004 / CS-012 / CS-051 / CS-CMP-012 / CS-026 <-> CS-053

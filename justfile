@@ -6,13 +6,13 @@ set shell := ["bash", "-euo", "pipefail", "-c"]
 default:
 	@just --list
 
-reproduce: lean native eshkol python-exact test figures paper citations
+reproduce: lean native eshkol python-exact test figures paper citations timestamps
 
 lean:
-	cd lean && lake build && lake env lean VerifyAxioms.lean && lake env leanchecker Solution && lake env leanchecker-paranoid Solution
+	cd lean && lake build --wfail && lake env lean VerifyAxioms.lean && lake env lean AuditExhaustiveAxioms.lean && lake env leanchecker Solution && lake env leanchecker PalomarSolution && lake env leanchecker-paranoid Solution && lake env leanchecker-paranoid PalomarSolution
 
 native:
-	make -C native clean test
+	make -C native clean all test
 
 eshkol:
 	node eshkol/run_eshkol_ad.mjs
@@ -36,9 +36,12 @@ paper:
 citations:
 	python scripts/check_citations.py
 
+timestamps:
+	python scripts/stamp_timestamps.py --verify
+
 lint:
-	ruff check python tests scripts || true
-	mypy python/triad_verify scripts --ignore-missing-imports || true
+	ruff check python tests scripts examples
+	mypy python/triad_verify scripts --ignore-missing-imports
 
 clean:
 	make -C native clean

@@ -7,7 +7,7 @@ Shannon + Ingleton Polymatroid Barrier (`h_uncond`, scale 128) for `(M=2, N=4, K
 
 Verifies ZERO violations across:
 - All 12 monotonicity inequalities;
-- All 3,531 unique elemental Shannon submodularity inequalities (all 270,336 subset pairs);
+- All 67,584 elemental Shannon submodularity inequalities (scanned across all 4096 * 66 = 270,336 pair-mask combinations);
 - All 99 exact PIR equalities (MDS K=2, file independence, deterministic answers, correctness
   of W_1, and ALL 89 full T=2 privacy equalities H(X_S, Y_T, A_I) = H(X_T, Y_S, A_I));
 - All 1,485 singleton Ingleton inequalities (174 unique mod S_4);
@@ -58,7 +58,7 @@ def verify_h_uncond(json_path: Path) -> dict:
     mono_viol = sum(1 for i in range(12) if H(4095 ^ (1 << i)) > H(4095))
     assert mono_viol == 0
 
-    # 2. Submodularity across ALL 4096 * 66 = 270,336 elemental triples
+    # 2. Submodularity across ALL C(12,2)*2^10 = 67,584 elemental triples (4096 * 66 pair-mask checks)
     submod_checked = 0
     submod_viol = 0
     for i in range(12):

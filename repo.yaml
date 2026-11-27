@@ -1,19 +1,13 @@
 # SPDX-License-Identifier: Apache-2.0
-# Project manifest for the Build Standard for LLMs v1.2.0. Read by scripts/Audit-Repo.ps1.
+# Project manifest for the Build Standard for LLMs v1.2.0.
+# Validated strictly against repo-standard.schema.json (Draft 2020-12) and read by scripts/Audit-Repo.ps1.
 standard: "1.2.0"
 name: "coded-pir-mlwe-complexity-lab"
-version: "5.0.0"
-description: "Zero-Mathlib Lean 4.35.0 proofs (31 theorems T1a-T3l + 7 adversarial refutations across 6 kernels, 4,300 con-leche/con-ron decls + live negative tamper gate), C11/Python/Eshkol verifiers (0 ruff, 0 mypy), interactive Proof Blueprint, and AMS-LaTeX preprint on Coded/Byzantine PIR & Single F_2^64 6-Obj Realization (CS-053), MLWE Tightness, Gaussian DFR Paradox & 14-Bit Dyadic-16384-A/B (CS-026), Schwartz-Zippel & Strassen-Brockett-Dobkin Sandwich (CS-004), and Infinite Paley/Conference Capacity Theta(G)=sqrt(4k+1) (CS-CMP-012)."
+description: "Zero-Mathlib Lean 4.35.0 proofs (31 theorem bundles T1a-T3l + 9 adversarial refutations across 6 kernels + 1,330-decl Lean.collectAxioms sweep), hardened C11/Python/Eshkol verifiers (0 ruff, 0 mypy), interactive WCAG-AA Proof Blueprint, dual RFC 3161 + OpenTimestamps receipts, and AMS-LaTeX preprint on Coded/Byzantine PIR & 6-Obj F_2^64 Realization (CS-053), MLWE Tightness & 14-Bit Dyadic-16384-A/B (CS-026), Schwartz-Zippel & Two-Sided Strassen Bounds (CS-004), and Conditional Paley/Conference Capacity Theta(G)=sqrt(4k+1) (CS-CMP-012)."
 owner: "0thernes"
-author: "Alexander S. Donahue"
-orcid: "0009-0006-8168-9648"
-repository: "https://github.com/0thernes/coded-pir-mlwe-complexity-lab"
-status: "active"
-license_code: "Apache-2.0"
-license_docs: "CC-BY-4.0"
 year: 2026
-project_type: research
-stack: [lean, c, python, node, latex]
+project_type: "research"
+stack: ["c-cpp", "python", "node", "other"]
 flags:
   public: true
   package: true
@@ -33,16 +27,16 @@ flags:
   formal: true
 items:
   A19: {status: done, evidence: "GitHub About description and 7 topics configured on 0thernes/coded-pir-mlwe-complexity-lab"}
-  A27: {status: done, evidence: "Self-contained interactive GitHub Pages Proof Blueprint DAG & Triad Explorer (docs/site/index.html, docs/site/blueprint.html) deployed via .github/workflows/pages.yml to https://0thernes.github.io/coded-pir-mlwe-complexity-lab/"}
+  A27: {status: done, evidence: "Self-contained CSP-hardened WCAG-AA interactive GitHub Pages Proof Blueprint DAG & Triad Explorer (docs/site/index.html, docs/site/blueprint.html) deployed via .github/workflows/pages.yml to https://0thernes.github.io/coded-pir-mlwe-complexity-lab/"}
   B03: {status: done, evidence: "Deterministic exact Lean kernel proofs, seeded Python/C11 runs, reproducible PDF/tarball SHA-256 hashes in MANIFEST.sha256"}
-  B05: {status: done, evidence: "18 pytest tests (tests/test_all.py, 14/14 killed mutants), 79 C11 unit tests, 3 Eshkol AD modules, 0 ruff / 0 mypy, and 31 Lean theorems + 7 adversarial refutations covering claims C1-C31"}
-  B06: {status: done, evidence: "7 machine-checked Lean adversarial refutations (AdversarialTests.lean), live negative kernel-rejection gate (mlkemCompress1 832 = 0 rejected), and C11/Python negative boundary tests"}
-  B07: {status: done, evidence: "Regression tests for every fixed defect logged in HARDENING_LOG.md (H01-H21 incl. PivotTrie structural recursion, Gaussian DFR Paradox discovery, zero-trimmed DFR, and 0 ruff / 0 mypy) plus ERRATA.md"}
-  B08: {status: done, evidence: "Golden artifacts results/lean_axioms.txt (34 decls, drift-checked in CI), data/f11_byz_witness.json, data/h_uncond_certified.json, results/exact_audit_summary.json, results/six_kernel_audit.txt, MANIFEST.sha256, data/MANIFEST.sha256.tsr (RFC 3161 TSA)"}
-  B11: {status: done, evidence: "Cross-language differential tests across Lean 4.35.0, C11, 60-digit Python, and Eshkol v1.3.6 dual-number AD (< 2e-13, incl. Dyadic-16384-A dR2/dsigma=-9.13e-10 & Dyadic-16384-B 6.22e-6) plus 6-kernel Lean replay (4,300 con-leche/con-ron & silent 0-error nanoda)"}
-  B12: {status: done, evidence: "60-digit Decimal Python exact oracles and exact finite-field / Z[sqrt(p)] / F_2^64 / integer polymatroid, zero-trimmed FIPS 203 DFR convolution, Bai overhead, & Koszul/Strassen/Paley enumerators serving as reference oracles for C11 and Eshkol"}
+  B05: {status: done, evidence: "25 pytest tests (tests/test_all.py, 14/14 killed mutants), 87 C11 unit tests, 3 Eshkol AD modules, 0 ruff / 0 mypy, and 31 Lean theorems + 9 adversarial refutations covering claims C1-C31"}
+  B06: {status: done, evidence: "9 machine-checked Lean adversarial refutations (AdversarialTests.lean), live negative kernel-rejection gate (false mlkemCompress1 (1665 + 832) = 1 rejected), strict C11 CLI invalid-arg rejection, Eshkol parser/depth negative tests, and tamper-detection timestamp tests"}
+  B07: {status: done, evidence: "Regression tests for every fixed defect logged in HARDENING_LOG.md (H01-H38 incl. exact FIPS 203 Compress_1 L01 fix, C11 stack-buffer bounds, Eshkol NaN-guard, Draft 2020-12 schema, exhaustive Lean.collectAxioms sweep, dual timestamps) plus ERRATA.md"}
+  B08: {status: done, evidence: "Golden artifacts results/lean_axioms.txt (34 decls, drift-checked in CI), data/f11_byz_witness.json, data/h_uncond_certified.json, results/exact_audit_summary.json, results/six_kernel_audit.txt, MANIFEST.sha256, data/MANIFEST.sha256.tsr (RFC 3161 TSA), data/MANIFEST.sha256.ots (Bitcoin OpenTimestamps)"}
+  B11: {status: done, evidence: "Cross-language differential tests across Lean 4.35.0, C11, 60-digit Python, and Eshkol v1.3.6 dual-number AD (< 2e-13, incl. Dyadic-16384-A/B) plus 6-kernel Lean replay (con-leche/con-ron --verified 4,337 decls & silent 0-error nanoda)"}
+  B12: {status: done, evidence: "60-digit Decimal Python exact oracles and exact finite-field / Z[sqrt(p)] / F_2^64 / integer polymatroid, float64 FIPS 203 DFR convolution model, Bai overhead, & Koszul/Strassen/Paley enumerators serving as reference oracles for C11 and Eshkol"}
   B14: {status: done, evidence: "Metamorphic K<->T rate symmetry (all M>=2), S_4 polymatroid invariance, Z_4 cyclic F_2^64 symmetry, odd-symmetry QGTL Berry curvature, unimodular det invariance, S_3 rectangular MatMul symmetry, and char-free tensor/Haemers/Schwartz-Zippel across F_2/F_5/F_101"}
-  B20: {status: done, evidence: "60-digit Decimal ML-KEM CBD & Dyadic-256/512/1024/16384-A/B Renyi-2/inf/Bai optimization + exact zero-trimmed FIPS 203 DFR convolutions (exposing ML-KEM-1024 Gaussian DFR Paradox 2^-173.42 FAIL vs Dyadic-16384-A 6.013 b / 2^-174.03 & Dyadic-16384-B 0.5916 b / 2^-139.31) matching C11 and Eshkol AD to < 2e-13"}
+  B20: {status: done, evidence: "60-digit Decimal ML-KEM CBD & Dyadic-256/512/1024/16384-A/B Renyi-2/inf/Bai optimization + float64 discrete-convolution FIPS 203 DFR model (Dyadic-16384-A 6.013 b / model DFR 2^-174.03 & Dyadic-16384-B 0.5916 b / model DFR 2^-139.31 vs CBD_2 model DFR 2^-176.63) matching C11 and Eshkol AD to < 2e-13"}
   B23: {status: n/a, note: "Algebraic, combinatorial, and information-theoretic theorems proved directly in Lean 4.35.0; no concurrent state machine requiring TLA+"}
-  B24: {status: done, evidence: "All 31 headline theorems (T1a-T3l), concrete NonVacuity witnesses, and 7 AdversarialTests refutations (34 audited decls) machine-checked in zero-Mathlib Lean 4.35.0 across 6 independent kernels (4,300 con-leche/con-ron verified decls + live negative tamper gate)"}
-  B25: {status: n/a, note: "C11 verification core audited via -std=c11 -Wall -Wextra -Wpedantic -Werror, ASan/UBSan, 512+ fuzz iterations, and Lean algebraic proofs; CBMC/Kani deferred"}
+  B24: {status: done, evidence: "All 31 headline theorems (T1a-T3l), char-2/F_5/F_11 NonVacuity witnesses, and 9 AdversarialTests refutations (34 audited decls + exhaustive Lean.collectAxioms sweep) machine-checked in zero-Mathlib Lean 4.35.0 across 6 independent kernels"}
+  B25: {status: n/a, note: "C11 verification core audited via -std=c11 -Wall -Wextra -Wpedantic -Werror, strict bounds checks, ASan/UBSan, 1024-iter fuzz, and Lean algebraic proofs; CBMC/Kani deferred"}

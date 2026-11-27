@@ -1,6 +1,6 @@
 {
   "schema": "triad-exact-audit/v1",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "author": "Alexander S. Donahue",
   "orcid": "0009-0006-8168-9648",
   "pillar_1_cs053": {
@@ -174,26 +174,32 @@
       "loss_bits_512": 0.592077,
       "exact_dfr_suite": {
         "ML_KEM_512_FIPS": {
+          "method": "ieee754_float64_nonnegative_direct_convolution",
           "pr_single_coeff_ge_832": 9.322515058208319e-46,
           "union_bound_log2_dfr": -141.59
         },
         "ML_KEM_512_Dyadic512_256": {
+          "method": "ieee754_float64_nonnegative_direct_convolution",
           "pr_single_coeff_ge_832": 4.6805567778362346e-45,
           "union_bound_log2_dfr": -139.26
         },
         "ML_KEM_768_FIPS": {
+          "method": "ieee754_float64_nonnegative_direct_convolution",
           "pr_single_coeff_ge_832": 8.80886400080871e-54,
           "union_bound_log2_dfr": -168.25
         },
         "ML_KEM_768_Dyadic256": {
+          "method": "ieee754_float64_nonnegative_direct_convolution",
           "pr_single_coeff_ge_832": 3.8384171775269607e-53,
           "union_bound_log2_dfr": -166.12
         },
         "ML_KEM_1024_FIPS": {
+          "method": "ieee754_float64_nonnegative_direct_convolution",
           "pr_single_coeff_ge_832": 2.644328727492627e-56,
           "union_bound_log2_dfr": -176.63
         },
         "ML_KEM_1024_Dyadic256": {
+          "method": "ieee754_float64_nonnegative_direct_convolution",
           "pr_single_coeff_ge_832": 1.357709934313547e-55,
           "union_bound_log2_dfr": -174.26
         }
@@ -236,46 +242,55 @@
       },
       "bai_overhead_suite": {
         "ML_KEM_512_CBD3": {
+          "method": "float64_grid_search_logsumexp",
           "bai_overhead_bits": 24.7732,
           "alpha_opt": 37.4,
           "sigma_opt": 1.2756
         },
         "ML_KEM_512_Dyadic512": {
+          "method": "float64_grid_search_logsumexp",
           "bai_overhead_bits": 12.0762,
           "alpha_opt": 23.2,
           "sigma_opt": 1.2392
         },
         "ML_KEM_512_Dyadic1024B": {
+          "method": "float64_grid_search_logsumexp",
           "bai_overhead_bits": 5.1261,
           "alpha_opt": 293.4,
           "sigma_opt": 1.2392
         },
         "ML_KEM_768_CBD2": {
+          "method": "float64_grid_search_logsumexp",
           "bai_overhead_bits": 50.3554,
           "alpha_opt": 21.2,
           "sigma_opt": 1.0504
         },
         "ML_KEM_768_Dyadic256": {
+          "method": "float64_grid_search_logsumexp",
           "bai_overhead_bits": 17.3535,
           "alpha_opt": 28.65,
           "sigma_opt": 1.0064
         },
         "ML_KEM_768_Dyadic1024A": {
+          "method": "float64_grid_search_logsumexp",
           "bai_overhead_bits": 5.4816,
           "alpha_opt": 296.6,
           "sigma_opt": 1.0092
         },
         "ML_KEM_1024_CBD2": {
+          "method": "float64_grid_search_logsumexp",
           "bai_overhead_bits": 67.1405,
           "alpha_opt": 21.2,
           "sigma_opt": 1.0504
         },
         "ML_KEM_1024_Dyadic256": {
+          "method": "float64_grid_search_logsumexp",
           "bai_overhead_bits": 23.138,
           "alpha_opt": 28.65,
           "sigma_opt": 1.0064
         },
         "ML_KEM_1024_Dyadic1024A": {
+          "method": "float64_grid_search_logsumexp",
           "bai_overhead_bits": 7.3088,
           "alpha_opt": 296.6,
           "sigma_opt": 1.0092
@@ -283,14 +298,17 @@
       },
       "dfr_1024_suite": {
         "ML_KEM_512_Dyadic1024B_A": {
+          "method": "ieee754_float64_nonnegative_direct_convolution",
           "pr_single_coeff_ge_832": 2.772401194475171e-45,
           "union_bound_log2_dfr": -140.02
         },
         "ML_KEM_768_Dyadic1024A": {
+          "method": "ieee754_float64_nonnegative_direct_convolution",
           "pr_single_coeff_ge_832": 4.1812410730048e-53,
           "union_bound_log2_dfr": -166.0
         },
         "ML_KEM_1024_Dyadic1024A": {
+          "method": "ieee754_float64_nonnegative_direct_convolution",
           "pr_single_coeff_ge_832": 1.4941297700105368e-55,
           "union_bound_log2_dfr": -174.13
         }
@@ -319,16 +337,19 @@
       },
       "bai_16384_suite": {
         "ML_KEM_512_Dyadic16384B": {
+          "method": "float64_grid_search_logsumexp",
           "bai_overhead_bits": 0.5916,
           "alpha_opt": 356.6,
           "sigma_opt": 1.2258
         },
         "ML_KEM_768_Dyadic16384A": {
+          "method": "float64_grid_search_logsumexp",
           "bai_overhead_bits": 4.5098,
           "alpha_opt": 156.6,
           "sigma_opt": 1.0066
         },
         "ML_KEM_1024_Dyadic16384A": {
+          "method": "float64_grid_search_logsumexp",
           "bai_overhead_bits": 6.0131,
           "alpha_opt": 156.6,
           "sigma_opt": 1.0066
@@ -336,14 +357,17 @@
       },
       "dfr_16384_suite": {
         "ML_KEM_512_Dyadic16384B_A": {
+          "method": "ieee754_float64_nonnegative_direct_convolution",
           "pr_single_coeff_ge_832": 4.519422412131248e-45,
           "union_bound_log2_dfr": -139.31
         },
         "ML_KEM_768_Dyadic16384A": {
+          "method": "ieee754_float64_nonnegative_direct_convolution",
           "pr_single_coeff_ge_832": 4.440790277358037e-53,
           "union_bound_log2_dfr": -165.91
         },
         "ML_KEM_1024_Dyadic16384A": {
+          "method": "ieee754_float64_nonnegative_direct_convolution",
           "pr_single_coeff_ge_832": 1.5982924120679216e-55,
           "union_bound_log2_dfr": -174.03
         }
@@ -475,6 +499,9 @@
     "mlwe_compress1_ceiling": {
       "q": 3329,
       "exact_safe_margin": 831,
+      "b0_exact_margin": 832,
+      "b1_first_failure": 832,
+      "b0_first_failure": 833,
       "first_failure": 832,
       "depth_at_step16": 51
     },
