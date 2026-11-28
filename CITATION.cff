@@ -10,8 +10,8 @@ repository-code: "https://github.com/0thernes/coded-pir-mlwe-complexity-lab"
 url: "https://0thernes.github.io/coded-pir-mlwe-complexity-lab/"
 identifiers:
   - type: swh
-    value: "swh:1:snp:219e9ee707b73306a4b4f9636878c9989d4359d7"
-    description: "Software Heritage permanent archival snapshot of v5.3.0 (v5.4.0 snapshot queued upon release)"
+    value: "swh:1:snp:badfe4328be66ecd30b2e745b31e7dd232fe3aa9"
+    description: "Software Heritage permanent archival snapshot of v5.4.0"
 authors:
   - family-names: Donahue
     given-names: Alexander Stephen
