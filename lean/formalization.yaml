@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
 # SPDX-License-Identifier: Apache-2.0
-version: "v0.5"
+version: "v0.4"
 release_version: "5.4.0"
 
 project:
@@ -46,15 +46,9 @@ project:
     for C_7, and, for every self-complementary conference graph on 4k+1 vertices, alpha(G^t)^2 <= (4k+1)^t
     and alpha(G^{2m}) >= (4k+1)^m, with the hypotheses checked in Lean for P_5, P_13 and P_17.
   authors:
-    - name: "Alexander S. Donahue"
-      orcid: "0009-0006-8168-9648"
-      email: "0_0@0thernes.art"
-      affiliation: "Independent Researcher, Spokane, WA, USA"
+    - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
   responsible_maintainers:
-    - name: "Alexander S. Donahue"
-      github: "0thernes"
-      orcid: "0009-0006-8168-9648"
-      email: "0_0@0thernes.art"
+    - "Alexander Stephen Donahue (@0thernes, ORCID 0009-0006-8168-9648, 0_0@0thernes.art)"
   license: "Apache-2.0"
 
 classification:
@@ -74,7 +68,7 @@ classification:
 sources:
   - title: "Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked Complexity-Barrier Bridges (v5.4.0)"
     authors:
-      - "Alexander S. Donahue"
+      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
     id: "https://github.com/0thernes/coded-pir-mlwe-complexity-lab"
     type: "original-proof"
     relationship: "other"
@@ -84,94 +78,91 @@ sources:
       confirmed external assignment.
   - title: "The capacity of private information retrieval from coded storage systems with colluding, robust and byzantine servers"
     authors:
-      - "Rui Sun"
-      - "Yiwei Zhang"
+      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
     id: "https://arxiv.org/abs/2610.37412"
     type: "paper"
     relationship: "background"
     note: "Capacity among linear, full support-rank schemes when N-U-2B >= KT; T1b, T1g and T1h compare closed-form expressions with it (no scheme is defined in Lean)."
   - title: "Infinitely Many Information Inequalities"
     authors:
-      - "Frantisek Matus"
+      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
     id: "https://doi.org/10.1109/ISIT.2007.4557201"
     type: "paper"
     relationship: "background"
     note: "The repository defines matusFamilyQ to follow this family (not compared with the source in Lean); T1h checks it on singleton instances of h_uncond."
   - title: "Module-Lattice-Based Key-Encapsulation Mechanism Standard (FIPS 203)"
     authors:
-      - "National Institute of Standards and Technology"
+      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
     id: "https://doi.org/10.6028/NIST.FIPS.203"
     type: "standard"
     relationship: "background"
     note: "Defines ML-KEM modulus q=3329, CBD_2/CBD_3 noise and Compress_1 (eq. 4.7). In v5.1.0, mlkemCompress1 in T3d implements literal Eq. (4.7) (closing ERRATA L01). Table 1 lists DFR 2^-174.8 for ML-KEM-1024; no 2^-174 threshold is stated."
   - title: "Quantum Algorithms for Lattice Problems"
     authors:
-      - "Yilei Chen"
+      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
     id: "https://eprint.iacr.org/2024/555"
     type: "paper"
     relationship: "background"
     note: "T2b formalizes a DFT identity the author proposes as an explanation of the Step 9 failure; the Step 9 bug was found by Hongxun Wu and, independently, Thomas Vidick (author note on the ePrint page)."
   - title: "Equations for secant varieties of Veronese and other varieties"
     authors:
-      - "J. M. Landsberg"
-      - "Giorgio Ottaviani"
+      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
     id: "https://doi.org/10.1007/s10231-011-0238-6"
     type: "paper"
     relationship: "background"
     note: "Koszul flattening framework; T3e and T3g prove rank lower bounds over every field via integer left-inverses."
   - title: "On multiplication of 2 x 2 matrices"
     authors:
-      - "Shmuel Winograd"
+      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
     id: "https://doi.org/10.1016/0024-3795(71)90009-7"
     type: "paper"
     relationship: "background"
     note: "Known result rank(<2,2,2>) = 7; T3h formalizes it over every SimpleField F."
   - title: "On the optimal evaluation of a set of bilinear forms"
     authors:
-      - "Roger W. Brockett"
-      - "David Dobkin"
+      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
     id: "https://doi.org/10.1016/0024-3795(78)90012-5"
     type: "paper"
     relationship: "background"
     note: "Proved 2n^2-1 over any field (as reported by Shpilka, arXiv:cs/0201001). T3i proves the weaker substitution-method bound 2m^2-m."
   - title: "On the Shannon capacity of a graph"
     authors:
-      - "Laszlo Lovasz"
+      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
     id: "https://doi.org/10.1109/TIT.1979.1055985"
     type: "paper"
     relationship: "background"
     note: "Theta(C_5) = sqrt(5) and capacity sqrt(n) for self-complementary vertex-transitive graphs; T3j gives the integer form for C_5 and T3l a conditional form for conference graphs."
   - title: "On some problems of Lovasz concerning the Shannon capacity of a graph"
     authors:
-      - "Willem Haemers"
+      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
     id: "https://doi.org/10.1109/TIT.1979.1056027"
     type: "paper"
     relationship: "background"
     note: "Haemers rank bound, formalized over every field in T3j, with minimum fitting-matrix rank 4 for C_7."
   - title: "Fast Probabilistic Algorithms for Verification of Polynomial Identities"
     authors:
-      - "Jacob T. Schwartz"
+      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
     id: "https://doi.org/10.1145/322217.322225"
     type: "paper"
     relationship: "background"
     note: "Schwartz-Zippel root bound, formalized over every SimpleField F in T3k."
   - title: "Probabilistic Algorithms for Sparse Polynomials"
     authors:
-      - "Richard Zippel"
+      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
     id: "https://doi.org/10.1007/3-540-09519-5_73"
     type: "paper"
     relationship: "background"
     note: "Multivariate polynomial root bound formalized in Theorem T3k."
   - title: "On Orthogonal Matrices"
     authors:
-      - "R. E. A. C. Paley"
+      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
     id: "https://doi.org/10.1002/sapm1933121311"
     type: "paper"
     relationship: "background"
     note: "Paley conference matrices. T3l is conditional on conference-graph and self-complement hypotheses, proved in Lean for P_5, P_13 and P_17 only."
   - title: "A 5/2 n^2-Lower Bound for the Rank of n x n-Matrix Multiplication over Arbitrary Fields"
     authors:
-      - "Markus Blaser"
+      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
     id: "https://doi.org/10.1109/SFFCS.1999.814576"
     type: "paper"
     relationship: "background"
