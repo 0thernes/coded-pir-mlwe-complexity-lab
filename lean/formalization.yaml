@@ -1,397 +1,477 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
 # SPDX-License-Identifier: Apache-2.0
-version: "v0.4"
-release_version: "5.4.0"
-
+version: v0.4
+release_version: 5.4.0
 project:
-  name: "Koszul-Veronese Flag-Private Coded Byzantine PIR, Module-LWE Reduction Obstructions, and Complexity-Theoretic Bridges"
-  description: >-
-    Zero-Mathlib Lean 4.35.0 formalization of 34 theorems (T1a-T3m) plus non-degenerate
-    non-vacuity witnesses (including char-2 SimpleField (Fin 2), non-degenerate concurrent/coplanar
-    P^3 lines, and T1k/T2e-T2i witnesses) and 11 adversarial tests (37 audited declarations +
-    2,306 TriadFrontier.* declarations swept by AuditExhaustiveAxioms.lean under Lean 4.35.0 module).
-    The theorems include elementary identities, sound linear-algebraic rank certificates, a universal
-    2-file N-server K-MDS flag-private PIR protocol with zero-error decoding and exact T-collusion
-    privacy bijection (T1k), unconditional in-kernel constructive existence of the F_101 (6,3,3)
-    rate-10/17 20/20 zero-error PIR scheme (T1l), Markus Blaser's (FOCS 1999) 5/2 m^2 - 3m matrix
-    multiplication rank lower bound over every SimpleField F including F_2 (T3m), and formalizations
-    of known results across three areas; none resolves a published open problem in Lean or refutes a
-    published claim.
-    (Pillar I, CS-053) a moment-vector annihilation identity and a Pascal-type binomial identity;
-    inequalities between closed-form rate expressions; arithmetic threshold statements; a Boolean check
-    of 90 tabulated F_11 matrix inverses; Boolean polymatroid checks for a tabulated 12-variable
-    function h_uncond at value ratio 8/13; the classical P^3 concurrency fact over any field;
-    Zhang-Yeung (1998) and Matus-type identities; in-Lean vector-space soundness (HasSpanDim) of
-    matRankModP (over F_2 and F_3) and gf2RankSparse (over F_2), closing ERRATA L02 so T1i and T1j
-    certify genuine vector-space span dimensions; a field-universal formalization of the linear
-    flag-private PIR protocol (zero-error decoding + exact colluder-transcript bijection Psi_I, T1k);
-    and unconditional in-kernel constructive existence over SimpleField (Fin 101) of the explicit
-    (6,3,3) rate-10/17 > 4/7 zero-error PIR scheme certifying DecInv*M_des = I_60, Cancel*M_pure = M_mixed,
-    and all 20/20 colluding-triple flag isomorphisms with zero external oracles (T1l, closing S01/A02
-    completely inside all 6 Lean kernels).
-    (Pillar II, CS-026/QC-042/CM-048) a diagonal-product identity (the q-ary MLWE basis has
-    determinant q^m), DFT-cancellation identities over any commutative ring, and integer
-    Cauchy-Schwarz, Holder, TV-chi^2, data-processing and moment certificates for tabulated noise
-    weights. Renyi values, Bai et al. overheads and exact coupled FIPS 203 decryption-failure rates
-    (cross-verified by a 90-digit Kronecker exact interval oracle reproducing NIST FIPS 203 Table 1
-    within 0.04 bits, closing ERRATA S02) are numerical; no divergence, sampler or lattice is defined
-    in Lean. mlkemCompress1 implements exact NIST FIPS 203 Eq. (4.7) and proves equivalence with +1664.
-    (Pillar III, CS-001/CS-004/CS-010/CS-012/CS-051/CS-CMP-012) multilinear-extension uniqueness,
-    the counting inequality of the natural-proofs argument, minimum distance 2B+1 of a
-    B-error-correcting code, pigeonhole counting, tensor-rank bounds over every field including F_2
-    (rank(<2,2,2>) = 7; substitution bound 2m^2-m in T3i; Markus Blaser's FOCS 1999 5/2 m^2 - 3m
-    lower bound 5m^2 - 6m <= 2*r in T3m, strictly surpassing Brockett-Dobkin 2m^2 - 1 for all m >= 6
-    with m=6 -> r >= 72 > 71; and tightened sandwich 5*4^k - 6*2^k <= 2*rank(<2^k,2^k,2^k>) <= 2*7^k),
-    Schwartz-Zippel, the integer form of Lovasz's Theta(C_5) = sqrt(5), minimum fitting-matrix rank 4
-    for C_7, and, for every self-complementary conference graph on 4k+1 vertices, alpha(G^t)^2 <= (4k+1)^t
-    and alpha(G^{2m}) >= (4k+1)^m, with the hypotheses checked in Lean for P_5, P_13 and P_17.
+  name: Koszul-Veronese Flag-Private Coded Byzantine PIR, Module-LWE Reduction Obstructions, and Complexity-Theoretic
+    Bridges
+  description: Zero-Mathlib Lean 4.35.0 formalization of 34 theorems (T1a-T3m) plus non-degenerate non-vacuity
+    witnesses (including char-2 SimpleField (Fin 2), non-degenerate concurrent/coplanar P^3 lines, and
+    T1k/T2e-T2i witnesses) and 11 adversarial tests (37 audited declarations + 2,306 TriadFrontier.* declarations
+    swept by AuditExhaustiveAxioms.lean under Lean 4.35.0 module). The theorems include elementary identities,
+    sound linear-algebraic rank certificates, a universal 2-file N-server K-MDS flag-private PIR protocol
+    with zero-error decoding and exact T-collusion privacy bijection (T1k), unconditional in-kernel constructive
+    existence of the F_101 (6,3,3) rate-10/17 20/20 zero-error PIR scheme (T1l), Markus Blaser's (FOCS
+    1999) 5/2 m^2 - 3m matrix multiplication rank lower bound over every SimpleField F including F_2 (T3m),
+    and formalizations of known results across three areas; none resolves a published open problem in
+    Lean or refutes a published claim. (Pillar I, CS-053) a moment-vector annihilation identity and a
+    Pascal-type binomial identity; inequalities between closed-form rate expressions; arithmetic threshold
+    statements; a Boolean check of 90 tabulated F_11 matrix inverses; Boolean polymatroid checks for a
+    tabulated 12-variable function h_uncond at value ratio 8/13; the classical P^3 concurrency fact over
+    any field; Zhang-Yeung (1998) and Matus-type identities; in-Lean vector-space soundness (HasSpanDim)
+    of matRankModP (over F_2 and F_3) and gf2RankSparse (over F_2), closing ERRATA L02 so T1i and T1j
+    certify genuine vector-space span dimensions; a field-universal formalization of the linear flag-private
+    PIR protocol (zero-error decoding + exact colluder-transcript bijection Psi_I, T1k); and unconditional
+    in-kernel constructive existence over SimpleField (Fin 101) of the explicit (6,3,3) rate-10/17 > 4/7
+    zero-error PIR scheme certifying DecInv*M_des = I_60, Cancel*M_pure = M_mixed, and all 20/20 colluding-triple
+    flag isomorphisms with zero external oracles (T1l, closing S01/A02 completely inside all 6 Lean kernels).
+    (Pillar II, CS-026/QC-042/CM-048) a diagonal-product identity (the q-ary MLWE basis has determinant
+    q^m), DFT-cancellation identities over any commutative ring, and integer Cauchy-Schwarz, Holder, TV-chi^2,
+    data-processing and moment certificates for tabulated noise weights. Renyi values, Bai et al. overheads
+    and exact coupled FIPS 203 decryption-failure rates (cross-verified by a 90-digit Kronecker exact
+    interval oracle reproducing NIST FIPS 203 Table 1 within 0.04 bits, closing ERRATA S02) are numerical;
+    no divergence, sampler or lattice is defined in Lean. mlkemCompress1 implements exact NIST FIPS 203
+    Eq. (4.7) and proves equivalence with +1664. (Pillar III, CS-001/CS-004/CS-010/CS-012/CS-051/CS-CMP-012)
+    multilinear-extension uniqueness, the counting inequality of the natural-proofs argument, minimum
+    distance 2B+1 of a B-error-correcting code, pigeonhole counting, tensor-rank bounds over every field
+    including F_2 (rank(<2,2,2>) = 7; substitution bound 2m^2-m in T3i; Markus Blaser's FOCS 1999 5/2
+    m^2 - 3m lower bound 5m^2 - 6m <= 2*r in T3m, strictly surpassing Brockett-Dobkin 2m^2 - 1 for all
+    m >= 6 with m=6 -> r >= 72 > 71; and tightened sandwich 5*4^k - 6*2^k <= 2*rank(<2^k,2^k,2^k>) <=
+    2*7^k), Schwartz-Zippel, the integer form of Lovasz's Theta(C_5) = sqrt(5), minimum fitting-matrix
+    rank 4 for C_7, and, for every self-complementary conference graph on 4k+1 vertices, alpha(G^t)^2
+    <= (4k+1)^t and alpha(G^{2m}) >= (4k+1)^m, with the hypotheses checked in Lean for P_5, P_13 and P_17.
   authors:
-    - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
+  - Alexander Stephen Donahue
   responsible_maintainers:
-    - "Alexander Stephen Donahue (@0thernes, ORCID 0009-0006-8168-9648, 0_0@0thernes.art)"
-  license: "Apache-2.0"
-
+  - Alexander Stephen Donahue
+  license: Apache-2.0
+  orcid: 0009-0006-8168-9648
 classification:
   arxiv:
-    - "cs.IT"
-    - "cs.CR"
-    - "cs.CC"
-    - "cs.LO"
+  - cs.IT
+  - cs.CR
+  - cs.CC
+  - cs.LO
   msc2020:
-    - "94A24"
-    - "94B05"
-    - "94A60"
-    - "68Q15"
-    - "15A69"
-    - "03B35"
-
+  - 94A24
+  - 94B05
+  - 94A60
+  - 68Q15
+  - 15A69
+  - 03B35
 sources:
-  - title: "Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked Complexity-Barrier Bridges (v5.4.0)"
-    authors:
-      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
-    id: "https://github.com/0thernes/coded-pir-mlwe-complexity-lab"
-    type: "original-proof"
-    relationship: "other"
-    note: >-
-      Original formalization and companion AMS-LaTeX preprint first presented in
-      this repository. No external DOI, arXiv ID, or peer review is claimed prior to
-      confirmed external assignment.
-  - title: "The capacity of private information retrieval from coded storage systems with colluding, robust and byzantine servers"
-    authors:
-      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
-    id: "https://arxiv.org/abs/2610.37412"
-    type: "paper"
-    relationship: "background"
-    note: "Capacity among linear, full support-rank schemes when N-U-2B >= KT; T1b, T1g and T1h compare closed-form expressions with it (no scheme is defined in Lean)."
-  - title: "Infinitely Many Information Inequalities"
-    authors:
-      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
-    id: "https://doi.org/10.1109/ISIT.2007.4557201"
-    type: "paper"
-    relationship: "background"
-    note: "The repository defines matusFamilyQ to follow this family (not compared with the source in Lean); T1h checks it on singleton instances of h_uncond."
-  - title: "Module-Lattice-Based Key-Encapsulation Mechanism Standard (FIPS 203)"
-    authors:
-      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
-    id: "https://doi.org/10.6028/NIST.FIPS.203"
-    type: "standard"
-    relationship: "background"
-    note: "Defines ML-KEM modulus q=3329, CBD_2/CBD_3 noise and Compress_1 (eq. 4.7). In v5.1.0, mlkemCompress1 in T3d implements literal Eq. (4.7) (closing ERRATA L01). Table 1 lists DFR 2^-174.8 for ML-KEM-1024; no 2^-174 threshold is stated."
-  - title: "Quantum Algorithms for Lattice Problems"
-    authors:
-      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
-    id: "https://eprint.iacr.org/2024/555"
-    type: "paper"
-    relationship: "background"
-    note: "T2b formalizes a DFT identity the author proposes as an explanation of the Step 9 failure; the Step 9 bug was found by Hongxun Wu and, independently, Thomas Vidick (author note on the ePrint page)."
-  - title: "Equations for secant varieties of Veronese and other varieties"
-    authors:
-      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
-    id: "https://doi.org/10.1007/s10231-011-0238-6"
-    type: "paper"
-    relationship: "background"
-    note: "Koszul flattening framework; T3e and T3g prove rank lower bounds over every field via integer left-inverses."
-  - title: "On multiplication of 2 x 2 matrices"
-    authors:
-      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
-    id: "https://doi.org/10.1016/0024-3795(71)90009-7"
-    type: "paper"
-    relationship: "background"
-    note: "Known result rank(<2,2,2>) = 7; T3h formalizes it over every SimpleField F."
-  - title: "On the optimal evaluation of a set of bilinear forms"
-    authors:
-      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
-    id: "https://doi.org/10.1016/0024-3795(78)90012-5"
-    type: "paper"
-    relationship: "background"
-    note: "Proved 2n^2-1 over any field (as reported by Shpilka, arXiv:cs/0201001). T3i proves the weaker substitution-method bound 2m^2-m."
-  - title: "On the Shannon capacity of a graph"
-    authors:
-      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
-    id: "https://doi.org/10.1109/TIT.1979.1055985"
-    type: "paper"
-    relationship: "background"
-    note: "Theta(C_5) = sqrt(5) and capacity sqrt(n) for self-complementary vertex-transitive graphs; T3j gives the integer form for C_5 and T3l a conditional form for conference graphs."
-  - title: "On some problems of Lovasz concerning the Shannon capacity of a graph"
-    authors:
-      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
-    id: "https://doi.org/10.1109/TIT.1979.1056027"
-    type: "paper"
-    relationship: "background"
-    note: "Haemers rank bound, formalized over every field in T3j, with minimum fitting-matrix rank 4 for C_7."
-  - title: "Fast Probabilistic Algorithms for Verification of Polynomial Identities"
-    authors:
-      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
-    id: "https://doi.org/10.1145/322217.322225"
-    type: "paper"
-    relationship: "background"
-    note: "Schwartz-Zippel root bound, formalized over every SimpleField F in T3k."
-  - title: "Probabilistic Algorithms for Sparse Polynomials"
-    authors:
-      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
-    id: "https://doi.org/10.1007/3-540-09519-5_73"
-    type: "paper"
-    relationship: "background"
-    note: "Multivariate polynomial root bound formalized in Theorem T3k."
-  - title: "On Orthogonal Matrices"
-    authors:
-      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
-    id: "https://doi.org/10.1002/sapm1933121311"
-    type: "paper"
-    relationship: "background"
-    note: "Paley conference matrices. T3l is conditional on conference-graph and self-complement hypotheses, proved in Lean for P_5, P_13 and P_17 only."
-  - title: "A 5/2 n^2-Lower Bound for the Rank of n x n-Matrix Multiplication over Arbitrary Fields"
-    authors:
-      - "Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)"
-    id: "https://doi.org/10.1109/SFFCS.1999.814576"
-    type: "paper"
-    relationship: "background"
-    note: "Blaser (FOCS 1999) 5/2 m^2 - 3m matrix multiplication lower bound over arbitrary fields; formalized completely from scratch over every SimpleField F (including F_2) in T3m (BlaserLowerBound.lean)."
-
+- title: Koszul-Veronese Byzantine Private Information Retrieval, MLWE Reduction Tightness, and Machine-Checked
+    Complexity-Barrier Bridges (v5.4.0)
+  authors:
+  - Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)
+  id: https://github.com/0thernes/coded-pir-mlwe-complexity-lab
+  type: original-proof
+  relationship: other
+  note: Original formalization and companion AMS-LaTeX preprint first presented in this repository. No
+    external DOI, arXiv ID, or peer review is claimed prior to confirmed external assignment.
+- title: The capacity of private information retrieval from coded storage systems with colluding, robust
+    and byzantine servers
+  authors:
+  - Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)
+  id: https://arxiv.org/abs/2610.37412
+  type: paper
+  relationship: background
+  note: Capacity among linear, full support-rank schemes when N-U-2B >= KT; T1b, T1g and T1h compare closed-form
+    expressions with it (no scheme is defined in Lean).
+- title: Infinitely Many Information Inequalities
+  authors:
+  - Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)
+  id: https://doi.org/10.1109/ISIT.2007.4557201
+  type: paper
+  relationship: background
+  note: The repository defines matusFamilyQ to follow this family (not compared with the source in Lean);
+    T1h checks it on singleton instances of h_uncond.
+- title: Module-Lattice-Based Key-Encapsulation Mechanism Standard (FIPS 203)
+  authors:
+  - Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)
+  id: https://doi.org/10.6028/NIST.FIPS.203
+  type: standard
+  relationship: background
+  note: Defines ML-KEM modulus q=3329, CBD_2/CBD_3 noise and Compress_1 (eq. 4.7). In v5.1.0, mlkemCompress1
+    in T3d implements literal Eq. (4.7) (closing ERRATA L01). Table 1 lists DFR 2^-174.8 for ML-KEM-1024;
+    no 2^-174 threshold is stated.
+- title: Quantum Algorithms for Lattice Problems
+  authors:
+  - Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)
+  id: https://eprint.iacr.org/2024/555
+  type: paper
+  relationship: background
+  note: T2b formalizes a DFT identity the author proposes as an explanation of the Step 9 failure; the
+    Step 9 bug was found by Hongxun Wu and, independently, Thomas Vidick (author note on the ePrint page).
+- title: Equations for secant varieties of Veronese and other varieties
+  authors:
+  - Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)
+  id: https://doi.org/10.1007/s10231-011-0238-6
+  type: paper
+  relationship: background
+  note: Koszul flattening framework; T3e and T3g prove rank lower bounds over every field via integer
+    left-inverses.
+- title: On multiplication of 2 x 2 matrices
+  authors:
+  - Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)
+  id: https://doi.org/10.1016/0024-3795(71)90009-7
+  type: paper
+  relationship: background
+  note: Known result rank(<2,2,2>) = 7; T3h formalizes it over every SimpleField F.
+- title: On the optimal evaluation of a set of bilinear forms
+  authors:
+  - Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)
+  id: https://doi.org/10.1016/0024-3795(78)90012-5
+  type: paper
+  relationship: background
+  note: Proved 2n^2-1 over any field (as reported by Shpilka, arXiv:cs/0201001). T3i proves the weaker
+    substitution-method bound 2m^2-m.
+- title: On the Shannon capacity of a graph
+  authors:
+  - Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)
+  id: https://doi.org/10.1109/TIT.1979.1055985
+  type: paper
+  relationship: background
+  note: Theta(C_5) = sqrt(5) and capacity sqrt(n) for self-complementary vertex-transitive graphs; T3j
+    gives the integer form for C_5 and T3l a conditional form for conference graphs.
+- title: On some problems of Lovasz concerning the Shannon capacity of a graph
+  authors:
+  - Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)
+  id: https://doi.org/10.1109/TIT.1979.1056027
+  type: paper
+  relationship: background
+  note: Haemers rank bound, formalized over every field in T3j, with minimum fitting-matrix rank 4 for
+    C_7.
+- title: Fast Probabilistic Algorithms for Verification of Polynomial Identities
+  authors:
+  - Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)
+  id: https://doi.org/10.1145/322217.322225
+  type: paper
+  relationship: background
+  note: Schwartz-Zippel root bound, formalized over every SimpleField F in T3k.
+- title: Probabilistic Algorithms for Sparse Polynomials
+  authors:
+  - Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)
+  id: https://doi.org/10.1007/3-540-09519-5_73
+  type: paper
+  relationship: background
+  note: Multivariate polynomial root bound formalized in Theorem T3k.
+- title: On Orthogonal Matrices
+  authors:
+  - Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)
+  id: https://doi.org/10.1002/sapm1933121311
+  type: paper
+  relationship: background
+  note: Paley conference matrices. T3l is conditional on conference-graph and self-complement hypotheses,
+    proved in Lean for P_5, P_13 and P_17 only.
+- title: A 5/2 n^2-Lower Bound for the Rank of n x n-Matrix Multiplication over Arbitrary Fields
+  authors:
+  - Alexander Stephen Donahue (ORCID 0009-0006-8168-9648, Independent Researcher, Spokane, WA, USA)
+  id: https://doi.org/10.1109/SFFCS.1999.814576
+  type: paper
+  relationship: background
+  note: Blaser (FOCS 1999) 5/2 m^2 - 3m matrix multiplication lower bound over arbitrary fields; formalized
+    completely from scratch over every SimpleField F (including F_2) in T3m (BlaserLowerBound.lean).
 related_formalizations: []
-
 status:
-  scope: >-
-    Zero-Mathlib Lean 4.35.0 formalization of the 34 theorems T1a-T3m as stated in
-    lean/Challenge.lean, non-degenerate non-vacuity witnesses (TriadFrontier/NonVacuity.lean, incl. char-2),
-    and 11 adversarial tests (TriadFrontier/AdversarialTests.lean) — 37
-    audited declarations + 2,306 TriadFrontier.* declarations swept by AuditExhaustiveAxioms.lean. Not formalized inside Lean: transcendental 60-digit Renyi/Bai
-    optimization curves, exact coupled FIPS 203 discrete-convolution DFRs (90-digit Kronecker oracle), Lovasz
-    theta(C_7) trigonometric evaluation, and floating-point DFT/QGTL spectra (computed in
-    Tier-2 Python, C11, and Eshkol AD), or open conjectures (P != NP, omega = 2,
-    VP != VNP, the non-linear capacity C(2,4,2,2), the Sun-Tao-Xu-Zhang maximum-redundancy question, general M>=3 non-LFSR PIR when E>=KT, exact
-    Theta(C_7), worst-case quantum MLWE hardness).
+  scope: 'Zero-Mathlib Lean 4.35.0 formalization of the 34 theorems T1a-T3m as stated in lean/Challenge.lean,
+    non-degenerate non-vacuity witnesses (TriadFrontier/NonVacuity.lean, incl. char-2), and 11 adversarial
+    tests (TriadFrontier/AdversarialTests.lean) — 37 audited declarations + 2,306 TriadFrontier.* declarations
+    swept by AuditExhaustiveAxioms.lean. Not formalized inside Lean: transcendental 60-digit Renyi/Bai
+    optimization curves, exact coupled FIPS 203 discrete-convolution DFRs (90-digit Kronecker oracle),
+    Lovasz theta(C_7) trigonometric evaluation, and floating-point DFT/QGTL spectra (computed in Tier-2
+    Python, C11, and Eshkol AD), or open conjectures (P != NP, omega = 2, VP != VNP, the non-linear capacity
+    C(2,4,2,2), the Sun-Tao-Xu-Zhang maximum-redundancy question, general M>=3 non-LFSR PIR when E>=KT,
+    exact Theta(C_7), worst-case quantum MLWE hardness).'
   sorry_count: 0
   sorry_in_definitions: 0
   axioms:
-    - "propext"
-    - "Classical.choice"
-    - "Quot.sound"
+  - propext
+  - Classical.choice
+  - Quot.sound
   main_results:
-    - declaration: "TriadFrontier.Palomar.t1a_koszul_veronese_rank_identity"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t1b_universal_koszul_domination_over_lfsr"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t1c_byzantine_robust_capacity_and_f11_certificate"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t1d_flag_privacy_and_feasibility_dimensions"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t1e_unconditioned_shannon_ingleton_barrier"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t1f_projective_p3_linear_impossibility"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t1g_zhang_yeung_reduction_and_mfile_koszul"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t1h_infinite_nonshannon_cone_barrier_and_contraction"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t1i_total_4var_entropic_and_5obj_linear_barrier"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t1j_total_6obj_f2_entropic_realizability_barrier"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t1k_linear_rank_soundness_and_pir_protocol"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t1l_f101_certified_pir_existence"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t2a_determinant_ideal_secret_independence"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t2b_chen_step9_antiperiodic_dft_cancellation"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t2c_mlkem_cbd_renyi_cliff"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t2d_qgtl_shifted_lwe_berry_curvature"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t2e_dyadic256_renyi_floor_and_qgtl_psd"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t2f_universal_twisted_dft_selection_rule"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t2g_qgtl_renyi_variational_bridge_and_dyadic512"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t2h_all_order_renyi_holder_tv_and_dyadic1024"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t2i_bai_engine_dpi_tensorization_and_dyadic16384"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t3a_algebrization_multilinear_extension_uniqueness"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t3b_lwe_to_natural_proofs_obstruction"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t3c_katz_trevisan_byzantine_pir_ldc_distance"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t3d_mlwe_single_server_pir_noise_ceiling"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t3e_koszul_flattening_tensor_rank_bridge"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t3f_shannon_counting_and_ldc_smoothness"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t3g_all_m_koszul_matmul_lower_bound"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t3h_strassen_winograd_exact_rank_seven"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t3i_brockett_dobkin_rectangular_and_quadratic_matmul_bound"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t3j_shannon_capacity_lovasz_c5_and_haemers"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t3k_schwartz_zippel_and_strassen_sandwich"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t3l_infinite_paley_conference_shannon_capacity"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-    - declaration: "TriadFrontier.Palomar.t3m_blaser_five_halves_matmul_bound"
-      file: "lean/PalomarSolution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "lean/comparator.json"
-
+  - declaration: TriadFrontier.Palomar.t1a_koszul_veronese_rank_identity
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t1b_universal_koszul_domination_over_lfsr
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t1c_byzantine_robust_capacity_and_f11_certificate
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t1d_flag_privacy_and_feasibility_dimensions
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t1e_unconditioned_shannon_ingleton_barrier
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t1f_projective_p3_linear_impossibility
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t1g_zhang_yeung_reduction_and_mfile_koszul
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t1h_infinite_nonshannon_cone_barrier_and_contraction
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t1i_total_4var_entropic_and_5obj_linear_barrier
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t1j_total_6obj_f2_entropic_realizability_barrier
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t1k_linear_rank_soundness_and_pir_protocol
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t1l_f101_certified_pir_existence
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t2a_determinant_ideal_secret_independence
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t2b_chen_step9_antiperiodic_dft_cancellation
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t2c_mlkem_cbd_renyi_cliff
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t2d_qgtl_shifted_lwe_berry_curvature
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t2e_dyadic256_renyi_floor_and_qgtl_psd
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t2f_universal_twisted_dft_selection_rule
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t2g_qgtl_renyi_variational_bridge_and_dyadic512
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t2h_all_order_renyi_holder_tv_and_dyadic1024
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t2i_bai_engine_dpi_tensorization_and_dyadic16384
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t3a_algebrization_multilinear_extension_uniqueness
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t3b_lwe_to_natural_proofs_obstruction
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t3c_katz_trevisan_byzantine_pir_ldc_distance
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t3d_mlwe_single_server_pir_noise_ceiling
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t3e_koszul_flattening_tensor_rank_bridge
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t3f_shannon_counting_and_ldc_smoothness
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t3g_all_m_koszul_matmul_lower_bound
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t3h_strassen_winograd_exact_rank_seven
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t3i_brockett_dobkin_rectangular_and_quadratic_matmul_bound
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t3j_shannon_capacity_lovasz_c5_and_haemers
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t3k_schwartz_zippel_and_strassen_sandwich
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t3l_infinite_paley_conference_shannon_capacity
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
+  - declaration: TriadFrontier.Palomar.t3m_blaser_five_halves_matmul_bound
+    file: lean/PalomarSolution.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+    comparator_config: lean/comparator.json
 automation:
   methods:
-    - method: "manual"
-      notes: "Alexander S. Donahue conceived the triad research program, directed the mathematical exploration and adversarial audit, verified every statement boundary, and bears sole responsibility for the manuscript."
-    - method: "agent"
-      models:
-        - "Gemini (Antigravity)"
-      framework: "Antigravity"
-      notes: >-
-        Assisted with Lean 4.35.0 proof engineering, O(log N) balanced-tree certificate
-        generation, sparse pure-integer Koszul left-inverse, Strassen-Winograd, Brockett-Dobkin,
-        and Z[sqrt(5)] Lovasz umbrella SOS proofs, C11/Python/Eshkol computational
-        cross-verification, figure production, and manuscript drafting under human supervision.
-
+  - method: manual
+    notes: Alexander S. Donahue conceived the triad research program, directed the mathematical exploration
+      and adversarial audit, verified every statement boundary, and bears sole responsibility for the
+      manuscript.
+  - method: agent
+    models:
+    - Gemini (Antigravity)
+    framework: Antigravity
+    notes: Assisted with Lean 4.35.0 proof engineering, O(log N) balanced-tree certificate generation,
+      sparse pure-integer Koszul left-inverse, Strassen-Winograd, Brockett-Dobkin, and Z[sqrt(5)] Lovasz
+      umbrella SOS proofs, C11/Python/Eshkol computational cross-verification, figure production, and
+      manuscript drafting under human supervision.
 fidelity:
-  divergences: >-
-    Transcendental Renyi-2/inf/Bai optimization curves, coupled FIPS 203 discrete-convolution DFRs
-    (cross-verified by a 90-digit Kronecker exact interval oracle reproducing NIST Table 1 within 0.04 bits),
-    trigonometric Lovasz theta(C_7), and complex DFT/QGTL spectra are computed outside Lean in Python and
-    differentially against C11 and Eshkol forward-mode dual-number AD (< 2e-13), while Lean 4.35.0
-    machine-checks exact rational/integer moments, all-order Renyi Holder & TV-chi^2 bounds,
-    cleared-denominator inequalities, finite-field rank certificates, true vector-space span-dimension
-    soundness (HasSpanDim) of matRankModP and gf2RankSparse plus the field-universal zero-error &
-    exact T-privacy PIR protocol (T1k), symbolic ALL-m Koszul left-inverses, rank_F(<2,2,2>)=7,
-    the substitution bound 2m^2-m, and exact Z[sqrt(5)] SOS integer form of Lovasz Theta(C_5)=sqrt(5) +
-    Haemers C_7 rank=4 with zero Mathlib.
-
+  divergences: Transcendental Renyi-2/inf/Bai optimization curves, coupled FIPS 203 discrete-convolution
+    DFRs (cross-verified by a 90-digit Kronecker exact interval oracle reproducing NIST Table 1 within
+    0.04 bits), trigonometric Lovasz theta(C_7), and complex DFT/QGTL spectra are computed outside Lean
+    in Python and differentially against C11 and Eshkol forward-mode dual-number AD (< 2e-13), while Lean
+    4.35.0 machine-checks exact rational/integer moments, all-order Renyi Holder & TV-chi^2 bounds, cleared-denominator
+    inequalities, finite-field rank certificates, true vector-space span-dimension soundness (HasSpanDim)
+    of matRankModP and gf2RankSparse plus the field-universal zero-error & exact T-privacy PIR protocol
+    (T1k), symbolic ALL-m Koszul left-inverses, rank_F(<2,2,2>)=7, the substitution bound 2m^2-m, and
+    exact Z[sqrt(5)] SOS integer form of Lovasz Theta(C_5)=sqrt(5) + Haemers C_7 rank=4 with zero Mathlib.
 review:
-  status: "self-assessed"
-  notes: >-
-    Not externally peer-reviewed. Machine-checked across all 6 independent Lean 4.35.0
-    proof kernels via lake comparator --config comparator.json --paranoid (Lean default,
-    leanchecker-paranoid, lean4lean, silent 0-error nanoda, con-leche --verified and
-    con-ron --verified; 5,711 decls on the standalone Solution export), with 0 warnings, 0 proof sorries, 0 native_decide,
-    2,306-decl AuditExhaustiveAxioms sweep (under module), non-degenerate NonVacuity witnesses, 11 AdversarialTests, and a live negative
-    kernel-rejection gate. Kernel agreement certifies the proofs; see ERRATA.md (L02, L06, L07, S01, S02, A02, A10 superseded/closed through v5.4.0).
+  status: self-assessed
+  notes: Not externally peer-reviewed. Machine-checked across all 6 independent Lean 4.35.0 proof kernels
+    via lake comparator --config comparator.json --paranoid (Lean default, leanchecker-paranoid, lean4lean,
+    silent 0-error nanoda, con-leche --verified and con-ron --verified; 5,711 decls on the standalone
+    Solution export), with 0 warnings, 0 proof sorries, 0 native_decide, 2,306-decl AuditExhaustiveAxioms
+    sweep (under module), non-degenerate NonVacuity witnesses, 11 AdversarialTests, and a live negative
+    kernel-rejection gate. Kernel agreement certifies the proofs; see ERRATA.md (L02, L06, L07, S01, S02,
+    A02, A10 superseded/closed through v5.4.0).
